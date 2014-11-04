@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+        <title>Ext.ux.Highcharts</title>
+        <!-- ExtJS includes -->
+        <script type="text/javascript" src="../../../adapter/ext/ext-base-debug.js"></script>
+        <script type="text/javascript" src="../../../ext-all.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../../resources/css/ext-all.css" />
+
+        <!-- Common Styles for the examples -->
+        <link rel="stylesheet" type="text/css" href="../../shared/examples.css" />
+
+        <!-- ExtJS adapter for Highcharts -->
+        <script type="text/javascript" src="adapter-extjs.js"></script>
+
+        <!-- Highcharts includes 
+        <script type="text/javascript" src="http://code.highcharts.com/2.0.5/highcharts.js"></script>-->
+        <script type="text/javascript" src="highcharts.js"></script>
+        <!-- export and print 
+ 		<script src="http://code.highcharts.com/2.0.5/modules/exporting.js" type="text/javascript"></script>-->
+        <script type="text/javascript" src="exporting.js"></script>
+        <!--[if IE]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif]-->
+
+        <!-- ExtJS Plugin for Highcharts -->
+        <script type="text/javascript" src="Ext.ux.HighChart.js"></script>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <a href="#" onclick="loadData()">Load the data</a> - 
+        <a href="#" onclick="addSerie()">Add a new serie</a> -
+        <a href="#" onclick="chart.setTitle('Title')">Set the title</a> -
+        <a href="#" onclick="chart.setSubTitle('SubTitle')">Set the Subtitle</a>
+        <div id="chart"></div>
+        <script>
+		
+            var chart;
+            var store = new Ext.data.JsonStore({
+                fields:['name', 'visits', 'views'],
+                url: 'data.json',
+                root: "Data"
+            });
+
+            var loadData = function(){
+                store.load();
+            }
+
+            var addSerie = function(){
+                var series = [{
+                    type: 'column',
+                    name: 'Views',
+                    dataIndex: 'views'
+                },{
+                    name: 'Visits',
+                    dataIndex: 'visits'
+                }];
+                chart.addSeries(series);
+            }
+
+            Ext.onReady(function(){
+
+                chart = new Ext.ux.HighChart({
+                    store: store,
+					animShift:true,
+                    series: [
+                        {
+                            type: 'column',
+                            name: 'Views',
+                            dataIndex: 'views'
+                        }
+                    ],
+                    xField: 'name',
+                    chartConfig: {
+                        chart: {
+                            defaultSeriesType: 'line',
+							animation:true,
+                            margin: [50, 150, 60, 80]
+                        },
+                        title: {
+                            text: 'ExtJS Visits',
+                            style: {
+                                margin: '10px 100px 0 0' // center it
+                            }
+                        },
+                        subtitle: {
+                            text: 'Source: extjs.com',
+                            style: {
+                                margin: '0 100px 0 0' // center it
+                            }
+                        },
+                        xAxis: [{
+                          labels: {
+                             rotation: -45,
+                             align: 'right',
+                             style: {
+                                 font: 'normal 13px Verdana, sans-serif'
+                             }
+                          }
+                        }],
+                        yAxis: {
+                            title: {
+                                text: ''
+                            },
+                            labels: {
+                                formatter: function() {
+                                    return this.value / 1000 +'k';
+                                }
+                            }
+                        },
+						  plotOptions: {
+							 pie: {
+								allowPointSelect: false,
+								cursor: 'pointer'
+							 }
+						  },
+                        legend: {
+                            layout: 'vertical',
+                            style: {
+                                left: 'auto',
+                                bottom: 'auto',
+                                right: '10px',
+                                top: '100px'
+                            }
+                        }
+                    }
+                });
+
+
+                /**
+                */
+                var graphWin = new Ext.Window({
+                    title: 'Resizeable Graph Window',
+                    resizeable: true,
+                    width: 800,
+                    height: 450,
+                    layout: 'fit',
+                    items: [chart]
+                });
+                graphWin.show();
+                /*
+                new Ext.Panel({
+                    renderTo: 'chart',
+                    width: 800,
+                    height: 450,
+                    layout: 'fit',
+                    items:[chart]
+                });*/
+            });
+        </script>
+
+    </body>
+</html>

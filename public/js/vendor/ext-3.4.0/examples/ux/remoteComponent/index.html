@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Ejemplo de uso del plugin Ext.ux.Plugin.RemoteComponent</title>
+<link rel="stylesheet" type="text/css" href="../../../resources/css/ext-all.css"/>
+<link rel="stylesheet" type="text/css" href="../examples.css"/>
+<script type="text/javascript" src="../../../adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="../../../ext-all.js"></script>
+
+<script type="text/javascript" src="Ext.ux.Plugin.RemoteComponent.js"></script>
+
+<script type="text/javascript">
+Ext.onReady(function(){
+	var panel = new Ext.TabPanel({
+		 title: 'Hola'
+		,renderTo: Ext.getBody()
+		,width: 600
+		,height: 500
+		,activeTab: 0
+		,items: [{
+			 title: 'Portada'
+			,html: 'Hola mundo!'
+			,baseCls: 'x-panel-mc'
+		}]
+		,tbar: [{
+			 text: 'Agregar'
+			,handler: function(){
+				var tab = panel.add({
+					 title: 'Hola'
+					,width: 600
+					,height: 500
+					,layout: 'fit'
+					,autoShow: true
+					,plugins: new Ext.ux.Plugin.RemoteComponent({
+						 url: 'prueba.js'
+						,method: 'GET'
+						,loadOn: 'show'
+						,mask: panel.body
+						,maskConfig: {
+							msg: Ext.LoadMask.prototype.msg
+						}
+					})
+				});
+				panel.setActiveTab(tab);
+			}
+		}]
+	});
+});
+</script>
+</head>
+
+<body>
+<h1>Ejemplo de uso realizado por Ramiro P. Saenz (garraS).</h1>
+<h2>Descargar ejemplo <a href="RemoteComponent.rar">AQU&Iacute;</a></h2>
+</body>
+</html>

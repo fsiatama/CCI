@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="../../../resources/css/ext-all.css">
+    <script type="text/javascript" src="../../../adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../../ext-all-debug.js"></script>
+    <script type="text/javascript" src="Ext.ux.plugins.js"></script>
+    <!-- A Localization Script File comes here -->
+    <script type="text/javascript">
+Ext.BLANK_IMAGE_URL = '../../../resources/images/default/s.gif';
+Ext.onReady(function() {
+	Ext.QuickTips.init();
+	var submit = function() {
+		form.getForm().submit({url:'echo.php', method:'post'});
+	}
+	var form = new Ext.FormPanel({
+		 width:400
+		,height:200
+		,style:'margin:30px;margin-top:0'
+		,bodyStyle:'padding:5px'
+		,title:'Remote Field Validation Plugin Example Form'
+		,defaults:{xtype:'textfield',anchor:'0'}
+		,labelWidth:160
+		,frame:true
+		,renderTo:'form-ct'
+		,items:[{
+			 fieldLabel:'No validation'
+			,name:'novalidation'
+		},{
+			 fieldLabel:'Client only validation'
+			,name:'clientvalidation'
+			,allowBlank:false
+		},{
+			 fieldLabel:'Server only validation'
+			,name:'servervalidation'
+			,plugins:[Ext.ux.plugins.RemoteValidator]
+			,rvOptions: {
+				url:'validate.php'
+			}
+		},{
+			 fieldLabel:'Client and server validation'
+			,name:'clientservervalidation'
+			,allowBlank:false
+			,plugins:[Ext.ux.plugins.RemoteValidator]
+			,rvOptions: {
+				url:'validate.php'
+			}
+		}]
+		,buttons:[{
+			 text: 'Submit'
+			,formBind:true
+			,handler:function() {
+				form.getForm().submit({url:'echo.php', method:'post', success:function(){alert('success');}});
+			}
+		}]
+	});
+	form.startMonitoring();
+});
+    </script>
+    <title>Remote Field Validation Plugin Example</title>
+</head>
+<body style="font-size:10pt">
+
+<div id="adsense-top">
+<script type="text/javascript"><!--
+google_ad_client = "pub-2768521146228687";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+//2007-07-14: UploadForm
+google_ad_channel = "0819383193";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "008000";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+<div style="margin:30px;margin-bottom:10px;margin-top:0;width:400px">
+	<h1>Remote Field Validation Example Form</h1>
+	<ol style="list-style:decimal outside;padding:20px">
+	<li>First field is without any validation; you do not need to fill anything into it.</li>
+	<li>Second field has <b>allowBlank:false</b> so you need to fill something into it.</li>
+	<li>Third field has no client side validation rules set but it is server validated. Only valid value is <b>ExtJS</b>.</li>
+	<li>Fourth field has <b>allowBlank:false</b> and it is also server validated. Only valid value is <b>ExtJS</b>.</li>
+	</ol>
+</div>
+<div id="form-ct">
+</div>
+<div style="margin:20px">
+	<a href="rvalidate.zip">Download files</a><br>
+	<a href="http://extjs.com/learn/Plugin:RemoteValidator">Ext JS wiki</a><br>
+	<a href="http://extjs.com/forum/showthread.php?t=19112">Remote Field Validation Plugin Forum Thread</a><br>
+</div>
+
+<div id="adsense-bottom">
+<script type="text/javascript"><!--
+google_ad_client = "pub-2768521146228687";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+//2007-07-14: UploadForm
+google_ad_channel = "0819383193";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "008000";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+</body>
+</html>
+

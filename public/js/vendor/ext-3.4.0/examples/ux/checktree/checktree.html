@@ -1,0 +1,163 @@
+<!-- vim: ts=2:sw=2:nu:fdc=2:spell
+
+Ext.ux.tree.CheckTreePanel Example Page
+
+@author    Ing.Jozef Sakáloš
+@copyright (c) 2008, by Ing. Jozef Sakáloš
+@date      30. March 2008
+@version   $Id: checktree.html 113 2009-02-02 02:27:23Z jozo $
+
+@license checktree.html is licensed under the terms of the Open Source
+LGPL 3.0 license. Commercial use is permitted to the extent that the 
+code/component(s) do NOT become part of another Open Source or Commercially
+licensed development library or toolkit without explicit permission.
+ 
+License details: http://www.gnu.org/licenses/lgpl.html
+-->
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="ext/resources/css/ext-all.css">
+  <link rel="stylesheet" type="text/css" href="css/icons.css">
+  <link rel="stylesheet" type="text/css" href="css/empty.css" id="theme">
+  <link rel="stylesheet" type="text/css" href="css/webpage.css">
+	<link rel="stylesheet" type="text/css" href="css/Ext.ux.tree.CheckTreePanel.css">
+  <link rel="stylesheet" type="text/css" href="css/checktree.css">
+	<link rel="shortcut icon" href="img/extjs.ico">
+  <script type="text/javascript" src="ext/adapter/ext/ext-base.js"></script>
+  <script type="text/javascript" src="ext/ext-all-debug.js"></script>
+  <script type="text/javascript" src="js/WebPage.js"></script>
+  <script type="text/javascript" src="js/Ext.ux.form.ThemeCombo.js"></script>
+  <script type="text/javascript" src="js/Ext.ux.menu.IconMenu.js"></script>
+  <script type="text/javascript" src="js/Ext.ux.Toast.js"></script>
+  <script type="text/javascript" src="js/Ext.ux.tree.TreeFilterX.js"></script>
+  <script type="text/javascript" src="js/Ext.ux.tree.RemoteTreePanel.js"></script>
+  <script type="text/javascript" src="js/Ext.ux.tree.CheckTreePanel.js"></script>
+  <script type="text/javascript" src="checktree.js"></script>
+  <title id="page-title">Ext.ux.tree.CheckTreePanel by Saki</title>
+</head>
+<body>
+
+<div id="west-content" class="x-hidden">
+	<div id="description">
+		<h3>Description</h3>
+		<p>
+		This extension implements tree panel with checkboxes that allow selection of individual branches or leafs.
+		</p>
+
+		<div id="adsense-float" class="adsense x-hidden">
+			<script type="text/javascript"><!--
+			google_ad_client = "pub-2768521146228687"
+			/* 125x125 - in text */
+			google_ad_slot = "2156000855";
+			google_ad_width = 125;
+			google_ad_height = 125;
+			//-->
+			</script>
+			<script type="text/javascript"
+			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script>
+		</div>
+
+		<p>
+		The checked nodes define a "value" of the tree that is returned as list of values separated by a configurable separator.
+		</p>
+		<p>
+		The first panel of this example allows editing of the tree used by other panels. It is not CheckTreePanel in fact, but 
+		<a target="_blank" href="http://remotetree.extjs.eu">RemoteTreePanel</a>.
+		</p>
+		<p>
+		Other panels show CheckTreePanel in various configurations, not showing all possible though. 
+		</p>
+		<p>You can get or set
+		"value" of the trees in text fields below them; watch the text field tooltips.
+		</p>
+	</div>
+
+	<br/>
+	<a href="http://extjs.eu/docs?class=Ext.ux.tree.CheckTreePanel">CheckTreePanel Documentation</a><br>
+	<a target="_blank" href="http://extjs.com/forum/showthread.php?t=56875">CheckTreePanel Forum Thread</a><br><br>
+	<b>View Sources:</b><br>
+	<a href="source.php?file=js/Ext.ux.tree.CheckTreePanel.js" target="_blank">Ext.ux.tree.CheckTreePanel.js</a><br>
+	<!--
+	<a href="source.php?file=js/Ext.ux.tree.TreeFilterX.js" target="_blank">Ext.ux.tree.TreeFilterX.js</a><br>
+	-->
+	<a href="source.php?file=checktree.js" target="_blank">checktree.js</a><br>
+	<a href="source.php?file=checktree.html" target="_blank">checktree.html</a><br>
+
+	<div id="paypal">
+		<!-- PayPal Donate Button -->
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+		<input type="hidden" name="cmd" value="_s-xclick">
+		<input type="hidden" name="hosted_button_id" value="2211543">
+		<input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-butcc-donate.gif" border="0" name="submit" alt="">
+		<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+		</form>
+		<!-- PayPal Donate Button End-->
+	</div>
+
+	<div id="downloads">
+		<p><b>Downloads (development):</b></p>
+		<a href="http://extjs.eu/phpmv2/phpmyvisites.php?url=http%3A//checktree.extjs.eu/checktree.tar.bz2&id=1&pagename=FILE: download/checktree/checktree.tar.bz2">checktree.tar.bz2</a><br>
+		<a href="http://extjs.eu/phpmv2/phpmyvisites.php?url=http%3A//checktree.extjs.eu/checktree.tar.gz&id=1&pagename=FILE: download/checktree/checktree.tar.gz">checktree.tar.gz</a><br>
+		<a href="http://extjs.eu/phpmv2/phpmyvisites.php?url=http%3A//checktree.extjs.eu/checktree.zip&id=1&pagename=FILE: download/checktree/checktree.zip">checktree.zip</a></br>
+	</div>
+	<br/>
+	<p>
+		<b><a href="http://extjs.eu" target="_blank">Other Extensions and Plugins</a></b>
+	</p>
+
+	<!-- digg -->
+	<div id="digg">
+		<script>
+		digg_url = 'http://checktree.extjs.eu';
+		</script>
+		<script src="http://digg.com/api/diggthis.js"></script>
+	</div>
+	<!-- digg -->
+
+	<!--
+	<a href="http://www.stumbleupon.com/submit?url=<?=urlencode('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);?>"><img border=0 src="../img/stumble7.gif" alt="StumbleUpon Toolbar"></a>	
+	-->
+
+</div>
+
+<div id="adrow-content" class="adsense x-hidden">
+	<div id="adsense-top">
+		<script type="text/javascript"><!--
+		google_ad_client = "pub-2768521146228687";
+		/* recordform top row wide */
+		google_ad_slot = "3909046423";
+		google_ad_width = 728;
+		google_ad_height = 15;
+		//-->
+		</script>
+		<script type="text/javascript"
+		src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+		</script>
+	</div>
+</div>
+
+<div id="center-content" class="x-hidden">
+	<div id="ct1" class="tree-ct"></div>
+	<div id="ct2" class="tree-ct"></div>
+	<div id="ct3" class="tree-ct"></div>
+	<div id="ct4" class="tree-ct"></div>
+	<div style="clear:both"></div>
+	<div id="change-log">
+		<h3>Development Change Log:</h3>
+		<ul>
+			<li><b>January 9, 2009</b> - Version 1.0 released.
+			<p>This version is feature complete and pretty well tested. Bug reports are welcome though.
+			</p>
+			<br>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<?if("checktree.extjs.eu"===$_SERVER["SERVER_NAME"])include("stats.php");?>
+</body>
+</html>
+<!-- eof -->
