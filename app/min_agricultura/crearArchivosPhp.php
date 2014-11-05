@@ -1,6 +1,8 @@
-<?
-$base         = "muestrasSeo"; //$_GET["db"];
-$nombre_tabla = "keyword"; //$_GET["tabla"];
+<?php
+ini_set('display_errors', true);
+error_reporting(E_ALL);
+$base         = "min_agricultura"; //$_GET["db"];
+$nombre_tabla = "user"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -10,9 +12,11 @@ if(!file_exists($nombre_tabla)){
 	mkdir($nombre_tabla);
 }
 
-include('../../adodb5/adodb.inc.php');	   # Carga el codigo comun de ADOdb
-$conn = &ADONewConnection('mysql');  # crea la conexion
-$conn->PConnect('172.16.1.233','root','','information_schema');# se conecta a la base de datos agora
+include('../adodb5/adodb.inc.php');	   # Carga el codigo comun de ADOdb
+
+
+$conn = &ADONewConnection('mysqli');  # crea la conexion
+$conn->PConnect('127.0.0.1','root','','information_schema');# se conecta a la base de datos agora
 $sql = "SELECT * FROM COLUMNS WHERE TABLE_SCHEMA = '".$base."' AND (TABLE_NAME = '".$nombre_tabla."' )";
 $rs = $conn->Execute($sql);
 //print $rs->GetMenu('COLUMN_NAME','orden_compra_cab_id');
@@ -22,17 +26,17 @@ $contenido = "";
 $cabecera  = "";
 $variables = "";
 
-$cabecera  = "<?php\r\nclass ".ucfirst($nombre_tabla)."{\r\n";
+$cabecera  = "<?php\r\nclass ".ucfirst($nombre_tabla)." {\r\n";
 
 $llave_primaria = false;
 while (!$rs->EOF) {
-	$contenido  .= "	function set". ucfirst($rs->fields["COLUMN_NAME"])."(\$". $rs->fields["COLUMN_NAME"] ."){\r\n";
+	$contenido  .= "	public function set". ucfirst($rs->fields["COLUMN_NAME"])."(\$". $rs->fields["COLUMN_NAME"] ."){\r\n";
 	$contenido  .= "		\$this->". $rs->fields["COLUMN_NAME"]." = \$". $rs->fields["COLUMN_NAME"].";\r\n";
 	$contenido  .= "	}\r\n";
-	$contenido  .= "	function get". ucfirst($rs->fields["COLUMN_NAME"])."(){\r\n";
+	$contenido  .= "	public function get". ucfirst($rs->fields["COLUMN_NAME"])."(){\r\n";
 	$contenido  .= "		return \$this->". $rs->fields["COLUMN_NAME"].";\r\n";
 	$contenido  .= "	}\r\n";
-	$variables  .= "	var \$". $rs->fields["COLUMN_NAME"]. ";\r\n";
+	$variables  .= "	protected \$". $rs->fields["COLUMN_NAME"]. ";\r\n";
 	$result[]    = $rs->fields["COLUMN_NAME"];
 	$result2[]   = $rs->fields;
 	if($rs->fields["COLUMN_KEY"] == "PRI"){
@@ -46,9 +50,6 @@ if($llave_primaria === false){
 	exit();
 }
 $cabecera .= $variables;
-$cabecera .= "	function ".$nombre_tabla."(){\r\n";
-$cabecera .= "		//constructor vacio\r\n";
-$cabecera .= "	}\r\n";
 $cabecera .= $contenido;
 $cabecera .= "}\r\n?>";
 //printf($contenido);
@@ -71,12 +72,14 @@ $variables = "";
 
 $contenido .= "<?php\r\n";
 $contenido .= "include(\"".$nombre_tabla.".php\");\r\n";
-$contenido .= "class ".ucfirst($nombre_tabla)."Ado extends Conexion{\r\n";
-$contenido .= "	var \$conn;\r\n";
-$contenido .= "	function ".ucfirst($nombre_tabla)."Ado(\$_bd){\r\n";
-$contenido .= "		parent::Conexion(\$_bd);\r\n";
+$contenido .= "class ".ucfirst($nombre_tabla)."Ado extends Conexion {\r\n\r\n";
+$contenido .= "	protected \$conn;\r\n\r\n";
+$contenido .= "	public function __construct (\$_bd)\r\n";
+$contenido .= "	{\r\n";
+$contenido .= "		parent::__construct(\$_bd);\r\n";
 $contenido .= "	}\r\n";
-$contenido .= "	function lista(\$".$nombre_tabla."){\r\n";
+$contenido .= "	public function lista(\$".$nombre_tabla.")\r\n";
+$contenido .= "	{\r\n";
 $contenido .= "		\$conn = \$this->conn;\r\n";
 $contenido .= "		\$filtro = array();\r\n";
 $contenido .= "		foreach(\$".$nombre_tabla." as \$key => \$data){\r\n";
@@ -103,7 +106,8 @@ $contenido .= "		\$rs->Close();\r\n";
 $contenido .= "		return \$result;\r\n";
 $contenido .= "	}\r\n";
 
-$contenido .= "	function lista_filtro(\$query, \$queryValuesIndicator, \$limit){\r\n";
+$contenido .= "	public function lista_filtro(\$query, \$queryValuesIndicator, \$limit)\r\n";
+$contenido .= "	{\r\n";
 $contenido .= "		\$conn = \$this->conn;\r\n";
 $contenido .= "		\$filtro = array();\r\n";
 
@@ -157,7 +161,8 @@ $contenido .= "		\$rs->Close();\r\n";
 $contenido .= "		return \$result;\r\n";
 $contenido .= "	}\r\n";
 
-$contenido .= "	function insertar(\$".$nombre_tabla."){\r\n";
+$contenido .= "	public function insertar(\$".$nombre_tabla.")\r\n";
+$contenido .= "	{\r\n";
 $contenido .= "		\$conn = \$this->conn;\r\n";
 foreach($result as $key => $campos){
 	$contenido .= "		\$" . $campos . " = \$" . $nombre_tabla ."->get".ucfirst($campos)."();\r\n";
@@ -185,7 +190,8 @@ $contenido .= "		return \$return;\r\n";
 $contenido .= "	}\r\n";
 
 $variables = array();
-$contenido .= "	function actualizar(\$".$nombre_tabla."){\r\n";
+$contenido .= "	public function actualizar(\$".$nombre_tabla.")\r\n";
+$contenido .= "	{\r\n";
 $contenido .= "		\$conn = \$this->conn;\r\n";
 
 $contenido .= "		\$sqlUpd = array();\r\n";
@@ -210,7 +216,8 @@ $contenido .= "		\$rs->Close();\r\n";
 $contenido .= "		return true;\r\n";
 $contenido .= "	}\r\n";
 
-$contenido .= "	function borrar(\$".$nombre_tabla."){\r\n";
+$contenido .= "	public function borrar(\$".$nombre_tabla.")\r\n";
+$contenido .= "	{\r\n";
 $contenido .= "		\$conn = \$this->conn;\r\n";
 $contenido .= "		\$" . $llave_primaria . " = \$" . $nombre_tabla ."->get".ucfirst($llave_primaria)."();\r\n";
 $contenido .= "		\$sql  = \"DELETE FROM ".$nombre_tabla." WHERE ".$llave_primaria." = '\".\$".$llave_primaria.".\"'\";\r\n";
