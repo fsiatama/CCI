@@ -36,7 +36,7 @@ while (!$rs->EOF) {
 	$contenido  .= "	public function get". ucfirst($rs->fields["COLUMN_NAME"])."(){\r\n";
 	$contenido  .= "		return \$this->". $rs->fields["COLUMN_NAME"].";\r\n";
 	$contenido  .= "	}\r\n";
-	$variables  .= "	protected \$". $rs->fields["COLUMN_NAME"]. ";\r\n";
+	$variables  .= "	private \$". $rs->fields["COLUMN_NAME"]. ";\r\n";
 	$result[]    = $rs->fields["COLUMN_NAME"];
 	$result2[]   = $rs->fields;
 	if($rs->fields["COLUMN_KEY"] == "PRI"){

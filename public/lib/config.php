@@ -1,5 +1,6 @@
 <?php
-ini_set("display_errors", 0);
+ini_set('display_errors', true);
+error_reporting(E_ALL);
 //ini_set('session.cookie_domain', '.' );
 //date_default_timezone_set('America/Bogota');
 
@@ -16,14 +17,3 @@ define("PATH_APP", "C:/wamp/www/CCI/app/");
 define("PATH_REPORTES", PATH_RAIZ."/rep/");
 
 define("IDIOMA", "colombia.dic.php");
-
-
-foreach($_POST as $var => $val)
-{
-    $$var = $val;
-}
-
-foreach($_GET as $var => $val)
-{
-    $$var = $val;
-}

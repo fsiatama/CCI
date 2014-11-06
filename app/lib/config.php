@@ -4,7 +4,6 @@
 * posee variables y constantes de configuracion para el backend
 */
 
-
 /*
 |--------------------------------------------------------------------------
 | Database Connections
@@ -19,7 +18,7 @@ $connections = array(
 	'default' => 'min_agricultura',
 
 	'min_agricultura' => array(
-		'driver'   => 'mysql',
+		'driver'   => 'mysqli',
 		'host'     => 'localhost',
 		'database' => 'min_agricultura',
 		'username' => 'root',

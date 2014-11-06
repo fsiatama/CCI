@@ -2,129 +2,125 @@
 
 class Request {
 
-    protected $url;
+	protected $url;
 
-    protected $controller;
-    protected $action;
-    protected $params = array();
+	protected $controller;
+	protected $defaultController = 'home';
+	protected $action;
+	protected $defaultAction = 'index';
+	protected $params = array();
 
-    public function __construct($url)
-    {
-        $this->url = $url;
+	public function __construct($url)
+	{
+		$this->url = $url;
 
-        $segments = explode('/', $this->getUrl());
+		$segments = explode('/', $this->getUrl());
 
-        $this->resolveController($segments);
-        $this->resolveAction($segments);
-        $this->resolveParams($segments);
-    }
+		$this->resolveController($segments);
+		$this->resolveAction($segments);
+		$this->resolveParams($segments);
+	}
 
-    public function resolveController(&$segments)
-    {
-        $this->controller = array_shift($segments);
+	public function resolveController(&$segments)
+	{
+		$this->controller = array_shift($segments);
 
-        if (empty($this->controller))
-        {
-            throw new ValidationException('Controller is empty');
-        }
-    }
+		if (empty($this->controller))
+		{
+			$this->controller = $this->defaultController;
+		}
+	}
 
-    public function resolveAction(&$segments)
-    {
-        $this->action = array_shift($segments);
+	public function resolveAction(&$segments)
+	{
+		$this->action = array_shift($segments);
 
-        if (empty($this->action))
-        {
-            throw new ValidationException('action is empty');
-        }
-    }
+		if (empty($this->action))
+		{
+			$this->action = $this->defaultAction;
+		}
+	}
 
-    public function resolveParams(&$segments)
-    {
-        $this->params = $segments;
-    }
+	public function resolveParams(&$segments)
+	{
+		$postParams  = Helpers::arrayToVar($_POST);
+		$urlParams   = $segments;
+		$this->params = compact('urlParams', 'postParams');
+	}
 
-    public function getUrl()
-    {
-        return $this->url;
-    }
+	public function getUrl()
+	{
+		return $this->url;
+	}
 
-    public function getController()
-    {
-        return $this->controller;
-    }
+	public function getController()
+	{
+		return $this->controller;
+	}
 
-    public function getControllerClassName()
-    {
-        return Inflector::camel($this->getController()) . 'Controller';
-    }
+	public function getControllerClassName()
+	{
+		return Inflector::camel($this->getController()) . 'Controller';
+	}
 
-    public function getControllerFileName()
-    {
-        return 'controllers/' . $this->getControllerClassName() . '.php';
-    }
+	public function getControllerFileName()
+	{
+		return PATH_APP.'controllers/' . $this->getControllerClassName() . '.php';
+	}
 
-    public function getAction()
-    {
-        return $this->action;
-    }
+	public function getAction()
+	{
+		return $this->action;
+	}
 
-    public function getActionMethodName()
-    {
-        return Inflector::lowerCamel($this->getAction()) . 'Action';
-    }
+	public function getActionMethodName()
+	{
+		return Inflector::lowerCamel($this->getAction()) . 'Action';
+	}
 
-    public function getParams()
-    {
-        return $this->params;
-    }
+	public function getParams()
+	{
+		return $this->params;
+	}
 
-    public function execute()
-    {
-        $controllerClassName = $this->getControllerClassName();
-        $controllerFileName  = $this->getControllerFileName();
-        $actionMethodName    = $this->getActionMethodName();
-        $params              = $this->getParams();
+	public function execute()
+	{
+		$controllerClassName = $this->getControllerClassName();
+		$controllerFileName  = $this->getControllerFileName();
+		$actionMethodName    = $this->getActionMethodName();
+		$params              = $this->getParams();
+		if ( ! file_exists($controllerFileName))
+		{
+			exit('controlador no existe'. $controllerFileName);
+		}
 
-        if ( ! file_exists($controllerFileName))
-        {
-            exit('controlador no existe');
-        }
+		require $controllerFileName;
 
-        require $controllerFileName;
+		$controller = new $controllerClassName();
 
-        $controller = new $controllerClassName();
+		$response = call_user_func_array([$controller, $actionMethodName], $params);
 
-        $response = call_user_func_array([$controller, $actionMethodName], $params);
+		$this->executeResponse($response);
+	}
 
-        $this->executeResponse($response);
-    }
-
-    public function executeResponse($response)
-    {
-        if ($response instanceof Response)
-        {
-            $response->execute();
-        }
-        elseif (is_string($response))
-        {
-            echo $response;
-        }
-        elseif(is_array($response))
-        {
-            echo json_encode($response);
-        }
-        else
-        {
-            exit('Respuesta no valida');
-        }
-    }
+	public function executeResponse($response)
+	{
+		if ($response instanceof Response)
+		{
+			$response->execute();
+		}
+		elseif (is_string($response))
+		{
+			echo $response;
+		}
+		elseif(is_array($response))
+		{
+			echo json_encode($response);
+		}
+		else
+		{
+			exit('Respuesta no valida');
+		}
+	}
 
 }
-
-
-
-
-
-
-

@@ -4,7 +4,7 @@
 *clase base para la coneccion a una base de datos
 */
 
-include(PATH_RAIZ.'adodb5/adodb.inc.php');
+include(PATH_APP.'adodb5/adodb.inc.php');
 
 class Connection
 {
@@ -17,7 +17,7 @@ class Connection
 
     public function __construct($database)
 	{
-		$ADODB_CACHE_DIR = PATH_RAIZ.'cache';
+		$ADODB_CACHE_DIR = PATH_APP.'cache';
 		define('ADODB_FORCE_VALUE',3);//PARA TOMAR LOS VALUES CON CADENA 'null' como NULL de mysql
 		
 		$this->setConnection($database);
@@ -34,7 +34,8 @@ class Connection
 	}
 	public function setConnection($database)
 	{
-		require PATH_RAIZ.'lib/config.php';
+		print('PRUEBA ='.$database);
+		require PATH_APP.'lib/config.php';
 
 		if (empty($connections[$database])) {
 			$database = $connections['default'];
@@ -48,5 +49,3 @@ class Connection
 	}
 
 }
-
-?>
