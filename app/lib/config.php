@@ -1,5 +1,4 @@
 <?php
-=======
 /**
 * @author Fabian Siatama
 * posee variables y constantes de configuracion para el backend
@@ -21,7 +20,7 @@ $connections = array(
 
 	'min_agricultura' => array(
 		'driver'   => 'mysql',
-		'host'     => '192.168.15.3',
+		'host'     => 'localhost',
 		'database' => 'min_agricultura',
 		'username' => 'root',
 		'password' => ''
