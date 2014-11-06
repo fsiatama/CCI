@@ -5,9 +5,6 @@ ini_set("display_errors", 0);
 
 //header("Content-Type: text/html; charset=iso-8859-1");
 
-define("SL", "\r\n");
-define("BR", "<BR>".SL);
-
 define("URL_RAIZ", "http://".$_SERVER['HTTP_HOST']."/");
 define("URL_INGRESO", URL_RAIZ."main");
 
@@ -30,7 +27,3 @@ foreach($_GET as $var => $val)
 {
     $$var = $val;
 }
-
-
-
-?>
