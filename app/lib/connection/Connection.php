@@ -47,4 +47,9 @@ class Connection
 		$this->password = $connections[$database]['password'];
 	}
 
+	public function getConnection()
+	{
+		return $this->connection;
+	}
+
 }

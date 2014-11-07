@@ -1,25 +1,46 @@
 <?php
 include("user.php");
-class UserAdo extends Conexion {
+class UserAdo extends BaseAdo {
 
-	protected $conn;
+	private $data;
 
-	public function __construct ($_bd)
+	public function setData ($user)
 	{
-		parent::__construct($_bd);
+		$user_id = $user->getUser_id();
+		$user_full_name = $user->getUser_full_name();
+		$user_email = $user->getUser_email();
+		$user_password = $user->getUser_password();
+		$user_active = $user->getUser_active();
+		$user_session = $user->getUser_session();
+		$user_uinsert = $user->getUser_uinsert();
+		$user_finsert = $user->getUser_finsert();
+		$user_fupdate = $user->getUser_fupdate();
+
+		$this->data = compact(
+			'user_id',
+			'user_full_name',
+			'user_email',
+			'user_password',
+			'user_active',
+			'user_session',
+			'user_uinsert',
+			'user_finsert',
+			'user_fupdate'
+		);
 	}
+
 	public function lista($user)
 	{
-		$conn = $this->conn;
-		$filtro = array();
-		foreach($user as $key => $data){
+		$conn = $this->getConnection();
+		$filter = array();
+		foreach($this->data as $key => $data){
 			if ($data <> ''){
-				$filtro[] = $key . " = '" . $data ."'";
+				$filter[] = $key . " = '" . $data ."'";
 			}
 		}
 		$sql  = 'SELECT * FROM user';
-		if(!empty($filtro)){
-			$sql .= ' WHERE '. implode(' AND ', $filtro);
+		if(!empty($filter)){
+			$sql .= ' WHERE '. implode(' AND ', $filter);
 		}
 		$rs   = $conn->Execute($sql);
 		$result = array();
@@ -35,9 +56,10 @@ class UserAdo extends Conexion {
 		$rs->Close();
 		return $result;
 	}
+
 	public function lista_filtro($query, $queryValuesIndicator, $limit)
 	{
-		$conn = $this->conn;
+		$conn = $this->getConnection();
 		$filtro = array();
 		if($queryValuesIndicator && is_array($query)){
 			$filtro[] = "user_id IN('".implode("','",$query)."')";
@@ -54,13 +76,15 @@ class UserAdo extends Conexion {
 					OR user_full_name LIKE '%" . $query ."%'
 					OR user_email LIKE '%" . $query ."%'
 					OR user_password LIKE '%" . $query ."%'
+					OR user_active LIKE '%" . $query ."%'
+					OR user_session LIKE '%" . $query ."%'
 					OR user_uinsert LIKE '%" . $query ."%'
 					OR user_finsert LIKE '%" . $query ."%'
 					OR user_fupdate LIKE '%" . $query ."%'
 				)";
 			}
 		}
-		$sql  = 'SELECT user_id,user_full_name,user_email,user_password,user_uinsert,user_finsert,user_fupdate FROM user';
+		$sql  = 'SELECT user_id,user_full_name,user_email,user_password,user_active,user_session,user_uinsert,user_finsert,user_fupdate FROM user';
 		if(!empty($filtro)){
 			$sql .= ' WHERE '. implode(' AND ', $filtro);
 		}
@@ -87,22 +111,18 @@ class UserAdo extends Conexion {
 		$rs->Close();
 		return $result;
 	}
+
 	public function insertar($user)
 	{
-		$conn = $this->conn;
-		$user_id = $user->getUser_id();
-		$user_full_name = $user->getUser_full_name();
-		$user_email = $user->getUser_email();
-		$user_password = $user->getUser_password();
-		$user_uinsert = $user->getUser_uinsert();
-		$user_finsert = $user->getUser_finsert();
-		$user_fupdate = $user->getUser_fupdate();
+		$conn = $this->getConnection();
 		$sql = "
 			INSERT INTO user (
 				user_id,
 				user_full_name,
 				user_email,
 				user_password,
+				user_active,
+				user_session,
 				user_uinsert,
 				user_finsert,
 				user_fupdate
@@ -112,6 +132,8 @@ class UserAdo extends Conexion {
 				'".$user_full_name."',
 				'".$user_email."',
 				'".$user_password."',
+				'".$user_active."',
+				'".$user_session."',
 				'".$user_uinsert."',
 				'".$user_finsert."',
 				'".$user_fupdate."'

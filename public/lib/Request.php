@@ -43,7 +43,7 @@ class Request {
 
 	public function resolveParams(&$segments)
 	{
-		$postParams  = Helpers::arrayToVar($_POST);
+		$postParams  = $_POST;
 		$urlParams   = $segments;
 		$this->params = compact('urlParams', 'postParams');
 	}

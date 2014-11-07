@@ -22,9 +22,23 @@ class UserRepo extends BaseRepo {
 		
 		$this->model->setUser_email($email);
 		$this->model->setUser_password($password);
+		$this->model->setUser_active('1');
 
-		$result = $this->modelAdo->lista($this->model);
-		var_dump($result);
+		$result = $this->modelAdo->exactSearch($this->model);
+		
+		if ($result['success'] && $result['total'] > 0) {
+
+			$row = array_shift($result['data']);
+
+			$this->model = $this->getModel();
+			$this->model->setUser_id($row['user_id']);
+			$this->model->setUser_session(session_id());
+
+			$result = $this->modelAdo->update($this->model);
+
+			$_SESSION['user_id']  = $row['usuario_id'];
+			var_dump($row);
+		}
 
 		return $result;
 	}

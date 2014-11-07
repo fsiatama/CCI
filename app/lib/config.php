@@ -19,7 +19,7 @@ $connections = array(
 
 	'min_agricultura' => array(
 		'driver'   => 'mysqli',
-		'host'     => 'localhost',
+		'host'     => '127.0.0.1',
 		'database' => 'min_agricultura',
 		'username' => 'root',
 		'password' => ''

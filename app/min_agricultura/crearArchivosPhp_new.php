@@ -49,12 +49,12 @@ if($llave_primaria === false){
 	print "no existe llave primaria";
 	exit();
 }
-$cabecera .= $variables;
+$cabecera .= $variables."\r\n";
 $cabecera .= $contenido;
-$cabecera .= "}\r\n?>";
+$cabecera .= "}";
 //printf($contenido);
 
-$archivo = $nombre_tabla . "/" . $nombre_tabla.".php";
+$archivo = $nombre_tabla . "/" . ucfirst($nombre_tabla).".php";
 if(!file_exists($archivo)){
 	$fp = fopen($archivo,"w+");
 	fwrite($fp, $cabecera);
@@ -64,14 +64,119 @@ else {
 	print $archivo . " ya existe, no se ha creado \r\n";
 }
 
+/******************************************************************************************************/
+/*********************************Inicia creacion del Ado**********************************************/
+/******************************************************************************************************/
+$getters = "";
+foreach($result as $key => $campos){
+	$getters .= "		\$" . $campos . " = \$" . $nombre_tabla ."->get".ucfirst($campos)."();\r\n";
+}
 
-$contenido = "";
+$contenido = "
+<?php
+
+require 'BaseAdo.php';
+
+class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {
+
+	protected function setTable()
+	{
+		\$this->table = '".$nombre_tabla."';
+	}
+
+	protected function setPrimaryKey()
+	{
+		\$this->primaryKey = '".$llave_primaria."';
+	}
+
+	protected function setData()
+	{
+		\$".$nombre_tabla." = \$this->getModel();
+
+		".$getters."
+
+		\$this->data = compact(
+			'".implode("',\r\n			", $result)."'\r\n
+		);
+	}
+
+	public function create(\$".$nombre_tabla.")
+	{
+		\$conn = \$this->getConnection();
+		\$this->setModel(\$".$nombre_tabla.");
+		\$this->setData();
+
+		\$sql = '
+			INSERT INTO user (
+				user_id,
+				user_full_name,
+				user_email,
+				user_password,
+				user_uinsert,
+				user_finsert,
+				user_fupdate
+			)
+			VALUES (
+				'".$this->data['user_id']."',
+				'".$this->data['user_full_name']."',
+				'".$this->data['user_email']."',
+				'".$this->data['user_password']."',
+				'".$this->data['user_uinsert']."',
+				'".$this->data['user_finsert']."',
+				'".$this->data['user_fupdate']."'
+			)
+		';
+		$resultSet = $conn->Execute($sql);
+		$result = $this->buildResult($resultSet, $conn->Insert_ID());
+
+		return $result;
+	}
+
+	public function buildSelect()
+	{
+		$filter = array();
+		$operator = $this->getOperator();
+		$joinOperator = ' AND ';
+		foreach($this->data as $key => $data){
+			if ($data <> ''){
+				if ($operator == '=') {
+					$filter[] = $key . ' ' . $operator . ' \'' . $data . '\'';
+				}
+				elseif ($operator == 'IN') {
+					$filter[] = $key . ' ' . $operator . '(\'' . $data . '\')';
+				}
+				else {
+					$filter[] = $key . ' ' . $operator . ' \'%' . $data . '%\'';
+					$joinOperator = ' OR ';
+				}
+			}
+		}
+
+		$sql = 'SELECT
+			 user_id,
+			 user_full_name,
+			 user_email,
+			 user_password,
+			 user_uinsert,
+			 user_finsert,
+			 user_fupdate 
+			FROM user
+		';
+		if(!empty($filter)){
+			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+		}
+
+		return $sql;
+	}
+
+}
+";
 $cabecera  = "";
 $variables = "";
 
 
 $contenido .= "<?php\r\n";
-$contenido .= "include(\"".$nombre_tabla.".php\");\r\n";
+$contenido .= "include(\"".ucfirst($nombre_tabla).".php\");\r\n";
 $contenido .= "class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {\r\n\r\n";
 $contenido .= "	private \$data;\r\n\r\n";
 $contenido .= "	public function setData (\$".$nombre_tabla.")\r\n";

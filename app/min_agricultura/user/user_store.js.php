@@ -14,6 +14,8 @@ var storeUser = new Ext.data.JsonStore({
 		{name:'user_full_name', type:'string'},
 		{name:'user_email', type:'string'},
 		{name:'user_password', type:'string'},
+		{name:'user_active', type:'string'},
+		{name:'user_session', type:'string'},
 		{name:'user_uinsert', type:'float'},
 		{name:'user_finsert', type:'date', dateFormat:'Y-m-d H:i:s'},
 		{name:'user_fupdate', type:'date', dateFormat:'Y-m-d H:i:s'}
@@ -37,6 +39,8 @@ var cmUser = new Ext.grid.ColumnModel({
 		{header:'<?php print _USER_FULL_NAME; ?>', align:'left', hidden:false, dataIndex:'user_full_name'},
 		{header:'<?php print _USER_EMAIL; ?>', align:'left', hidden:false, dataIndex:'user_email'},
 		{header:'<?php print _USER_PASSWORD; ?>', align:'left', hidden:false, dataIndex:'user_password'},
+		{header:'<?php print _USER_ACTIVE; ?>', align:'left', hidden:false, dataIndex:'user_active'},
+		{header:'<?php print _USER_SESSION; ?>', align:'left', hidden:false, dataIndex:'user_session'},
 		{xtype:'numbercolumn', header:'<?php print _USER_UINSERT; ?>', align:'right', hidden:false, dataIndex:'user_uinsert'},
 		{xtype:'datecolumn', header:'<?php print _USER_FINSERT; ?>', align:'left', hidden:false, dataIndex:'user_finsert', format:'Y-m-d, g:i a'},
 		{xtype:'datecolumn', header:'<?php print _USER_FUPDATE; ?>', align:'left', hidden:false, dataIndex:'user_fupdate', format:'Y-m-d, g:i a'}
@@ -82,6 +86,8 @@ var formUser = new Ext.FormPanel({
 			{name:'user_full_name', mapping:'user_full_name', type:'string'},
 			{name:'user_email', mapping:'user_email', type:'string'},
 			{name:'user_password', mapping:'user_password', type:'string'},
+			{name:'user_active', mapping:'user_active', type:'string'},
+			{name:'user_session', mapping:'user_session', type:'string'},
 			{name:'user_uinsert', mapping:'user_uinsert', type:'float'},
 			{name:'user_finsert', mapping:'user_finsert', type:'date'},
 			{name:'user_fupdate', mapping:'user_fupdate', type:'date'}
@@ -133,6 +139,24 @@ var formUser = new Ext.FormPanel({
 				,name:'user_password'
 				,fieldLabel:'<?php print _USER_PASSWORD; ?>'
 				,id:modulo+'user_password'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				,xtype:'textfield'
+				,name:'user_active'
+				,fieldLabel:'<?php print _USER_ACTIVE; ?>'
+				,id:modulo+'user_active'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				,xtype:'textfield'
+				,name:'user_session'
+				,fieldLabel:'<?php print _USER_SESSION; ?>'
+				,id:modulo+'user_session'
 				,allowBlank:false
 			}]
 		},{
