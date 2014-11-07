@@ -34,7 +34,6 @@ class Connection
 	}
 	public function setConnection($database)
 	{
-		print('PRUEBA ='.$database);
 		require PATH_APP.'lib/config.php';
 
 		if (empty($connections[$database])) {

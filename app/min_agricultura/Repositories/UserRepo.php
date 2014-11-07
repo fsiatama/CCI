@@ -1,5 +1,6 @@
 <?php
 
+require PATH_APP.'min_agricultura/Ado/UserAdo.php';
 require PATH_APP.'min_agricultura/Entities/User.php';
 require 'BaseRepo.php';
 
@@ -9,13 +10,23 @@ class UserRepo extends BaseRepo {
 	{
 		return new User;
 	}
+	
+	public function getModelAdo()
+	{
+		return new UserAdo;
+	}
 
 	public function login($params)
 	{
-		var_dump($this->connection);
 		extract($params);
-		$result = $this->model->login($id);
-		return $email;
+		
+		$this->model->setUser_email($email);
+		$this->model->setUser_password($password);
+
+		$result = $this->modelAdo->lista($this->model);
+		var_dump($result);
+
+		return $result;
 	}
 
 }

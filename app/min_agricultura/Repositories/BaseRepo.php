@@ -1,17 +1,17 @@
 <?php
 
-require PATH_APP.'lib/connection/Connection.php';
-
-abstract class BaseRepo extends Connection {
+abstract class BaseRepo {
 	
 	protected $model;
+	protected $modelAdo;
 
 	public function __construct()
 	{
-		parent::__construct('min_agricultura');
-		$this->model = $this->getModel();
+		$this->model    = $this->getModel();
+		$this->modelAdo = $this->getModelAdo();
 	}
 	abstract public function getModel();
+	abstract public function getModelAdo();
 	
 	public function find($id)
 	{
