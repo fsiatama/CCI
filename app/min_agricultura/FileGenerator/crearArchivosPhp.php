@@ -1,6 +1,7 @@
 <?php
 ini_set('display_errors', true);
 error_reporting(E_ALL);
+
 $base         = "min_agricultura"; //$_GET["db"];
 $nombre_tabla = "user"; //$_GET["tabla"];
 
@@ -12,7 +13,7 @@ if(!file_exists($nombre_tabla)){
 	mkdir($nombre_tabla);
 }
 
-include('../adodb5/adodb.inc.php');	   # Carga el codigo comun de ADOdb
+include('../../adodb5/adodb.inc.php');	   # Carga el codigo comun de ADOdb
 
 
 $conn = &ADONewConnection('mysqli');  # crea la conexion
@@ -49,12 +50,12 @@ if($llave_primaria === false){
 	print "no existe llave primaria";
 	exit();
 }
-$cabecera .= $variables;
+$cabecera .= $variables."\r\n";
 $cabecera .= $contenido;
-$cabecera .= "}\r\n?>";
+$cabecera .= "}";
 //printf($contenido);
 
-$archivo = $nombre_tabla . "/" . $nombre_tabla.".php";
+$archivo = $nombre_tabla . "/" . ucfirst($nombre_tabla).".php";
 if(!file_exists($archivo)){
 	$fp = fopen($archivo,"w+");
 	fwrite($fp, $cabecera);
@@ -64,179 +65,96 @@ else {
 	print $archivo . " ya existe, no se ha creado \r\n";
 }
 
-
-$contenido = "";
-$cabecera  = "";
-$variables = "";
-
-
-$contenido .= "<?php\r\n";
-$contenido .= "include(\"".$nombre_tabla.".php\");\r\n";
-$contenido .= "class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {\r\n\r\n";
-$contenido .= "	private \$data;\r\n\r\n";
-$contenido .= "	public function setData (\$".$nombre_tabla.")\r\n";
-$contenido .= "	{\r\n";
+/******************************************************************************************************/
+/*********************************Inicia creacion del Ado**********************************************/
+/******************************************************************************************************/
+$getters = "";
 foreach($result as $key => $campos){
-	$contenido .= "		\$" . $campos . " = \$" . $nombre_tabla ."->get".ucfirst($campos)."();\r\n";
+	$getters .= "		\$" . $campos . " = \$" . $nombre_tabla ."->get".ucfirst($campos)."();\r\n";
 }
-$contenido .= "\r\n";
-$contenido .= "		\$this->data = compact(\r\n";
-$contenido .= "			'".implode("',\r\n			'",$result)."'\r\n";
-$contenido .= "		);\r\n";
-$contenido .= "	}\r\n\r\n";
-$contenido .= "	public function lista(\$".$nombre_tabla.")\r\n";
-$contenido .= "	{\r\n";
-$contenido .= "		\$conn = \$this->getConnection();\r\n";
-$contenido .= "		\$filter = array();\r\n";
-$contenido .= "		foreach(\$this->data as \$key => \$data){\r\n";
-$contenido .= "			if (\$data <> ''){\r\n";	
-$contenido .= "				\$filter[] = \$key . \" = '\" . \$data .\"'\";\r\n";
-$contenido .= "			}\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		\$sql  = 'SELECT * FROM ".$nombre_tabla."';\r\n";
-$contenido .= "		if(!empty(\$filter)){\r\n";
-$contenido .= "			\$sql .= ' WHERE '. implode(' AND ', \$filter);\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		\$rs   = \$conn->Execute(\$sql);\r\n";
-$contenido .= "		\$result = array();\r\n";
-$contenido .= "		if(!\$rs){\r\n";
-$contenido .= "			return \$conn->ErrorMsg();\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		\$total = \$rs->RecordCount();\r\n";
-$contenido .= "		while(!\$rs->EOF){\r\n";
-$contenido .= "			\$result[\"datos\"][] = \$rs->fields;\r\n";
-$contenido .= "			\$rs->MoveNext();\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		\$result[\"total\"] = \$total;\r\n";
-$contenido .= "		\$rs->Close();\r\n";
-$contenido .= "		return \$result;\r\n";
-$contenido .= "	}\r\n\r\n";
 
-$contenido .= "	public function lista_filtro(\$query, \$queryValuesIndicator, \$limit)\r\n";
-$contenido .= "	{\r\n";
-$contenido .= "		\$conn = \$this->getConnection();\r\n";
-$contenido .= "		\$filtro = array();\r\n";
+$contenido = "
+<?php
 
-$contenido .= "		if(\$queryValuesIndicator && is_array(\$query)){\r\n";
-$contenido .= "			\$filtro[] = \"".$llave_primaria." IN('\".implode(\"','\",\$query).\"')\";\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		else{\r\n";
-$contenido .= "			if(is_array(\$query)){\r\n";
-$contenido .= "				\$tmp_query = array_pop(\$query);\r\n";
-$contenido .= "				\$filtro[] = \"".$llave_primaria." IN('\".implode(\"','\",\$query).\"')\";\r\n";
-$contenido .= "				\$query = \$tmp_query;\r\n";
-$contenido .= "			}\r\n";
-$contenido .= "			else{\r\n";
+require 'BaseAdo.php';
 
-$variables = array();
-foreach($result as $key => $campos){
-	$variables[] = $campos." LIKE '%\" . \$query .\"%'";
+class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {
+
+	protected function setTable()
+	{
+		\$this->table = '".$nombre_tabla."';
+	}
+
+	protected function setPrimaryKey()
+	{
+		\$this->primaryKey = '".$llave_primaria."';
+	}
+
+	protected function setData()
+	{
+		\$".$nombre_tabla." = \$this->getModel();
+
+".$getters."
+		\$this->data = compact(
+			'".implode("',\r\n			'", $result)."'
+		);
+	}
+
+	public function create(\$".$nombre_tabla.")
+	{
+		\$conn = \$this->getConnection();
+		\$this->setModel(\$".$nombre_tabla.");
+		\$this->setData();
+
+		\$sql = '
+			INSERT INTO user (
+				".implode(",\r\n				", $result)."
+			)
+			VALUES (
+				\"'.\$this->data['".implode("'].'\",\r\n				\"'.\$this->data['", $result)."'].'\"
+			)
+		';
+		\$resultSet = \$conn->Execute(\$sql);
+		\$result = \$this->buildResult(\$resultSet, \$conn->Insert_ID());
+
+		return \$result;
+	}
+
+	public function buildSelect()
+	{
+		\$filter = array();
+		\$operator = \$this->getOperator();
+		\$joinOperator = ' AND ';
+		foreach(\$this->data as \$key => \$data){
+			if (\$data <> ''){
+				if (\$operator == '=') {
+					\$filter[] = \$key . ' ' . \$operator . ' \"' . \$data . '\"';
+				}
+				elseif ($operator == 'IN') {
+					\$filter[] = \$key . ' ' . \$operator . '(\"' . \$data . '\")';
+				}
+				else {
+					\$filter[] = \$key . ' ' . \$operator . ' \"%' . \$data . '%\"';
+					\$joinOperator = ' OR ';
+				}
+			}
+		}
+
+		\$sql = 'SELECT
+			 ".implode(",\r\n			 ", $result)."
+			FROM user
+		';
+		if(!empty(\$filter)){
+			\$sql .= ' WHERE ('. implode( \$joinOperator, \$filter ).')';
+		}
+
+		return \$sql;
+	}
+
 }
-$contenido .= "				\$filtro[] = \"(\r\n";
-$contenido .= "					   ".implode("\r\n					OR ",$variables)."\r\n";
-$contenido .= "				)\";\r\n";
-$contenido .= "			}\r\n";
-$contenido .= "		}\r\n";
+";
 
-$contenido .= "		\$sql  = 'SELECT ".implode(",",$result)." FROM ".$nombre_tabla."';\r\n";
-$contenido .= "		if(!empty(\$filtro)){\r\n";
-$contenido .= "			\$sql .= ' WHERE '. implode(' AND ', \$filtro);\r\n";
-$contenido .= "		}\r\n";
-
-$contenido .= "		\$result = array();\r\n";
-$contenido .= "		if(\$queryValuesIndicator && is_array(\$query)){\r\n";
-$contenido .= "			\$rs = \$conn->Execute(\$sql);\r\n";
-$contenido .= "			\$result[\"total\"] = \$rs->RecordCount();\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		elseif(\$limit != \"\"){\r\n";
-$contenido .= "			\$arr_limit = explode(\",\",\$limit);\r\n";
-$contenido .= "			\$savec = \$ADODB_COUNTRECS;\r\n";
-$contenido .= "			if(\$conn->pageExecuteCountRows) \$ADODB_COUNTRECS = true;\r\n";
-$contenido .= "			\$rs = \$conn->PageExecute(\$sql,\$arr_limit[1], \$arr_limit[0]);\r\n";
-$contenido .= "			\$ADODB_COUNTRECS = \$savec;\r\n";
-$contenido .= "			\$result[\"total\"] = \$rs->_maxRecordCount;\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		if(!\$rs){\r\n";
-$contenido .= "			return \$conn->ErrorMsg();\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		while(!\$rs->EOF){\r\n";
-$contenido .= "			\$result[\"datos\"][] = \$rs->fields;\r\n";
-$contenido .= "			\$rs->MoveNext();\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		\$rs->Close();\r\n";
-$contenido .= "		return \$result;\r\n";
-$contenido .= "	}\r\n\r\n";
-
-$contenido .= "	public function insertar(\$".$nombre_tabla.")\r\n";
-$contenido .= "	{\r\n";
-$contenido .= "		\$conn = \$this->getConnection();\r\n";
-
-//print(implode(",",$result));
-$contenido .= "		\$sql = \"\r\n";
-$contenido .= "			INSERT INTO ".$nombre_tabla." (\r\n";
-$contenido .= "				".implode(",\r\n				",$result)."\r\n";
-$contenido .= "			)\r\n";
-$contenido .= "			VALUES (\r\n";
-$contenido .= "				'\".\$".implode(".\"',\r\n				'\".\$",$result).".\"'\r\n";
-$contenido .= "			)\r\n";
-$contenido .= "		\";\r\n";
-$contenido .= "		\$rs   = \$conn->Execute(\$sql);\r\n";
-$contenido .= "		\$return = array();\r\n";
-$contenido .= "		if(!\$rs){\r\n";
-$contenido .= "			\$return[\"success\"] = false;\r\n";
-$contenido .= "			\$return[\"error\"]  = \$conn->ErrorMsg();\r\n";
-$contenido .= "			return \$return;\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		\$return[\"success\"] = true;\r\n";
-$contenido .= "		\$return[\"insert_id\"] = \$conn->Insert_ID();\r\n";
-$contenido .= "		\$rs->Close();\r\n";
-$contenido .= "		return \$return;\r\n";
-$contenido .= "	}\r\n";
-
-$variables = array();
-$contenido .= "	public function actualizar(\$".$nombre_tabla.")\r\n";
-$contenido .= "	{\r\n";
-$contenido .= "		\$conn = \$this->conn;\r\n";
-
-$contenido .= "		\$sqlUpd = array();\r\n";
-$contenido .= "		foreach(\$".$nombre_tabla." as \$key => \$value){\r\n";
-$contenido .= "			if(\$value != \"\"){\r\n";
-$contenido .= "				\$sqlUpd[] = \$key. ' = \"' . \$value . '\"';\r\n";
-$contenido .= "			}\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		\$".$llave_primaria." = \$".$nombre_tabla."->get".ucfirst($llave_primaria)."();\r\n";
-
-
-$contenido .= "		\$sql = \"\r\n";
-$contenido .= "			UPDATE ".$nombre_tabla." SET\r\n";
-$contenido .= "				\".implode(\", \",\$sqlUpd).\"\r\n";
-$contenido .= "			WHERE ".$llave_primaria." = '\".\$".$llave_primaria.".\"'\r\n";
-$contenido .= "		\";\r\n";
-$contenido .= "		\$rs   = \$conn->Execute(\$sql);\r\n";
-$contenido .= "		if(!\$rs){\r\n";
-$contenido .= "			return \$conn->ErrorMsg();\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		\$rs->Close();\r\n";
-$contenido .= "		return true;\r\n";
-$contenido .= "	}\r\n";
-
-$contenido .= "	public function borrar(\$".$nombre_tabla.")\r\n";
-$contenido .= "	{\r\n";
-$contenido .= "		\$conn = \$this->conn;\r\n";
-$contenido .= "		\$" . $llave_primaria . " = \$" . $nombre_tabla ."->get".ucfirst($llave_primaria)."();\r\n";
-$contenido .= "		\$sql  = \"DELETE FROM ".$nombre_tabla." WHERE ".$llave_primaria." = '\".\$".$llave_primaria.".\"'\";\r\n";
-$contenido .= "		\$rs   = \$conn->Execute(\$sql);\r\n";
-$contenido .= "		if(!\$rs){\r\n";
-$contenido .= "			return \$conn->ErrorMsg();\r\n";
-$contenido .= "		}\r\n";
-$contenido .= "		\$rs->Close();\r\n";
-$contenido .= "		return true;\r\n";
-$contenido .= "	}\r\n";
-$contenido .= "}\r\n";
-$contenido .= "?>\r\n";
-
-
-$archivo = $nombre_tabla . "/" .$nombre_tabla."Ado.php";
+$archivo = $nombre_tabla . "/" .ucfirst($nombre_tabla)."Ado.php";
 if(!file_exists($archivo)){
 	$fp = fopen($archivo,"w+");
 	fwrite($fp, $contenido);

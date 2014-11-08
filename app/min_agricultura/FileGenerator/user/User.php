@@ -5,8 +5,6 @@ class User {
 	private $user_full_name;
 	private $user_email;
 	private $user_password;
-	private $user_active;
-	private $user_session;
 	private $user_uinsert;
 	private $user_finsert;
 	private $user_fupdate;
@@ -41,22 +39,6 @@ class User {
 
 	public function getUser_password(){
 		return $this->user_password;
-	}
-
-	public function setUser_active($user_active){
-		$this->user_active = $user_active;
-	}
-
-	public function getUser_active(){
-		return $this->user_active;
-	}
-
-	public function setUser_session($user_session){
-		$this->user_session = $user_session;
-	}
-
-	public function getUser_session(){
-		return $this->user_session;
 	}
 
 	public function setUser_uinsert($user_uinsert){

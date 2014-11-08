@@ -14,8 +14,6 @@ if(isset($accion)){
 			$user->setUser_full_name($user_full_name);
 			$user->setUser_email($user_email);
 			$user->setUser_password($user_password);
-			$user->setUser_active($user_active);
-			$user->setUser_session($user_session);
 			$user->setUser_uinsert($user_uinsert);
 			$user->setUser_finsert($user_finsert);
 			$user->setUser_fupdate($user_fupdate);
@@ -54,8 +52,6 @@ if(isset($accion)){
 			$user->setUser_full_name($user_full_name);
 			$user->setUser_email($user_email);
 			$user->setUser_password($user_password);
-			$user->setUser_active($user_active);
-			$user->setUser_session($user_session);
 			$user->setUser_uinsert($user_uinsert);
 			$user->setUser_finsert($user_finsert);
 			$user->setUser_fupdate($user_fupdate);
@@ -82,8 +78,6 @@ if(isset($accion)){
 			$user->setUser_full_name($user_full_name);
 			$user->setUser_email($user_email);
 			$user->setUser_password($user_password);
-			$user->setUser_active($user_active);
-			$user->setUser_session($user_session);
 			$user->setUser_uinsert($user_uinsert);
 			$user->setUser_finsert($user_finsert);
 			$user->setUser_fupdate($user_fupdate);
