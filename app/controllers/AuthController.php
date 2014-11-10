@@ -24,9 +24,8 @@ class AuthController {
 	{
 
 		$result = $this->userRepo->login($postParams);
-
-		var_dump($result);
-		//return new View('home', ['titulo' => 'Clase 2','prueba' => 333]);
+		
+		return $result;
 	}
 
 }

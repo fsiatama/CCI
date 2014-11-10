@@ -18,7 +18,11 @@ class Connection
     public function __construct($database)
 	{
 		$ADODB_CACHE_DIR = PATH_APP.'cache';
-		define('ADODB_FORCE_VALUE',3);//PARA TOMAR LOS VALUES CON CADENA 'null' como NULL de mysql
+		
+		if (!defined('ADODB_FORCE_VALUE')) {
+			//PARA TOMAR LOS VALUES CON CADENA 'null' como NULL de mysql
+			define('ADODB_FORCE_VALUE',3);
+		}
 		
 		$this->setConnection($database);
 		

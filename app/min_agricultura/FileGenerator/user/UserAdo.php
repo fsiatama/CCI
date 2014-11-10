@@ -23,6 +23,8 @@ class UserAdo extends BaseAdo {
 		$user_full_name = $user->getUser_full_name();
 		$user_email = $user->getUser_email();
 		$user_password = $user->getUser_password();
+		$user_active = $user->getUser_active();
+		$user_profile_id = $user->getUser_profile_id();
 		$user_uinsert = $user->getUser_uinsert();
 		$user_finsert = $user->getUser_finsert();
 		$user_fupdate = $user->getUser_fupdate();
@@ -32,6 +34,8 @@ class UserAdo extends BaseAdo {
 			'user_full_name',
 			'user_email',
 			'user_password',
+			'user_active',
+			'user_profile_id',
 			'user_uinsert',
 			'user_finsert',
 			'user_fupdate'
@@ -50,6 +54,8 @@ class UserAdo extends BaseAdo {
 				user_full_name,
 				user_email,
 				user_password,
+				user_active,
+				user_profile_id,
 				user_uinsert,
 				user_finsert,
 				user_fupdate
@@ -59,6 +65,8 @@ class UserAdo extends BaseAdo {
 				"'.$this->data['user_full_name'].'",
 				"'.$this->data['user_email'].'",
 				"'.$this->data['user_password'].'",
+				"'.$this->data['user_active'].'",
+				"'.$this->data['user_profile_id'].'",
 				"'.$this->data['user_uinsert'].'",
 				"'.$this->data['user_finsert'].'",
 				"'.$this->data['user_fupdate'].'"
@@ -80,7 +88,7 @@ class UserAdo extends BaseAdo {
 				if ($operator == '=') {
 					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
 				}
-				elseif ( == 'IN') {
+				elseif ($operator == 'IN') {
 					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
 				}
 				else {
@@ -95,6 +103,8 @@ class UserAdo extends BaseAdo {
 			 user_full_name,
 			 user_email,
 			 user_password,
+			 user_active,
+			 user_profile_id,
 			 user_uinsert,
 			 user_finsert,
 			 user_fupdate

@@ -13,8 +13,4 @@ abstract class BaseRepo {
 	abstract public function getModel();
 	abstract public function getModelAdo();
 	
-	public function find($id)
-	{
-		return $this->model->find($id);
-	}
 }

@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-/*ini_set('display_errors', true);
-error_reporting(E_ALL);*/
+ini_set('display_errors', true);
+error_reporting(E_ALL);
 //ini_set('session.cookie_domain', '.' );
 //date_default_timezone_set('America/Bogota');
 

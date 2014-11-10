@@ -7,7 +7,7 @@ class User {
 	private $user_email;
 	private $user_password;
 	private $user_active;
-	private $user_session;
+	private $user_profile_id;
 	private $user_uinsert;
 	private $user_finsert;
 	private $user_fupdate;
@@ -37,7 +37,7 @@ class User {
 	}
 
 	public function setUser_password($user_password){
-		$this->user_password = md5($user_password);
+		$this->user_password = $user_password;
 	}
 
 	public function getUser_password(){
@@ -52,12 +52,12 @@ class User {
 		return $this->user_active;
 	}
 
-	public function setUser_session($user_session){
-		$this->user_session = $user_session;
+	public function setUser_profile_id($user_profile_id){
+		$this->user_profile_id = $user_profile_id;
 	}
 
-	public function getUser_session(){
-		return $this->user_session;
+	public function getUser_profile_id(){
+		return $this->user_profile_id;
 	}
 
 	public function setUser_uinsert($user_uinsert){
@@ -83,4 +83,5 @@ class User {
 	public function getUser_fupdate(){
 		return $this->user_fupdate;
 	}
+
 }

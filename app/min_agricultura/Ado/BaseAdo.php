@@ -166,8 +166,8 @@ abstract class BaseAdo extends Connection {
 		else{
 			$result["success"] = true;
 			$result["total"]  = $resultSet->RecordCount();
-			if ($insertId) {
-				$result["success"] = $insertId;
+			if ($insertId !== false) {
+				$result["insertId"] = $insertId;
 			}
 			while(!$resultSet->EOF){
 				$result["data"][] = $resultSet->fields;

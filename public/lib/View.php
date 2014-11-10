@@ -39,9 +39,12 @@ class View extends Response {
 
 			require PATH_APP."views/$template.tpl.php";
 
-			$tpl_content = ob_get_clean();
-
-			require PATH_APP."views/layout.tpl.php";
+			if (empty($is_template)) {
+				
+				$tpl_content = ob_get_clean();
+				require PATH_APP."views/layout.tpl.php";
+				
+			}
 		});
 	}
 

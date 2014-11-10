@@ -7,32 +7,30 @@
 			</div>
 			<div class="panel-body">
 
-				<form class="form-horizontal" role="form" method="POST" action="auth/login">
+				<form class="form-horizontal" role="form" method="POST" id="loginForm">
 					<div class="form-group">
 						<label for="inputEmail" class="col-sm-3 control-label">Email</label>
 						<div class="col-sm-9">
 							<input type="email" class="form-control" id="inputEmail" name="email" placeholder="Correo Electrónico" required autofocus>
-							<p class="error_message"><?= $error_email ?></p>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputPassword" class="col-sm-3 control-label">Password</label>
 						<div class="col-sm-9">
 							<input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password" required="">
-							<p class="error_message"><?= $error_password ?></p>
 						</div>
 					</div>
 					<div class="form-group last">
 						<div class="col-sm-offset-6 col-sm-6">
-							<button type="submit" class="btn btn-success btn-sm btn-block">Ingresar</button>
+							<button id="loginFormSubmit" type="submit" class="btn btn-success btn-sm btn-block">Ingresar</button>
 						</div>
 					</div>
 				</form>
 
 			</div>
-			<div class="panel-footer">
+			<!-- <div class="panel-footer">
 				<a href="#" class="">Olvido su contraseña?</a>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </div>

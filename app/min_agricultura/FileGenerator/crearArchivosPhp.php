@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "user"; //$_GET["tabla"];
+$nombre_tabla = "session"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -73,8 +73,7 @@ foreach($result as $key => $campos){
 	$getters .= "		\$" . $campos . " = \$" . $nombre_tabla ."->get".ucfirst($campos)."();\r\n";
 }
 
-$contenido = "
-<?php
+$contenido = "<?php
 
 require 'BaseAdo.php';
 
@@ -107,7 +106,7 @@ class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {
 		\$this->setData();
 
 		\$sql = '
-			INSERT INTO user (
+			INSERT INTO ".$nombre_tabla." (
 				".implode(",\r\n				", $result)."
 			)
 			VALUES (
@@ -130,7 +129,7 @@ class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {
 				if (\$operator == '=') {
 					\$filter[] = \$key . ' ' . \$operator . ' \"' . \$data . '\"';
 				}
-				elseif ($operator == 'IN') {
+				elseif (\$operator == 'IN') {
 					\$filter[] = \$key . ' ' . \$operator . '(\"' . \$data . '\")';
 				}
 				else {
@@ -142,7 +141,7 @@ class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {
 
 		\$sql = 'SELECT
 			 ".implode(",\r\n			 ", $result)."
-			FROM user
+			FROM ".$nombre_tabla."
 		';
 		if(!empty(\$filter)){
 			\$sql .= ' WHERE ('. implode( \$joinOperator, \$filter ).')';
@@ -163,6 +162,43 @@ if(!file_exists($archivo)){
 else {
 	print $archivo . " ya existe, no se ha creado ";
 }
+
+/******************************************************************************************************/
+/*********************************Inicia creacion del Repo**********************************************/
+/******************************************************************************************************/
+
+$contenido = "<?php
+
+require PATH_APP.'".$base."/Entities/".ucfirst($nombre_tabla).".php';
+require PATH_APP.'".$base."/Ado/".ucfirst($nombre_tabla)."Ado.php';
+require_once ('BaseRepo.php');
+
+class ".ucfirst($nombre_tabla)."Repo extends BaseRepo {
+
+	public function getModel()
+	{
+		return new ".ucfirst($nombre_tabla).";
+	}
+	
+	public function getModelAdo()
+	{
+		return new ".ucfirst($nombre_tabla)."Ado;
+	}
+
+}	
+
+";
+
+$archivo = $nombre_tabla . "/" .ucfirst($nombre_tabla)."Repo.php";
+if(!file_exists($archivo)){
+	$fp = fopen($archivo,"w+");
+	fwrite($fp, $contenido);
+	fclose($fp);
+}
+else {
+	print $archivo . " ya existe, no se ha creado ";
+}
+
 
 
 $contenido = "";
