@@ -208,20 +208,30 @@ Ext.onReady(function(){
 		} 
 	});
 	
-	
-	
-	Ext.override(Ext.data.Store,{
+	Ext.override(Ext.data.Store, {
 		listeners:{
-			'loadexception': function(proxy, options, response){
-				Ext.Msg.show({
+			'loadexception': function(proxy, options, response){ 	
+				//console.log(proxy, options, response);		
+				Ext.MessageBox.show({
 					title: '',
-					msg: Ext.decode(response.responseText).errors.reason,
+					msg: Ext.decode(response.responseText).msg,
 					buttons: Ext.Msg.OK,
 					closable:false,
 					icon: Ext.MessageBox.ERROR
 				});
 			}
+			,'exception': function(a,b,c,d,e,f,g){ 	
+				console.log(a,b,c,d,e,f,g);
+			}
 		}
+	});
+	
+	Ext.override(Ext.data.Connection,{
+		failure: function (response, opts){
+	        alert('email request fail! ' + response.status);
+	        //var jsonResp = Ext.util.JSON.decode(response.responseText)
+	        //Ext.Msg.alert("Error",jsonResp.error);
+	    }
 	});
 	
 	Ext.override(Ext.ux.Plugin.RemoteComponent, {
@@ -245,23 +255,3 @@ Ext.onReady(function(){
 		}
 	});
 });
-
-function validarSeccion(seccion_id, node_id){
-	Ext.Ajax.request({
-		 url:'proceso/seccion_cv/'
-		,params: {
-			 accion: 'validar_seccion'
-			,id: seccion_id
-		}
-		,callback: function(options, success, response){
-			var json = Ext.util.JSON.decode(response.responseText);
-			Ext.getCmp(node_id).setIconClass(json.cls);
-			//console.log(node_id,json.cls);
-			var tab = Ext.getCmp('tab-' + node_id);
-			if(tab){
-				
-				tab.setIconClass(json.cls);
-			}
-		}
-	});
-}

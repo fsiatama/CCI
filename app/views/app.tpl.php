@@ -10,9 +10,9 @@
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
-		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+		<!-- <link rel="stylesheet" href="css/bootstrap-theme.min.css">-->
 
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"> 
 		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/resources/css/ext-all.css" />
 		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/examples/ux/css/Portal.css" />
 		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/resources/css/xtheme-gray-extend.css">

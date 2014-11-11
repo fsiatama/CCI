@@ -1,5 +1,3 @@
-<?= var_dump($_SESSION); ?>
-
 Header = function(){
 
 	function logout(){
@@ -14,10 +12,8 @@ Header = function(){
 					,callback: function(options, success, response){
 						var json = Ext.util.JSON.decode(response.responseText);
 						if(json.success){
-							setTimeout(function(){
-								Ext.Msg.hide();
-								location.href = '<?php print URL_RAIZ; ?>'
-							}, 3000);
+							Ext.Msg.hide();
+							location.href = json.url;
 						}
 					}
 				});
@@ -30,9 +26,42 @@ Header = function(){
 	function fecha(){
 		var fecha = new Date();
 		var formato = 'd/m/Y';
-
-
 		return "<img src='img/date.png' width='24' height='24' border='0' align='middle' style='vertical-align:middle;' />&nbsp;&nbsp;"+fecha.format(formato);
+	}
+
+	function getHeaderMenu () {
+
+		var userMenu = new Ext.menu.Menu();
+
+		Ext.Ajax.request({
+			 url:'auth/headerMenu/'
+			,callback: function(options, success, response){
+				var json = Ext.util.JSON.decode(response.responseText);
+
+				var text = '<b>'+json.text+'</b>'
+
+				var tbItem = Ext.getCmp('UserHeaderMenu');
+
+				tbItem.setText(text);
+
+				var ret = {
+					text: 'Cerrar Sesión'
+					,handler: logout
+					,iconCls: 'silk-logout16'
+					,listeners: {
+						'render': function(){
+							globalKeyMap.accessKey({
+								key:'s'
+								,alt:true
+							}, logout, this);
+						}
+					}
+				};
+				userMenu.add(ret);
+			}
+		});
+
+		return userMenu;
 	}
 
 	var globalKeyMap = new Ext.KeyMap(document);
@@ -47,26 +76,18 @@ Header = function(){
 	var toolbar = new Ext.Toolbar({
 		height: 65
 		,items:[
-			'<img src="img/logo.png" alt="Logo" width="161" height="45" border="0" align="middle" style="vertical-align:middle;margin:8px;" />'
-			,'->',
-		{
-			text: '<?= $_SESSION["session_name"]; ?>'
-			,menu: [{
-				text: 'Cerrar Sesión'
-				,handler: logout
-				,listeners: {
-					'render': function(){
-						globalKeyMap.accessKey({
-							key:'s'
-							,alt:true
-							}, logout, this);
-					}
-				}
-			}]
+			'<img src="img/logo.png" alt="Logo" width="190" height="61" border="0" align="middle" style="vertical-align:middle;margin:0;" />'
+		,'->'
+		,{
+			text: ''
+			,id: 'UserHeaderMenu'
+			,iconCls: 'silk-user'
+			,menu: getHeaderMenu()
 		}
+		,'-'
 			,fecha()
-			,'-',
-			"<img src='img/time.png' width='24' height='24' border='0' align='middle' style='vertical-align:middle;' />&nbsp;"
+		,'-'
+			,"<img src='img/time.png' width='24' height='24' border='0' align='middle' style='vertical-align:middle;' />&nbsp;"
 			,reloj
 		]
 	});

@@ -2,6 +2,7 @@
 
 require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
+
 /**
 * AuthController
 *
@@ -14,16 +15,31 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 class AuthController {
 	
 	protected $userRepo;
+	protected $sessionRepo;
 
 	public function __construct()
 	{
 		$this->userRepo = new UserRepo;
+		$this->sessionRepo = new SessionRepo;
 	}
 
 	public function loginAction($urlParams, $postParams)
 	{
-
 		$result = $this->userRepo->login($postParams);
+		
+		return $result;
+	}
+
+	public function logoutAction()
+	{
+		$result = $this->sessionRepo->logout();
+		
+		return $result;
+	}
+
+	public function headerMenuAction()
+	{
+		$result = $this->userRepo->headerMenu();
 		
 		return $result;
 	}

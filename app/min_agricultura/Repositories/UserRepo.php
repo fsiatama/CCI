@@ -59,4 +59,16 @@ class UserRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function headerMenu()
+	{
+		$sessionRepo = new SessionRepo;
+		$result = false;
+		if ($sessionRepo->validSession()) {
+			$result = [
+				'text' => $_SESSION['session_name']
+			];
+		}
+		return $result;
+	}
+
 }
