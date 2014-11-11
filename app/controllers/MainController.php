@@ -4,7 +4,8 @@ class MainController {
 
 	public function indexAction()
 	{
-		return new View('app', array('is_template' => true));
+		$is_template = true;
+		return new View('app', compact('is_template'));
 	}
 
 }

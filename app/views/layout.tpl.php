@@ -9,6 +9,7 @@
 		<title></title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="google" content="notranslate" />
 
 		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="css/main.css">
@@ -49,7 +50,7 @@
 					<!-- /modal body -->
 
 					<div class="modal-footer margin-top0"><!-- modal footer -->
-						<button class="btn btn-default" data-dismiss="modal">'._CLOSE.'</button>
+						<button class="btn btn-default" data-dismiss="modal">Cerrar</button>
 					</div><!-- /modal footer -->
 
 				</div>
@@ -72,7 +73,7 @@
 					<!-- /modal body -->
 
 					<div class="modal-footer margin-top0"><!-- modal footer -->
-						<button class="btn btn-default" data-dismiss="modal">'._CLOSE.'</button>
+						<button class="btn btn-default" data-dismiss="modal">Cerrar</button>
 					</div><!-- /modal footer -->
 
 				</div>

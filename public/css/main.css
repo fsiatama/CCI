@@ -16,3 +16,26 @@ body {
 .form-group.last {
   margin-bottom:0px;
 }
+
+#loading-mask {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background: #999999;
+     z-index: 1;
+}
+#loading {
+     position: absolute;
+     top: 40%;
+     left: 45%;
+     z-index: 2;
+}
+#loading SPAN {
+  background: url('../img/progress.gif') no-repeat top left;
+  display: block;
+  color:#666;
+  padding-left:20px;
+  padding:5px 0 20px 40px;
+}
