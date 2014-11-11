@@ -16,17 +16,18 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`min_agricultura` /*!40100 DEFAULT CHARA
 
 USE `min_agricultura`;
 
-/*Table structure for table `category` */
+/*Table structure for table `category_menu` */
 
-DROP TABLE IF EXISTS `category`;
+DROP TABLE IF EXISTS `category_menu`;
 
-CREATE TABLE `category` (
-  `category_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `category_name` varchar(45) NOT NULL,
-  PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `category_menu` (
+  `category_menu_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `category_menu_name` varchar(45) NOT NULL,
+  `category_menu_order` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`category_menu_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-/*Data for the table `category` */
+/*Data for the table `category_menu` */
 
 /*Table structure for table `indicator` */
 
@@ -36,7 +37,7 @@ CREATE TABLE `indicator` (
   `indicator_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `indicator_name` varchar(255) NOT NULL,
   PRIMARY KEY (`indicator_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Data for the table `indicator` */
 
@@ -103,7 +104,7 @@ CREATE TABLE `session` (
 
 /*Data for the table `session` */
 
-insert  into `session`(`session_user_id`,`session_php_id`,`session_date`,`session_active`) values (1,'lraurictrcf1dsgoe10tp3tnv0','2014-11-10 22:05:23','1');
+insert  into `session`(`session_user_id`,`session_php_id`,`session_date`,`session_active`) values (1,'25trnmt5fflnci083kkgqnaah0','2014-11-11 03:48:05','1');
 
 /*Table structure for table `user` */
 
@@ -120,11 +121,11 @@ CREATE TABLE `user` (
   `user_finsert` datetime NOT NULL,
   `user_fupdate` datetime NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `user` */
 
-insert  into `user`(`user_id`,`user_full_name`,`user_email`,`user_password`,`user_active`,`user_profile_id`,`user_uinsert`,`user_finsert`,`user_fupdate`) values (1,'FABIAN SIATAMA','fsiatama@sicex.com','202cb962ac59075b964b07152d234b70','1',0,1,'2014-11-07 10:44:48','0000-00-00 00:00:00');
+insert  into `user`(`user_id`,`user_full_name`,`user_email`,`user_password`,`user_active`,`user_profile_id`,`user_uinsert`,`user_finsert`,`user_fupdate`) values (1,'FABIAN SIATAMA','fsiatama@sicex.com','202cb962ac59075b964b07152d234b70','1',1,1,'2014-11-07 10:44:48','0000-00-00 00:00:00');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
