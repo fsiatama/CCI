@@ -1,6 +1,7 @@
 
 //funciones
-using.register('funciones.js', true, '/js/funciones.js?x=1');
+using.register('funciones.js', true, '/js/funciones.js');
+using.register('lang-es.js', true, '/js/dic/lang-es.js');
 
 // UX JS
 using.register('Ext.ux.SlidingPager.js', true, '<?php print URL_EXT;?>examples/ux/grid/Ext.ux.SlidingPager.js');

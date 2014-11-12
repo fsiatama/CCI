@@ -24,6 +24,14 @@ class UserRepo extends BaseRepo {
 		$user    = $this->model;
 		$userAdo = $this->modelAdo;
 
+		if (empty($email) || empty($password)) {
+			$result = array(
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			);
+			return $result;
+		}
+
 		$user->setUser_email($email);
 		$user->setUser_password($password);
 		$user->setUser_active('1');

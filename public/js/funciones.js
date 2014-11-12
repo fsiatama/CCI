@@ -227,11 +227,11 @@ Ext.onReady(function(){
 	});
 	
 	Ext.override(Ext.data.Connection,{
-		failure: function (response, opts){
-	        alert('email request fail! ' + response.status);
-	        //var jsonResp = Ext.util.JSON.decode(response.responseText)
-	        //Ext.Msg.alert("Error",jsonResp.error);
-	    }
+		listeners:{
+			'requestexception': function(conn, response, options){
+				console.log(conn, response, options);
+			}
+		}
 	});
 	
 	Ext.override(Ext.ux.Plugin.RemoteComponent, {
@@ -255,3 +255,8 @@ Ext.onReady(function(){
 		}
 	});
 });
+
+Ext.ns('Ext.ux', 'Ext.ux.routes');
+Ext.ux.routes = {
+	 url_index: ''
+}

@@ -1,13 +1,3 @@
-<?php
-//Trae la sesión que esté asignada
-session_start();
-include($_SESSION['session_diccionario']);
-//Variables de configuración del sistema
-include ("../../../../lib/config.php");
-include ("../../../../lib/lib_sesion.php");
-?>
-/*<script>*/
-
 var ONESECOND = 1000;
 var ONEMINUTE = ONESECOND * 60;
 
@@ -21,6 +11,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 	confirmacionUsuario: null,
 	messageBoxConfig: {}, // allows developers to override the appearance of the messageBox
 	messageBoxCountdown: 5, // how long should the messageBox wait?
+	user_email: null,
 	constructor: function(config) {
 		this.addEvents({timeout: true});
 		Ext.apply(this, config);
@@ -31,7 +22,10 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 			body.on("click", this.resetTimeout, this);
 			body.on("keypress", this.resetTimeout, this);
 		}
-	},	
+	},
+	getUser: function() {
+		
+	},
 	destroy: function() {
 		var body = Ext.get(document.body);
 		body.un("click", this.resetTimeout, this);
@@ -53,7 +47,6 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 	_inactivityTask: null, // task to start countdown
 	_beginCountdown: function(){
 		this.fireEvent('timeout', this);
-		var usuario = '<?php print $_SESSION['session_login']; ?>';
 		if(!this.confirmacionUsuario){
 			Ext.TaskMgr.stopAll();
 			Ext.getCmp('norte').fireEvent('render'); // Para que no pare el Reloj
@@ -68,7 +61,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 				,border: false
 				,baseCls: 'x-panel-mc'
 				,layout: 'fit'
-				,url: '<?php print URL_RAIZ."login/". LOGIN; ?>/'
+				,url: 'auth/login'
 				,method: 'POST'
 				,autoHeight: true
 				,items: [{
@@ -81,18 +74,13 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 						,items: [{
 							 xtype: 'textfield'
 							,fieldLabel: "Usuario"
-							,name: 'user_name'
+							,name: 'email'
 							,allowBlank: false
 							,selectOnFocus: true
 							,anchor: '85%'
 							,readOnly: true
-							,value: usuario
+							,value: this.user_email
 							,msgTarget: 'qtip'
-						},{
-							xtype:'hidden'
-							,name: 'forzar'
-							,id: 'forzar'
-							,value: 0
 						}]
 					},{
 						 columnWidth: .5
@@ -132,7 +120,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 					,cls: 'silk-user-warning'
 					,autoHeight: true
 					,bodyStyle: 'padding: 10px 10px 20px 70px;'
-					,html: '<b><?php print _MENSESIONEXPIRA; ?></b>'
+					,html: Ext.ux.lang.error.session_expired
 				},
 					LoginPanel
 				]
@@ -141,7 +129,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 					 text: "Logout"
 					,iconCls: 'silk-logout16'
 					,handler: function(){
-						location.href = '<?php print URL_INGRESO; ?>';
+						location.href = Ext.ux.routes.url_index;
 					}
 				},{
 					 text: 'Aceptar'
@@ -152,27 +140,10 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 						LoginPanel.form.submit({
 							 waitTitle: " "
 							,waitMsg: "...."
-							,params: {
-								ac: '<?php print LOGIN; ?>',
-								producto:'multipais'
-							}
 							,reset: false
 							,scope: this
 							,failure: function(Login, action){
-								if(action.result.msg == 'CONF'){
-									Ext.getCmp('msgLogin').update('<b><?php print _INTRODPASS; ?></b>');
-									Ext.Msg.confirm('','<?php print _SESSION; ?>?', function(btn){
-										if(btn=='yes'){
-											Ext.getCmp("forzar").setValue("1");
-										}
-										else{
-											location.href = '<?php print URL_INGRESO; ?>';
-										}
-									});
-								}
-								else{
-									Ext.getCmp('msgLogin').update('<b>'+action.result.msg+'</b>');
-								}
+								Ext.getCmp('msgLogin').update('<b>'+action.result.msg+'</b>');
 								Ext.getCmp('password').setRawValue('');
 								LoginPanel.items.items[0].items.items[1].items.items[0].markInvalid();
 								LoginPanel.items.items[0].items.items[1].items.items[0].focus(true, 750);
@@ -195,27 +166,10 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 					LoginPanel.form.submit({
 						 waitTitle: ""
 						,waitMsg: "...."
-						,params: {
-							ac: '<?php print LOGIN; ?>',
-							producto:'multipais'
-						}
 						,reset: false
 						,scope: this
 						,failure: function(Login, action) {
-							if(action.result.msg == 'CONF'){
-								Ext.getCmp('msgLogin').update('<b><?php print _INTRODPASS; ?></b>');
-								Ext.Msg.confirm('','<?php print _SESSION; ?>?', function(btn){
-									if(btn=='yes'){
-										Ext.getCmp("forzar").setValue("1");
-									}
-									else{
-										location.href = '<?php print URL_INGRESO; ?>';
-									}
-								});
-							}
-							else{
-								Ext.getCmp('msgLogin').update('<b>'+action.result.msg+'</b>');
-							}
+							Ext.getCmp('msgLogin').update('<b>'+action.result.msg+'</b>');
 							Ext.getCmp('password').setRawValue('');
 							LoginPanel.items.items[0].items.items[1].items.items[0].markInvalid();
 							LoginPanel.items.items[0].items.items[1].items.items[0].focus(true, 750);
@@ -232,7 +186,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 	}
 	,logout: function(){
 		Ext.Ajax.request({
-			url: '<?php print URL_RAIZ."logout/". LOGOUT; ?>/',
+			url: 'auth/logout/',
 			method:'POST',
 			scope:this,
 			//timeout: 100000,

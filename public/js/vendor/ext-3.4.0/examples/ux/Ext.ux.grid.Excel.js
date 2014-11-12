@@ -1,12 +1,3 @@
-<?php
-//Trae la sesión que esté asignada
-session_start();
-include($_SESSION['session_diccionario']);
-//Variables de configuración del sistema
-include ("../../../../lib/config.php");
-include ("../../../../lib/lib_sesion.php");
-?>
-/*<script>*/
 Ext.ns('Ext.ux.grid');
 
 Ext.ux.grid.Excel = function(config) {
@@ -25,7 +16,7 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 	 */
 	,position:'bottom'
 
-	
+	,title:''
 	,width:100
 
 	/**
@@ -91,59 +82,51 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 	,onRender:function() {
 		var panel = this.toolbarContainer || this.grid;
 		var tb = 'bottom' === this.position ? panel.bottomToolbar : panel.topToolbar;
-
-		this.combo = new Ext.form.ComboBox({
-			forceSelection: true
-			,triggerAction: 'all'
-			,selectOnFocus:true
-			,mode: 'local'
-			,store:new Ext.data.ArrayStore({
-				id: 0
-				,fields:['extensionId','extension']
-				,data: [
-					[1, '<?php print _EXCEL2010; ?>']
-					,[2, '<?php print _EXCEL97; ?>']
-				]
-			})
-			,valueField: 'extensionId'
-			,displayField: 'extension'
-			,value:2
+		
+		this.btgroup = new Ext.ButtonGroup({
+			title:this.title
+			,items: [{
+				iconCls:'icon-excel24'
+                ,scale:'medium'
+				,menu:[{
+					text: Ext.ux.lang.reports.excel2010
+					,handler:this.onTriggerExcel.createDelegate(this,['1'])
+				},{
+					text: Ext.ux.lang.reports.excel2010
+					,handler:this.onTriggerExcel.createDelegate(this,['2'])
+				}]
+			/*},{
+				iconCls:'icon-pdf24'
+                ,scale:'medium'
+				,handler:this.onTriggerExcel.createDelegate(this,['3'])
+			},{
+				iconCls:'icon-txt24'
+                ,scale:'medium'
+				,handler:this.onTriggerExcel.createDelegate(this,['4'])*/
+			}]
 		});
 		
 		tb.addSeparator();
-		tb.add(this.combo);
-				
-		this.button = new Ext.Button({
-		  iconCls: 'icon-excel'
-		  ,handler:this.onTriggerExcel.createDelegate(this)
-		});
-
+		tb.add(this.btgroup);
+		
 		// handle position
 		if('right' === this.align) {
 			tb.addFill();
 		}
 		else {
 			if(0 < tb.items.getCount()) {
-				tb.addSeparator();
+				//tb.addSeparator();
 			}
 		}
-
-		// add menu button
-		tb.add(this.button);		
 
 	} // eo function onRender
 	
 	/**
 	 * private Search Trigger click handler (executes the search, local or remote)
 	 */
-	,onTriggerExcel:function(){
-		if(!this.combo.isValid()) {
-			return;
-		}
-		this.button.disable();
-		
+	,onTriggerExcel:function(val){
+				
 		var cm = this.grid.colModel;
-		var val = this.combo.getValue();
 		var store = this.grid.store;
 		
 		var parametros = new Object();
@@ -156,6 +139,12 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 		
 		parametros = store.baseParams;
 		
+		var sortInfo = store.getSortState();
+		if(sortInfo){
+			parametros['sort'] = sortInfo.field;
+			parametros['dir']  = sortInfo.direction;
+		}
+		//console.log(sortInfo);
 		// add fields and query to baseParams of store
 		delete(parametros[this.paramNames.fields]);
 		delete(parametros[this.paramNames.formato]);
@@ -165,31 +154,43 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 		if(columnas){
 			parametros[this.paramNames.fields] = Ext.encode(columnas);
 			parametros[this.paramNames.formato] = val;
-			parametros[this.paramNames.limit] = <?php print MAXREGEXCEL; ?>;
+			parametros[this.paramNames.limit] = Ext.util.lang.reports.maxRows;
 		}
 		
 		Ext.Ajax.request({
 			url: store.proxy.url
 			,method:'POST'
 			,scope:this
-			,timeout: 100000
+			,timeout: 100000000
 			,params: parametros
 			,success: function(response){
 				results = Ext.decode(response.responseText);
-				try {
-					Ext.destroy(Ext.get('downloadIframe'));
+				if(results.success){
+					try {
+						Ext.destroy(Ext.get('downloadIframe'));
+					}
+					catch(e) {}
+					Ext.DomHelper.append(document.body, {
+						tag: 'iframe'
+						,id:'downloadIframe'
+						,frameBorder: 0
+						,width: 0
+						,height: 0
+						,css: 'display:none;visibility:hidden;height:0px;'
+						,src: 'download-excel/'+results.msg+'/'
+					});
 				}
-				catch(e) {}
-				Ext.DomHelper.append(document.body, {
-					tag: 'iframe'
-					,id:'downloadIframe'
-					,frameBorder: 0
-					,width: 0
-					,height: 0
-					,css: 'display:none;visibility:hidden;height:0px;'
-					,src: '<?php print URL_RAIZ; ?>download-excel.php?archivo='+results.msg
-				});
-				this.button.enable();
+				else{
+					if (results.msg) {
+						Ext.MessageBox.show({
+							title: ''
+							,msg:results.msg
+							,buttons: Ext.Msg.OK
+							,closable:false
+							,icon: Ext.MessageBox.ERROR
+						});
+					}
+				}
 				delete(store.baseParams[this.paramNames.fields]);
 				delete(store.baseParams[this.paramNames.formato]);
 				delete(store.baseParams[this.paramNames.limit]);
@@ -199,7 +200,6 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 				if (results.msg) {
 					Ext.Msg.alert('Infomation',results.msg);
 				}
-				this.button.enable();
 			 }
 		 });
 		

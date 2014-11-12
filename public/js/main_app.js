@@ -28,6 +28,7 @@ Ext.onReady(function(){
 		]
 	});
 	using('funciones.js');
+	using('lang-es.js');
 
 	var loadingMask = Ext.get('loading-mask');
     var loading = Ext.get('loading');

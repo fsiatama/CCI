@@ -35,6 +35,7 @@ Header = function(){
 
 		Ext.Ajax.request({
 			 url:'auth/headerMenu/'
+			,method:'POST'
 			,callback: function(options, success, response){
 				var json = Ext.util.JSON.decode(response.responseText);
 

@@ -76,7 +76,7 @@
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/statusbar/StatusBar.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/RowEditor.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/SlidingTabs.js"></script>
-		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/Ext.ux.inactivityMonitor.js.php"></script>
+		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/Ext.ux.inactivityMonitor.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/Ext.ux.util.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/PanelResizer.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/LinkPanel/Ext.ux.LinkPanel.js"></script>
@@ -89,7 +89,7 @@
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/MultiSelect.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/ItemSelector.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/BufferView.js"></script>
-		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/Ext.ux.grid.Excel.js.php"></script>
+		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/Ext.ux.grid.Excel.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/Ext.ux.grid.Search.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/checktree/js/Ext.ux.tree.CheckTreePanel.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/Ext.ux.tree.RemoteTreePanel.js"></script>

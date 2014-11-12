@@ -41,8 +41,8 @@ class SessionRepo extends BaseRepo {
 
 	public function logout()
 	{
-		header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-		exit();
+		/*header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+		exit();*/
 		$result['success'] = false;
 		if ($this->validSession()) {
 			$session    = $this->model;
