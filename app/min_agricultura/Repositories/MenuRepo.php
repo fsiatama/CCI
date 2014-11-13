@@ -43,8 +43,10 @@ class MenuRepo extends BaseRepo {
 						$menuData     = $result['data'];
 						$arrMenuItems = array();
 						foreach ($menuData as $subkey => $subvalue) {
-							$arrMenuItems = array(
-								'id'       => Inflector::underscore($subvalue['menu_name']),
+							$varMenuName = Inflector::cleanOutputString($subvalue['menu_name']);
+							
+							$arrMenuItems[] = array(
+								'id'       => Inflector::underscore($varMenuName),
 								'title'    => $subvalue['menu_name'],
 								'iconCls'  => Inflector::slug($subvalue['menu_name']),
 								'titleTab' => $subvalue['menu_name'],
@@ -54,10 +56,13 @@ class MenuRepo extends BaseRepo {
 								)
 							);
 						}
-						$category = Inflector::underscore($value['category_menu_name']);
+						
+						$varCategoryName = Inflector::cleanOutputString($value['category_menu_name']);
+						$category = Inflector::underscore($varCategoryName);
+
 						$arrMenu[$category] = array(
 							'title' => $value['category_menu_name'],
-							'iconCls'  => Inflector::slug($value['category_menu_name']),
+							'iconCls'  => Inflector::slug($varCategoryName),
 							'items' => $arrMenuItems
 						);
 					}

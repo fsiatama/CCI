@@ -77,7 +77,7 @@ class SessionRepo extends BaseRepo {
 			}
 		}
 		
-		header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+		header('Location: ' . URL_RAIZ);
 		exit();
 	}
 

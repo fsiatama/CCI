@@ -71,14 +71,18 @@ Ext.extend(Left, Ext.Panel, {
 				if (json.success) {
 					var data = json.data;
 					for (var key in data) {
-						console.log(key, data);
-						data[key].items['handler'] = Ext.getCmp('oeste').addTab
+						
+						var menuItems = data[key].items;
+						for (var item in menuItems) {
+							menuItems[item]['handler'] = Ext.getCmp('oeste').addTab;
+						}
+						
 						var p = new Ext.Panel({
 							frame:false,
 							border:false,
 							autoHeight:true,
 							title:data[key].title,
-							items:data[key].items,
+							items:menuItems,
 							iconCls:data[key].iconCls
 						});
 						if (p.title != undefined) {

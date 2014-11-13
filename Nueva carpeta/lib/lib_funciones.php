@@ -393,9 +393,7 @@ function sanear_string($string){
         $string
     );
 	
-	//$string = utf8_decode($string);
-	//print_r($string."\n");
-    //Esta parte se encarga de eliminar cualquier caracter extraño
+	//Esta parte se encarga de eliminar cualquier caracter extraño
     $string = str_replace(
         array("\\", "¨", "º", "°",/*"-",*/ "~",
              "#",  "|", "!", "\"",

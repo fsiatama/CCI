@@ -34,6 +34,8 @@ class Connection
     		$this->database
     	);
 
+    	$this->connection->SetCharSet('utf8');
+
 		$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 	}
 	public function setConnection($database)
