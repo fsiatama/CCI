@@ -160,17 +160,17 @@ abstract class BaseAdo extends Connection {
 		$result = array();
 		
 		if(!$resultSet){
-			$result["success"] = false;
-			$result["error"]  = $conn->ErrorMsg();
+			$result['success'] = false;
+			$result['error']  = $conn->ErrorMsg();
 		}
 		else{
-			$result["success"] = true;
-			$result["total"]  = $resultSet->RecordCount();
+			$result['success'] = true;
+			$result['total']  = $resultSet->RecordCount();
 			if ($insertId !== false) {
-				$result["insertId"] = $insertId;
+				$result['insertId'] = $insertId;
 			}
 			while(!$resultSet->EOF){
-				$result["data"][] = $resultSet->fields;
+				$result['data'][] = $resultSet->fields;
 				$resultSet->MoveNext();
 			}
 			$resultSet->Close();

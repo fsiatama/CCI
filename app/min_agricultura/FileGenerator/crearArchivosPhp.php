@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "session"; //$_GET["tabla"];
+$nombre_tabla = "category_menu"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -75,7 +75,7 @@ foreach($result as $key => $campos){
 
 $contenido = "<?php
 
-require 'BaseAdo.php';
+require_once ('BaseAdo.php');
 
 class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {
 
@@ -199,6 +199,53 @@ else {
 	print $archivo . " ya existe, no se ha creado ";
 }
 
+/******************************************************************************************************/
+/*********************************Inicia creacion del Controller**********************************************/
+/******************************************************************************************************/
+
+$contenido = "<?php
+
+require PATH_APP.'min_agricultura/Repositories/".ucfirst($nombre_tabla)."Repo.php';
+
+class ".ucfirst($nombre_tabla)."Controller {
+	
+	protected \$".($nombre_tabla)."Repo;
+
+	public function __construct()
+	{
+		\$this->".($nombre_tabla)."Repo = new ".ucfirst($nombre_tabla)."Repo;
+	}
+	
+	/**
+	 * indexAction
+	 * Metodo por defecto que sera llamado si no se especifica otro en la url
+	 *
+	 * @param array \$urlParams  parametros adicionales pasados por la url.
+	 * @param array \$postParams Parametros enviados via Post.
+	 *
+	 * @access public
+	 *
+	 * @return mixed Value.
+	 */
+	public function indexAction(\$urlParams, \$postParams)
+    {
+        return true;
+    }
+
+}
+	
+
+";
+
+$archivo = $nombre_tabla . "/" .ucfirst($nombre_tabla)."Controller.php";
+if(!file_exists($archivo)){
+	$fp = fopen($archivo,"w+");
+	fwrite($fp, $contenido);
+	fclose($fp);
+}
+else {
+	print $archivo . " ya existe, no se ha creado ";
+}
 
 
 $contenido = "";

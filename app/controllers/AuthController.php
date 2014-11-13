@@ -15,12 +15,10 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 class AuthController {
 	
 	protected $userRepo;
-	protected $sessionRepo;
 
 	public function __construct()
 	{
 		$this->userRepo = new UserRepo;
-		$this->sessionRepo = new SessionRepo;
 	}
 
 	public function loginAction($urlParams, $postParams)

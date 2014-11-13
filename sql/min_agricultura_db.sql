@@ -25,9 +25,11 @@ CREATE TABLE `category_menu` (
   `category_menu_name` varchar(45) NOT NULL,
   `category_menu_order` smallint(5) unsigned NOT NULL,
   PRIMARY KEY (`category_menu_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `category_menu` */
+
+insert  into `category_menu`(`category_menu_id`,`category_menu_name`,`category_menu_order`) values (1,'Admin',1);
 
 /*Table structure for table `indicator` */
 
@@ -53,9 +55,11 @@ CREATE TABLE `menu` (
   `menu_order` int(11) NOT NULL DEFAULT '1',
   `menu_hidden` enum('0','1') NOT NULL,
   PRIMARY KEY (`menu_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `menu` */
+
+insert  into `menu`(`menu_id`,`menu_name`,`menu_category_menu_id`,`menu_url`,`menu_order`,`menu_hidden`) values (1,'Usuarios',1,'jscode/user',1,'0');
 
 /*Table structure for table `permissions` */
 
@@ -104,7 +108,7 @@ CREATE TABLE `session` (
 
 /*Data for the table `session` */
 
-insert  into `session`(`session_user_id`,`session_php_id`,`session_date`,`session_active`) values (1,'25trnmt5fflnci083kkgqnaah0','2014-11-11 03:48:05','1');
+insert  into `session`(`session_user_id`,`session_php_id`,`session_date`,`session_active`) values (1,'cg6ic1pbdmqj5qjfkb9r9s8ql1','2014-11-13 03:04:35','1');
 
 /*Table structure for table `user` */
 

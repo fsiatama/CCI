@@ -62,11 +62,33 @@ Left = function() {
 Ext.extend(Left, Ext.Panel, {
 	getMenu: function(response){
 
+		var accordion = Ext.getCmp('menupersonal');
 		Ext.Ajax.request({
-			 url:'user/mainMenu/'
+			 url:'menu'
 			,method:'POST'
 			,callback: function(options, success, response){
 				var json = Ext.util.JSON.decode(response.responseText);
+				if (json.success) {
+					var data = json.data;
+					for (var key in data) {
+						console.log(key, data);
+						data[key].items['handler'] = Ext.getCmp('oeste').addTab
+						var p = new Ext.Panel({
+							frame:false,
+							border:false,
+							autoHeight:true,
+							title:data[key].title,
+							items:data[key].items,
+							iconCls:data[key].iconCls
+						});
+						if (p.title != undefined) {
+							if ((p.title).length != 0) {
+								accordion.add(p).show();
+								accordion.doLayout();
+							}
+						}
+					}
+				};
 			}
 		});
 

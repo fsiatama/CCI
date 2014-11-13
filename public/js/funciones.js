@@ -258,5 +258,5 @@ Ext.onReady(function(){
 
 Ext.ns('Ext.ux', 'Ext.ux.routes');
 Ext.ux.routes = {
-	 url_index: ''
+	 url_index: 'http://cci.local'
 }
