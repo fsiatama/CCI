@@ -24,7 +24,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 		}
 	},
 	getUser: function() {
-		
+			
 	},
 	destroy: function() {
 		var body = Ext.get(document.body);

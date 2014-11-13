@@ -7,6 +7,7 @@ class Inflector {
 		$segments = explode('-', $value);
 
 		array_walk($segments, function (&$item) {
+			$item = static::cleanVarName($item);
 			$item = ucfirst($item);
 		});
 
@@ -23,6 +24,7 @@ class Inflector {
 		$segments = explode(' ', $value);
 
 		array_walk($segments, function (&$item) {
+			$item = static::cleanVarName($item);
 			$item = strtolower($item);
 		});
 
@@ -34,10 +36,25 @@ class Inflector {
 		$segments = explode(' ', $value);
 
 		array_walk($segments, function (&$item) {
+			$item = static::cleanVarName($item);
 			$item = strtolower($item);
 		});
 
 		return implode('-', $segments);
+	}
+
+	public static function cleanVarName($string)
+	{
+		$string = static::cleanOutputString($string);
+		$string = str_replace(
+		    array('.', ',', '-'),
+		    '',
+		    $string
+		);
+		
+		$string = strtolower($string);
+
+		return $string;
 	}
 
 	public static function cleanOutputString($string)

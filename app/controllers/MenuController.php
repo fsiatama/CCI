@@ -1,6 +1,8 @@
 <?php
 
 require PATH_APP.'min_agricultura/Repositories/MenuRepo.php';
+require PATH_APP.'min_agricultura/Repositories/PermissionsRepo.php';
+
 
 /**
 * MenuController
@@ -32,7 +34,8 @@ class MenuController {
      */
 	public function indexAction($urlParams, $postParams)
     {
-        $result = $this->menuRepo->mainMenu($postParams);
+        $permissionsRepo = new PermissionsRepo;
+        $result = $permissionsRepo->mainMenu($postParams);
 		
 		return $result;
     }
