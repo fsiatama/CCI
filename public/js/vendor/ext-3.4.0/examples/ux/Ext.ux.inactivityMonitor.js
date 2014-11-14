@@ -21,10 +21,18 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 			var body = Ext.get(document.body);
 			body.on("click", this.resetTimeout, this);
 			body.on("keypress", this.resetTimeout, this);
+			this.setUser();
 		}
 	},
-	getUser: function() {
-			
+	setUser: function() {
+		Ext.Ajax.request({
+			 url:'auth/headerMenu/'
+			,method:'POST'
+			,callback: function(options, success, response){
+				var json = Ext.util.JSON.decode(response.responseText);
+				this.user_email = json.email;
+			}
+		});
 	},
 	destroy: function() {
 		var body = Ext.get(document.body);
@@ -47,7 +55,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 	_inactivityTask: null, // task to start countdown
 	_beginCountdown: function(){
 		this.fireEvent('timeout', this);
-		if(!this.confirmacionUsuario){
+		if(!this.confirmacionUsuario && this.user_email){
 			Ext.TaskMgr.stopAll();
 			Ext.getCmp('norte').fireEvent('render'); // Para que no pare el Reloj
 			this.logout();						
@@ -73,7 +81,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 						,autoHeight: true
 						,items: [{
 							 xtype: 'textfield'
-							,fieldLabel: "Usuario"
+							,fieldLabel: 'Email'
 							,name: 'email'
 							,allowBlank: false
 							,selectOnFocus: true
@@ -88,7 +96,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 						,autoHeight: true
 						,items: [{
 							 xtype: 'textfield'
-							,fieldLabel: "Pass"
+							,fieldLabel: "Password"
 							,inputType: 'password'
 							,name: 'password'
 							,id: 'password'
@@ -126,13 +134,13 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 				]
 				,buttonAlign: 'center'
 				,buttons: [{
-					 text: "Logout"
+					 text: Ext.ux.lang.botones.salir
 					,iconCls: 'silk-logout16'
 					,handler: function(){
 						location.href = Ext.ux.routes.url_index;
 					}
 				},{
-					 text: 'Aceptar'
+					 text: Ext.ux.lang.botones.entrar
 					,iconCls: 'silk-accept'
 					,scope: this
 					,handler: function(){
@@ -189,13 +197,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 			url: 'auth/logout/',
 			method:'POST',
 			scope:this,
-			//timeout: 100000,
-			success: function(response) {
-				//location.href = '<?php print URL_INGRESO; ?>'			 
-			},
-			failure: function(response) {
-				
-			}
+			disableCaching: false
 		});
 	}
 });	

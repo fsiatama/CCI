@@ -29,10 +29,7 @@
 			{name:'user_email', type:'string'},
 			{name:'user_password', type:'string'},
 			{name:'user_active', type:'string'},
-			{name:'user_profile_id', type:'float'},
-			{name:'user_uinsert', type:'float'},
-			{name:'user_finsert', type:'date', dateFormat:'Y-m-d H:i:s'},
-			{name:'user_fupdate', type:'date', dateFormat:'Y-m-d H:i:s'}
+			{name:'user_profile_id', type:'float'}
 		]
 	});
 	

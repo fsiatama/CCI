@@ -9,6 +9,52 @@ Ext.ux.lang.reports = {
 	,excel97: 'Libro Excel 97-2003 (*.xls)'
 	,maxRows: 65000
 }
+
+Ext.ns('Ext.ux', 'Ext.ux.idioma.menu');
+Ext.ux.idioma.menu = {
+	menu_principal: 'Men&uacute; Principal'
+	,ayuda: 'Ayuda'
+}
+
+Ext.ns('Ext.ux', 'Ext.ux.lang.botones');
+Ext.ux.lang.botones = {
+	salir: 'Salir'
+	,entrar: 'Entrar'
+	,cerrar: 'Cerrar'
+	,idioma: 'Idioma'
+	,guardar: 'Guardar'
+	,limpiar: 'Limpiar'
+	,aceptar: 'Aceptar'
+	,cancelar: 'Cancelar'
+	,restablecer: 'Restablecer'
+	,reintentar: 'Reintentar'
+	,enviar: 'Enviar'
+	,listo: 'Listo'
+	,actualizar: 'Actualizar'
+	,recargar: 'Recargar'
+	,generar: 'Generar'
+	,renombrar: 'Renombrar'
+	,renombrar_tt: 'Renombrar el archivo seleccionado'
+	,agregar: 'Agregar'
+	,agregar_tt: 'Subir una o m&aacute;s Archivos'
+	,borrar: 'Borrar'
+	,borrar_tt: 'Borrar los Archivos seleccionados'
+	,modificar: 'Modificar'
+	,modificar_tt: 'Modificar el registro seleccionado'
+	,nuevo: 'Nuevo'
+	,nueva: 'Nueva'
+	,descargar: 'Descargar'
+	,descargar_tt: 'Descargar el Archivo seleccionado'
+	,comentar: 'Comentar'
+	,comentar_tt: 'Comentar el Archivo seleccionado'
+	,configurar: 'Configurar'
+	,ver: 'Ver'
+	,siguiente: 'Siguiente &raquo;'
+	,anterior: '&laquo; Anterior'
+	,subir_guardar: 'Subir y Guardar'
+	,solo_guardar: 'Solo guardar'
+}
+
 /*
 Ext.ns('Ext.ux', 'Ext.ux.lang.error');
 Ext.ux.lang.error = {

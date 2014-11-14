@@ -39,7 +39,7 @@ Header = function(){
 			,callback: function(options, success, response){
 				var json = Ext.util.JSON.decode(response.responseText);
 
-				var text = '<b>'+json.text+'</b>'
+				var text = '<b>'+json.name+'</b>'
 
 				var tbItem = Ext.getCmp('UserHeaderMenu');
 

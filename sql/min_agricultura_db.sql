@@ -25,11 +25,29 @@ CREATE TABLE `category_menu` (
   `category_menu_name` varchar(45) NOT NULL,
   `category_menu_order` smallint(5) unsigned NOT NULL,
   PRIMARY KEY (`category_menu_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 /*Data for the table `category_menu` */
 
-insert  into `category_menu`(`category_menu_id`,`category_menu_name`,`category_menu_order`) values (1,'Admin',1);
+insert  into `category_menu`(`category_menu_id`,`category_menu_name`,`category_menu_order`) values (1,'Admin.',1),(2,'Configuración',2),(3,'Admin. Acuerdos Comerciales',3);
+
+/*Table structure for table `correlativa` */
+
+DROP TABLE IF EXISTS `correlativa`;
+
+CREATE TABLE `correlativa` (
+  `correlativa_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `correlativa_origen_posicion_id` varchar(15) NOT NULL,
+  `correlativa_destino_posicion_id` varchar(15) NOT NULL,
+  `correlativa_fvigente` date NOT NULL,
+  `correlativa_decreto` varchar(5) NOT NULL,
+  `correlativa_observacion` text NOT NULL,
+  `correlativa_uinsert` int(10) unsigned NOT NULL,
+  `correlativa_finsert` datetime NOT NULL,
+  PRIMARY KEY (`correlativa_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `correlativa` */
 
 /*Table structure for table `indicator` */
 
@@ -55,11 +73,11 @@ CREATE TABLE `menu` (
   `menu_order` int(11) NOT NULL DEFAULT '1',
   `menu_hidden` enum('0','1') NOT NULL,
   PRIMARY KEY (`menu_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 /*Data for the table `menu` */
 
-insert  into `menu`(`menu_id`,`menu_name`,`menu_category_menu_id`,`menu_url`,`menu_order`,`menu_hidden`) values (1,'Usuarios',1,'jscode/user',1,'0');
+insert  into `menu`(`menu_id`,`menu_name`,`menu_category_menu_id`,`menu_url`,`menu_order`,`menu_hidden`) values (1,'Usuarios',1,'user/jscode',1,'0'),(2,'Contingentes de importación',3,'contingentes/jscode',1,'0'),(3,'Correlativas',2,'correlativas/jscode',1,'0');
 
 /*Table structure for table `permissions` */
 
@@ -76,9 +94,11 @@ CREATE TABLE `permissions` (
   `permissions_export` enum('0','1') NOT NULL,
   PRIMARY KEY (`permissions_id`),
   UNIQUE KEY `permissions_profile_id` (`permissions_profile_id`,`permissions_menu_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 /*Data for the table `permissions` */
+
+insert  into `permissions`(`permissions_id`,`permissions_profile_id`,`permissions_menu_id`,`permissions_list`,`permissions_modify`,`permissions_create`,`permissions_delete`,`permissions_export`) values (1,1,1,'1','1','1','1','1'),(2,1,2,'1','1','1','1','1'),(3,1,3,'1','1','1','1','1');
 
 /*Table structure for table `profile` */
 
@@ -108,7 +128,7 @@ CREATE TABLE `session` (
 
 /*Data for the table `session` */
 
-insert  into `session`(`session_user_id`,`session_php_id`,`session_date`,`session_active`) values (1,'cg6ic1pbdmqj5qjfkb9r9s8ql1','2014-11-13 03:04:35','1');
+insert  into `session`(`session_user_id`,`session_php_id`,`session_date`,`session_active`) values (1,'c0cq545aua237n5fkcqqbh0fa4','2014-11-14 01:09:17','1');
 
 /*Table structure for table `user` */
 

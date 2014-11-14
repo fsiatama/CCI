@@ -52,6 +52,7 @@ class UserRepo extends BaseRepo {
 					$_SESSION['session_email']   = $row['user_email'];
 					$_SESSION['session_profile'] = $row['user_profile_id'];
 					$_SESSION['start']           = time();
+					$_SESSION['user_token']      = uniqid();
 
 					$result['url'] = URL_INGRESO;
 				}
@@ -73,7 +74,8 @@ class UserRepo extends BaseRepo {
 		$result = false;
 		if ($sessionRepo->validSession()) {
 			$result = [
-				'text' => $_SESSION['session_name']
+				'name' => $_SESSION['session_name'],
+				'email' => $_SESSION['session_email']
 			];
 		}
 		return $result;
