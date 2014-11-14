@@ -3,7 +3,7 @@ Left = function() {
 		 id: 'oeste'
 		,region: 'west'
 		,layout: 'border'
-		,title:	Ext.ux.idioma.menu.menu_principal
+		,title:	Ext.ux.lang.menu.menu_root
 		,margins: '5 0 5 5'
 		,cmargins: '5 5 5 5'
 		,split: true

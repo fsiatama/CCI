@@ -30,7 +30,8 @@ class AuthController {
 
 	public function logoutAction()
 	{
-		$result = $this->sessionRepo->logout();
+		$sessionRepo = new SessionRepo;
+		$result = $sessionRepo->logout();
 		
 		return $result;
 	}

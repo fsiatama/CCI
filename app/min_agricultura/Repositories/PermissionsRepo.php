@@ -17,9 +17,18 @@ class PermissionsRepo extends BaseRepo {
 		return new PermissionsAdo;
 	}
 
-	public function mainMenu()
+	public function listProfileMenu($profile_id)
 	{
 		$permissionsAdo = $this->modelAdo;
+		$permissions    = $this->model;
+		$permissions->setPermissions_profile_id($profile_id);
+		$result = $permissionsAdo->exactSearch($permissions);
+
+		return $result;
+	}
+
+	public function mainMenu()
+	{
 		$sessionRepo    = new SessionRepo;
 		$result         = false;
 		$arrMenu        = array();
@@ -27,10 +36,7 @@ class PermissionsRepo extends BaseRepo {
 
 		if ($sessionRepo->validSession()) {
 
-			$permissions = $this->getModel();
-			$permissions->setPermissions_profile_id($_SESSION['session_profile']);
-			$result = $permissionsAdo->exactSearch($permissions);
-
+			$result = $this->listProfileMenu($_SESSION['session_profile']);
 
 			if ($result['success'] && $result['total'] > 0) {
 				foreach ($result['data'] as $key => $value) {
@@ -45,7 +51,9 @@ class PermissionsRepo extends BaseRepo {
 						'titleTab' => $varMenuName,
 						'url'      => $value['menu_url'],
 						'params'   => array(
-							'id' => $value['menu_id']
+							'id'     => $value['menu_id'],
+							'title'  => $varMenuName,
+							'module' => Inflector::underscore($varMenuName)
 						)
 					);
 				}

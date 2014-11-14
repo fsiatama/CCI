@@ -1,10 +1,8 @@
 /*<script>*/
 (function(){
-	var App = new Ext.App({});
 	Ext.form.Field.prototype.msgTarget = 'side';
-	var modulo = 'cargos';
-	var prefijoId = 'cargos-';
-	var cantidad_reg = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
+	var module = '<?= $module; ?>';
+	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
 	var today=new Date()
 	var msg = function(title, msg, tipo){
 		Ext.Msg.show({
@@ -33,18 +31,18 @@
 		]
 	});
 	
-	storeCargos.load({params:{start:0, limit:cantidad_reg}});
+	storeUser.load({params:{start:0, limit:numberRecords}});
 	
-	gridCargosAction = new Ext.ux.grid.RowActions({
-		 header:'Actions'
+	gridUserAction = new Ext.ux.grid.RowActions({
+		 header: Ext.ux.lang.columns.options
 		,keepSelection:true
 		,autoWidth:false
 		,actions:[{
 			iconCls:'silk-delete'
-			,tooltip:'Delete this item'
+			,tooltip: Ext.ux.lang.buttons.delete_tt
 		},{
-			 iconCls:'silk-page-edit'
-			,tooltip:'Modify this item'
+			 iconCls: 'silk-page-edit'
+			,tooltip: Ext.ux.lang.buttons.modify_tt
 		}]
 		,callbacks:{
 			'silk-delete':function(grid, record, action, row, col) {
@@ -56,33 +54,34 @@
 		}
 	});
 	
-	var cmCargos = new Ext.grid.ColumnModel({
+	var cmUser = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'Position', align:'left', hidden:false, dataIndex:'categoria_cargos_nombre'},
-			{header:'Job', align:'left', dataIndex:'cargos_nombre'},
-			gridCargosAction
+			{xtype:'numbercolumn', header:'<?php print _USER_ID; ?>', align:'right', hidden:false, dataIndex:'user_id'},
+			{header:'<?php print _USER_FULL_NAME; ?>', align:'left', hidden:false, dataIndex:'user_full_name'},
+			{header:'<?php print _USER_EMAIL; ?>', align:'left', hidden:false, dataIndex:'user_email'},
+			{header:'<?php print _USER_ACTIVE; ?>', align:'left', hidden:false, dataIndex:'user_active'},
+			{xtype:'numbercolumn', header:'<?php print _USER_PROFILE_ID; ?>', align:'right', hidden:false, dataIndex:'user_profile_id'},
 		]
 		,defaults:{
-			sortable:false
-			,menuDisabled:true
+			sortable:true
 			,width:100
 		}
-	});	
+	});
 	
 	
-	var tbCargos = new Ext.Toolbar({
+	var tbUser = new Ext.Toolbar({
 		items:[{
-			text: 'Add item',
-			iconCls: 'silk-add',
-			handler: function(){				
+			text: Ext.ux.lang.buttons.add
+			,iconCls: 'silk-add'
+			,handler: function(){				
 				var datos = {
-					id:'agregar-'+modulo
+					id:'add-'+module
 					,iconCls:'silk-add'
-					,titleTab:'Job - Add item'
-					,url:'jscode/cargos_form/'
+					,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
+					,url:'<?= $urlAdd; ?>'
 					,params:{
 						code:'jobs'
-						,id:'agregar-'+modulo
+						,id:'agregar-'+module
 						,url:'jscode/cargos_form/'
 						,accion:'crea'
 					}
@@ -93,7 +92,7 @@
 	});
 	var gridCargos = new Ext.grid.GridPanel({
 		store:storeCargos
-		,id:prefijoId+'gridCargos'
+		,id:prefixId+'gridCargos'
 		//,height:200
 		,colModel:cmCargos
 		,viewConfig: {
@@ -103,7 +102,7 @@
 		,sm: new Ext.grid.RowSelectionModel({
 			singleSelect: true
 		})
-		,bbar:new Ext.PagingToolbar({pageSize:cantidad_reg, store:storeCargos, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeCargos, displayInfo:true})
 		,enableColumnMove:false
 		,enableColumnResize:false
 		,tbar:tbCargos
@@ -116,7 +115,7 @@
 		,iconCls:'icon-grid'
 		,plugins:[new Ext.ux.grid.Search({
 			iconCls:'silk-zoom'
-			,id:modulo+'searchid'
+			,id:module+'searchid'
 			,minChars:2
 			,autoFocus:true
 			,width:300
@@ -129,7 +128,7 @@
 	
 	function fnEditItm(record){
 		var key = record.get('cargos_id');
-		if(Ext.getCmp('tab-agregar-'+modulo) || Ext.getCmp('tab-modificar-'+modulo)){
+		if(Ext.getCmp('tab-agregar-'+module) || Ext.getCmp('tab-modificar-'+module)){
 			Ext.Msg.show({
 				 title:'Warning'
 				,msg:'Please for create or modify a job, you need to close the tab Add Job and / or Modify Job'
@@ -139,13 +138,13 @@
 		}
 		else{
 			var datos = {
-				id:'modificar-'+modulo
+				id:'modificar-'+module
 				,iconCls:'silk-page-edit'
 				,titleTab:'Edit - Job'
 				,url:'jscode/cargos_form/'
 				,params:{
 					code:'jobs'
-					,id:'modificar-'+modulo
+					,id:'modificar-'+module
 					,url:'jscode/cargos_form/'
 					,accion:'act'
 					,key:key

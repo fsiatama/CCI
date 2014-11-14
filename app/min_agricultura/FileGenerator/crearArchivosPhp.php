@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "permissions"; //$_GET["tabla"];
+$nombre_tabla = "pais"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -462,7 +462,7 @@ foreach($result2 as $key => $campos){
 	$str .= "				,xtype:'".$xtype."'\r\n";
 	$str .= "				,name:'".$campos["COLUMN_NAME"]."'\r\n";
 	$str .= "				,fieldLabel:'<?php print _".strtoupper($campos["COLUMN_NAME"])."; ?>'\r\n";
-	$str .= "				,id:modulo+'".$campos["COLUMN_NAME"]."'\r\n";
+	$str .= "				,id:module+'".$campos["COLUMN_NAME"]."'\r\n";
 	$str .= "				,allowBlank:false\r\n";
 	$str .= "			}]\r\n";
 	
@@ -483,7 +483,7 @@ $contenido .= "});\r\n";
 
 $contenido .= "var combo".ucfirst($nombre_tabla)." = new Ext.form.ComboBox({\r\n";
 $contenido .= "	hiddenName:'".$nombre_tabla."'\r\n";
-$contenido .= "	,id:modulo+'combo".ucfirst($nombre_tabla)."'\r\n";
+$contenido .= "	,id:module+'combo".ucfirst($nombre_tabla)."'\r\n";
 $contenido .= "	,fieldLabel:'<?php print _".strtoupper($nombre_tabla)."; ?>'\r\n";
 $contenido .= "	,store:store".ucfirst($nombre_tabla)."\r\n";
 $contenido .= "	,valueField:'".$llave_primaria."'\r\n";
@@ -508,7 +508,7 @@ $contenido .= "var tb".ucfirst($nombre_tabla)." = new Ext.Toolbar();\r\n\r\n";
 
 $contenido .= "var grid".ucfirst($nombre_tabla)." = new Ext.grid.GridPanel({\r\n";
 $contenido .= "	store:store".ucfirst($nombre_tabla)."\r\n";
-$contenido .= "	,id:modulo+'grid".ucfirst($nombre_tabla)."'\r\n";
+$contenido .= "	,id:module+'grid".ucfirst($nombre_tabla)."'\r\n";
 $contenido .= "	,colModel:cm".ucfirst($nombre_tabla)."\r\n";
 $contenido .= "	,viewConfig: {\r\n";
 $contenido .= "		forceFit: true\r\n";

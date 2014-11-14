@@ -19,5 +19,19 @@ class UserController {
 	{
 		$this->userRepo = new UserRepo;
 	}
+	public function jsCodeAction($urlParams, $postParams)
+	{
+		$sessionRepo = new SessionRepo;
+		$result = $this->userRepo->validateMenu($postParams);
+
+		if ($result['success']) {
+			var_dump($result);
+			$postParams['is_template'] = true;
+
+			return new View('jsCode/user', $postParams);
+		}
+		
+		return $result;
+	}
 
 }

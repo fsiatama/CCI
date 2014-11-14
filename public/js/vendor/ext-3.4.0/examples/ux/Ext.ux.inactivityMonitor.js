@@ -26,8 +26,10 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 	},
 	setUser: function() {
 		Ext.Ajax.request({
-			 url:'auth/headerMenu/'
-			,method:'POST'
+			url: 'auth/headerMenu/',
+			method:'POST',
+			scope:this,
+			disableCaching: false
 			,callback: function(options, success, response){
 				var json = Ext.util.JSON.decode(response.responseText);
 				this.user_email = json.email;
@@ -55,7 +57,7 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 	_inactivityTask: null, // task to start countdown
 	_beginCountdown: function(){
 		this.fireEvent('timeout', this);
-		if(!this.confirmacionUsuario && this.user_email){
+		if(!this.confirmacionUsuario){
 			Ext.TaskMgr.stopAll();
 			Ext.getCmp('norte').fireEvent('render'); // Para que no pare el Reloj
 			this.logout();						
@@ -80,13 +82,10 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 						,layout: 'form'
 						,autoHeight: true
 						,items: [{
-							 xtype: 'textfield'
-							,fieldLabel: 'Email'
-							,name: 'email'
-							,allowBlank: false
-							,selectOnFocus: true
+							xtype:'displayfield'
+							,fieldLabel:'Email'
+							,name:'email1'
 							,anchor: '85%'
-							,readOnly: true
 							,value: this.user_email
 							,msgTarget: 'qtip'
 						}]
@@ -107,13 +106,15 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 							,anchor: '85%'
 							,msgTarget: 'qtip'
 						}]
+					},{
+						xtype:'hidden',name:'email',value: this.user_email
 					}]
 				}]
 			});
 			
 			this.confirmacionUsuario = new Ext.Window({
 				id: 'inactivityWin'
-				,width: 300
+				,width: 350
 				,autoHeight: true
 				,modal: true
 				,plain: true
@@ -134,13 +135,13 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 				]
 				,buttonAlign: 'center'
 				,buttons: [{
-					 text: Ext.ux.lang.botones.salir
+					 text: Ext.ux.lang.buttons.logout
 					,iconCls: 'silk-logout16'
 					,handler: function(){
 						location.href = Ext.ux.routes.url_index;
 					}
 				},{
-					 text: Ext.ux.lang.botones.entrar
+					 text: Ext.ux.lang.buttons.login
 					,iconCls: 'silk-accept'
 					,scope: this
 					,handler: function(){
@@ -151,7 +152,10 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 							,reset: false
 							,scope: this
 							,failure: function(Login, action){
-								Ext.getCmp('msgLogin').update('<b>'+action.result.msg+'</b>');
+								Ext.getCmp('sbWinLogin').setStatus({
+			                        text: action.result.error,
+			                        iconCls: 'x-status-error'
+			                    });
 								Ext.getCmp('password').setRawValue('');
 								LoginPanel.items.items[0].items.items[1].items.items[0].markInvalid();
 								LoginPanel.items.items[0].items.items[1].items.items[0].focus(true, 750);
@@ -164,6 +168,10 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 					}
 				}]
 				,onEsc: Ext.emptyFn()
+				,bbar: new Ext.ux.StatusBar({
+		            text: '',
+		            id: 'sbWinLogin'
+		        })
 			});
 			this.confirmacionUsuario.show();
 			LoginPanel.items.items[0].items.items[1].items.items[0].focus(true, 750);

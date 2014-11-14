@@ -106,8 +106,10 @@ class UserAdo extends BaseAdo {
 			 user_profile_id,
 			 user_uinsert,
 			 user_finsert,
-			 user_fupdate
+			 user_fupdate,
+			 profile_name
 			FROM user
+			LEFT JOIN profile ON user_profile_id = profile_id
 		';
 		if(!empty($filter)){
 			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
