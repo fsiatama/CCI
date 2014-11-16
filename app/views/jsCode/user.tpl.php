@@ -16,11 +16,10 @@
 	var F = Ext.util.Format;
 	
 	var storeUser = new Ext.data.JsonStore({
-		url:'proceso/user/'
-		,root:'datos'
+		url:'user/list'
+		,root:'data'
 		,sortInfo:{field:'user_id',direction:'ASC'}
 		,totalProperty:'total'
-		,baseParams:{accion:'lista'}
 		,fields:[
 			{name:'user_id', type:'float'},
 			{name:'user_full_name', type:'string'},
@@ -56,11 +55,11 @@
 	
 	var cmUser = new Ext.grid.ColumnModel({
 		columns:[
-			{xtype:'numbercolumn', header:'<?php print _USER_ID; ?>', align:'right', hidden:false, dataIndex:'user_id'},
-			{header:'<?php print _USER_FULL_NAME; ?>', align:'left', hidden:false, dataIndex:'user_full_name'},
-			{header:'<?php print _USER_EMAIL; ?>', align:'left', hidden:false, dataIndex:'user_email'},
-			{header:'<?php print _USER_ACTIVE; ?>', align:'left', hidden:false, dataIndex:'user_active'},
-			{xtype:'numbercolumn', header:'<?php print _USER_PROFILE_ID; ?>', align:'right', hidden:false, dataIndex:'user_profile_id'},
+			{xtype:'numbercolumn', header:'', align:'right', hidden:false, dataIndex:'user_id'},
+			{header:'', align:'left', hidden:false, dataIndex:'user_full_name'},
+			{header:'', align:'left', hidden:false, dataIndex:'user_email'},
+			{header:'', align:'left', hidden:false, dataIndex:'user_active'},
+			{xtype:'numbercolumn', header:'', align:'right', hidden:false, dataIndex:'user_profile_id'},
 		]
 		,defaults:{
 			sortable:true
@@ -74,27 +73,25 @@
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
 			,handler: function(){				
-				var datos = {
-					id:'add-'+module
+				var data = {
+					id:'add-' + module
 					,iconCls:'silk-add'
 					,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
-					,url:'<?= $urlAdd; ?>'
+					,url:''
 					,params:{
 						code:'jobs'
 						,id:'agregar-'+module
-						,url:'jscode/cargos_form/'
-						,accion:'crea'
+						,url:'user/jscode/add'
 					}
 				};
-				Ext.getCmp('oeste').addTab(this,this,datos);
+				Ext.getCmp('oeste').addTab(this,this,data);
 			}
 		}]
 	});
-	var gridCargos = new Ext.grid.GridPanel({
-		store:storeCargos
-		,id:prefixId+'gridCargos'
-		//,height:200
-		,colModel:cmCargos
+	var gridUser = new Ext.grid.GridPanel({
+		store:storeUser
+		,id:module + 'gridUser'
+		,colModel:cmUser
 		,viewConfig: {
 			forceFit: true
 			,scrollOffset:2
@@ -102,10 +99,10 @@
 		,sm: new Ext.grid.RowSelectionModel({
 			singleSelect: true
 		})
-		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeCargos, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeUser, displayInfo:true})
 		,enableColumnMove:false
 		,enableColumnResize:false
-		,tbar:tbCargos
+		,tbar:tbUser
 		,loadMask:true
 		,border:false
 		,frame: false
@@ -121,7 +118,7 @@
 			,width:300
 			,mode:'remote'
 			,position:top
-		}), new Ext.ux.grid.Excel(),gridCargosAction]
+		}), new Ext.ux.grid.Excel(),gridUserAction]
 	});
 	
 	/***********************************************INICIO FUNCIONES ***********************************************/
@@ -137,7 +134,7 @@
 			});
 		}
 		else{
-			var datos = {
+			var data = {
 				id:'modificar-'+module
 				,iconCls:'silk-page-edit'
 				,titleTab:'Edit - Job'
@@ -150,7 +147,7 @@
 					,key:key
 				}
 			};
-			Ext.getCmp('oeste').addTab(this,this,datos);
+			Ext.getCmp('oeste').addTab(this,this,data);
 		}
 	}
 	function fnDeleteItem(record){
@@ -188,5 +185,5 @@
 	}
 
 	/*----------------------------------------------- FIN FUNCIONES -----------------------------------------------*/
-	return gridCargos;	
+	return gridUser;	
 })()

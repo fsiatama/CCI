@@ -21,16 +21,21 @@ class UserController {
 	}
 	public function jsCodeAction($urlParams, $postParams)
 	{
-		$sessionRepo = new SessionRepo;
 		$result = $this->userRepo->validateMenu($postParams);
 
 		if ($result['success']) {
-			var_dump($result);
 			$postParams['is_template'] = true;
+			$params = array_merge($postParams, $result);
 
-			return new View('jsCode/user', $postParams);
+			return new View('jsCode/user', $params);
 		}
 		
+		return $result;
+	}
+
+	public function listAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->grid($postParams);
 		return $result;
 	}
 

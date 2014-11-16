@@ -29,7 +29,7 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 	 */
 	,paramNames: {
 		 fields:'fields'
-		,formato:'formato'
+		,format:'format'
 		,limit:'limit'
 		,start:'start'
 	}
@@ -92,7 +92,7 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 					text: Ext.ux.lang.reports.excel2010
 					,handler:this.onTriggerExcel.createDelegate(this,['1'])
 				},{
-					text: Ext.ux.lang.reports.excel2010
+					text: Ext.ux.lang.reports.excel97
 					,handler:this.onTriggerExcel.createDelegate(this,['2'])
 				}]
 			/*},{
@@ -147,13 +147,13 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 		//console.log(sortInfo);
 		// add fields and query to baseParams of store
 		delete(parametros[this.paramNames.fields]);
-		delete(parametros[this.paramNames.formato]);
+		delete(parametros[this.paramNames.format]);
 		delete(parametros[this.paramNames.limit]);
 		delete(parametros[this.paramNames.start]);
 		
 		if(columnas){
 			parametros[this.paramNames.fields] = Ext.encode(columnas);
-			parametros[this.paramNames.formato] = val;
+			parametros[this.paramNames.format] = val;
 			parametros[this.paramNames.limit] = Ext.util.lang.reports.maxRows;
 		}
 		
@@ -192,7 +192,7 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 					}
 				}
 				delete(store.baseParams[this.paramNames.fields]);
-				delete(store.baseParams[this.paramNames.formato]);
+				delete(store.baseParams[this.paramNames.format]);
 				delete(store.baseParams[this.paramNames.limit]);
 			 }
 			 ,failure: function(response){

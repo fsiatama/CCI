@@ -116,7 +116,7 @@ class UserRepo extends BaseRepo {
 					'success' => false,
 					'closeTab' => true,
 					'tab' => 'tab-'.$id,
-					'error' => ''
+					'error' => 'Su perfil no tiene habilitado esta opción'
 				];
 			}
 			else {
@@ -127,10 +127,42 @@ class UserRepo extends BaseRepo {
 				$permissions_delete = ($_SESSION['session_menu'][$id]['delete'] == '1') ? true : false;
 				$permissions_export = ($_SESSION['session_menu'][$id]['export'] == '1') ? true : false;
 
-				$success = true;
-				$result = compact('success','permissions_list', 'permissions_modify', 'permissions_create', 'permissions_delete', 'permissions_export');
+				$permissions = compact('permissions_list', 'permissions_modify', 'permissions_create', 'permissions_delete', 'permissions_export');
+				if (!in_array(true, $permissions)) {
+					$result = [
+						'success' => false,
+						'closeTab' => true,
+						'tab' => 'tab-'.$id,
+						'error' => 'Su perfil no tiene permisos habilitados para esta opción'
+					];
+				}
+				else {
+					$success = true;
+					$result = compact('success', 'permissions_list', 'permissions_modify', 'permissions_create', 'permissions_delete', 'permissions_export');
+				}
 			}
 		}
+		return $result;
+	}
+
+	public function grid($params)
+	{
+		extract($params);
+		$user    = $this->model;
+		$userAdo = $this->modelAdo;
+		
+		$start = ( isset($start) ) ? $start : 0;
+		$limit = ( isset($limit) ) ? $limit : 30;
+
+		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
+
+
+		/*$user->setUser_email($email);
+		$user->setUser_password($password);
+		$user->setUser_active('1');*/
+		
+		$result = $userAdo->paginate($user, 'LIKE', $page, $limit);
+
 		return $result;
 	}
 

@@ -64,7 +64,7 @@ abstract class BaseAdo extends Connection {
 
 		$sql = $this->buildSelect();
 
-		$savec = $ADODB_COUNTRECS;
+		$savec = ( empty($ADODB_COUNTRECS) ) ? false : $ADODB_COUNTRECS;
 		if ($conn->pageExecuteCountRows) {
 			$ADODB_COUNTRECS = true;
 		}
