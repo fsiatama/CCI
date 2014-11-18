@@ -1,0 +1,8 @@
+cd C:\wamp\bin\apache\apache2.4.9\bin
+openssl genrsa -des3 -out cci_local.key 1024
+password cci.local
+
+
+copy cci_local.key cci_local.key.org  
+openssl rsa -in cci_local.key.org -out cci_local.key  
+openssl req -new -x509 -nodes -sha1 -days 365 -key cci_local.key -out cci_local.crt -config C:\wamp\bin\apache\apache2.4.9\conf\openssl.cnf  

@@ -190,7 +190,7 @@ class UserRepo extends BaseRepo {
 			'profile_name',
 		]);
 
-		$result = $userAdo->paginate($user, 'LIKE', $page, $limit);
+		$result = $userAdo->paginate($user, 'LIKE', $limit, $page);
 
 		return $result;
 	}
