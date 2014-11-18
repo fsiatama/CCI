@@ -21,7 +21,7 @@ class User {
 	}
 
 	public function setUser_full_name($user_full_name){
-		$this->user_full_name = $user_full_name;
+		$this->user_full_name = Inflector::cleanInputString($user_full_name);
 	}
 
 	public function getUser_full_name(){
@@ -29,7 +29,7 @@ class User {
 	}
 
 	public function setUser_email($user_email){
-		$this->user_email = $user_email;
+		$this->user_email = Inflector::cleanInputEmail($user_email);
 	}
 
 	public function getUser_email(){
@@ -82,6 +82,11 @@ class User {
 
 	public function getUser_fupdate(){
 		return $this->user_fupdate;
+	}
+
+	public function getUserActiveTitleAttribute($key)
+	{
+		return Lang::get('user.user_active.' . $key);
 	}
 
 }

@@ -18,4 +18,4 @@ define("PATH_RAIZ", "C:/wamp/www/CCI/public/");
 define("PATH_APP", "C:/wamp/www/CCI/app/");
 define("PATH_REPORTES", PATH_RAIZ."/rep/");
 
-define("IDIOMA", "colombia.dic.php");
+define("DEFAULT_LANGUAGE", "es");

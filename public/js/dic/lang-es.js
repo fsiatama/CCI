@@ -1,6 +1,16 @@
 Ext.ns('Ext.ux', 'Ext.ux.lang.error');
 Ext.ux.lang.error = {
 	 session_expired: 'Su sesi&oacute;n ha superado los 20 minutos de actividad.<br>Por seguridad, ingrese su contrase&ntilde;a para seguir trabajando'
+	 ,close_tab: '&iquest;Est&aacute; seguro que desea cerrar la pesta&ntilde;a/ventana?<br />Si la cierra, perder&aacute; todos los datos y cambios ingresados, como asi tambi&eacute;n los archivos subidos.'
+	 ,invalid_pass_input: 'No es una contraseña válida. Debe contener al menos una letra mayúscula, una letra minúscula y al menos un número.'
+}
+
+Ext.ns('Ext.ux', 'Ext.ux.lang.messages');
+Ext.ux.lang.messages = {
+	 warning: 'Advertencia'
+	,confirmation: 'Confirmar'
+	,error: 'Error'
+	,question_delete: '¿Seguro que quiere eliminar el registro seleccionado?'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.reports');
@@ -16,9 +26,11 @@ Ext.ux.lang.menu = {
 	,help: 'Ayuda'
 }
 
-Ext.ns('Ext.ux', 'Ext.ux.lang.columns');
-Ext.ux.lang.columns = {
+Ext.ns('Ext.ux', 'Ext.ux.lang.grid');
+Ext.ux.lang.grid = {
 	options: 'Opciones'
+	,selectAllText: 'Todo'
+	,search: 'Buscar'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.buttons');

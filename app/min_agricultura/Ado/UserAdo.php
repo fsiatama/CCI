@@ -114,7 +114,6 @@ class UserAdo extends BaseAdo {
 		if(!empty($filter)){
 			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
 		}
-
 		return $sql;
 	}
 

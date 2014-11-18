@@ -45,7 +45,7 @@ class PermissionsRepo extends BaseRepo {
 					$varMenuName     = $value['menu_name'];
 
 					$arrMenuItems[$category][] = array(
-						'id'       => Inflector::underscore($varMenuName),
+						'id'       => Inflector::underscore($varMenuName).'_'.$value['menu_id'],
 						'title'    => $varMenuName,
 						'iconCls'  => Inflector::slug($varMenuName),
 						'titleTab' => $varMenuName,

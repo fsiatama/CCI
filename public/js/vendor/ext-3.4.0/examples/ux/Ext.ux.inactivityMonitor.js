@@ -185,7 +185,10 @@ Ext.ux.inactivityMonitor = Ext.extend(Ext.util.Observable, {
 						,reset: false
 						,scope: this
 						,failure: function(Login, action) {
-							Ext.getCmp('msgLogin').update('<b>'+action.result.msg+'</b>');
+							Ext.getCmp('sbWinLogin').setStatus({
+		                        text: action.result.error,
+		                        iconCls: 'x-status-error'
+		                    });
 							Ext.getCmp('password').setRawValue('');
 							LoginPanel.items.items[0].items.items[1].items.items[0].markInvalid();
 							LoginPanel.items.items[0].items.items[1].items.items[0].focus(true, 750);

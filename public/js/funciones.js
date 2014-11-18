@@ -214,7 +214,7 @@ Ext.onReady(function(){
 				//console.log(proxy, options, response);		
 				Ext.MessageBox.show({
 					title: '',
-					msg: Ext.decode(response.responseText).msg,
+					msg: Ext.decode(response.responseText).error,
 					buttons: Ext.Msg.OK,
 					closable:false,
 					icon: Ext.MessageBox.ERROR
@@ -240,7 +240,7 @@ Ext.onReady(function(){
 				if(response.success == false){
 					Ext.MessageBox.show({
 						title: 'Error',
-						msg:response.errors.reason,
+						msg:response.error,
 						buttons: Ext.Msg.OK,
 						closable:false,
 						icon: Ext.MessageBox.ERROR

@@ -52,6 +52,7 @@ class UserRepo extends BaseRepo {
 					$_SESSION['session_name']    = $row['user_full_name'];
 					$_SESSION['session_email']   = $row['user_email'];
 					$_SESSION['session_profile'] = $row['user_profile_id'];
+					$_SESSION['lang']            = DEFAULT_LANGUAGE;
 					$_SESSION['start']           = time();
 					$_SESSION['user_token']      = uniqid();
 
@@ -104,7 +105,7 @@ class UserRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function validateMenu($params)
+	public function validateMenu($action, $params)
 	{
 		extract($params);
 
@@ -121,18 +122,23 @@ class UserRepo extends BaseRepo {
 			}
 			else {
 
-				$permissions_list   = ($_SESSION['session_menu'][$id]['list']   == '1') ? true : false;
+				//var_dump($_SESSION['session_menu'][$id][$action], $params);
+
+				$permissions = ($_SESSION['session_menu'][$id][$action] == '1') ? true : false;
+
+				/*$permissions_list   = ($_SESSION['session_menu'][$id]['list']   == '1') ? true : false;
 				$permissions_modify = ($_SESSION['session_menu'][$id]['modify'] == '1') ? true : false;
 				$permissions_create = ($_SESSION['session_menu'][$id]['create'] == '1') ? true : false;
 				$permissions_delete = ($_SESSION['session_menu'][$id]['delete'] == '1') ? true : false;
 				$permissions_export = ($_SESSION['session_menu'][$id]['export'] == '1') ? true : false;
 
 				$permissions = compact('permissions_list', 'permissions_modify', 'permissions_create', 'permissions_delete', 'permissions_export');
-				if (!in_array(true, $permissions)) {
+				if (!in_array(true, $permissions)) {*/
+				if (!$permissions) {
 					$result = [
 						'success' => false,
 						'closeTab' => true,
-						'tab' => 'tab-'.$id,
+						'tab' => 'tab-'.$module,
 						'error' => 'Su perfil no tiene permisos habilitados para esta opción'
 					];
 				}
@@ -156,13 +162,78 @@ class UserRepo extends BaseRepo {
 
 		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
 
+		if (!empty($query)) {
+			if (!empty($fullTextFields)) {
+				
+				$fullTextFields = json_decode($fullTextFields);
+				
+				foreach ($fullTextFields as $value) {
+					$methodName = $this->getColumnMethodName('set', $value);
+					
+					if (method_exists($user, $methodName)) {
+						call_user_func_array([$user, $methodName], compact('query'));
+					}
+				}
+			} else {
+				$user->setUser_email($query);
+				$user->setUser_full_name($query);
+			}
+			
+		}
 
-		/*$user->setUser_email($email);
-		$user->setUser_password($password);
-		$user->setUser_active('1');*/
-		
+		$userAdo->setColumns([
+			'user_full_name',
+			'user_email',
+			'user_active',
+			'user_active_title',
+			'user_profile_id',
+			'profile_name',
+		]);
+
 		$result = $userAdo->paginate($user, 'LIKE', $page, $limit);
 
+		return $result;
+	}
+
+	public function create($params)
+	{
+		extract($params);
+		$user    = $this->model;
+		$userAdo = $this->modelAdo;
+
+		if (
+			empty($user_full_name) || 
+			empty($user_email) || 
+			empty($user_password) ||
+			empty($user_profile_id)
+		) {
+			$result = array(
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			);
+			return $result;
+		}
+
+		$user->setUser_email($user_email);
+		$result = $userAdo->exactSearch($user);
+		
+		if ($result['success']) {
+			
+			if ($result['total'] > 0) {
+				$result = array(
+					'success' => false,
+					'error'   => 'Este Email ya se encuentra registrado'
+				);
+				return $result;
+			}
+			$user->setUser_full_name($user_full_name);
+			$user->setUser_password($user_password);
+			$user->setUser_active($user_active);
+			$user->setUser_profile_id($user_profile_id);
+			$user->setUser_uinsert($_SESSION['user_id']);
+			$user->setUser_finsert(Helpers::getDateTimeNow());
+			$result = $userAdo->create($user);
+		}
 		return $result;
 	}
 

@@ -9,6 +9,7 @@ abstract class BaseAdo extends Connection {
 	protected $data;
 	protected $table;
 	protected $primaryKey;
+	protected $columns = null;
 	
 	public function __construct()
 	{
@@ -19,7 +20,15 @@ abstract class BaseAdo extends Connection {
 
 	abstract protected function setData();
 	abstract protected function buildSelect();
-	
+
+	public function setColumns($columns){
+		$this->columns = $columns;
+	}
+
+	public function getColumns(){
+		return $this->columns;
+	}
+
 	protected function getOperator()
 	{
 		return $this->operator;
@@ -165,17 +174,49 @@ abstract class BaseAdo extends Connection {
 		}
 		else{
 			$result['success'] = true;
-			$result['total']  = $resultSet->RecordCount();
+			$result['total']   = $resultSet->RecordCount();
+			$result['data']    = [];
 			if ($insertId !== false) {
 				$result['insertId'] = $insertId;
 			}
 			while(!$resultSet->EOF){
-				$result['data'][] = $resultSet->fields;
+				$result['data'][] = $this->filterRow($resultSet->fields);
 				$resultSet->MoveNext();
 			}
 			$resultSet->Close();
 		}
 
 		return $result;
+	}
+
+	protected function filterRow($row)
+	{
+		$columns = $this->getColumns();
+		$model   = $this->getModel();
+
+		if (!is_null($columns) && is_array($columns)) {
+			$newRow = [];
+			foreach ($columns as $column) {
+
+				$methodName = 'get' . Inflector::underCamel($column) . 'Attribute';
+				if (array_key_exists($column, $row)) {
+					$newRow[$column] = $row[$column];
+				}
+				elseif (method_exists($model, $methodName)) {
+					$segments   = explode('_', $column);
+					$attribute  = array_pop($segments);
+					$columnName = implode('_', $segments);
+
+					if (!empty($row[$columnName])) {
+						$response        = call_user_func_array([$model, $methodName], [$row[$columnName]]);
+						$newRow[$column] = $response;
+					}
+				}
+			}
+			$row = $newRow;
+			//var_dump($columns);
+		}
+
+		return $row;
 	}
 }

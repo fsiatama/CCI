@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "pais"; //$_GET["tabla"];
+$nombre_tabla = "profile"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -216,20 +216,9 @@ class ".ucfirst($nombre_tabla)."Controller {
 		\$this->".($nombre_tabla)."Repo = new ".ucfirst($nombre_tabla)."Repo;
 	}
 	
-	/**
-	 * indexAction
-	 * Metodo por defecto que sera llamado si no se especifica otro en la url
-	 *
-	 * @param array \$urlParams  parametros adicionales pasados por la url.
-	 * @param array \$postParams Parametros enviados via Post.
-	 *
-	 * @access public
-	 *
-	 * @return mixed Value.
-	 */
-	public function indexAction(\$urlParams, \$postParams)
+	public function listAction(\$urlParams, \$postParams)
     {
-        return true;
+        return \$this->".($nombre_tabla)."Repo->listAll(\$postParams);
     }
 
 }
@@ -455,13 +444,13 @@ foreach($result2 as $key => $campos){
 	}
 	
 	$arr_str_fields[]  = "{name:'".$campos["COLUMN_NAME"]."', type:'".$tipo."'".$format."}";;
-	$arr_col_model[]   = "{".$column_xtype."header:'<?php print _".strtoupper($campos["COLUMN_NAME"])."; ?>', align:'".$alinear ."', hidden:false, dataIndex:'".$campos["COLUMN_NAME"]."'".$column_format."}";
+	$arr_col_model[]   = "{".$column_xtype."header:'<?= Lang::get('".$nombre_tabla.".columns_title.".$campos["COLUMN_NAME"]."'); ?>', align:'".$alinear ."', hidden:false, dataIndex:'".$campos["COLUMN_NAME"]."'".$column_format."}";
 	$arr_form_reader[] = "{name:'".$campos["COLUMN_NAME"]."', mapping:'".$campos["COLUMN_NAME"]."', type:'".$tipo."'}";
 	$str  = "defaults:{anchor:'100%'}\r\n";
 	$str .= "			,items:[{\r\n";
-	$str .= "				,xtype:'".$xtype."'\r\n";
+	$str .= "				xtype:'".$xtype."'\r\n";
 	$str .= "				,name:'".$campos["COLUMN_NAME"]."'\r\n";
-	$str .= "				,fieldLabel:'<?php print _".strtoupper($campos["COLUMN_NAME"])."; ?>'\r\n";
+	$str .= "				,fieldLabel:'<?= Lang::get('".$nombre_tabla.".columns_title.".$campos["COLUMN_NAME"]."'); ?>'\r\n";
 	$str .= "				,id:module+'".$campos["COLUMN_NAME"]."'\r\n";
 	$str .= "				,allowBlank:false\r\n";
 	$str .= "			}]\r\n";
@@ -470,7 +459,7 @@ foreach($result2 as $key => $campos){
 }
 
 $contenido .= "var store".ucfirst($nombre_tabla)." = new Ext.data.JsonStore({\r\n";
-$contenido .= "	url:'proceso/".$nombre_tabla."/'\r\n";
+$contenido .= "	url:'".$nombre_tabla."/list'\r\n";
 $contenido .= "	,root:'data'\r\n";
 $contenido .= "	,sortInfo:{field:'".$llave_primaria."',direction:'ASC'}\r\n";
 $contenido .= "	,totalProperty:'total'\r\n";
@@ -483,14 +472,21 @@ $contenido .= "});\r\n";
 $contenido .= "var combo".ucfirst($nombre_tabla)." = new Ext.form.ComboBox({\r\n";
 $contenido .= "	hiddenName:'".$nombre_tabla."'\r\n";
 $contenido .= "	,id:module+'combo".ucfirst($nombre_tabla)."'\r\n";
-$contenido .= "	,fieldLabel:'<?php print _".strtoupper($nombre_tabla)."; ?>'\r\n";
+$contenido .= "	,fieldLabel:'<?= Lang::get('".$nombre_tabla.".columns_title.".$campos["COLUMN_NAME"]."'); ?>'\r\n";
 $contenido .= "	,store:store".ucfirst($nombre_tabla)."\r\n";
 $contenido .= "	,valueField:'".$llave_primaria."'\r\n";
-$contenido .= "	,displayField:'".$nombre_tabla."_nombre'\r\n";
+$contenido .= "	,displayField:'".$nombre_tabla."_name'\r\n";
 $contenido .= "	,typeAhead:true\r\n";
 $contenido .= "	,forceSelection:true\r\n";
 $contenido .= "	,triggerAction:'all'\r\n";
 $contenido .= "	,selectOnFocus:true\r\n";
+$contenido .= "	,listeners:{\r\n";
+$contenido .= "		select: {\r\n";
+$contenido .= "			fn: function(combo,reg){\r\n";
+$contenido .= "				Ext.getCmp(module + '".$llave_primaria."').setValue(reg.data.".$llave_primaria.");\r\n";
+$contenido .= "			}\r\n";
+$contenido .= "		}\r\n";
+$contenido .= "	}\r\n";
 $contenido .= "});\r\n";
 
 $contenido .= "var cm".ucfirst($nombre_tabla)." = new Ext.grid.ColumnModel({\r\n";

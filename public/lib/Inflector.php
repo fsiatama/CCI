@@ -14,6 +14,18 @@ class Inflector {
 		return implode('', $segments);
 	}
 
+	public static function underCamel($value)
+	{
+		$segments = explode('_', $value);
+
+		array_walk($segments, function (&$item) {
+			$item = static::cleanVarName($item);
+			$item = ucfirst($item);
+		});
+
+		return implode('', $segments);
+	}
+
 	public static function lowerCamel($value)
 	{
 		return lcfirst(static::camel($value));
@@ -51,6 +63,27 @@ class Inflector {
 		    '',
 		    $string
 		);
+		
+		$string = strtolower($string);
+
+		return $string;
+	}
+
+	public static function cleanInputString($string)
+	{
+		$string = static::cleanOutputString($string);
+		$string = strip_tags($string);
+		
+		$string = strtoupper($string);
+
+		return $string;
+	}
+
+	public static function cleanInputEmail($string)
+	{
+		$string = static::cleanOutputString($string);
+		$string = strip_tags($string);
+		$string = filter_var($string, FILTER_SANITIZE_EMAIL);
 		
 		$string = strtolower($string);
 

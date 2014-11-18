@@ -12,6 +12,7 @@ require 'lib/Request.php';
 require 'lib/Inflector.php';
 require 'lib/Response.php';
 require 'lib/View.php';
+require 'lib/Lang.php';
 
 
 //Llamar al controlador indicado

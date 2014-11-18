@@ -9,9 +9,25 @@
 */
 class Lang
 {
-	public static function get($namespace)
+	protected static function getPath()
 	{
-		return date("Y-m-d H:i:s");
+		return PATH_APP.'lang/'.$_SESSION['lang'].'/';
+	}
+
+	public static function get($group)
+	{
+		$path = self::getPath();
+
+		$segments = explode('.', $group);
+
+		$file = array_shift($segments);
+
+		$fileName = $path.$file.'.php';
+
+		$lines = Helpers::getRequire($fileName);
+
+		return Helpers::arrayGet($lines, implode('.', $segments));
+		
 	}
 		
 }

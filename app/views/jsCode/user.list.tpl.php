@@ -3,37 +3,28 @@
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module; ?>';
 	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
-	var today=new Date()
-	var msg = function(title, msg, tipo){
-		Ext.Msg.show({
-			title: title
-			,msg: msg,minWidth: 200
-			,modal: true
-			,icon: tipo
-			,buttons: Ext.Msg.OK
-		});
-	};	
-	var F = Ext.util.Format;
 	
 	var storeUser = new Ext.data.JsonStore({
 		url:'user/list'
 		,root:'data'
 		,sortInfo:{field:'user_id',direction:'ASC'}
 		,totalProperty:'total'
+		,baseParams:{id:'<?= $id; ?>'}
 		,fields:[
 			{name:'user_id', type:'float'},
 			{name:'user_full_name', type:'string'},
 			{name:'user_email', type:'string'},
-			{name:'user_password', type:'string'},
 			{name:'user_active', type:'string'},
-			{name:'user_profile_id', type:'float'}
+			{name:'user_active_title', type:'string'},
+			{name:'user_profile_id', type:'float'},
+			{name:'profile_name', type:'string'}
 		]
 	});
 	
 	storeUser.load({params:{start:0, limit:numberRecords}});
 	
 	gridUserAction = new Ext.ux.grid.RowActions({
-		 header: Ext.ux.lang.columns.options
+		 header: Ext.ux.lang.grid.options
 		,keepSelection:true
 		,autoWidth:false
 		,actions:[{
@@ -55,11 +46,12 @@
 	
 	var cmUser = new Ext.grid.ColumnModel({
 		columns:[
-			{xtype:'numbercolumn', header:'', align:'right', hidden:false, dataIndex:'user_id'},
-			{header:'', align:'left', hidden:false, dataIndex:'user_full_name'},
-			{header:'', align:'left', hidden:false, dataIndex:'user_email'},
-			{header:'', align:'left', hidden:false, dataIndex:'user_active'},
-			{xtype:'numbercolumn', header:'', align:'right', hidden:false, dataIndex:'user_profile_id'},
+			new Ext.grid.RowNumberer(),
+			{header:'<?= Lang::get('user.columns_title.user_full_name'); ?>', hidden:false, dataIndex:'user_full_name'},
+			{header:'<?= Lang::get('user.columns_title.user_email'); ?>', hidden:false, dataIndex:'user_email'},
+			{header:'<?= Lang::get('user.columns_title.user_active'); ?>', hidden:false, dataIndex:'user_active_title'},
+			{header:'<?= Lang::get('user.columns_title.profile_name'); ?>', hidden:false, dataIndex:'profile_name'},
+			gridUserAction
 		]
 		,defaults:{
 			sortable:true
@@ -67,21 +59,21 @@
 		}
 	});
 	
-	
 	var tbUser = new Ext.Toolbar({
 		items:[{
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
 			,handler: function(){				
 				var data = {
-					id:'add-' + module
+					id:'add_' + module
 					,iconCls:'silk-add'
 					,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
-					,url:''
+					,url:'user/jscode/create'
 					,params:{
-						code:'jobs'
-						,id:'agregar-'+module
-						,url:'user/jscode/add'
+						id:'<?= $id; ?>'
+						,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.add
+						,module: 'add_' + module
+						,parent: module
 					}
 				};
 				Ext.getCmp('oeste').addTab(this,this,data);
@@ -110,25 +102,32 @@
 		,buttonAlign:'center'
 		,title:''
 		,iconCls:'icon-grid'
-		,plugins:[new Ext.ux.grid.Search({
-			iconCls:'silk-zoom'
-			,id:module+'searchid'
-			,minChars:2
-			,autoFocus:true
-			,width:300
-			,mode:'remote'
-			,position:top
-		}), new Ext.ux.grid.Excel(),gridUserAction]
+		,plugins:[
+			new Ext.ux.grid.Search({
+				iconCls:'silk-zoom'
+				,searchText: Ext.ux.lang.grid.search
+				,selectAllText: Ext.ux.lang.grid.selectAllText
+				,id:module+'SearchBox'
+				,minChars:2
+				,width:200
+				,mode:'remote'
+				,align:'right'
+				,position:top
+				,disableIndexes:['user_active_title', 'profile_name']
+			}) 
+			,new Ext.ux.grid.Excel()
+			,gridUserAction
+		]
 	});
 	
 	/***********************************************INICIO FUNCIONES ***********************************************/
 	
 	function fnEditItm(record){
-		var key = record.get('cargos_id');
-		if(Ext.getCmp('tab-agregar-'+module) || Ext.getCmp('tab-modificar-'+module)){
+		var key = record.get('user_id');
+		if(Ext.getCmp('tab-add-'+module)){
 			Ext.Msg.show({
-				 title:'Warning'
-				,msg:'Please for create or modify a job, you need to close the tab Add Job and / or Modify Job'
+				 title:Ext.ux.lang.messages.warning
+				,msg:Ext.ux.lang.error.close_tab
 				,buttons: Ext.Msg.OK
 				,icon: Ext.Msg.WARNING
 			});
@@ -138,20 +137,20 @@
 				id:'modificar-'+module
 				,iconCls:'silk-page-edit'
 				,titleTab:'Edit - Job'
-				,url:'jscode/cargos_form/'
+				,url:'user/jscode/modify'
 				,params:{
 					code:'jobs'
-					,id:'modificar-'+module
-					,url:'jscode/cargos_form/'
-					,accion:'act'
-					,key:key
+					,id:'add-'+module
 				}
 			};
 			Ext.getCmp('oeste').addTab(this,this,data);
 		}
 	}
 	function fnDeleteItem(record){
-		Ext.Msg.confirm('Confirmation', 'Are you sure you want to delete the selected item?', function(btn){
+		Ext.Msg.confirm(
+			Ext.ux.lang.messages.confirmation
+			,Ext.ux.lang.messages.question_delete
+			,function(btn){
 			if(btn == 'yes'){
 				var gridMask = new Ext.LoadMask(gridCargos.getEl(), { msg: 'Erasing .....' });
 				gridMask.show();
@@ -171,7 +170,7 @@
 						}
 						else{
 							Ext.Msg.show({
-							   title:'Error',
+							   title:Ext.ux.lang.messages.error,
 							   buttons: Ext.Msg.OK,
 							   msg:json.reason,
 							   animEl: 'elId',
