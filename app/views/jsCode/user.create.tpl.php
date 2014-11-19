@@ -54,7 +54,7 @@
 				{name:'user_email', mapping:'user_email', type:'string'},
 				{name:'user_active', mapping:'user_active', type:'string'},
 				{name:'user_profile_id', mapping:'user_profile_id', type:'float'},
-				{name:'profile_name', mapping:'profile_name', type:'strin'}
+				{name:'profile_name', mapping:'profile_name', type:'string'}
 			]
 		})
 		,items:[{
