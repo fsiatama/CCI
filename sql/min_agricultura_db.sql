@@ -37,17 +37,21 @@ DROP TABLE IF EXISTS `correlativa`;
 
 CREATE TABLE `correlativa` (
   `correlativa_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `correlativa_origen_posicion_id` varchar(10) NOT NULL,
-  `correlativa_destino_posicion_id` varchar(10) NOT NULL,
   `correlativa_fvigente` date NOT NULL,
-  `correlativa_decreto` varchar(5) NOT NULL,
+  `correlativa_decreto` varchar(15) NOT NULL,
   `correlativa_observacion` text NOT NULL,
+  `correlativa_origen` text NOT NULL,
+  `correlativa_destino` text NOT NULL,
   `correlativa_uinsert` int(10) unsigned NOT NULL,
   `correlativa_finsert` datetime NOT NULL,
+  `correlativa_uupdate` int(11) unsigned NOT NULL,
+  `correlativa_fupdate` datetime NOT NULL,
   PRIMARY KEY (`correlativa_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `correlativa` */
+
+insert  into `correlativa`(`correlativa_id`,`correlativa_fvigente`,`correlativa_decreto`,`correlativa_observacion`,`correlativa_origen`,`correlativa_destino`,`correlativa_uinsert`,`correlativa_finsert`,`correlativa_uupdate`,`correlativa_fupdate`) values (1,'2011-01-01','4927/11','LA SUBPARTIDA ARANCELARIA 0102 90 A NIVEL DE S.A. SE DESDOBLA EN 0102 29 PARA DIFERENCIAR LOS BOVINOS DOMÉSTICOS, A NIVEL DE NANDINA Y ARANCEL TAMBIÈN SE DESDOBLÓ LA SUBPARTIDA ARANCELARIA\r\n','0102909010','0102299010,0102390010,0102900010',1,'2014-11-18 21:35:25',0,'0000-00-00 00:00:00');
 
 /*Table structure for table `indicator` */
 
@@ -157,7 +161,7 @@ CREATE TABLE `session` (
 
 /*Data for the table `session` */
 
-insert  into `session`(`session_user_id`,`session_php_id`,`session_date`,`session_active`) values (1,'4m4cgsbdh91bkkrei8v2m6p483','2014-11-18 03:29:01','1');
+insert  into `session`(`session_user_id`,`session_php_id`,`session_date`,`session_active`) values (1,'4m4cgsbdh91bkkrei8v2m6p483','2014-11-19 03:07:37','1');
 
 /*Table structure for table `user` */
 

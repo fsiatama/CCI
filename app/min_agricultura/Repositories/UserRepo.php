@@ -157,9 +157,9 @@ class UserRepo extends BaseRepo {
 		$user    = $this->model;
 		$userAdo = $this->modelAdo;
 		
+		/**/
 		$start = ( isset($start) ) ? $start : 0;
 		$limit = ( isset($limit) ) ? $limit : 30;
-
 		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
 
 		if (!empty($query)) {

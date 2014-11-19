@@ -19,23 +19,27 @@ class CorrelativaAdo extends BaseAdo {
 		$correlativa = $this->getModel();
 
 		$correlativa_id = $correlativa->getCorrelativa_id();
-		$correlativa_origen_posicion_id = $correlativa->getCorrelativa_origen_posicion_id();
-		$correlativa_destino_posicion_id = $correlativa->getCorrelativa_destino_posicion_id();
 		$correlativa_fvigente = $correlativa->getCorrelativa_fvigente();
 		$correlativa_decreto = $correlativa->getCorrelativa_decreto();
 		$correlativa_observacion = $correlativa->getCorrelativa_observacion();
+		$correlativa_origen = $correlativa->getCorrelativa_origen();
+		$correlativa_destino = $correlativa->getCorrelativa_destino();
 		$correlativa_uinsert = $correlativa->getCorrelativa_uinsert();
 		$correlativa_finsert = $correlativa->getCorrelativa_finsert();
+		$correlativa_uupdate = $correlativa->getCorrelativa_uupdate();
+		$correlativa_fupdate = $correlativa->getCorrelativa_fupdate();
 
 		$this->data = compact(
 			'correlativa_id',
-			'correlativa_origen_posicion_id',
-			'correlativa_destino_posicion_id',
 			'correlativa_fvigente',
 			'correlativa_decreto',
 			'correlativa_observacion',
+			'correlativa_origen',
+			'correlativa_destino',
 			'correlativa_uinsert',
-			'correlativa_finsert'
+			'correlativa_finsert',
+			'correlativa_uupdate',
+			'correlativa_fupdate'
 		);
 	}
 
@@ -48,23 +52,27 @@ class CorrelativaAdo extends BaseAdo {
 		$sql = '
 			INSERT INTO correlativa (
 				correlativa_id,
-				correlativa_origen_posicion_id,
-				correlativa_destino_posicion_id,
 				correlativa_fvigente,
 				correlativa_decreto,
 				correlativa_observacion,
+				correlativa_origen,
+				correlativa_destino,
 				correlativa_uinsert,
-				correlativa_finsert
+				correlativa_finsert,
+				correlativa_uupdate,
+				correlativa_fupdate
 			)
 			VALUES (
 				"'.$this->data['correlativa_id'].'",
-				"'.$this->data['correlativa_origen_posicion_id'].'",
-				"'.$this->data['correlativa_destino_posicion_id'].'",
 				"'.$this->data['correlativa_fvigente'].'",
 				"'.$this->data['correlativa_decreto'].'",
 				"'.$this->data['correlativa_observacion'].'",
+				"'.$this->data['correlativa_origen'].'",
+				"'.$this->data['correlativa_destino'].'",
 				"'.$this->data['correlativa_uinsert'].'",
-				"'.$this->data['correlativa_finsert'].'"
+				"'.$this->data['correlativa_finsert'].'",
+				"'.$this->data['correlativa_uupdate'].'",
+				"'.$this->data['correlativa_fupdate'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -95,23 +103,21 @@ class CorrelativaAdo extends BaseAdo {
 
 		$sql = 'SELECT
 			 correlativa_id,
-			 correlativa_origen_posicion_id,
-			 correlativa_destino_posicion_id,
 			 correlativa_fvigente,
 			 correlativa_decreto,
 			 correlativa_observacion,
+			 correlativa_origen,
+			 correlativa_destino,
 			 correlativa_uinsert,
 			 correlativa_finsert,
-			 origen.posicion,
-			 destino.posicion
+			 correlativa_uupdate,
+			 correlativa_fupdate
 			FROM correlativa
-			LEFT JOIN posicion AS origen ON correlativa_origen_posicion_id = origen.posicion_id
-			LEFT JOIN posicion AS destino ON correlativa_destino_posicion_id = destino.posicion_id
 		';
 		if(!empty($filter)){
 			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
 		}
-
+		//var_dump($sql);
 		return $sql;
 	}
 

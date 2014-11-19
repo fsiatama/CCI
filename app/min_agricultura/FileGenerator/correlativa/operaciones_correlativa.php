@@ -11,13 +11,15 @@ if(isset($accion)){
 	switch($accion){
 		case "act":
 			$correlativa->setCorrelativa_id($correlativa_id);
-			$correlativa->setCorrelativa_origen_posicion_id($correlativa_origen_posicion_id);
-			$correlativa->setCorrelativa_destino_posicion_id($correlativa_destino_posicion_id);
 			$correlativa->setCorrelativa_fvigente($correlativa_fvigente);
 			$correlativa->setCorrelativa_decreto($correlativa_decreto);
 			$correlativa->setCorrelativa_observacion($correlativa_observacion);
+			$correlativa->setCorrelativa_origen($correlativa_origen);
+			$correlativa->setCorrelativa_destino($correlativa_destino);
 			$correlativa->setCorrelativa_uinsert($correlativa_uinsert);
 			$correlativa->setCorrelativa_finsert($correlativa_finsert);
+			$correlativa->setCorrelativa_uupdate($correlativa_uupdate);
+			$correlativa->setCorrelativa_fupdate($correlativa_fupdate);
 			$rs_correlativa = $correlativaAdo->actualizar($correlativa);
 			if($rs_correlativa !== true){
 				$success = false;
@@ -50,13 +52,15 @@ if(isset($accion)){
 		break;
 		case "crea":
 			$correlativa->setCorrelativa_id($correlativa_id);
-			$correlativa->setCorrelativa_origen_posicion_id($correlativa_origen_posicion_id);
-			$correlativa->setCorrelativa_destino_posicion_id($correlativa_destino_posicion_id);
 			$correlativa->setCorrelativa_fvigente($correlativa_fvigente);
 			$correlativa->setCorrelativa_decreto($correlativa_decreto);
 			$correlativa->setCorrelativa_observacion($correlativa_observacion);
+			$correlativa->setCorrelativa_origen($correlativa_origen);
+			$correlativa->setCorrelativa_destino($correlativa_destino);
 			$correlativa->setCorrelativa_uinsert($correlativa_uinsert);
 			$correlativa->setCorrelativa_finsert($correlativa_finsert);
+			$correlativa->setCorrelativa_uupdate($correlativa_uupdate);
+			$correlativa->setCorrelativa_fupdate($correlativa_fupdate);
 			$rs_correlativa = $correlativaAdo->insertar($correlativa);
 			if($rs_correlativa["success"] !== true){
 				$respuesta = array(
@@ -77,13 +81,15 @@ if(isset($accion)){
 		case "lista":
 			$arr = array();
 			$correlativa->setCorrelativa_id($correlativa_id);
-			$correlativa->setCorrelativa_origen_posicion_id($correlativa_origen_posicion_id);
-			$correlativa->setCorrelativa_destino_posicion_id($correlativa_destino_posicion_id);
 			$correlativa->setCorrelativa_fvigente($correlativa_fvigente);
 			$correlativa->setCorrelativa_decreto($correlativa_decreto);
 			$correlativa->setCorrelativa_observacion($correlativa_observacion);
+			$correlativa->setCorrelativa_origen($correlativa_origen);
+			$correlativa->setCorrelativa_destino($correlativa_destino);
 			$correlativa->setCorrelativa_uinsert($correlativa_uinsert);
 			$correlativa->setCorrelativa_finsert($correlativa_finsert);
+			$correlativa->setCorrelativa_uupdate($correlativa_uupdate);
+			$correlativa->setCorrelativa_fupdate($correlativa_fupdate);
 			$rs_correlativa = $correlativaAdo->lista($correlativa);
 			if(!is_array($rs_correlativa)){
 				$respuesta = array(
@@ -93,13 +99,13 @@ if(isset($accion)){
 				echo json_encode($respuesta);
 				exit();
 			}
-			foreach($rs_correlativa["datos"] as $key => $data){
+			foreach($rs_correlativa["data"] as $key => $data){
 				$arr[] = sanear_string($data);
 			}
 			$respuesta = array(
 				"success"=>true,
 				"total"=>$rs_correlativa["total"],
-				"datos"=>$arr
+				"data"=>$arr
 			);
 			echo json_encode($respuesta);
 			exit();
@@ -128,13 +134,13 @@ if(isset($accion)){
 				exit();
 			}
 			else{
-				foreach($rs_correlativa["datos"] as $key => $data){
+				foreach($rs_correlativa["data"] as $key => $data){
 					$arr[] = sanear_string($data);
 				}
 				$respuesta = array(
 					"success"=>true,
 					"total"=>$rs_correlativa["total"],
-					"datos"=>$arr
+					"data"=>$arr
 				);
 				echo json_encode($respuesta);
 				exit();

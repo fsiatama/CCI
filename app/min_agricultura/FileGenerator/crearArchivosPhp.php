@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "profile"; //$_GET["tabla"];
+$nombre_tabla = "correlativa"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -463,6 +463,7 @@ $contenido .= "	url:'".$nombre_tabla."/list'\r\n";
 $contenido .= "	,root:'data'\r\n";
 $contenido .= "	,sortInfo:{field:'".$llave_primaria."',direction:'ASC'}\r\n";
 $contenido .= "	,totalProperty:'total'\r\n";
+$contenido .= "	,baseParams:{id:'<?= \$id; ?>'}\r\n";
 $contenido .= "	,fields:[\r\n";
 $contenido .= "		".implode(",\r\n		",$arr_str_fields)."\r\n";
 $contenido .= "	]\r\n";

@@ -4,26 +4,33 @@
 	var module = '<?= $module; ?>';
 	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
 	
-	var storeUser = new Ext.data.JsonStore({
-		url:'user/list'
+	var storeCorrelativa = new Ext.data.JsonStore({
+		url:'correlativa/list'
 		,root:'data'
-		,sortInfo:{field:'user_id',direction:'ASC'}
+		,sortInfo:{field:'correlativa_id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams:{id:'<?= $id; ?>'}
 		,fields:[
-			{name:'user_id', type:'float'},
-			{name:'user_full_name', type:'string'},
-			{name:'user_email', type:'string'},
-			{name:'user_active', type:'string'},
-			{name:'user_active_title', type:'string'},
-			{name:'user_profile_id', type:'float'},
-			{name:'profile_name', type:'string'}
+			{name:'correlativa_id', type:'float'},
+			{name:'correlativa_fvigente', type:'string', dateFormat:'Y-m-d'},
+			{name:'correlativa_decreto', type:'string'},
+			{name:'correlativa_observacion', type:'string'},
+			{name:'correlativa_origen', type:'string'},
+			{name:'correlativa_destino', type:'string'}
 		]
 	});
 	
-	storeUser.load({params:{start:0, limit:numberRecords}});
+	storeCorrelativa.load({params:{start:0, limit:numberRecords}});
 	
-	gridUserAction = new Ext.ux.grid.RowActions({
+	gridCorrelativaExpander = new Ext.grid.RowExpander({
+		tpl: new Ext.Template(
+			 '<br><p style="margin:0 0 4px 8px"><b><?= Lang::get('correlativa.columns_title.correlativa_observacion'); ?>:</b><br>{correlativa_observacion}</p>'
+			 ,'<p style="margin:0 0 4px 8px"><b><?= Lang::get('correlativa.columns_title.correlativa_origen'); ?>:</b> {correlativa_origen}</p>'
+			 ,'<p style="margin:0 0 4px 8px"><b><?= Lang::get('correlativa.columns_title.correlativa_destino'); ?>:</b> {correlativa_destino}</p>'
+		)
+	});
+
+	gridCorrelativaAction = new Ext.ux.grid.RowActions({
 		 header: Ext.ux.lang.grid.options
 		,keepSelection:true
 		,autoWidth:false
@@ -44,22 +51,23 @@
 		}
 	});
 	
-	var cmUser = new Ext.grid.ColumnModel({
+	var cmCorrelativa = new Ext.grid.ColumnModel({
 		columns:[
-			new Ext.grid.RowNumberer(),
-			{header:'<?= Lang::get('user.columns_title.user_full_name'); ?>', hidden:false, dataIndex:'user_full_name'},
-			{header:'<?= Lang::get('user.columns_title.user_email'); ?>', hidden:false, dataIndex:'user_email'},
-			{header:'<?= Lang::get('user.columns_title.user_active'); ?>', hidden:false, dataIndex:'user_active_title'},
-			{header:'<?= Lang::get('user.columns_title.profile_name'); ?>', hidden:false, dataIndex:'profile_name'},
-			gridUserAction
+			gridCorrelativaExpander,
+			{header:'<?= Lang::get('correlativa.columns_title.correlativa_decreto'); ?>', align:'left', hidden:false, dataIndex:'correlativa_decreto'},
+			{xtype:'datecolumn', header:'<?= Lang::get('correlativa.columns_title.correlativa_fvigente'); ?>', align:'left', hidden:false, dataIndex:'correlativa_fvigente', format:'Y-m-d'},
+			{header:'<?= Lang::get('correlativa.columns_title.correlativa_observacion'); ?>', align:'left', hidden:false, dataIndex:'correlativa_observacion'},
+			{header:'<?= Lang::get('correlativa.columns_title.correlativa_origen'); ?>', align:'left', hidden:false, dataIndex:'correlativa_origen'},
+			{header:'<?= Lang::get('correlativa.columns_title.correlativa_destino'); ?>', align:'left', hidden:false, dataIndex:'correlativa_destino'},
+			gridCorrelativaAction
 		]
 		,defaults:{
 			sortable:true
 			,width:100
 		}
 	});
-	
-	var tbUser = new Ext.Toolbar({
+		
+	var tbCorrelativa = new Ext.Toolbar({
 		items:[{
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
@@ -68,7 +76,7 @@
 					id:'add_' + module
 					,iconCls:'silk-add'
 					,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
-					,url:'user/jscode/create'
+					,url:'correlativa/jscode/create'
 					,params:{
 						id:'<?= $id; ?>'
 						,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.add
@@ -80,10 +88,10 @@
 			}
 		}]
 	});
-	var gridUser = new Ext.grid.GridPanel({
-		store:storeUser
-		,id:module + 'gridUser'
-		,colModel:cmUser
+	var gridCorrelativa = new Ext.grid.GridPanel({
+		store:storeCorrelativa
+		,id:module + 'gridCorrelativa'
+		,colModel:cmCorrelativa
 		,viewConfig: {
 			forceFit: true
 			,scrollOffset:2
@@ -91,10 +99,10 @@
 		,sm: new Ext.grid.RowSelectionModel({
 			singleSelect: true
 		})
-		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeUser, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeCorrelativa, displayInfo:true})
 		,enableColumnMove:false
 		,enableColumnResize:false
-		,tbar:tbUser
+		,tbar:tbCorrelativa
 		,loadMask:true
 		,border:false
 		,frame: false
@@ -113,18 +121,18 @@
 				,mode:'remote'
 				,align:'right'
 				,position:top
-				,disableIndexes:['user_active_title', 'profile_name']
+				,disableIndexes:[]
 			}) 
-			,new Ext.ux.grid.Excel()
-			,gridUserAction
+			,gridCorrelativaAction
+			,gridCorrelativaExpander
 		]
 	});
 	
-	return gridUser;	
+	return gridCorrelativa;	
 	/*********************************************** Start functions***********************************************/
 	
 	function fnEditItm(record){
-		var key = record.get('user_id');
+		var key = record.get('correlativa_id');
 		if(Ext.getCmp('tab-add-'+module)){
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
@@ -135,13 +143,15 @@
 		}
 		else{
 			var data = {
-				id:'modificar-'+module
+				id:'edit_' + module
 				,iconCls:'silk-page-edit'
-				,titleTab:'Edit - Job'
-				,url:'user/jscode/modify'
+				,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
+				,url:'correlativa/jscode/create'
 				,params:{
-					code:'jobs'
-					,id:'add-'+module
+					id:'<?= $id; ?>'
+					,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
+					,module: 'edit_' + module
+					,parent: module
 				}
 			};
 			Ext.getCmp('oeste').addTab(this,this,data);

@@ -2,13 +2,15 @@
 class Correlativa {
 
 	private $correlativa_id;
-	private $correlativa_origen_posicion_id;
-	private $correlativa_destino_posicion_id;
 	private $correlativa_fvigente;
 	private $correlativa_decreto;
 	private $correlativa_observacion;
+	private $correlativa_origen;
+	private $correlativa_destino;
 	private $correlativa_uinsert;
 	private $correlativa_finsert;
+	private $correlativa_uupdate;
+	private $correlativa_fupdate;
 
 	public function setCorrelativa_id($correlativa_id){
 		$this->correlativa_id = $correlativa_id;
@@ -16,22 +18,6 @@ class Correlativa {
 
 	public function getCorrelativa_id(){
 		return $this->correlativa_id;
-	}
-
-	public function setCorrelativa_origen_posicion_id($correlativa_origen_posicion_id){
-		$this->correlativa_origen_posicion_id = $correlativa_origen_posicion_id;
-	}
-
-	public function getCorrelativa_origen_posicion_id(){
-		return $this->correlativa_origen_posicion_id;
-	}
-
-	public function setCorrelativa_destino_posicion_id($correlativa_destino_posicion_id){
-		$this->correlativa_destino_posicion_id = $correlativa_destino_posicion_id;
-	}
-
-	public function getCorrelativa_destino_posicion_id(){
-		return $this->correlativa_destino_posicion_id;
 	}
 
 	public function setCorrelativa_fvigente($correlativa_fvigente){
@@ -58,6 +44,22 @@ class Correlativa {
 		return $this->correlativa_observacion;
 	}
 
+	public function setCorrelativa_origen($correlativa_origen){
+		$this->correlativa_origen = $correlativa_origen;
+	}
+
+	public function getCorrelativa_origen(){
+		return $this->correlativa_origen;
+	}
+
+	public function setCorrelativa_destino($correlativa_destino){
+		$this->correlativa_destino = $correlativa_destino;
+	}
+
+	public function getCorrelativa_destino(){
+		return $this->correlativa_destino;
+	}
+
 	public function setCorrelativa_uinsert($correlativa_uinsert){
 		$this->correlativa_uinsert = $correlativa_uinsert;
 	}
@@ -72,6 +74,22 @@ class Correlativa {
 
 	public function getCorrelativa_finsert(){
 		return $this->correlativa_finsert;
+	}
+
+	public function setCorrelativa_uupdate($correlativa_uupdate){
+		$this->correlativa_uupdate = $correlativa_uupdate;
+	}
+
+	public function getCorrelativa_uupdate(){
+		return $this->correlativa_uupdate;
+	}
+
+	public function setCorrelativa_fupdate($correlativa_fupdate){
+		$this->correlativa_fupdate = $correlativa_fupdate;
+	}
+
+	public function getCorrelativa_fupdate(){
+		return $this->correlativa_fupdate;
 	}
 
 }

@@ -4,44 +4,54 @@ include_once('../../lib/config.php');
 ?>
 /*<script>*/
 var storeCorrelativa = new Ext.data.JsonStore({
-	url:'proceso/correlativa/'
-	,root:'datos'
+	url:'correlativa/list'
+	,root:'data'
 	,sortInfo:{field:'correlativa_id',direction:'ASC'}
 	,totalProperty:'total'
-	,baseParams:{accion:'lista'}
 	,fields:[
 		{name:'correlativa_id', type:'float'},
-		{name:'correlativa_origen_posicion_id', type:'string'},
-		{name:'correlativa_destino_posicion_id', type:'string'},
 		{name:'correlativa_fvigente', type:'string', dateFormat:'Y-m-d'},
 		{name:'correlativa_decreto', type:'string'},
 		{name:'correlativa_observacion', type:'string'},
+		{name:'correlativa_origen', type:'string'},
+		{name:'correlativa_destino', type:'string'},
 		{name:'correlativa_uinsert', type:'float'},
-		{name:'correlativa_finsert', type:'date', dateFormat:'Y-m-d H:i:s'}
+		{name:'correlativa_finsert', type:'date', dateFormat:'Y-m-d H:i:s'},
+		{name:'correlativa_uupdate', type:'float'},
+		{name:'correlativa_fupdate', type:'date', dateFormat:'Y-m-d H:i:s'}
 	]
 });
 var comboCorrelativa = new Ext.form.ComboBox({
 	hiddenName:'correlativa'
-	,id:modulo+'comboCorrelativa'
-	,fieldLabel:'<?php print _CORRELATIVA; ?>'
+	,id:module+'comboCorrelativa'
+	,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_fupdate'); ?>'
 	,store:storeCorrelativa
 	,valueField:'correlativa_id'
-	,displayField:'correlativa_nombre'
+	,displayField:'correlativa_name'
 	,typeAhead:true
 	,forceSelection:true
 	,triggerAction:'all'
 	,selectOnFocus:true
+	,listeners:{
+		select: {
+			fn: function(combo,reg){
+				Ext.getCmp(module + 'correlativa_id').setValue(reg.data.correlativa_id);
+			}
+		}
+	}
 });
 var cmCorrelativa = new Ext.grid.ColumnModel({
 	columns:[
-		{xtype:'numbercolumn', header:'<?php print _CORRELATIVA_ID; ?>', align:'right', hidden:false, dataIndex:'correlativa_id'},
-		{header:'<?php print _CORRELATIVA_ORIGEN_POSICION_ID; ?>', align:'left', hidden:false, dataIndex:'correlativa_origen_posicion_id'},
-		{header:'<?php print _CORRELATIVA_DESTINO_POSICION_ID; ?>', align:'left', hidden:false, dataIndex:'correlativa_destino_posicion_id'},
-		{xtype:'datecolumn', header:'<?php print _CORRELATIVA_FVIGENTE; ?>', align:'left', hidden:false, dataIndex:'correlativa_fvigente', format:'Y-m-d'},
-		{header:'<?php print _CORRELATIVA_DECRETO; ?>', align:'left', hidden:false, dataIndex:'correlativa_decreto'},
-		{header:'<?php print _CORRELATIVA_OBSERVACION; ?>', align:'left', hidden:false, dataIndex:'correlativa_observacion'},
-		{xtype:'numbercolumn', header:'<?php print _CORRELATIVA_UINSERT; ?>', align:'right', hidden:false, dataIndex:'correlativa_uinsert'},
-		{xtype:'datecolumn', header:'<?php print _CORRELATIVA_FINSERT; ?>', align:'left', hidden:false, dataIndex:'correlativa_finsert', format:'Y-m-d, g:i a'}
+		{xtype:'numbercolumn', header:'<?= Lang::get('correlativa.columns_title.correlativa_id'); ?>', align:'right', hidden:false, dataIndex:'correlativa_id'},
+		{xtype:'datecolumn', header:'<?= Lang::get('correlativa.columns_title.correlativa_fvigente'); ?>', align:'left', hidden:false, dataIndex:'correlativa_fvigente', format:'Y-m-d'},
+		{header:'<?= Lang::get('correlativa.columns_title.correlativa_decreto'); ?>', align:'left', hidden:false, dataIndex:'correlativa_decreto'},
+		{header:'<?= Lang::get('correlativa.columns_title.correlativa_observacion'); ?>', align:'left', hidden:false, dataIndex:'correlativa_observacion'},
+		{header:'<?= Lang::get('correlativa.columns_title.correlativa_origen'); ?>', align:'left', hidden:false, dataIndex:'correlativa_origen'},
+		{header:'<?= Lang::get('correlativa.columns_title.correlativa_destino'); ?>', align:'left', hidden:false, dataIndex:'correlativa_destino'},
+		{xtype:'numbercolumn', header:'<?= Lang::get('correlativa.columns_title.correlativa_uinsert'); ?>', align:'right', hidden:false, dataIndex:'correlativa_uinsert'},
+		{xtype:'datecolumn', header:'<?= Lang::get('correlativa.columns_title.correlativa_finsert'); ?>', align:'left', hidden:false, dataIndex:'correlativa_finsert', format:'Y-m-d, g:i a'},
+		{xtype:'numbercolumn', header:'<?= Lang::get('correlativa.columns_title.correlativa_uupdate'); ?>', align:'right', hidden:false, dataIndex:'correlativa_uupdate'},
+		{xtype:'datecolumn', header:'<?= Lang::get('correlativa.columns_title.correlativa_fupdate'); ?>', align:'left', hidden:false, dataIndex:'correlativa_fupdate', format:'Y-m-d, g:i a'}
 	]
 	,defaults:{
 		sortable:true
@@ -52,7 +62,7 @@ var tbCorrelativa = new Ext.Toolbar();
 
 var gridCorrelativa = new Ext.grid.GridPanel({
 	store:storeCorrelativa
-	,id:modulo+'gridCorrelativa'
+	,id:module+'gridCorrelativa'
 	,colModel:cmCorrelativa
 	,viewConfig: {
 		forceFit: true
@@ -77,17 +87,19 @@ var formCorrelativa = new Ext.FormPanel({
 	,monitorValid:true
 	,bodyStyle:'padding:15px;'
 	,reader: new Ext.data.JsonReader({
-		root:'datos'
+		root:'data'
 		,totalProperty:'total'
 		,fields:[
 			{name:'correlativa_id', mapping:'correlativa_id', type:'float'},
-			{name:'correlativa_origen_posicion_id', mapping:'correlativa_origen_posicion_id', type:'string'},
-			{name:'correlativa_destino_posicion_id', mapping:'correlativa_destino_posicion_id', type:'string'},
 			{name:'correlativa_fvigente', mapping:'correlativa_fvigente', type:'string'},
 			{name:'correlativa_decreto', mapping:'correlativa_decreto', type:'string'},
 			{name:'correlativa_observacion', mapping:'correlativa_observacion', type:'string'},
+			{name:'correlativa_origen', mapping:'correlativa_origen', type:'string'},
+			{name:'correlativa_destino', mapping:'correlativa_destino', type:'string'},
 			{name:'correlativa_uinsert', mapping:'correlativa_uinsert', type:'float'},
-			{name:'correlativa_finsert', mapping:'correlativa_finsert', type:'date'}
+			{name:'correlativa_finsert', mapping:'correlativa_finsert', type:'date'},
+			{name:'correlativa_uupdate', mapping:'correlativa_uupdate', type:'float'},
+			{name:'correlativa_fupdate', mapping:'correlativa_fupdate', type:'date'}
 		]
 	})
 	,items:[{
@@ -105,73 +117,91 @@ var formCorrelativa = new Ext.FormPanel({
 		,items:[{
 			defaults:{anchor:'100%'}
 			,items:[{
-				,xtype:'numberfield'
+				xtype:'numberfield'
 				,name:'correlativa_id'
-				,fieldLabel:'<?php print _CORRELATIVA_ID; ?>'
-				,id:modulo+'correlativa_id'
+				,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_id'); ?>'
+				,id:module+'correlativa_id'
 				,allowBlank:false
 			}]
 		},{
 			defaults:{anchor:'100%'}
 			,items:[{
-				,xtype:'textfield'
-				,name:'correlativa_origen_posicion_id'
-				,fieldLabel:'<?php print _CORRELATIVA_ORIGEN_POSICION_ID; ?>'
-				,id:modulo+'correlativa_origen_posicion_id'
-				,allowBlank:false
-			}]
-		},{
-			defaults:{anchor:'100%'}
-			,items:[{
-				,xtype:'textfield'
-				,name:'correlativa_destino_posicion_id'
-				,fieldLabel:'<?php print _CORRELATIVA_DESTINO_POSICION_ID; ?>'
-				,id:modulo+'correlativa_destino_posicion_id'
-				,allowBlank:false
-			}]
-		},{
-			defaults:{anchor:'100%'}
-			,items:[{
-				,xtype:'datefield'
+				xtype:'datefield'
 				,name:'correlativa_fvigente'
-				,fieldLabel:'<?php print _CORRELATIVA_FVIGENTE; ?>'
-				,id:modulo+'correlativa_fvigente'
+				,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_fvigente'); ?>'
+				,id:module+'correlativa_fvigente'
 				,allowBlank:false
 			}]
 		},{
 			defaults:{anchor:'100%'}
 			,items:[{
-				,xtype:'textfield'
+				xtype:'textfield'
 				,name:'correlativa_decreto'
-				,fieldLabel:'<?php print _CORRELATIVA_DECRETO; ?>'
-				,id:modulo+'correlativa_decreto'
+				,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_decreto'); ?>'
+				,id:module+'correlativa_decreto'
 				,allowBlank:false
 			}]
 		},{
 			defaults:{anchor:'100%'}
 			,items:[{
-				,xtype:'textfield'
+				xtype:'textfield'
 				,name:'correlativa_observacion'
-				,fieldLabel:'<?php print _CORRELATIVA_OBSERVACION; ?>'
-				,id:modulo+'correlativa_observacion'
+				,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_observacion'); ?>'
+				,id:module+'correlativa_observacion'
 				,allowBlank:false
 			}]
 		},{
 			defaults:{anchor:'100%'}
 			,items:[{
-				,xtype:'numberfield'
+				xtype:'textfield'
+				,name:'correlativa_origen'
+				,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_origen'); ?>'
+				,id:module+'correlativa_origen'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'correlativa_destino'
+				,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_destino'); ?>'
+				,id:module+'correlativa_destino'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'numberfield'
 				,name:'correlativa_uinsert'
-				,fieldLabel:'<?php print _CORRELATIVA_UINSERT; ?>'
-				,id:modulo+'correlativa_uinsert'
+				,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_uinsert'); ?>'
+				,id:module+'correlativa_uinsert'
 				,allowBlank:false
 			}]
 		},{
 			defaults:{anchor:'100%'}
 			,items:[{
-				,xtype:'datefield'
+				xtype:'datefield'
 				,name:'correlativa_finsert'
-				,fieldLabel:'<?php print _CORRELATIVA_FINSERT; ?>'
-				,id:modulo+'correlativa_finsert'
+				,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_finsert'); ?>'
+				,id:module+'correlativa_finsert'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'numberfield'
+				,name:'correlativa_uupdate'
+				,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_uupdate'); ?>'
+				,id:module+'correlativa_uupdate'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'datefield'
+				,name:'correlativa_fupdate'
+				,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_fupdate'); ?>'
+				,id:module+'correlativa_fupdate'
 				,allowBlank:false
 			}]
 		}]

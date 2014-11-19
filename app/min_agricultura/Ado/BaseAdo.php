@@ -189,6 +189,16 @@ abstract class BaseAdo extends Connection {
 		return $result;
 	}
 
+    /**
+     * filterRow
+     * 
+     * @param array $row contiene un array con los valores de un registro de la entidad que hereda
+     *
+     *
+     * @access protected
+     *
+     * @return array $row solo con las columnas especificadas en $this->columns.
+     */
 	protected function filterRow($row)
 	{
 		$columns = $this->getColumns();
@@ -214,7 +224,6 @@ abstract class BaseAdo extends Connection {
 				}
 			}
 			$row = $newRow;
-			//var_dump($columns);
 		}
 
 		return $row;
