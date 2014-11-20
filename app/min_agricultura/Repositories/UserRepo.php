@@ -233,6 +233,9 @@ class UserRepo extends BaseRepo {
 			$user->setUser_uinsert($_SESSION['user_id']);
 			$user->setUser_finsert(Helpers::getDateTimeNow());
 			$result = $userAdo->create($user);
+			if ($result['success']) {
+				return ['success' => true];
+			}
 		}
 		return $result;
 	}

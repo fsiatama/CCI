@@ -13,6 +13,7 @@
 			{name:'profile_name', type:'string'}
 		]
 	});
+	
 	var comboProfile = new Ext.form.ComboBox({
 		hiddenName:'profile'
 		,id:module+'comboProfile'
@@ -35,7 +36,7 @@
 	});
 
 	var formUser = new Ext.FormPanel({
-		baseCls:'x-panel-mc'
+		baseCls:'x-plain'
 		,id:module + 'formUser'
 		,method:'POST'
 		,autoWidth:true
@@ -57,10 +58,15 @@
 				{name:'profile_name', mapping:'profile_name', type:'string'}
 			]
 		})
+		,layout: {
+            type: 'vbox'
+            ,align: 'stretch'
+        }
 		,items:[{
 			xtype:'fieldset'
 			,title:''
 			,layout:'column'
+			,flex: 1
 			,defaults:{
 				columnWidth:1
 				,layout:'form'

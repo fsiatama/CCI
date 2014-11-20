@@ -29,7 +29,7 @@ class Correlativa {
 	}
 
 	public function setCorrelativa_decreto($correlativa_decreto){
-		$this->correlativa_decreto = $correlativa_decreto;
+		$this->correlativa_decreto = Inflector::cleanInputString($correlativa_decreto);
 	}
 
 	public function getCorrelativa_decreto(){
@@ -37,7 +37,7 @@ class Correlativa {
 	}
 
 	public function setCorrelativa_observacion($correlativa_observacion){
-		$this->correlativa_observacion = $correlativa_observacion;
+		$this->correlativa_observacion = Inflector::cleanInputString($correlativa_observacion);
 	}
 
 	public function getCorrelativa_observacion(){

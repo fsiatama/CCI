@@ -206,6 +206,7 @@ else {
 $contenido = "<?php
 
 require PATH_APP.'min_agricultura/Repositories/".ucfirst($nombre_tabla)."Repo.php';
+require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class ".ucfirst($nombre_tabla)."Controller {
 	
@@ -214,6 +215,7 @@ class ".ucfirst($nombre_tabla)."Controller {
 	public function __construct()
 	{
 		\$this->".($nombre_tabla)."Repo = new ".ucfirst($nombre_tabla)."Repo;
+		\$this->userRepo        = new UserRepo;
 	}
 	
 	public function listAction(\$urlParams, \$postParams)

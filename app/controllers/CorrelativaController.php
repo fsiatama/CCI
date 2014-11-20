@@ -43,6 +43,16 @@ class CorrelativaController {
 		return $result;
 	}
 
+	public function createAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('create', $postParams);
+
+		if ($result['success']) {
+			$result = $this->correlativaRepo->create($postParams);
+		}
+		return $result;
+	}
+
 }
 	
 

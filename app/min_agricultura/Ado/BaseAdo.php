@@ -80,7 +80,7 @@ abstract class BaseAdo extends Connection {
 		$resultSet = $conn->PageExecute($sql, $numRows, $page);
 		$ADODB_COUNTRECS = $savec;
 
-		$result = $this->buildResult($resultSet);
+		$result = $this->buildResult($resultSet, false, true);
 
 		return $result;
 	}
@@ -163,7 +163,7 @@ abstract class BaseAdo extends Connection {
 		return $result;
 	}
 
-	protected function buildResult(&$resultSet, $insertId = false)
+	protected function buildResult(&$resultSet, $insertId = false, $paginate = false)
 	{
 		$conn = $this->getConnection();
 		$result = array();
@@ -174,7 +174,7 @@ abstract class BaseAdo extends Connection {
 		}
 		else{
 			$result['success'] = true;
-			$result['total']   = $resultSet->RecordCount();
+			$result['total']   = (!$paginate) ? $resultSet->RecordCount() : $resultSet->_maxRecordCount;
 			$result['data']    = [];
 			if ($insertId !== false) {
 				$result['insertId'] = $insertId;

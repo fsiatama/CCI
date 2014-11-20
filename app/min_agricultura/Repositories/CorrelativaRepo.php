@@ -62,5 +62,39 @@ class CorrelativaRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function create($params)
+	{
+		extract($params);
+		$correlativa    = $this->model;
+		$correlativaAdo = $this->modelAdo;
+
+		if (
+			empty($correlativa_fvigente) || 
+			empty($correlativa_decreto) || 
+			empty($correlativa_observacion) ||
+			empty($correlativa_origen) ||
+			empty($correlativa_destino)
+		) {
+			$result = array(
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			);
+			return $result;
+		}
+
+		$correlativa->setCorrelativa_fvigente($correlativa_fvigente);
+		$correlativa->setCorrelativa_decreto($correlativa_decreto);
+		$correlativa->setCorrelativa_observacion($correlativa_observacion);
+		$correlativa->setCorrelativa_origen(implode(',', $correlativa_origen));
+		$correlativa->setCorrelativa_destino(implode(',', $correlativa_destino));
+		$correlativa->setCorrelativa_uinsert($_SESSION['user_id']);
+		$correlativa->setCorrelativa_finsert(Helpers::getDateTimeNow());
+
+		$result = $correlativaAdo->create($correlativa);
+		if ($result['success']) {
+			return ['success' => true];
+		}
+	}
+
 }	
 

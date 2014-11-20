@@ -18,60 +18,51 @@
 	var storePosicionDestino = new Ext.data.JsonStore(configStorePosicion);
 
 	var resultTpl = new Ext.XTemplate(
-		'<tpl for=\".\"><div class=\"search-item\"><span><b>{posicion_id}</b>&nbsp;-&nbsp;{posicion}</span></div></tpl>'
+		'<tpl for=".">' +
+			'<div class="search-item x-combo-list-item" ext:qtip="{posicion_id}">' +
+				'<span><b>{posicion_id}</b>&nbsp;-&nbsp;{posicion}</span>' +
+			'</div>' +
+		'</tpl>'
 	);
 
-	var comboPosicionOrigen = new Ext.ux.form.SuperBoxSelect({
-		id:module+'comboPosicionOrigen'
-		,xtype:'superboxselect'
-		,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_origen'); ?>'
+	var PosicionCombo = Ext.extend(Ext.ux.form.SuperBoxSelect, {
+		xtype:'superboxselect'
 		,resizable:false
-		,name:'correlativa_origen'
 		,anchor:'88%'
-		,store:storePosicionOrigen
 		,minChars:2
-		,displayField:'posicion_id'
-		,valueField:'posicion'
+		,displayField:'posicion'
+		,valueField:'posicion_id'
 		,forceSelection:true
 		,allowNewData:true
 		,extraItemCls:'x-tag'
 		,allowBlank:false
 		,extraItemStyle:'border-width:2px'
 		,stackItems:true
-		,tpl:resultTpl
+		,tpl: resultTpl
 		,mode:'remote'
 		,queryDelay:0
 		,triggerAction:'all'
 		,itemSelector:'.search-item'
 		,pageSize:10
+		,displayFieldTpl:'({posicion_id}) - {posicion}'
 	});
-	var comboPosicionDestino = new Ext.ux.form.SuperBoxSelect({
+
+	var comboPosicionOrigen = new PosicionCombo({
+		id:module+'comboPosicionOrigen'
+		,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_origen'); ?>'
+		,name:'correlativa_origen[]'
+		,store:storePosicionOrigen
+	});
+	var comboPosicionDestino = new PosicionCombo({
 		id:module+'comboPosicionDestino'
-		,xtype:'superboxselect'
 		,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_destino'); ?>'
-		,resizable:false
-		,name:'correlativa_destino'
-		,anchor:'88%'
+		,name:'correlativa_destino[]'
+		,xtype:'superboxselect'
 		,store:storePosicionDestino
-		,minChars:2
-		,displayField:'posicion_id'
-		,valueField:'posicion'
-		,forceSelection:true
-		,allowNewData:true
-		,extraItemCls:'x-tag'
-		,allowBlank:false
-		,extraItemStyle:'border-width:2px'
-		,stackItems:true
-		,tpl:resultTpl
-		,mode:'remote'
-		,queryDelay:0
-		,triggerAction:'all'
-		,itemSelector:'.search-item'
-		,pageSize:10
 	});
 
 	var formCorrelativa = new Ext.FormPanel({
-		baseCls:'x-panel-mc'
+		baseCls:'x-plain'
 		,id:module + 'formCorrelativa'
 		,method:'POST'
 		,autoWidth:true
@@ -80,6 +71,10 @@
 		,trackResetOnLoad:true
 		,monitorValid:true
 		,bodyStyle:'padding:15px;'
+		,layout: {
+            type: 'vbox'
+            ,align: 'stretch'
+        }
 		,reader: new Ext.data.JsonReader({
 			root:'datos'
 			,totalProperty:'total'
@@ -97,6 +92,7 @@
 			xtype:'fieldset'
 			,title:''
 			,layout:'column'
+			,flex: 1
 			,defaults:{
 				columnWidth:.5
 				,layout:'form'
@@ -178,17 +174,16 @@
 
 	function fnSave () {
 		params = {
-			user_password:Ext.ux.util.MD5(Ext.getCmp(module+'user_password').getValue())
-			,id: '<?= $id; ?>'
+			id: '<?= $id; ?>'
 		};
-		formUser.getForm().submit({
+		formCorrelativa.getForm().submit({
 			waitMsg: 'Saving....'
 			,waitTitle:'Wait please...'
-			,url:'user/create'
+			,url:'correlativa/create'
 			,params: params
 			,success: function(form, action){
-				if(Ext.getCmp('<?= $parent; ?>gridUser')){
-					Ext.getCmp('<?= $parent; ?>gridUser').getStore().reload();
+				if(Ext.getCmp('<?= $parent; ?>gridCorrelativa')){
+					Ext.getCmp('<?= $parent; ?>gridCorrelativa').getStore().reload();
 				}
 				fnCloseTab();
 			}
