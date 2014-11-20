@@ -8,6 +8,7 @@ var storeCorrelativa = new Ext.data.JsonStore({
 	,root:'data'
 	,sortInfo:{field:'correlativa_id',direction:'ASC'}
 	,totalProperty:'total'
+	,baseParams:{id:'<?= $id; ?>'}
 	,fields:[
 		{name:'correlativa_id', type:'float'},
 		{name:'correlativa_fvigente', type:'string', dateFormat:'Y-m-d'},

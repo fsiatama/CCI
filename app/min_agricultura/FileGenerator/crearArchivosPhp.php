@@ -185,6 +185,80 @@ class ".ucfirst($nombre_tabla)."Repo extends BaseRepo {
 		return new ".ucfirst($nombre_tabla)."Ado;
 	}
 
+	public function getPrimaryKey()
+	{
+		return '".$llave_primaria."';
+	}
+
+	public function setData(\$params, \$action)
+	{
+		extract(\$params);
+
+		if (\$action == 'modify') {
+			\$result = \$this->findPrimaryKey(\$".$llave_primaria.");
+
+			if (!\$result['success']) {
+				\$result = [
+					'success'  => false,
+					'closeTab' => true,
+					'tab'      => 'tab-'.\$module,
+					'error'    => \$result['error']
+				];
+				return \$result;
+			}
+		}
+
+		if (
+			empty(\$".implode(") ||\r\n			empty(\$", $result).")
+		) {
+			\$result = array(
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			);
+			return \$result;
+		}
+";
+foreach($result as $key => $campos){
+	$contenido .= "			\$this->model->set".ucfirst($campos)."(\$" . $campos . ");\r\n";
+}
+$contenido .= "		
+
+		if (\$action == 'create') {
+		}
+		elseif (\$action == 'modify') {
+		}
+		\$result = array('success' => true);
+		return \$result;
+	}
+
+	public function create(\$params)
+	{
+		\$result = \$this->setData(\$params, 'create');
+		if (!\$result['success']) {
+			return \$result;
+		}
+
+		\$result = \$this->modelAdo->create(\$this->model);
+		if (\$result['success']) {
+			return ['success' => true];
+		}
+		return \$result;
+	}
+
+	public function modify(\$params)
+	{
+		\$result = \$this->setData(\$params, 'modify');
+		if (!\$result['success']) {
+			return \$result;
+		}
+
+		\$result = \$this->modelAdo->update(\$this->model);
+		if (\$result['success']) {
+			return ['success' => true];
+		}
+		return \$result;
+	}
+
 }	
 
 ";

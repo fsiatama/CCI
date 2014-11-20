@@ -16,6 +16,11 @@ class ProfileRepo extends BaseRepo {
 		return new ProfileAdo;
 	}
 
+	public function getPrimaryKey()
+	{
+		return 'profile_id';
+	}
+
 	public function listAll($params)
 	{
 		$user    = $this->model;

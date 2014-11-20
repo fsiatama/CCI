@@ -15,6 +15,11 @@ class SessionRepo extends BaseRepo {
 		return new SessionAdo;
 	}
 
+	public function getPrimaryKey()
+	{
+		return 'session_id';
+	}
+
 	public function login($data)
 	{
 		$session    = $this->model;

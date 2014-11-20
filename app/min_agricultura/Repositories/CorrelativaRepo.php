@@ -16,6 +16,27 @@ class CorrelativaRepo extends BaseRepo {
 		return new CorrelativaAdo;
 	}
 
+	public function getPrimaryKey()
+	{
+		return 'correlativa_id';
+	}
+
+	public function validateModify($params)
+	{
+		extract($params);
+		$result = $this->findPrimaryKey($correlativa_id);
+
+		if (!$result['success']) {
+			$result = [
+				'success'  => false,
+				'closeTab' => true,
+				'tab'      => 'tab-'.$module,
+				'error'    => $result['error']
+			];
+		}
+		return $result;
+	}
+	
 	public function grid($params)
 	{
 		extract($params);
@@ -50,6 +71,7 @@ class CorrelativaRepo extends BaseRepo {
 		}
 
 		$correlativaAdo->setColumns([
+			'correlativa_id',
 			'correlativa_fvigente',
 			'correlativa_decreto',
 			'correlativa_observacion',
@@ -62,18 +84,32 @@ class CorrelativaRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function create($params)
+	public function setData($params, $action)
 	{
 		extract($params);
-		$correlativa    = $this->model;
-		$correlativaAdo = $this->modelAdo;
+
+		if ($action == 'modify') {
+			$result = $this->findPrimaryKey($correlativa_id);
+
+			if (!$result['success']) {
+				$result = [
+					'success'  => false,
+					'closeTab' => true,
+					'tab'      => 'tab-'.$module,
+					'error'    => $result['error']
+				];
+				return $result;
+			}
+		}
 
 		if (
 			empty($correlativa_fvigente) || 
 			empty($correlativa_decreto) || 
 			empty($correlativa_observacion) ||
-			empty($correlativa_origen) ||
-			empty($correlativa_destino)
+			empty($correlativa_origen) || 
+			!is_array($correlativa_origen) ||
+			empty($correlativa_destino) || 
+			!is_array($correlativa_destino)
 		) {
 			$result = array(
 				'success' => false,
@@ -82,18 +118,61 @@ class CorrelativaRepo extends BaseRepo {
 			return $result;
 		}
 
-		$correlativa->setCorrelativa_fvigente($correlativa_fvigente);
-		$correlativa->setCorrelativa_decreto($correlativa_decreto);
-		$correlativa->setCorrelativa_observacion($correlativa_observacion);
-		$correlativa->setCorrelativa_origen(implode(',', $correlativa_origen));
-		$correlativa->setCorrelativa_destino(implode(',', $correlativa_destino));
-		$correlativa->setCorrelativa_uinsert($_SESSION['user_id']);
-		$correlativa->setCorrelativa_finsert(Helpers::getDateTimeNow());
+		$this->model->setCorrelativa_fvigente($correlativa_fvigente);
+		$this->model->setCorrelativa_decreto($correlativa_decreto);
+		$this->model->setCorrelativa_observacion($correlativa_observacion);
+		$this->model->setCorrelativa_origen(implode(',', $correlativa_origen));
+		$this->model->setCorrelativa_destino(implode(',', $correlativa_destino));
+		if ($action == 'create') {
+			$this->model->setCorrelativa_uinsert($_SESSION['user_id']);
+			$this->model->setCorrelativa_finsert(Helpers::getDateTimeNow());
+		}
+		elseif ($action == 'modify') {
+			$this->model->setCorrelativa_uupdate($_SESSION['user_id']);
+			$this->model->setCorrelativa_fupdate(Helpers::getDateTimeNow());
+		}
+		$result = array('success' => true);
+		return $result;
+	}
 
-		$result = $correlativaAdo->create($correlativa);
+	public function create($params)
+	{
+		$result = $this->setData($params, 'create');
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$result = $this->modelAdo->create($this->model);
 		if ($result['success']) {
 			return ['success' => true];
 		}
+		return $result;
+	}
+
+	public function modify($params)
+	{
+		$result = $this->setData($params, 'modify');
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$result = $this->modelAdo->update($this->model);
+		if ($result['success']) {
+			return ['success' => true];
+		}
+		return $result;
+	}
+
+	public function delete($params)
+	{
+		extract($params);
+		$result = $this->findPrimaryKey($correlativa_id);
+
+		if ($result['success']) {
+			$result = $this->modelAdo->delete($this->model);
+		}
+
+		return $result;
 	}
 
 }	

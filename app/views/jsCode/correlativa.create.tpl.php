@@ -9,7 +9,7 @@
 		,sortInfo:{field:'posicion_id',direction:'ASC'}
 		,totalProperty:'total'
 		,fields:[
-			{name:'posicion_id', type:'float'}
+			{name:'posicion_id', type:'string'}
 			,{name:'posicion', type:'string'}
 		]
 	};
@@ -76,9 +76,8 @@
             ,align: 'stretch'
         }
 		,reader: new Ext.data.JsonReader({
-			root:'datos'
+			root:'data'
 			,totalProperty:'total'
-			,url:'proceso/trabajo/'
 			,fields:[
 				{name:'correlativa_id', mapping:'correlativa_id', type:'float'},
 				{name:'correlativa_fvigente', mapping:'correlativa_fvigente', type:'string'},
@@ -117,6 +116,7 @@
 					,name:'correlativa_fvigente'
 					,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_fvigente'); ?>'
 					,id:module+'correlativa_fvigente'
+					,format:'Y-m-d'
 					,allowBlank:false
 				}]
 			},{
@@ -161,6 +161,29 @@
 			}
 		}]
 	});	
+	
+	<?php
+	if ($action == 'modify') {
+
+		echo "
+	formCorrelativa.on('show', function(){
+		formCorrelativa.form.load({
+			 url: 'correlativa/listId'
+			,params:{
+				 correlativa_id: '$correlativa_id'
+				,id: '$id'
+			}
+			,method: 'POST'
+			,waitTitle:'Loading......'
+			,waitMsg: 'Loading......'
+			,success: function(formulario, response) {
+				Ext.getCmp(module+'comboPosicionOrigen').setValue(response.result.data.correlativa_origen);
+				Ext.getCmp(module+'comboPosicionDestino').setValue(response.result.data.correlativa_destino);
+			}
+		});
+	});";
+	}
+	?>
 
 	return formCorrelativa;
 
@@ -179,7 +202,7 @@
 		formCorrelativa.getForm().submit({
 			waitMsg: 'Saving....'
 			,waitTitle:'Wait please...'
-			,url:'correlativa/create'
+			,url:'correlativa/<?= $action; ?>'
 			,params: params
 			,success: function(form, action){
 				if(Ext.getCmp('<?= $parent; ?>gridCorrelativa')){

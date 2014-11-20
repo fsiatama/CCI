@@ -17,5 +17,9 @@ class MenuRepo extends BaseRepo {
 		return new MenuAdo;
 	}
 
+	public function getPrimaryKey()
+	{
+		return 'menu_id';
+	}
 }	
 

@@ -12,7 +12,7 @@
 		,baseParams:{id:'<?= $id; ?>'}
 		,fields:[
 			{name:'correlativa_id', type:'float'},
-			{name:'correlativa_fvigente', type:'string', dateFormat:'Y-m-d'},
+			{name:'correlativa_fvigente', type:'date', dateFormat:'Y-m-d'},
 			{name:'correlativa_decreto', type:'string'},
 			{name:'correlativa_observacion', type:'string'},
 			{name:'correlativa_origen', type:'string'},
@@ -133,7 +133,7 @@
 	
 	function fnEditItm(record){
 		var key = record.get('correlativa_id');
-		if(Ext.getCmp('tab-add-'+module)){
+		if(Ext.getCmp('tab-add_'+module)){
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
 				,msg:Ext.ux.lang.error.close_tab
@@ -146,12 +146,13 @@
 				id:'edit_' + module
 				,iconCls:'silk-page-edit'
 				,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
-				,url:'correlativa/jscode/create'
+				,url:'correlativa/jscode/modify'
 				,params:{
 					id:'<?= $id; ?>'
 					,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
 					,module: 'edit_' + module
 					,parent: module
+					,correlativa_id: key
 				}
 			};
 			Ext.getCmp('oeste').addTab(this,this,data);
@@ -163,27 +164,27 @@
 			,Ext.ux.lang.messages.question_delete
 			,function(btn){
 			if(btn == 'yes'){
-				var gridMask = new Ext.LoadMask(gridCargos.getEl(), { msg: 'Erasing .....' });
+				var gridMask = new Ext.LoadMask(gridCorrelativa.getEl(), { msg: 'Erasing .....' });
 				gridMask.show();
-				var selectedKeys =  record.get('cargos_id');
+				var key = record.get('correlativa_id');
 
 				Ext.Ajax.request({
-					 url:'proceso/cargos/'
+					 url:'correlativa/delete'
 					,params: {
-						 accion: 'del'
-						,id: selectedKeys
+						id: '<?= $id; ?>'
+						,correlativa_id: 000002
 					}
 					,callback: function(options, success, response){
 						gridMask.hide();
 						var json = Ext.util.JSON.decode(response.responseText);
 						if (json.success){
-							gridCargos.store.reload();
+							gridCorrelativa.store.reload();
 						}
 						else{
 							Ext.Msg.show({
 							   title:Ext.ux.lang.messages.error,
 							   buttons: Ext.Msg.OK,
-							   msg:json.reason,
+							   msg:json.error,
 							   animEl: 'elId',
 							   icon: Ext.MessageBox.ERROR
 							});

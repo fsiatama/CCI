@@ -1,6 +1,7 @@
 <?php
 
 require PATH_APP.'min_agricultura/Repositories/CorrelativaRepo.php';
+require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class CorrelativaController {
 	
@@ -9,6 +10,7 @@ class CorrelativaController {
 	public function __construct()
 	{
 		$this->correlativaRepo = new CorrelativaRepo;
+		$this->userRepo        = new UserRepo;
 	}
 	
 	public function listAction($urlParams, $postParams)

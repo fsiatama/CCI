@@ -17,6 +17,11 @@ class PermissionsRepo extends BaseRepo {
 		return new PermissionsAdo;
 	}
 
+	public function getPrimaryKey()
+	{
+		return 'permissions_id';
+	}
+	
 	public function listProfileMenu($profile_id)
 	{
 		$permissionsAdo = $this->modelAdo;

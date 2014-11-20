@@ -18,6 +18,11 @@ class UserRepo extends BaseRepo {
 		return new UserAdo;
 	}
 
+	public function getPrimaryKey()
+	{
+		return 'user_id';
+	}
+
 	public function login($params)
 	{
 		extract($params);
@@ -108,16 +113,16 @@ class UserRepo extends BaseRepo {
 	public function validateMenu($action, $params)
 	{
 		extract($params);
-
+		
 		$sessionRepo = new SessionRepo;
 		$result['success'] = false;
 		if ($sessionRepo->validSession()) {
 			if (empty($_SESSION['session_menu'][$id])) {
 				$result = [
-					'success' => false,
+					'success'  => false,
 					'closeTab' => true,
-					'tab' => 'tab-'.$id,
-					'error' => 'Su perfil no tiene habilitado esta opción'
+					'tab'      => 'tab-'.$module,
+					'error'    => 'Su perfil no tiene habilitado esta opción'
 				];
 			}
 			else {
@@ -136,10 +141,10 @@ class UserRepo extends BaseRepo {
 				if (!in_array(true, $permissions)) {*/
 				if (!$permissions) {
 					$result = [
-						'success' => false,
+						'success'  => false,
 						'closeTab' => true,
-						'tab' => 'tab-'.$module,
-						'error' => 'Su perfil no tiene permisos habilitados para esta opción'
+						'tab'      => 'tab-'.$module,
+						'error'    => 'Su perfil no tiene permisos habilitados para esta opción'
 					];
 				}
 				else {
@@ -195,11 +200,23 @@ class UserRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function create($params)
+	public function setData($params, $action)
 	{
 		extract($params);
-		$user    = $this->model;
-		$userAdo = $this->modelAdo;
+		
+		if ($action == 'modify') {
+			$result = $this->findPrimaryKey($user_id);
+
+			if (!$result['success']) {
+				$result = [
+					'success'  => false,
+					'closeTab' => true,
+					'tab'      => 'tab-'.$module,
+					'error'    => $result['error']
+				];
+				return $result;
+			}
+		}
 
 		if (
 			empty($user_full_name) || 
@@ -214,6 +231,32 @@ class UserRepo extends BaseRepo {
 			return $result;
 		}
 
+		$this->model->setUser_full_name($user_full_name);
+		$this->model->setUser_email($user_email);
+		$this->model->setUser_password($user_password);
+		$this->model->setUser_active($user_active);
+		$this->model->setUser_profile_id($user_profile_id);
+		$this->model->setUser_uinsert($_SESSION['user_id']);
+		$this->model->setUser_finsert(Helpers::getDateTimeNow());
+
+		if ($action == 'create') {
+			$this->model->setUser_uinsert($_SESSION['user_id']);
+			$this->model->setUser_finsert(Helpers::getDateTimeNow());
+		}
+		elseif ($action == 'modify') {
+			$this->model->setUser_uupdate($_SESSION['user_id']);
+			$this->model->setUser_fupdate(Helpers::getDateTimeNow());
+		}
+		$result = array('success' => true);
+		return $result;
+	}
+
+	public function create($params)
+	{
+		extract($params);
+		$user    = $this->model;
+		$userAdo = $this->modelAdo;
+
 		$user->setUser_email($user_email);
 		$result = $userAdo->exactSearch($user);
 		
@@ -226,12 +269,12 @@ class UserRepo extends BaseRepo {
 				);
 				return $result;
 			}
-			$user->setUser_full_name($user_full_name);
-			$user->setUser_password($user_password);
-			$user->setUser_active($user_active);
-			$user->setUser_profile_id($user_profile_id);
-			$user->setUser_uinsert($_SESSION['user_id']);
-			$user->setUser_finsert(Helpers::getDateTimeNow());
+
+			$result = $this->setData($params, 'create');
+			if (!$result['success']) {
+				return $result;
+			}
+
 			$result = $userAdo->create($user);
 			if ($result['success']) {
 				return ['success' => true];

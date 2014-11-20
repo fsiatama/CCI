@@ -16,6 +16,11 @@ class PosicionRepo extends BaseRepo {
 		return new PosicionAdo;
 	}
 
+	public function getPrimaryKey()
+	{
+		return 'posicion_id';
+	}
+
 	public function listAll($params)
 	{
 		extract($params);
@@ -26,10 +31,17 @@ class PosicionRepo extends BaseRepo {
 		$limit = ( isset($limit) ) ? $limit : 30;
 		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
 
-		$posicion->setPosicion_id($query);
-		$posicion->setPosicion($query);
+		if ($valuesqry) {
+			$query = explode('|',$query);
+			$posicion->setPosicion_id(implode('", "', $query));
+			return $posicionAdo->inSearch($posicion);
+		}
+		else {
+			$posicion->setPosicion_id($query);
+			$posicion->setPosicion($query);
+			return $posicionAdo->paginate($posicion, 'LIKE', $limit, $page);
+		}
 
-		return $posicionAdo->paginate($posicion, 'LIKE', $limit, $page);
 	}
 
 }	

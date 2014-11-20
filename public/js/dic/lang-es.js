@@ -1,7 +1,7 @@
 Ext.ns('Ext.ux', 'Ext.ux.lang.error');
 Ext.ux.lang.error = {
 	 session_expired: 'Su sesi&oacute;n ha superado los 20 minutos de actividad.<br>Por seguridad, ingrese su contrase&ntilde;a para seguir trabajando'
-	 ,close_tab: '&iquest;Est&aacute; seguro que desea cerrar la pesta&ntilde;a/ventana?<br />Si la cierra, perder&aacute; todos los datos y cambios ingresados, como asi tambi&eacute;n los archivos subidos.'
+	 ,close_tab: 'Para realizar esta acción necesita cerrar la pestaña de crear o modificar que se encuentra abierta'
 	 ,invalid_pass_input: 'No es una contraseña válida. Debe contener al menos una letra mayúscula, una letra minúscula y al menos un número.'
 }
 
