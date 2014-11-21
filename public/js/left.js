@@ -8,7 +8,7 @@ Left = function() {
 		,cmargins: '5 5 5 5'
 		,split: true
 		,collapsible:true
-		,width:	160
+		,width:	200
 		,border: false
 		,frame:	true
 		,items: [{
