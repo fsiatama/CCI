@@ -75,13 +75,13 @@ if(isset($accion)){
 				echo json_encode($respuesta);
 				exit();
 			}
-			foreach($rs_pais["datos"] as $key => $data){
+			foreach($rs_pais["data"] as $key => $data){
 				$arr[] = sanear_string($data);
 			}
 			$respuesta = array(
 				"success"=>true,
 				"total"=>$rs_pais["total"],
-				"datos"=>$arr
+				"data"=>$arr
 			);
 			echo json_encode($respuesta);
 			exit();
@@ -110,13 +110,13 @@ if(isset($accion)){
 				exit();
 			}
 			else{
-				foreach($rs_pais["datos"] as $key => $data){
+				foreach($rs_pais["data"] as $key => $data){
 					$arr[] = sanear_string($data);
 				}
 				$respuesta = array(
 					"success"=>true,
 					"total"=>$rs_pais["total"],
-					"datos"=>$arr
+					"data"=>$arr
 				);
 				echo json_encode($respuesta);
 				exit();

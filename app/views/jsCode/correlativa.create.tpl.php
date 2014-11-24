@@ -2,7 +2,7 @@
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module; ?>';
-	
+
 	var configStorePosicion = {
 		 url:'posicion/list'
 		,root:'data'
@@ -70,11 +70,7 @@
 		,buttonAlign:'center'
 		,trackResetOnLoad:true
 		,monitorValid:true
-		,bodyStyle:'padding:15px;'
-		,layout: {
-            type: 'vbox'
-            ,align: 'stretch'
-        }
+		,bodyStyle:	'padding:15px;position:relative;'
 		,reader: new Ext.data.JsonReader({
 			root:'data'
 			,totalProperty:'total'
@@ -160,8 +156,8 @@
 				fnSave();
 			}
 		}]
-	});	
-	
+	});
+
 	<?php
 	if ($action == 'modify') {
 
@@ -187,9 +183,9 @@
 
 	return formCorrelativa;
 
-	
+
 	/*********************************************** Start functions***********************************************/
-	
+
 	function fnCloseTab(){
 		var tabs = Ext.getCmp('tabpanel');
 		tabs.remove(tabs.activeTab, true);

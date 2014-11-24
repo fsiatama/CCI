@@ -21,33 +21,35 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
+	Ext.ns('Indicador');
 	var module = '<?= $module; ?>';
-	
+	var indicador_id = 0;
+
 	var root = new Ext.tree.AsyncTreeNode({
-		 text: '<?php print $descripcion; ?>'
+		text: '<?= $title; ?>'
 		,type: 'root'
 		,draggable: false
-		,id: modulo+'root'
+		,id: module + 'root'
 		,expanded: true
 		,uiProvider: false
 		,iconCls: 'silk-folder'
 	});	
 	
-	Reportes.tree = function() {	
-		Reportes.tree.superclass.constructor.call(this, {
-			id: modulo+'reportes'
+	Indicador.tree = function() {	
+		Indicador.tree.superclass.constructor.call(this, {
+			id: module + 'Indicador'
 			,header: false
-			,collapseAllText:'<?php print _COLLAPSEALLTEXT; ?>'
-			,collapseText:'<?php print _COLLAPSETEXT; ?>'
-			,deleteText:'<?php print _DELETETEXT; ?>'
-			,deleteInfoText:'<?php print _DELETEINFOTEXT; ?>'
-			,expandAllText:'<?php print _EXPANDALLTEXT; ?>'
-			,expandText:'<?php print _EXPANDTEXT; ?>'
-			,insertText:'<?php print _INSERTTEXT; ?>'
-			,newText:'<?php print _NEWTEXT; ?>'
-			,reallyWantText:'<?php print _REALLYWANTTEXT; ?>'
-			,reloadText:'<?php print _RELOADTEXT; ?>'
-			,renameText:'<?php print _RENAMETEXT; ?>'
+			,collapseAllText: Ext.ux.lang.folder.collapse_all
+			,collapseText: Ext.ux.lang.folder.collapse
+			,deleteText: Ext.ux.lang.folder.delete
+			,deleteInfoText: Ext.ux.lang.folder.delete_info
+			,expandAllText: Ext.ux.lang.folder.expand_all
+			,expandText: Ext.ux.lang.folder.expand
+			,insertText: Ext.ux.lang.folder.insert
+			,newText: Ext.ux.lang.folder.new
+			,reallyWantText: Ext.ux.lang.folder.really_want
+			,reloadText: Ext.ux.lang.folder.reload
+			,renameText: Ext.ux.lang.folder.rename
 			,ddAppendOnly:true
 			,minSize: 230
 			,maxSize: 500
@@ -57,7 +59,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			,containerScroll: true
 			,border: false
 			,enableDD: true
-			,ddGroup:'treeReportes'
+			,ddGroup:'treeIndicador'
 			,rootVisible: true
 			,maskDisabled: false
 			,useArrows: true
@@ -68,44 +70,37 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			,width:	200
 			,root:root
 			,loader: {
-				 url:'proceso/reportes/'
+				 url:'indicador/list'
 				,baseParams:{
-					 accion:'lista'
-					 ,pais_id:<?php print $pais; ?>
-					 ,producto:'<?php print $producto; ?>'
+					 tipo_indicador_id:'<?= $tipo_indicador_id; ?>'
 				}
 				,baseAttrs: {
 					 iconCls: 'silk-folder'
 				}
 			}
-			,tbar:['Filter:', {
-				 xtype:'trigger'
+			,tbar:[
+				Ext.ux.lang.folder.filter
+			,{
+				xtype:'trigger'
 				,triggerClass:'x-form-clear-trigger'
 				,onTriggerClick:function() {
 					this.setValue('');
-					sisduanReportesTree.filter.clear();
+					IndicadorTree.filter.clear();
 				}
-				,id:'filter'
+				,id:module + 'filter'
 				,enableKeyEvents:true
 				,listeners:{
-					keyup:{buffer:150, fn:function(field, e) {
+					keyup:{ buffer:150, fn:function(field, e) {
 						if(Ext.EventObject.ESC == e.getKey()) {
 							field.onTriggerClick();
 						}
 						else {
 							var val = this.getRawValue();
 							var re = new RegExp('.*' + val + '.*', 'i');
-							sisduanReportesTree.filter.clear();
-							sisduanReportesTree.filter.filter(re, 'text');
+							IndicadorTree.filter.clear();
+							IndicadorTree.filter.filter(re, 'text');
 						}
 					}}
-				}
-			},'->',{
-				 tooltip:'<?php print _AYUDA; ?>'
-				,iconCls:'silk-help'
-				,text:'<?php print _AYUDA; ?>'
-				,handler:function(){
-					ayuda_reportes_tree();
 				}
 			}]
 			,listeners: {
@@ -113,21 +108,12 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 					panelInicial();
 				}
 				,'click': function(node, e){
-					locationbar.setNode(node);
-					Ext.getCmp(modulo+'btnEdit').setDisabled(!node.leaf);
-					Ext.getCmp(modulo+'btnCopy').setDisabled(!node.leaf);
-					Ext.getCmp(modulo+'btnDel').setDisabled(!node.leaf);
-					Ext.getCmp(modulo+'btnDateEdit').setDisabled(!node.leaf);
-					Ext.getCmp(modulo+'btnSend').setDisabled(!node.attributes.descargar);
-					Ext.getCmp(modulo+'btnDown').setDisabled(!node.attributes.descargar);
-					Ext.getCmp(modulo+'formPeriodo').getForm().reset();
-					Ext.getCmp(modulo+'periodoPersonalizado').setValue('<?php print PERIODOPERSONALIZADO; ?>');
-					Ext.getCmp(modulo+'mesIni').setDisabled(false);
-					Ext.getCmp(modulo+'mesFin').setDisabled(false);
-					Ext.getCmp(modulo+'anio').setDisabled(false);
+					Ext.getCmp(module + 'btnEdit').setDisabled(!node.leaf);
+					Ext.getCmp(module + 'btnDel').setDisabled(!node.leaf);
+					
 					if(node.leaf){
-						reporte_id = node.id;
-						sisduanReportesTree.consultar(node.id)
+						indicador_id = node.id;
+						IndicadorTree.consultar(node.id)
 					}
 					else{
 						panelInicial();
@@ -144,21 +130,13 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			}
 		});
 	}
-	Ext.extend(Reportes.tree, Ext.ux.tree.RemoteTreePanel, {
-		consultar:function(reporte){
-			var node = this.getNodeById(reporte);
+	Ext.extend(Indicador.tree, Ext.ux.tree.RemoteTreePanel, {
+		consultar:function(indicador){
+			var node = this.getNodeById(indicador);
 			if(node){
-				Ext.getCmp(modulo+'btnEdit').setDisabled(false);
-				Ext.getCmp(modulo+'btnCopy').setDisabled(false);
-				Ext.getCmp(modulo+'btnDel').setDisabled(false);
-				Ext.getCmp(modulo+'btnDateEdit').setDisabled(false);
-				Ext.getCmp(modulo+'btnSend').setDisabled(!node.attributes.descargar);
-				Ext.getCmp(modulo+'btnDown').setDisabled(!node.attributes.descargar);
-				Ext.getCmp(modulo+'reporte').setValue(node.id);
-				Ext.getCmp(modulo+'reportes_enviar').setValue(node.attributes.enviar);
+				Ext.getCmp(module + 'btnEdit').setDisabled(false);
+				Ext.getCmp(module + 'btnDel').setDisabled(false);
 				
-				var periodo = Ext.encode(Ext.getCmp(modulo+'formPeriodo').getForm().getFieldValues());
-				//Ext.getCmp(modulo+'formPeriodo').getForm().reset();
 				var dataViewer = new Ext.Panel({
 					autoScroll: false
 					,layout: 'fit'
@@ -168,7 +146,10 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 					,autoDestroy:true
 					,plugins: new Ext.ux.Plugin.RemoteComponent({
 						 url:'jscode/reporte_sisduan/'
-						,params:{reporte:reporte, periodo:periodo,tree:modulo+'reportes'}
+						,params:{
+							indicador_id: indicador_id
+							,tree: module + 'Indicador'
+						}
 						,disableCaching: true
 						,method: 'POST'
 						,mask: Ext.getBody()
@@ -178,23 +159,128 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 					})
 					,items:[]
 				});
-				var lp = Ext.getCmp(modulo+'lpReportes');
+				var lp = Ext.getCmp(module + 'lpIndicador');
 				var remove = lp.removeAll(true);
 				lp.add(dataViewer);
 				lp.doLayout();
 			}
 		}
-		,cargar:function(reporte){
-			var node = this.getNodeById(reporte);
-			reporte_id = reporte;
+		,cargar:function(indicador){
+			var node = this.getNodeById(indicador);
+			indicador_id = indicador;
 			this.getRootNode().reload();
 		}
 	});
+	
+	var IndicadorTree = new Indicador.tree();	
+	IndicadorTree.filter = new Ext.ux.tree.TreeFilterX(IndicadorTree);
+	
+	IndicadorTree.getLoader().on('load', function(loader, node, callback){
+		if(indicador_id != 0){
+			var nodo = IndicadorTree.getNodeById(indicador_id);
+			if(nodo){
+				node = nodo;
+			}
+			else{
+				IndicadorTree.getRootNode().expand(true, false);
+			}
+		}
+		IndicadorTree.fireEvent('click', node);
+	});
 
-	return 'gridUser';	
+	var indicadorLayout = new Ext.Panel({
+		xtype: 'panel'
+		,layout: 'border'
+		,id:module + 'indicadorLayout'
+		,border: false
+		,items: [
+			IndicadorTree
+		,{
+			region:'center'
+			,layout: 'fit'
+			,id: module + 'lpIndicador'
+			,tbar: new Ext.Toolbar({
+				enableOverflow: true
+				,items: [{
+					text: Ext.ux.lang.buttons.new
+					,iconCls: 'silk-report-add'
+					,handler: function(){
+						cfg_reporte('create');
+					}
+				},{
+					text: Ext.ux.lang.buttons.edit
+					,iconCls: 'silk-report-edit'
+					,id: module + 'btnEdit'
+					,disabled: true
+					,handler: function(){
+						cfg_reporte('modify');
+					}
+				},{
+					text: Ext.ux.lang.buttons.delete
+					,iconCls: 'silk-application-delete'
+					,id:module + 'btnDel'
+					,disabled: true
+					,handler: function(){
+						var node;
+						if(IndicadorTree.getSelectionModel().getSelectedNode()){
+							node = IndicadorTree.getSelectionModel().getSelectedNode();
+						}
+						else{
+							node = IndicadorTree.getRootNode();
+						}
+						IndicadorTree.removeNode(node);
+					}
+				}]
+			})
+			,items:[]
+		}]
+	});
+
+	return indicadorLayout;	
 	/*********************************************** Start functions***********************************************/
 	
-	
+	function panelInicial(){
+	}
+	function cfg_reporte(action){
+		var url = 'indicador/jscodeCfg/' + action;
+		var node;
+		if(IndicadorTree.getSelectionModel().getSelectedNode()){
+			node = IndicadorTree.getSelectionModel().getSelectedNode();
+		}
+		else{
+			node = IndicadorTree.getRootNode();
+		}
+		var parent   = (node.leaf)?node.parentNode.id:node.id;
+		
+		var lp = Ext.getCmp(module + 'lpIndicador');
+
+		var remove = lp.removeAll(true);
+		var panelCfg = {
+			xtype:'panel'
+			,border:false
+			,layout:'fit'
+			,plugins: new Ext.ux.Plugin.RemoteComponent({
+				url:url
+				,params:{
+					indicador_id: indicador_id
+					,id: '<?= $id; ?>'
+					,tipo_indicador_id: '<?= $tipo_indicador_id; ?>'
+					,parent: parent
+					,tree: module + 'Indicador'
+					,module: 'cfg_' + module
+				}
+				,disableCaching:false
+				,method:'POST'
+			})
+			,bbar:new Ext.ux.StatusBar({
+				text:'',
+				id:module+'sbPanel'
+			})
+		}
+		
+		lp.add(panelCfg);
+		lp.doLayout();
+	}
 
 	/*********************************************** End functions***********************************************/
 })()

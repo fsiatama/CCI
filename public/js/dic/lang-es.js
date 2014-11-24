@@ -52,6 +52,7 @@ Ext.ux.lang.buttons = {
 	,add: 'Agregar'
 	,delete: 'Borrar'
 	,delete_tt: 'Borrar este registro'
+	,edit: 'Editar'
 	,modify: 'Modificar'
 	,modify_tt: 'Modificar este registro'
 	,new: 'Nuevo'
@@ -60,6 +61,22 @@ Ext.ux.lang.buttons = {
 	,view: 'Ver'
 	,next: 'Siguiente &raquo;'
 	,previous: '&laquo; Anterior'
+}
+
+Ext.ns('Ext.ux', 'Ext.ux.lang.folder');
+Ext.ux.lang.folder = {
+	collapse_all: 'Contraer todo'
+	,collapse: 'Contraer'
+	,delete: 'Eliminar'
+	,delete_info: 'Eliminará también todo el contenido de la carpeta. Esta acción es irreversible!'
+	,expand_all: 'Abrir todo'
+	,expand: 'Abrir'
+	,insert: 'Nueva Carpeta'
+	,new: 'Nueva Carpeta'
+	,reload: 'Actualizar'
+	,rename: 'Cambiar nombre'
+	,really_want: 'Realmente desea'
+	,filter: 'Filtrar'
 }
 
 /*

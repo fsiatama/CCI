@@ -16,5 +16,66 @@ class PaisRepo extends BaseRepo {
 		return new PaisAdo;
 	}
 
+	public function getPrimaryKey()
+	{
+		return 'pais_id';
+	}
+
+	public function validateModify($params)
+	{
+		extract($params);
+		$result = $this->findPrimaryKey($pais_id);
+
+		if (!$result['success']) {
+			$result = [
+				'success'  => false,
+				'closeTab' => true,
+				'tab'      => 'tab-'.$module,
+				'error'    => $result['error']
+			];
+		}
+		return $result;
+	}
+
+	public function setData($params, $action)
+	{
+		extract($params);
+
+		if ($action == 'modify') {
+			$result = $this->findPrimaryKey($pais_id);
+
+			if (!$result['success']) {
+				$result = [
+					'success'  => false,
+					'closeTab' => true,
+					'tab'      => 'tab-'.$module,
+					'error'    => $result['error']
+				];
+				return $result;
+			}
+		}
+
+		if (
+			empty($pais_id) ||
+			empty($pais)
+		) {
+			$result = array(
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			);
+			return $result;
+		}
+			$this->model->setPais_id($pais_id);
+			$this->model->setPais($pais);
+		
+
+		if ($action == 'create') {
+		}
+		elseif ($action == 'modify') {
+		}
+		$result = array('success' => true);
+		return $result;
+	}
+
 }	
 

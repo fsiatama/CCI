@@ -1,6 +1,7 @@
 <?php
 
 require PATH_APP.'min_agricultura/Repositories/PaisRepo.php';
+require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class PaisController {
 	
@@ -9,22 +10,12 @@ class PaisController {
 	public function __construct()
 	{
 		$this->paisRepo = new PaisRepo;
+		$this->userRepo        = new UserRepo;
 	}
 	
-	/**
-	 * indexAction
-	 * Metodo por defecto que sera llamado si no se especifica otro en la url
-	 *
-	 * @param array $urlParams  parametros adicionales pasados por la url.
-	 * @param array $postParams Parametros enviados via Post.
-	 *
-	 * @access public
-	 *
-	 * @return mixed Value.
-	 */
-	public function indexAction($urlParams, $postParams)
+	public function listAction($urlParams, $postParams)
     {
-        return true;
+        return $this->paisRepo->listAll($postParams);
     }
 
 }

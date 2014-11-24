@@ -19,3 +19,5 @@ define("PATH_APP", "C:/wamp/www/CCI/app/");
 define("PATH_REPORTES", PATH_RAIZ."/rep/");
 
 define("DEFAULT_LANGUAGE", "es");
+
+define("MAXREGEXCEL", 65000);

@@ -4,11 +4,11 @@ include_once('../../lib/config.php');
 ?>
 /*<script>*/
 var storePais = new Ext.data.JsonStore({
-	url:'proceso/pais/'
-	,root:'datos'
+	url:'pais/list'
+	,root:'data'
 	,sortInfo:{field:'pais_id',direction:'ASC'}
 	,totalProperty:'total'
-	,baseParams:{accion:'lista'}
+	,baseParams:{id:'<?= $id; ?>'}
 	,fields:[
 		{name:'pais_id', type:'float'},
 		{name:'pais', type:'string'}
@@ -16,20 +16,27 @@ var storePais = new Ext.data.JsonStore({
 });
 var comboPais = new Ext.form.ComboBox({
 	hiddenName:'pais'
-	,id:modulo+'comboPais'
-	,fieldLabel:'<?php print _PAIS; ?>'
+	,id:module+'comboPais'
+	,fieldLabel:'<?= Lang::get('pais.columns_title.pais'); ?>'
 	,store:storePais
 	,valueField:'pais_id'
-	,displayField:'pais_nombre'
+	,displayField:'pais_name'
 	,typeAhead:true
 	,forceSelection:true
 	,triggerAction:'all'
 	,selectOnFocus:true
+	,listeners:{
+		select: {
+			fn: function(combo,reg){
+				Ext.getCmp(module + 'pais_id').setValue(reg.data.pais_id);
+			}
+		}
+	}
 });
 var cmPais = new Ext.grid.ColumnModel({
 	columns:[
-		{xtype:'numbercolumn', header:'<?php print _PAIS_ID; ?>', align:'right', hidden:false, dataIndex:'pais_id'},
-		{header:'<?php print _PAIS; ?>', align:'left', hidden:false, dataIndex:'pais'}
+		{xtype:'numbercolumn', header:'<?= Lang::get('pais.columns_title.pais_id'); ?>', align:'right', hidden:false, dataIndex:'pais_id'},
+		{header:'<?= Lang::get('pais.columns_title.pais'); ?>', align:'left', hidden:false, dataIndex:'pais'}
 	]
 	,defaults:{
 		sortable:true
@@ -40,7 +47,7 @@ var tbPais = new Ext.Toolbar();
 
 var gridPais = new Ext.grid.GridPanel({
 	store:storePais
-	,id:modulo+'gridPais'
+	,id:module+'gridPais'
 	,colModel:cmPais
 	,viewConfig: {
 		forceFit: true
@@ -65,7 +72,7 @@ var formPais = new Ext.FormPanel({
 	,monitorValid:true
 	,bodyStyle:'padding:15px;'
 	,reader: new Ext.data.JsonReader({
-		root:'datos'
+		root:'data'
 		,totalProperty:'total'
 		,fields:[
 			{name:'pais_id', mapping:'pais_id', type:'float'},
@@ -87,19 +94,19 @@ var formPais = new Ext.FormPanel({
 		,items:[{
 			defaults:{anchor:'100%'}
 			,items:[{
-				,xtype:'numberfield'
+				xtype:'numberfield'
 				,name:'pais_id'
-				,fieldLabel:'<?php print _PAIS_ID; ?>'
-				,id:modulo+'pais_id'
+				,fieldLabel:'<?= Lang::get('pais.columns_title.pais_id'); ?>'
+				,id:module+'pais_id'
 				,allowBlank:false
 			}]
 		},{
 			defaults:{anchor:'100%'}
 			,items:[{
-				,xtype:'textfield'
+				xtype:'textfield'
 				,name:'pais'
-				,fieldLabel:'<?php print _PAIS; ?>'
-				,id:modulo+'pais'
+				,fieldLabel:'<?= Lang::get('pais.columns_title.pais'); ?>'
+				,id:module+'pais'
 				,allowBlank:false
 			}]
 		}]

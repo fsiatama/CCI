@@ -34,8 +34,36 @@ class IndicadorController {
 			$postParams['is_template'] = true;
 			$params = array_merge($postParams, $row, compact('action'));
 
-			var_dump($params);
+			//var_dump($params);
 			return new View('jsCode/indicador.'.$action, $params);
+		}
+
+		return $result;
+    }
+
+    public function jscodeCfgAction($urlParams, $postParams)
+    {
+        $action = array_shift($urlParams);
+		$action = (empty($action)) ? 'list' : $action;
+
+		$result = $this->userRepo->validateMenu($action, $postParams);
+
+		if ($result['success']) {
+
+			//verifica que exista el tipo de indicador y trae los datos
+			$result = $this->tipo_indicadorRepo->validateModify($postParams);
+			if (!$result['success']) {
+				return $result;
+			}
+			$row = array_shift($result['data']);
+			$postParams['is_template'] = true;
+			$params = array_merge($postParams, $row, compact('action'));
+
+			//el template de adicionar y editar son los mismos
+			$action = ($action == 'modify') ? 'create' : $action;
+
+			//var_dump($params);
+			return new View('jsCode/indicador/indicador.'.$action, $params);
 		}
 
 		return $result;

@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "indicador"; //$_GET["tabla"];
+$nombre_tabla = "pais"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -545,6 +545,7 @@ $contenido .= "	,typeAhead:true\r\n";
 $contenido .= "	,forceSelection:true\r\n";
 $contenido .= "	,triggerAction:'all'\r\n";
 $contenido .= "	,selectOnFocus:true\r\n";
+$contenido .= "	,allowBlank:false\r\n";
 $contenido .= "	,listeners:{\r\n";
 $contenido .= "		select: {\r\n";
 $contenido .= "			fn: function(combo,reg){\r\n";

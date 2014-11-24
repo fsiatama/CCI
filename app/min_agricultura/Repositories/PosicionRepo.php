@@ -36,7 +36,7 @@ class PosicionRepo extends BaseRepo {
 		$limit = ( isset($limit) ) ? $limit : 30;
 		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
 
-		if ($valuesqry) {
+		if (!empty($valuesqry) && $valuesqry) {
 			$query = explode('|',$query);
 			$posicion->setPosicion_id(implode('", "', $query));
 			return $posicionAdo->inSearch($posicion);

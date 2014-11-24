@@ -121,7 +121,7 @@ Ext.extend(Left, Ext.Panel, {
 				,buttonAlign: 'center'
 				,layout: 'fit'
 				,plugins: new Ext.ux.Plugin.RemoteComponent({
-					 url:url
+					url:url
 					,params:params
 					,disableCaching:false
 					,method:'POST'
