@@ -91,7 +91,11 @@ class Request {
 		$params              = $this->getParams();
 		if ( ! file_exists($controllerFileName))
 		{
-			exit('controlador no existe'. $controllerFileName);
+			$return = [
+				'success' => false,
+				'error'   => 'controlador no existe '. $controllerClassName
+			];
+			exit(json_encode($return));
 		}
 
 		require $controllerFileName;
@@ -119,7 +123,11 @@ class Request {
 		}
 		else
 		{
-			exit('Respuesta no valida');
+			$return = [
+				'success' => false,
+				'error'   => 'Respuesta no valida '
+			];
+			exit(json_encode($return));
 		}
 	}
 

@@ -135,45 +135,5 @@ class CorrelativaRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function create($params)
-	{
-		$result = $this->setData($params, 'create');
-		if (!$result['success']) {
-			return $result;
-		}
-
-		$result = $this->modelAdo->create($this->model);
-		if ($result['success']) {
-			return ['success' => true];
-		}
-		return $result;
-	}
-
-	public function modify($params)
-	{
-		$result = $this->setData($params, 'modify');
-		if (!$result['success']) {
-			return $result;
-		}
-
-		$result = $this->modelAdo->update($this->model);
-		if ($result['success']) {
-			return ['success' => true];
-		}
-		return $result;
-	}
-
-	public function delete($params)
-	{
-		extract($params);
-		$result = $this->findPrimaryKey($correlativa_id);
-
-		if ($result['success']) {
-			$result = $this->modelAdo->delete($this->model);
-		}
-
-		return $result;
-	}
-
 }	
 

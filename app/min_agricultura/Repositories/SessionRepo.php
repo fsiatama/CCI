@@ -20,6 +20,11 @@ class SessionRepo extends BaseRepo {
 		return 'session_id';
 	}
 
+	public function setData($params, $action)
+	{
+
+	}
+
 	public function login($data)
 	{
 		$session    = $this->model;

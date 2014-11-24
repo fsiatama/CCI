@@ -21,6 +21,11 @@ class PermissionsRepo extends BaseRepo {
 	{
 		return 'permissions_id';
 	}
+
+	public function setData($params, $action)
+	{
+
+	}
 	
 	public function listProfileMenu($profile_id)
 	{

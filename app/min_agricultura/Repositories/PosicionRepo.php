@@ -21,6 +21,11 @@ class PosicionRepo extends BaseRepo {
 		return 'posicion_id';
 	}
 
+	public function setData($params, $action)
+	{
+
+	}
+
 	public function listAll($params)
 	{
 		extract($params);

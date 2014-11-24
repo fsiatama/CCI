@@ -27,10 +27,17 @@ class UserController {
 		$result = $this->userRepo->validateMenu($action, $postParams);
 
 		if ($result['success']) {
-			$postParams['is_template'] = true;
-			$params = array_merge($postParams, $result);
+			if ($action == 'modify') {
+				$result = $this->userRepo->validateModify($postParams);
+				if (!$result['success']) {
+					return $result;
+				}
+			}
 
-			//var_dump($params);
+
+			$postParams['is_template'] = true;
+			$params = array_merge($postParams, $result, compact('action'));
+			
 			//el template de adicionar y editar son los mismos
 			$action = ($action == 'modify') ? 'create' : $action;
 
@@ -50,12 +57,37 @@ class UserController {
 		return $result;
 	}
 
+	public function listIdAction($urlParams, $postParams)
+	{
+		return $this->userRepo->validateModify($postParams);
+	}
+
 	public function createAction($urlParams, $postParams)
 	{
 		$result = $this->userRepo->validateMenu('create', $postParams);
 
 		if ($result['success']) {
 			$result = $this->userRepo->create($postParams);
+		}
+		return $result;
+	}
+
+	public function modifyAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('modify', $postParams);
+
+		if ($result['success']) {
+			$result = $this->userRepo->modify($postParams);
+		}
+		return $result;
+	}
+
+	public function deleteAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('delete', $postParams);
+
+		if ($result['success']) {
+			$result = $this->userRepo->delete($postParams);
 		}
 		return $result;
 	}

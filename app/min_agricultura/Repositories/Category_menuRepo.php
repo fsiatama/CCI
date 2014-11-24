@@ -21,6 +21,11 @@ class Category_menuRepo extends BaseRepo {
 		return 'category_menu_id';
 	}
 
+	public function setData($params, $action)
+	{
+
+	}
+
 	public function listAll()
 	{
 		$result = $this->modelAdo->exactSearch($this->model);

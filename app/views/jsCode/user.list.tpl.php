@@ -80,6 +80,7 @@
 			}
 		}]
 	});
+	
 	var gridUser = new Ext.grid.GridPanel({
 		store:storeUser
 		,id:module + 'gridUser'
@@ -135,13 +136,16 @@
 		}
 		else{
 			var data = {
-				id:'modificar-'+module
+				id:'edit_' + module
 				,iconCls:'silk-page-edit'
-				,titleTab:'Edit - Job'
+				,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
 				,url:'user/jscode/modify'
 				,params:{
-					code:'jobs'
-					,id:'add-'+module
+					id:'<?= $id; ?>'
+					,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
+					,module: 'edit_' + module
+					,parent: module
+					,user_id: key
 				}
 			};
 			Ext.getCmp('oeste').addTab(this,this,data);
@@ -153,27 +157,27 @@
 			,Ext.ux.lang.messages.question_delete
 			,function(btn){
 			if(btn == 'yes'){
-				var gridMask = new Ext.LoadMask(gridCargos.getEl(), { msg: 'Erasing .....' });
+				var gridMask = new Ext.LoadMask(gridUser.getEl(), { msg: 'Erasing .....' });
 				gridMask.show();
-				var selectedKeys =  record.get('cargos_id');
+				var key = record.get('user_id');
 
 				Ext.Ajax.request({
-					 url:'proceso/cargos/'
+					 url:'user/delete'
 					,params: {
-						 accion: 'del'
-						,id: selectedKeys
+						id: '<?= $id; ?>'
+						,user_id: key
 					}
 					,callback: function(options, success, response){
 						gridMask.hide();
 						var json = Ext.util.JSON.decode(response.responseText);
 						if (json.success){
-							gridCargos.store.reload();
+							gridUser.store.reload();
 						}
 						else{
 							Ext.Msg.show({
 							   title:Ext.ux.lang.messages.error,
 							   buttons: Ext.Msg.OK,
-							   msg:json.reason,
+							   msg:json.error,
 							   animEl: 'elId',
 							   icon: Ext.MessageBox.ERROR
 							});

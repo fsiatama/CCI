@@ -44,11 +44,10 @@
 		,buttonAlign:'center'
 		,trackResetOnLoad:true
 		,monitorValid:true
-		,bodyStyle:'padding:15px;'
+		,bodyStyle:	'padding:15px;position:relative;'
 		,reader: new Ext.data.JsonReader({
-			root:'datos'
+			root:'data'
 			,totalProperty:'total'
-			,url:'proceso/trabajo/'
 			,fields:[
 				{name:'user_id', mapping:'user_id', type:'float'},
 				{name:'user_full_name', mapping:'user_full_name', type:'string'},
@@ -58,10 +57,6 @@
 				{name:'profile_name', mapping:'profile_name', type:'string'}
 			]
 		})
-		,layout: {
-            type: 'vbox'
-            ,align: 'stretch'
-        }
 		,items:[{
 			xtype:'fieldset'
 			,title:''
@@ -116,17 +111,21 @@
 				defaults:{anchor:'100%'}
 				,items:[comboProfile]
 			},{
+	<?php
+	$disabled = ($action == 'modify') ? 'true' : 'false' ;
+	echo "
 				defaults:{anchor:'100%'}
 				,columnWidth:.5
 				,items:[{
 					xtype:'textfield'
 					,name:'user_password'
-					,fieldLabel:'<?= Lang::get('user.columns_title.user_password'); ?>'
+					,fieldLabel:'".Lang::get('user.columns_title.user_password')."'
 					,id:module+'user_password'
 					,inputType:'password'
 					,allowBlank:false
 					,vtype:'password'
 					,submitValue:false
+					,disabled: $disabled
 				}]
 			},{
 				defaults:{anchor:'100%'}
@@ -134,14 +133,48 @@
 				,items:[{
 					xtype:'textfield'
 					,name:'user_password_confirm'
-					,fieldLabel:'<?= Lang::get('user.columns_title.user_password_confirm'); ?>'
+					,fieldLabel:'".Lang::get('user.columns_title.user_password_confirm')."'
 					,id:module+'user_password_confirm'
 					,inputType:'password'
 					,allowBlank:false
 					,vtype:'confirmVal'
 					,initialField:module+'user_password'
 					,submitValue:false
+					,disabled: $disabled
 				}]
+	";
+	if ($action == 'modify') {
+	echo "
+			},{
+				defaults:{anchor:'88%'}
+				,columnWidth:.2
+				,labelAlign:'right'
+				,labelWidth: 1
+				,items:[{
+					xtype: 'checkbox'
+					,fieldLabel:''
+					,boxLabel:'".Lang::get('user.columns_title.change_password')."'
+					,id:module+'user_change_password'
+					,name:'user_change_password'
+					,inputValue: 1
+					,listeners:{
+						check: {
+							fn: function(checkbox,value){
+								if (!value) {
+									Ext.getCmp(module+'user_password').setValue('');
+									Ext.getCmp(module+'user_password').clearInvalid();
+									Ext.getCmp(module+'user_password_confirm').setValue('');
+									Ext.getCmp(module+'user_password_confirm').clearInvalid();
+								};
+								Ext.getCmp(module+'user_password').setDisabled(!value);
+								Ext.getCmp(module+'user_password_confirm').setDisabled(!value);
+							}
+						}
+					}
+				}]
+	";
+	};
+	?>
 			},{
 				xtype:'hidden'
 				,name:'user_id'
@@ -160,7 +193,7 @@
 				fnCloseTab();
 			}
 		},{
-			 text:Ext.ux.lang.buttons.save
+			text:Ext.ux.lang.buttons.save
 			,iconCls: 'icon-save'
 			,formBind: false
 			,handler:function(){
@@ -168,6 +201,28 @@
 			}
 		}]
 	});	
+	
+	<?php
+	if ($action == 'modify') {
+
+		echo "
+	formUser.on('show', function(){
+		formUser.form.load({
+			 url: 'user/listId'
+			,params:{
+				user_id: '$user_id'
+				,id: '$id'
+			}
+			,method: 'POST'
+			,waitTitle:'Loading......'
+			,waitMsg: 'Loading......'
+			,success: function(formulario, response) {
+				Ext.getCmp(module+'comboProfile').setValue(response.result.data.profile_name);
+			}
+		});
+	});";
+	}
+	?>
 
 	return formUser;
 
@@ -180,31 +235,41 @@
 	}
 
 	function fnSave () {
-		params = {
-			user_password:Ext.ux.util.MD5(Ext.getCmp(module+'user_password').getValue())
-			,id: '<?= $id; ?>'
-		};
-		formUser.getForm().submit({
-			waitMsg: 'Saving....'
-			,waitTitle:'Wait please...'
-			,url:'user/create'
-			,params: params
-			,success: function(form, action){
-				if(Ext.getCmp('<?= $parent; ?>gridUser')){
-					Ext.getCmp('<?= $parent; ?>gridUser').getStore().reload();
+		if(formUser.form.isValid()){
+			params = {
+				user_password:Ext.ux.util.MD5(Ext.getCmp(module+'user_password').getValue())
+				,id: '<?= $id; ?>'
+			};
+			formUser.getForm().submit({
+				waitMsg: 'Saving....'
+				,waitTitle:'Wait please...'
+				,url:'user/<?= $action; ?>'
+				,params: params
+				,success: function(form, action){
+					if(Ext.getCmp('<?= $parent; ?>gridUser')){
+						Ext.getCmp('<?= $parent; ?>gridUser').getStore().reload();
+					}
+					fnCloseTab();
 				}
-				fnCloseTab();
-			}
-			,failure:function(form, action){
-				Ext.Msg.show({
-				   title:'Error',
-				   buttons: Ext.Msg.OK,
-				   msg:Ext.decode(action.response.responseText).error,
-				   animEl: 'elId',
-				   icon: Ext.MessageBox.ERROR
-				});
-			}
-		});
+				,failure:function(form, action){
+					Ext.Msg.show({
+					   title:Ext.ux.lang.messages.error
+					   ,buttons: Ext.Msg.OK
+					   ,msg:Ext.decode(action.response.responseText).error
+					   ,animEl: 'elId'
+					   ,icon: Ext.MessageBox.ERROR
+					});
+				}
+			});
+		}
+		else{
+			Ext.Msg.show({
+				title: Ext.ux.lang.messages.warning
+				,msg: Ext.ux.lang.error.empty_fields
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+		}
 	}
 
 	/*********************************************** End functions***********************************************/

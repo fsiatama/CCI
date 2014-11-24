@@ -21,6 +21,11 @@ class ProfileRepo extends BaseRepo {
 		return 'profile_id';
 	}
 
+	public function setData($params, $action)
+	{
+
+	}
+
 	public function listAll($params)
 	{
 		$user    = $this->model;

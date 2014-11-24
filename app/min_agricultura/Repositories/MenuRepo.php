@@ -21,5 +21,10 @@ class MenuRepo extends BaseRepo {
 	{
 		return 'menu_id';
 	}
+
+	public function setData($params, $action)
+	{
+
+	}
 }	
 

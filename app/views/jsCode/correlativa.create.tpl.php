@@ -196,30 +196,40 @@
 	}
 
 	function fnSave () {
-		params = {
-			id: '<?= $id; ?>'
-		};
-		formCorrelativa.getForm().submit({
-			waitMsg: 'Saving....'
-			,waitTitle:'Wait please...'
-			,url:'correlativa/<?= $action; ?>'
-			,params: params
-			,success: function(form, action){
-				if(Ext.getCmp('<?= $parent; ?>gridCorrelativa')){
-					Ext.getCmp('<?= $parent; ?>gridCorrelativa').getStore().reload();
+		if(formCorrelativa.form.isValid()){
+			params = {
+				id: '<?= $id; ?>'
+			};
+			formCorrelativa.getForm().submit({
+				waitMsg: 'Saving....'
+				,waitTitle:'Wait please...'
+				,url:'correlativa/<?= $action; ?>'
+				,params: params
+				,success: function(form, action){
+					if(Ext.getCmp('<?= $parent; ?>gridCorrelativa')){
+						Ext.getCmp('<?= $parent; ?>gridCorrelativa').getStore().reload();
+					}
+					fnCloseTab();
 				}
-				fnCloseTab();
-			}
-			,failure:function(form, action){
-				Ext.Msg.show({
-				   title:'Error',
-				   buttons: Ext.Msg.OK,
-				   msg:Ext.decode(action.response.responseText).error,
-				   animEl: 'elId',
-				   icon: Ext.MessageBox.ERROR
-				});
-			}
-		});
+				,failure:function(form, action){
+					Ext.Msg.show({
+					   title:'Error',
+					   buttons: Ext.Msg.OK,
+					   msg:Ext.decode(action.response.responseText).error,
+					   animEl: 'elId',
+					   icon: Ext.MessageBox.ERROR
+					});
+				}
+			});
+		}
+		else{
+			Ext.Msg.show({
+				title: Ext.ux.lang.messages.warning
+				,msg: Ext.ux.lang.error.empty_fields
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+		}
 	}
 
 	/*********************************************** End functions***********************************************/

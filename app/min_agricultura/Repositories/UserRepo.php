@@ -23,6 +23,22 @@ class UserRepo extends BaseRepo {
 		return 'user_id';
 	}
 
+	public function validateModify($params)
+	{
+		extract($params);
+		$result = $this->findPrimaryKey($user_id);
+
+		if (!$result['success']) {
+			$result = [
+				'success'  => false,
+				'closeTab' => true,
+				'tab'      => 'tab-'.$module,
+				'error'    => $result['error']
+			];
+		}
+		return $result;
+	}
+
 	public function login($params)
 	{
 		extract($params);
@@ -187,6 +203,7 @@ class UserRepo extends BaseRepo {
 		}
 
 		$userAdo->setColumns([
+			'user_id',
 			'user_full_name',
 			'user_email',
 			'user_active',
@@ -216,6 +233,14 @@ class UserRepo extends BaseRepo {
 				];
 				return $result;
 			}
+
+			$row = array_shift($result['data']);
+
+			if (!empty($user_change_password) && $user_change_password === 1)  {
+				$user_password = $user_password;
+			} else {
+				$user_password = $row['user_password'];
+			}
 		}
 
 		if (
@@ -236,8 +261,11 @@ class UserRepo extends BaseRepo {
 		$this->model->setUser_password($user_password);
 		$this->model->setUser_active($user_active);
 		$this->model->setUser_profile_id($user_profile_id);
-		$this->model->setUser_uinsert($_SESSION['user_id']);
-		$this->model->setUser_finsert(Helpers::getDateTimeNow());
+
+		$result = $this->validateUniqueEmail();
+		if (!$result['success']) {
+			return $result;
+		}
 
 		if ($action == 'create') {
 			$this->model->setUser_uinsert($_SESSION['user_id']);
@@ -251,35 +279,21 @@ class UserRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function create($params)
+	public function validateUniqueEmail()
 	{
-		extract($params);
-		$user    = $this->model;
-		$userAdo = $this->modelAdo;
-
-		$user->setUser_email($user_email);
-		$result = $userAdo->exactSearch($user);
+		$result = $this->modelAdo->findUniqueEmail($this->model);
 		
 		if ($result['success']) {
-			
-			if ($result['total'] > 0) {
-				$result = array(
+			if ($result['total'] == 0) {
+				$result = ['success' => true];
+			} else {
+				$result = [
 					'success' => false,
-					'error'   => 'Este Email ya se encuentra registrado'
-				);
-				return $result;
-			}
-
-			$result = $this->setData($params, 'create');
-			if (!$result['success']) {
-				return $result;
-			}
-
-			$result = $userAdo->create($user);
-			if ($result['success']) {
-				return ['success' => true];
+					'error'   => 'This email is already registered'
+				];
 			}
 		}
+		
 		return $result;
 	}
 

@@ -3,6 +3,7 @@ Ext.ux.lang.error = {
 	 session_expired: 'Su sesi&oacute;n ha superado los 20 minutos de actividad.<br>Por seguridad, ingrese su contrase&ntilde;a para seguir trabajando'
 	 ,close_tab: 'Para realizar esta acción necesita cerrar la pestaña de crear o modificar que se encuentra abierta'
 	 ,invalid_pass_input: 'No es una contraseña válida. Debe contener al menos una letra mayúscula, una letra minúscula y al menos un número.'
+	 ,empty_fields: 'Compruebe el formulario ya que se encontraron campos vacíos o inválidos los cuales están resaltados en rojo.'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.messages');
@@ -46,7 +47,8 @@ Ext.ux.lang.buttons = {
 	,retry: 'Reintentar'
 	,send: 'Enviar'
 	,update: 'Actualizar'
-	,generare: 'Generar'
+	,generate: 'Generar'
+	,generate_tt: 'Generar Reporte'
 	,add: 'Agregar'
 	,delete: 'Borrar'
 	,delete_tt: 'Borrar este registro'

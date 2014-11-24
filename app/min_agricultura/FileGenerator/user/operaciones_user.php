@@ -18,6 +18,7 @@ if(isset($accion)){
 			$user->setUser_profile_id($user_profile_id);
 			$user->setUser_uinsert($user_uinsert);
 			$user->setUser_finsert($user_finsert);
+			$user->setUser_uupdate($user_uupdate);
 			$user->setUser_fupdate($user_fupdate);
 			$rs_user = $userAdo->actualizar($user);
 			if($rs_user !== true){
@@ -58,6 +59,7 @@ if(isset($accion)){
 			$user->setUser_profile_id($user_profile_id);
 			$user->setUser_uinsert($user_uinsert);
 			$user->setUser_finsert($user_finsert);
+			$user->setUser_uupdate($user_uupdate);
 			$user->setUser_fupdate($user_fupdate);
 			$rs_user = $userAdo->insertar($user);
 			if($rs_user["success"] !== true){
@@ -86,6 +88,7 @@ if(isset($accion)){
 			$user->setUser_profile_id($user_profile_id);
 			$user->setUser_uinsert($user_uinsert);
 			$user->setUser_finsert($user_finsert);
+			$user->setUser_uupdate($user_uupdate);
 			$user->setUser_fupdate($user_fupdate);
 			$rs_user = $userAdo->lista($user);
 			if(!is_array($rs_user)){
@@ -96,13 +99,13 @@ if(isset($accion)){
 				echo json_encode($respuesta);
 				exit();
 			}
-			foreach($rs_user["datos"] as $key => $data){
+			foreach($rs_user["data"] as $key => $data){
 				$arr[] = sanear_string($data);
 			}
 			$respuesta = array(
 				"success"=>true,
 				"total"=>$rs_user["total"],
-				"datos"=>$arr
+				"data"=>$arr
 			);
 			echo json_encode($respuesta);
 			exit();
@@ -131,13 +134,13 @@ if(isset($accion)){
 				exit();
 			}
 			else{
-				foreach($rs_user["datos"] as $key => $data){
+				foreach($rs_user["data"] as $key => $data){
 					$arr[] = sanear_string($data);
 				}
 				$respuesta = array(
 					"success"=>true,
 					"total"=>$rs_user["total"],
-					"datos"=>$arr
+					"data"=>$arr
 				);
 				echo json_encode($respuesta);
 				exit();

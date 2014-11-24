@@ -18,15 +18,16 @@ class UserAdo extends BaseAdo {
 	{
 		$user = $this->getModel();
 
-		$user_id        = $user->getUser_id();
-		$user_full_name = $user->getUser_full_name();
-		$user_email = $user->getUser_email();
-		$user_password = $user->getUser_password();
-		$user_active = $user->getUser_active();
+		$user_id         = $user->getUser_id();
+		$user_full_name  = $user->getUser_full_name();
+		$user_email      = $user->getUser_email();
+		$user_password   = $user->getUser_password();
+		$user_active     = $user->getUser_active();
 		$user_profile_id = $user->getUser_profile_id();
-		$user_uinsert = $user->getUser_uinsert();
-		$user_finsert = $user->getUser_finsert();
-		$user_fupdate = $user->getUser_fupdate();
+		$user_uinsert    = $user->getUser_uinsert();
+		$user_finsert    = $user->getUser_finsert();
+		$user_uupdate    = $user->getUser_uupdate();
+		$user_fupdate    = $user->getUser_fupdate();
 
 		$this->data = compact(
 			'user_id',
@@ -37,6 +38,7 @@ class UserAdo extends BaseAdo {
 			'user_profile_id',
 			'user_uinsert',
 			'user_finsert',
+			'user_uupdate',
 			'user_fupdate'
 		);
 	}
@@ -57,6 +59,7 @@ class UserAdo extends BaseAdo {
 				user_profile_id,
 				user_uinsert,
 				user_finsert,
+				user_uupdate,
 				user_fupdate
 			)
 			VALUES (
@@ -68,6 +71,7 @@ class UserAdo extends BaseAdo {
 				"'.$this->data['user_profile_id'].'",
 				"'.$this->data['user_uinsert'].'",
 				"'.$this->data['user_finsert'].'",
+				"'.$this->data['user_uupdate'].'",
 				"'.$this->data['user_fupdate'].'"
 			)
 		';
@@ -106,6 +110,7 @@ class UserAdo extends BaseAdo {
 			 user_profile_id,
 			 user_uinsert,
 			 user_finsert,
+			 user_uupdate,
 			 user_fupdate,
 			 profile_name
 			FROM user
@@ -114,7 +119,27 @@ class UserAdo extends BaseAdo {
 		if(!empty($filter)){
 			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
 		}
+
 		return $sql;
+	}
+
+	public function findUniqueEmail($user)
+	{
+		$conn = $this->getConnection();
+
+		$user_id    = $user->getUser_id();
+		$user_email = $user->getUser_email();
+
+		$sql = 'SELECT
+			 user_id
+			FROM user
+			LEFT JOIN profile ON user_profile_id = profile_id
+			WHERE user_id <> "'.$user_id.'" AND user_email = "'.$user_email.'"
+		';
+		$resultSet = $conn->Execute($sql);
+		$result = $this->buildResult($resultSet);
+
+		return $result;
 	}
 
 }

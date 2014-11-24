@@ -9,6 +9,7 @@ class User {
 	private $user_profile_id;
 	private $user_uinsert;
 	private $user_finsert;
+	private $user_uupdate;
 	private $user_fupdate;
 
 	public function setUser_id($user_id){
@@ -73,6 +74,14 @@ class User {
 
 	public function getUser_finsert(){
 		return $this->user_finsert;
+	}
+
+	public function setUser_uupdate($user_uupdate){
+		$this->user_uupdate = $user_uupdate;
+	}
+
+	public function getUser_uupdate(){
+		return $this->user_uupdate;
 	}
 
 	public function setUser_fupdate($user_fupdate){

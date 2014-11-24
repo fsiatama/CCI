@@ -1,7 +1,6 @@
-
 <?php
 
-require 'BaseAdo.php';
+require_once ('BaseAdo.php');
 
 class UserAdo extends BaseAdo {
 
@@ -27,6 +26,7 @@ class UserAdo extends BaseAdo {
 		$user_profile_id = $user->getUser_profile_id();
 		$user_uinsert = $user->getUser_uinsert();
 		$user_finsert = $user->getUser_finsert();
+		$user_uupdate = $user->getUser_uupdate();
 		$user_fupdate = $user->getUser_fupdate();
 
 		$this->data = compact(
@@ -38,6 +38,7 @@ class UserAdo extends BaseAdo {
 			'user_profile_id',
 			'user_uinsert',
 			'user_finsert',
+			'user_uupdate',
 			'user_fupdate'
 		);
 	}
@@ -58,6 +59,7 @@ class UserAdo extends BaseAdo {
 				user_profile_id,
 				user_uinsert,
 				user_finsert,
+				user_uupdate,
 				user_fupdate
 			)
 			VALUES (
@@ -69,6 +71,7 @@ class UserAdo extends BaseAdo {
 				"'.$this->data['user_profile_id'].'",
 				"'.$this->data['user_uinsert'].'",
 				"'.$this->data['user_finsert'].'",
+				"'.$this->data['user_uupdate'].'",
 				"'.$this->data['user_fupdate'].'"
 			)
 		';
@@ -107,6 +110,7 @@ class UserAdo extends BaseAdo {
 			 user_profile_id,
 			 user_uinsert,
 			 user_finsert,
+			 user_uupdate,
 			 user_fupdate
 			FROM user
 		';

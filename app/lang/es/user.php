@@ -11,5 +11,6 @@ return [
 		'user_password_confirm' => 'Confirmar Contraseña',
 		'user_active'           => 'Estado',
 		'profile_name'          => 'Perfil',
+		'change_password'       => 'Desea cambiar la Contraseña?',
     ]
 ];

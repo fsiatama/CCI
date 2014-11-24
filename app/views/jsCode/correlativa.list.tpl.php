@@ -172,7 +172,7 @@
 					 url:'correlativa/delete'
 					,params: {
 						id: '<?= $id; ?>'
-						,correlativa_id: 000002
+						,correlativa_id: key
 					}
 					,callback: function(options, success, response){
 						gridMask.hide();

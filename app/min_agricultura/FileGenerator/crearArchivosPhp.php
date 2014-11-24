@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "correlativa"; //$_GET["tabla"];
+$nombre_tabla = "indicador"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -190,6 +190,22 @@ class ".ucfirst($nombre_tabla)."Repo extends BaseRepo {
 		return '".$llave_primaria."';
 	}
 
+	public function validateModify(\$params)
+	{
+		extract(\$params);
+		\$result = \$this->findPrimaryKey(\$".$llave_primaria.");
+
+		if (!\$result['success']) {
+			\$result = [
+				'success'  => false,
+				'closeTab' => true,
+				'tab'      => 'tab-'.\$module,
+				'error'    => \$result['error']
+			];
+		}
+		return \$result;
+	}
+
 	public function setData(\$params, \$action)
 	{
 		extract(\$params);
@@ -228,34 +244,6 @@ $contenido .= "
 		elseif (\$action == 'modify') {
 		}
 		\$result = array('success' => true);
-		return \$result;
-	}
-
-	public function create(\$params)
-	{
-		\$result = \$this->setData(\$params, 'create');
-		if (!\$result['success']) {
-			return \$result;
-		}
-
-		\$result = \$this->modelAdo->create(\$this->model);
-		if (\$result['success']) {
-			return ['success' => true];
-		}
-		return \$result;
-	}
-
-	public function modify(\$params)
-	{
-		\$result = \$this->setData(\$params, 'modify');
-		if (!\$result['success']) {
-			return \$result;
-		}
-
-		\$result = \$this->modelAdo->update(\$this->model);
-		if (\$result['success']) {
-			return ['success' => true];
-		}
 		return \$result;
 	}
 

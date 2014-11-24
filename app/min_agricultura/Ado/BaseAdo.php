@@ -213,11 +213,12 @@ abstract class BaseAdo extends Connection {
 					$newRow[$column] = $row[$column];
 				}
 				elseif (method_exists($model, $methodName)) {
+
 					$segments   = explode('_', $column);
 					$attribute  = array_pop($segments);
 					$columnName = implode('_', $segments);
 
-					if (!empty($row[$columnName])) {
+					if (!empty($row[$columnName]) || $row[$columnName] === '0') {
 						$response        = call_user_func_array([$model, $methodName], [$row[$columnName]]);
 						$newRow[$column] = $response;
 					}
