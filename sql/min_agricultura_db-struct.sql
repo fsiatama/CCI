@@ -100,14 +100,19 @@ CREATE TABLE `declaraexp` (
   `id` int(10) unsigned NOT NULL,
   `anio` smallint(4) unsigned NOT NULL,
   `periodo` smallint(2) unsigned NOT NULL,
-  `id_empresa` varchar(20) NOT NULL,
+  `id_empresa` varchar(20) CHARACTER SET latin1 NOT NULL,
   `id_paisdestino` smallint(3) unsigned NOT NULL,
-  `id_posicion` varchar(10) DEFAULT NULL,
+  `id_posicion` varchar(10) CHARACTER SET latin1 NOT NULL,
   `id_ciiu` smallint(3) unsigned NOT NULL,
-  `valorfob` double NOT NULL,
-  `valorcif` double NOT NULL,
-  `peso_neto` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `valorfob` float(13,2) NOT NULL,
+  `valorcif` float(13,2) NOT NULL,
+  `peso_neto` float(13,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_empresa` (`id_empresa`),
+  KEY `id_paisdestino` (`id_paisdestino`),
+  KEY `id_posicion` (`id_posicion`),
+  KEY `anio` (`anio`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `declaraimp` */
 
@@ -117,16 +122,22 @@ CREATE TABLE `declaraimp` (
   `id` int(10) unsigned NOT NULL,
   `anio` smallint(4) unsigned NOT NULL,
   `periodo` smallint(2) unsigned NOT NULL,
-  `id_empresa` varchar(20) NOT NULL,
+  `id_empresa` varchar(20) CHARACTER SET latin1 NOT NULL,
   `id_paisorigen` smallint(3) unsigned NOT NULL,
   `id_paiscompra` smallint(3) unsigned NOT NULL,
   `id_paisprocedencia` smallint(3) unsigned NOT NULL,
-  `id_posicion` varchar(10) DEFAULT NULL,
+  `id_posicion` varchar(10) CHARACTER SET latin1 NOT NULL,
   `id_ciiu` smallint(3) unsigned NOT NULL,
-  `valorcif` double NOT NULL,
-  `valorfob` double NOT NULL,
-  `peso_neto` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `valorcif` float(13,2) NOT NULL,
+  `valorfob` float(13,2) NOT NULL,
+  `peso_neto` float(13,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `anio` (`anio`),
+  KEY `id_empresa` (`id_empresa`),
+  KEY `id_paisprocedencia` (`id_paisprocedencia`),
+  KEY `id_posicion` (`id_posicion`),
+  KEY `id_ciiu` (`id_ciiu`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `empresa` */
 
