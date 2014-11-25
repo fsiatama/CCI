@@ -37,7 +37,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 	
 	Indicador.tree = function() {	
 		Indicador.tree.superclass.constructor.call(this, {
-			id: module + 'Indicador'
+			id: module + 'TreeIndicador'
 			,header: false
 			,collapseAllText: Ext.ux.lang.folder.collapse_all
 			,collapseText: Ext.ux.lang.folder.collapse
@@ -70,9 +70,12 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			,width:	200
 			,root:root
 			,loader: {
-				 url:'indicador/list'
+				url:'indicador/list'
+				,root:'data'
 				,baseParams:{
-					 tipo_indicador_id:'<?= $tipo_indicador_id; ?>'
+					tipo_indicador_id:'<?= $tipo_indicador_id; ?>'
+					,id: '<?= $id; ?>'
+					,module: module
 				}
 				,baseAttrs: {
 					 iconCls: 'silk-folder'
@@ -188,6 +191,13 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 		IndicadorTree.fireEvent('click', node);
 	});
 
+	IndicadorTree.getLoader().on('beforeload', function(loader, node, callback){		
+		if(Ext.getCmp(module+'lpIndicador').items.items.length == 0){
+			IndicadorTree.getRootNode().select();
+			panelInicial();
+		}
+	});
+
 	var indicadorLayout = new Ext.Panel({
 		xtype: 'panel'
 		,layout: 'border'
@@ -266,7 +276,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 					,id: '<?= $id; ?>'
 					,tipo_indicador_id: '<?= $tipo_indicador_id; ?>'
 					,parent: parent
-					,tree: module + 'Indicador'
+					,tree: module + 'TreeIndicador'
 					,module: 'cfg_' + module
 				}
 				,disableCaching:false

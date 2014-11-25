@@ -12,7 +12,7 @@ MySQL - 5.6.17 : Database - min_agricultura
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`min_agricultura` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`min_agricultura` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `min_agricultura`;
 
@@ -72,7 +72,7 @@ CREATE TABLE `ciiu` (
   `ciiu` varchar(100) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_ciiu`),
   UNIQUE KEY `ciiu` (`ciiu`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `correlativa` */
 
@@ -100,9 +100,9 @@ CREATE TABLE `declaraexp` (
   `id` int(10) unsigned NOT NULL,
   `anio` smallint(4) unsigned NOT NULL,
   `periodo` smallint(2) unsigned NOT NULL,
-  `id_empresa` varchar(20) CHARACTER SET latin1 NOT NULL,
+  `id_empresa` varchar(20) NOT NULL,
   `id_paisdestino` smallint(3) unsigned NOT NULL,
-  `id_posicion` varchar(10) CHARACTER SET latin1 NOT NULL,
+  `id_posicion` varchar(10) DEFAULT NULL,
   `id_ciiu` smallint(3) unsigned NOT NULL,
   `valorfob` float(13,2) NOT NULL,
   `valorcif` float(13,2) NOT NULL,
@@ -122,11 +122,11 @@ CREATE TABLE `declaraimp` (
   `id` int(10) unsigned NOT NULL,
   `anio` smallint(4) unsigned NOT NULL,
   `periodo` smallint(2) unsigned NOT NULL,
-  `id_empresa` varchar(20) CHARACTER SET latin1 NOT NULL,
+  `id_empresa` varchar(20) NOT NULL,
   `id_paisorigen` smallint(3) unsigned NOT NULL,
   `id_paiscompra` smallint(3) unsigned NOT NULL,
   `id_paisprocedencia` smallint(3) unsigned NOT NULL,
-  `id_posicion` varchar(10) CHARACTER SET latin1 NOT NULL,
+  `id_posicion` varchar(10) DEFAULT NULL,
   `id_ciiu` smallint(3) unsigned NOT NULL,
   `valorcif` float(13,2) NOT NULL,
   `valorfob` float(13,2) NOT NULL,
@@ -170,7 +170,7 @@ CREATE TABLE `empresa` (
   KEY `id_departamentos` (`id_departamentos`),
   KEY `id_ciudad` (`id_ciudad`),
   KEY `id_tipo_empresa` (`id_tipo_empresa`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `indicador` */
 
@@ -187,7 +187,7 @@ CREATE TABLE `indicador` (
   `indicador_finsert` datetime NOT NULL,
   `indicador_fupdate` datetime NOT NULL,
   PRIMARY KEY (`indicador_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `menu` */
 

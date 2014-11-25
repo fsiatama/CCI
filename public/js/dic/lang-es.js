@@ -19,6 +19,7 @@ Ext.ux.lang.reports = {
 	 excel2010: 'Libro Excel (*.xlsx)'
 	,excel97: 'Libro Excel 97-2003 (*.xls)'
 	,maxRows: 65000
+	,filters: 'Filtros'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');

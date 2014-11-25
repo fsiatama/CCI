@@ -15,6 +15,16 @@ class IndicadorController {
 		$this->indicadorRepo      = new IndicadorRepo;
 		$this->userRepo           = new UserRepo;
 	}
+
+	public function listAction($urlParams, $postParams)
+    {
+        $result = $this->userRepo->validateMenu('list', $postParams);
+
+		if ($result['success']) {
+			$result = $this->indicadorRepo->listUserId($postParams);
+		}
+		return $result;
+    }
 	
 	public function jscodeAction($urlParams, $postParams)
     {
@@ -67,6 +77,16 @@ class IndicadorController {
 		}
 
 		return $result;
+    }
+
+    public function createAction($urlParams, $postParams)
+    {
+    	$result = $this->userRepo->validateMenu('create', $postParams);
+
+    	if ($result['success']) {
+    		$result = $this->indicadorRepo->create($postParams);
+    	}
+    	return $result;
     }
 
 }

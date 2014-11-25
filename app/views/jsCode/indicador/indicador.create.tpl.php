@@ -4,7 +4,7 @@
 	var module = '<?= $module; ?>';
 
 	var configStorePosicion = {
-		 url:'posicion/list'
+		url:'posicion/list'
 		,root:'data'
 		,sortInfo:{field:'posicion_id',direction:'ASC'}
 		,totalProperty:'total'
@@ -102,6 +102,7 @@
 			,totalProperty:'total'
 			,fields:[
 				{name:'indicador_id', mapping:'indicador_id', type:'float'},
+				{name:'indicador_tipo_indicador_id', mapping:'indicador_tipo_indicador_id', type:'float'},
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
 				{name:'indicador_campos', mapping:'indicador_campos', type:'string'},
 				{name:'indicador_filtros', mapping:'indicador_filtros', type:'string'},
@@ -130,7 +131,21 @@
 					,id:module+'correlativa_decreto'
 					,allowBlank:false
 				}]
-			},{
+			}]
+		},{
+			xtype:'fieldset'
+			,title: Ext.ux.lang.reports.filters
+			,layout:'column'
+			,flex: 1
+			,defaults:{
+				columnWidth:1
+				,layout:'form'
+				,labelAlign:'top'
+				,border:false
+				,xtype:'panel'
+				,bodyStyle:'padding:0 18px 0 0'
+			}
+			,items:[{
 				defaults:{anchor:'100%'}
 				,items:[comboPais]
 			},{
@@ -141,6 +156,11 @@
 				xtype:'hidden'
 				,name:'pais_id'
 				,id:module+'pais_id'
+			},{
+				xtype:'hidden'
+				,name:'indicador_tipo_indicador_id'
+				,id:module+'indicador_tipo_indicador_id'
+				,value: '<?= $tipo_indicador_id; ?>'
 			}]
 		}]
 		,buttons: [{
@@ -203,10 +223,9 @@
 				,url:'indicador/<?= $action; ?>'
 				,params: params
 				,success: function(form, action){
-					if(Ext.getCmp('<?= $parent; ?>gridCorrelativa')){
-						Ext.getCmp('<?= $parent; ?>gridCorrelativa').getStore().reload();
+					if(Ext.getCmp('<?= $tree; ?>')){
+						Ext.getCmp('<?= $tree; ?>').cargar('<?= $indicador_id; ?>');
 					}
-					fnCloseTab();
 				}
 				,failure:function(form, action){
 					Ext.Msg.show({
