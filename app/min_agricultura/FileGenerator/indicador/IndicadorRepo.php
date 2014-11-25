@@ -62,6 +62,7 @@ class IndicadorRepo extends BaseRepo {
 			empty($indicador_campos) ||
 			empty($indicador_filtros) ||
 			empty($indicador_leaf) ||
+			empty($indicador_parent) ||
 			empty($indicador_uinsert) ||
 			empty($indicador_finsert) ||
 			empty($indicador_fupdate)
@@ -78,6 +79,7 @@ class IndicadorRepo extends BaseRepo {
 			$this->model->setIndicador_campos($indicador_campos);
 			$this->model->setIndicador_filtros($indicador_filtros);
 			$this->model->setIndicador_leaf($indicador_leaf);
+			$this->model->setIndicador_parent($indicador_parent);
 			$this->model->setIndicador_uinsert($indicador_uinsert);
 			$this->model->setIndicador_finsert($indicador_finsert);
 			$this->model->setIndicador_fupdate($indicador_fupdate);

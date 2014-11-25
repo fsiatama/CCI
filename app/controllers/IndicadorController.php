@@ -79,6 +79,27 @@ class IndicadorController {
 		return $result;
     }
 
+    public function jscodeExecuteAction($urlParams, $postParams)
+    {
+    	$action = array_shift($urlParams);
+		$action = (empty($action)) ? 'list' : $action;
+
+		$result = $this->userRepo->validateMenu($action, $postParams);
+
+		if ($result['success']) {
+			//verifica que exista el tipo de indicador y trae los datos
+    		$result = $this->tipo_indicadorRepo->validateModify($postParams);
+    		if (!$result['success']) {
+    			return $result;
+    		}
+    		$row = array_shift($result['data']);
+    		$postParams['is_template'] = true;
+    		$params = array_merge($postParams, $row, compact('action'));
+    		return new View('jsCode/indicador/indicador.execute', $params);
+		}
+		return $result;
+    }
+
     public function createAction($urlParams, $postParams)
     {
     	$result = $this->userRepo->validateMenu('create', $postParams);

@@ -16,6 +16,7 @@ if(isset($accion)){
 			$indicador->setIndicador_campos($indicador_campos);
 			$indicador->setIndicador_filtros($indicador_filtros);
 			$indicador->setIndicador_leaf($indicador_leaf);
+			$indicador->setIndicador_parent($indicador_parent);
 			$indicador->setIndicador_uinsert($indicador_uinsert);
 			$indicador->setIndicador_finsert($indicador_finsert);
 			$indicador->setIndicador_fupdate($indicador_fupdate);
@@ -56,6 +57,7 @@ if(isset($accion)){
 			$indicador->setIndicador_campos($indicador_campos);
 			$indicador->setIndicador_filtros($indicador_filtros);
 			$indicador->setIndicador_leaf($indicador_leaf);
+			$indicador->setIndicador_parent($indicador_parent);
 			$indicador->setIndicador_uinsert($indicador_uinsert);
 			$indicador->setIndicador_finsert($indicador_finsert);
 			$indicador->setIndicador_fupdate($indicador_fupdate);
@@ -84,6 +86,7 @@ if(isset($accion)){
 			$indicador->setIndicador_campos($indicador_campos);
 			$indicador->setIndicador_filtros($indicador_filtros);
 			$indicador->setIndicador_leaf($indicador_leaf);
+			$indicador->setIndicador_parent($indicador_parent);
 			$indicador->setIndicador_uinsert($indicador_uinsert);
 			$indicador->setIndicador_finsert($indicador_finsert);
 			$indicador->setIndicador_fupdate($indicador_fupdate);

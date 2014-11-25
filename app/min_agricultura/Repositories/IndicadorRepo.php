@@ -53,10 +53,56 @@ class IndicadorRepo extends BaseRepo {
 		$this->modelAdo->setColumns([
 			'indicador_id',
 			'indicador_nombre',
-			'indicador_leaf'
+			'indicador_leaf',
+			'indicador_parent'
 		]);
 
 		$result = $this->modelAdo->exactSearch($this->model);
+		if ($result['success']) {
+			$arr = [];
+			foreach($result['data'] as $key => $data){
+				$qtip = '';
+				if($data["indicador_leaf"] == '1'){
+					/*if($data["indicador_detalle"] == ""){
+						$filtros  = $data["reportes_filtros"];			
+						$_filtros = convierteArreglo($filtros);
+						$html_tip = array();
+						$html_tip[] = _INTERCAMBIO . " : " . ($data["reportes_intercambio"]==0?_IMPORTACION:_EXPORTACION);
+						foreach($filtrosIntercambioSisduan[$data["reportes_intercambio"]] as $i => $filtro){
+							foreach($_filtros as $j => $filtro_valores){
+								if($filtro["filtro"] == $j){
+									$html_tip[] = utf8_encode(traducir($filtro["nombre"])) . " : " . ($filtro_valores);
+								}
+							}
+						}
+						$qtip = implode("<br>",$html_tip);
+					}
+					else{
+						$qtip .= str_replace("->","<br>",$data["reportes_detalle"]);
+					}*/
+				}
+				//$arr_filas = ($data["reportes_filas"] == "")?false:explode("||",$data["reportes_filas"]);
+				
+				if($data["indicador_leaf"] == '0'){
+					$css = "silk-folder";
+				}
+				else{
+					$css = "silk-report-magnify";
+				}
+										
+				$arr[] = array(
+					'id'        => $data['indicador_id'],
+					'nodeID'    => $data['indicador_id'],
+					'pnodeID'   => $data['indicador_parent'],
+					'text'      => $data['indicador_nombre'],
+					'leaf'      => ( $data['indicador_leaf'] == '0' ) ? 'false' : 'true',
+					'qtip'      => $qtip,
+					'iconCls'   => $css,
+				);
+			}
+
+			$result = $arr;
+		}
 		return $result;
 
 	}

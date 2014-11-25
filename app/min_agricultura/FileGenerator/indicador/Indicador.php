@@ -7,6 +7,7 @@ class Indicador {
 	private $indicador_campos;
 	private $indicador_filtros;
 	private $indicador_leaf;
+	private $indicador_parent;
 	private $indicador_uinsert;
 	private $indicador_finsert;
 	private $indicador_fupdate;
@@ -57,6 +58,14 @@ class Indicador {
 
 	public function getIndicador_leaf(){
 		return $this->indicador_leaf;
+	}
+
+	public function setIndicador_parent($indicador_parent){
+		$this->indicador_parent = $indicador_parent;
+	}
+
+	public function getIndicador_parent(){
+		return $this->indicador_parent;
 	}
 
 	public function setIndicador_uinsert($indicador_uinsert){

@@ -33,20 +33,20 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 		,expanded: true
 		,uiProvider: false
 		,iconCls: 'silk-folder'
-	});	
-	
-	Indicador.tree = function() {	
+	});
+
+	Indicador.tree = function() {
 		Indicador.tree.superclass.constructor.call(this, {
 			id: module + 'TreeIndicador'
 			,header: false
 			,collapseAllText: Ext.ux.lang.folder.collapse_all
 			,collapseText: Ext.ux.lang.folder.collapse
-			,deleteText: Ext.ux.lang.folder.delete
+			,deleteText: Ext.ux.lang.folder.delete_btn
 			,deleteInfoText: Ext.ux.lang.folder.delete_info
 			,expandAllText: Ext.ux.lang.folder.expand_all
 			,expandText: Ext.ux.lang.folder.expand
 			,insertText: Ext.ux.lang.folder.insert
-			,newText: Ext.ux.lang.folder.new
+			,newText: Ext.ux.lang.folder.new_btn
 			,reallyWantText: Ext.ux.lang.folder.really_want
 			,reloadText: Ext.ux.lang.folder.reload
 			,renameText: Ext.ux.lang.folder.rename
@@ -71,7 +71,6 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			,root:root
 			,loader: {
 				url:'indicador/list'
-				,root:'data'
 				,baseParams:{
 					tipo_indicador_id:'<?= $tipo_indicador_id; ?>'
 					,id: '<?= $id; ?>'
@@ -113,7 +112,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 				,'click': function(node, e){
 					Ext.getCmp(module + 'btnEdit').setDisabled(!node.leaf);
 					Ext.getCmp(module + 'btnDel').setDisabled(!node.leaf);
-					
+
 					if(node.leaf){
 						indicador_id = node.id;
 						IndicadorTree.consultar(node.id)
@@ -139,7 +138,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			if(node){
 				Ext.getCmp(module + 'btnEdit').setDisabled(false);
 				Ext.getCmp(module + 'btnDel').setDisabled(false);
-				
+
 				var dataViewer = new Ext.Panel({
 					autoScroll: false
 					,layout: 'fit'
@@ -148,17 +147,16 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 					,border: false
 					,autoDestroy:true
 					,plugins: new Ext.ux.Plugin.RemoteComponent({
-						 url:'jscode/reporte_sisduan/'
+						url: 'indicador/jscodeExecute/'
 						,params:{
 							indicador_id: indicador_id
-							,tree: module + 'Indicador'
+							,id: '<?= $id; ?>'
+							,tipo_indicador_id: '<?= $tipo_indicador_id; ?>'
+							,tree: module + 'TreeIndicador'
+							,module: 'execute_' + module
 						}
-						,disableCaching: true
-						,method: 'POST'
-						,mask: Ext.getBody()
-						,maskConfig: {
-							msg: Ext.LoadMask.prototype.msg
-						}
+						,disableCaching:false
+						,method:'POST'
 					})
 					,items:[]
 				});
@@ -174,10 +172,10 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			this.getRootNode().reload();
 		}
 	});
-	
-	var IndicadorTree = new Indicador.tree();	
+
+	var IndicadorTree = new Indicador.tree();
 	IndicadorTree.filter = new Ext.ux.tree.TreeFilterX(IndicadorTree);
-	
+
 	IndicadorTree.getLoader().on('load', function(loader, node, callback){
 		if(indicador_id != 0){
 			var nodo = IndicadorTree.getNodeById(indicador_id);
@@ -191,7 +189,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 		IndicadorTree.fireEvent('click', node);
 	});
 
-	IndicadorTree.getLoader().on('beforeload', function(loader, node, callback){		
+	IndicadorTree.getLoader().on('beforeload', function(loader, node, callback){
 		if(Ext.getCmp(module+'lpIndicador').items.items.length == 0){
 			IndicadorTree.getRootNode().select();
 			panelInicial();
@@ -212,7 +210,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			,tbar: new Ext.Toolbar({
 				enableOverflow: true
 				,items: [{
-					text: Ext.ux.lang.buttons.new
+					text: Ext.ux.lang.buttons.new_btn
 					,iconCls: 'silk-report-add'
 					,handler: function(){
 						cfg_reporte('create');
@@ -226,7 +224,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 						cfg_reporte('modify');
 					}
 				},{
-					text: Ext.ux.lang.buttons.delete
+					text: Ext.ux.lang.buttons.delete_btn
 					,iconCls: 'silk-application-delete'
 					,id:module + 'btnDel'
 					,disabled: true
@@ -246,9 +244,9 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 		}]
 	});
 
-	return indicadorLayout;	
+	return indicadorLayout;
 	/*********************************************** Start functions***********************************************/
-	
+
 	function panelInicial(){
 	}
 	function cfg_reporte(action){
@@ -261,7 +259,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			node = IndicadorTree.getRootNode();
 		}
 		var parent   = (node.leaf)?node.parentNode.id:node.id;
-		
+
 		var lp = Ext.getCmp(module + 'lpIndicador');
 
 		var remove = lp.removeAll(true);
@@ -287,7 +285,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 				id:module+'sbPanel'
 			})
 		}
-		
+
 		lp.add(panelCfg);
 		lp.doLayout();
 	}

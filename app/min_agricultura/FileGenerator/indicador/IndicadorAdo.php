@@ -24,6 +24,7 @@ class IndicadorAdo extends BaseAdo {
 		$indicador_campos = $indicador->getIndicador_campos();
 		$indicador_filtros = $indicador->getIndicador_filtros();
 		$indicador_leaf = $indicador->getIndicador_leaf();
+		$indicador_parent = $indicador->getIndicador_parent();
 		$indicador_uinsert = $indicador->getIndicador_uinsert();
 		$indicador_finsert = $indicador->getIndicador_finsert();
 		$indicador_fupdate = $indicador->getIndicador_fupdate();
@@ -35,6 +36,7 @@ class IndicadorAdo extends BaseAdo {
 			'indicador_campos',
 			'indicador_filtros',
 			'indicador_leaf',
+			'indicador_parent',
 			'indicador_uinsert',
 			'indicador_finsert',
 			'indicador_fupdate'
@@ -55,6 +57,7 @@ class IndicadorAdo extends BaseAdo {
 				indicador_campos,
 				indicador_filtros,
 				indicador_leaf,
+				indicador_parent,
 				indicador_uinsert,
 				indicador_finsert,
 				indicador_fupdate
@@ -66,6 +69,7 @@ class IndicadorAdo extends BaseAdo {
 				"'.$this->data['indicador_campos'].'",
 				"'.$this->data['indicador_filtros'].'",
 				"'.$this->data['indicador_leaf'].'",
+				"'.$this->data['indicador_parent'].'",
 				"'.$this->data['indicador_uinsert'].'",
 				"'.$this->data['indicador_finsert'].'",
 				"'.$this->data['indicador_fupdate'].'"
@@ -104,6 +108,7 @@ class IndicadorAdo extends BaseAdo {
 			 indicador_campos,
 			 indicador_filtros,
 			 indicador_leaf,
+			 indicador_parent,
 			 indicador_uinsert,
 			 indicador_finsert,
 			 indicador_fupdate

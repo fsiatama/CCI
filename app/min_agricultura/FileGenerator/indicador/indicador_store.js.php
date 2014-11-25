@@ -16,6 +16,7 @@ var storeIndicador = new Ext.data.JsonStore({
 		{name:'indicador_campos', type:'string'},
 		{name:'indicador_filtros', type:'string'},
 		{name:'indicador_leaf', type:'string'},
+		{name:'indicador_parent', type:'float'},
 		{name:'indicador_uinsert', type:'float'},
 		{name:'indicador_finsert', type:'date', dateFormat:'Y-m-d H:i:s'},
 		{name:'indicador_fupdate', type:'date', dateFormat:'Y-m-d H:i:s'}
@@ -32,6 +33,7 @@ var comboIndicador = new Ext.form.ComboBox({
 	,forceSelection:true
 	,triggerAction:'all'
 	,selectOnFocus:true
+	,allowBlank:false
 	,listeners:{
 		select: {
 			fn: function(combo,reg){
@@ -48,6 +50,7 @@ var cmIndicador = new Ext.grid.ColumnModel({
 		{header:'<?= Lang::get('indicador.columns_title.indicador_campos'); ?>', align:'left', hidden:false, dataIndex:'indicador_campos'},
 		{header:'<?= Lang::get('indicador.columns_title.indicador_filtros'); ?>', align:'left', hidden:false, dataIndex:'indicador_filtros'},
 		{header:'<?= Lang::get('indicador.columns_title.indicador_leaf'); ?>', align:'left', hidden:false, dataIndex:'indicador_leaf'},
+		{xtype:'numbercolumn', header:'<?= Lang::get('indicador.columns_title.indicador_parent'); ?>', align:'right', hidden:false, dataIndex:'indicador_parent'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('indicador.columns_title.indicador_uinsert'); ?>', align:'right', hidden:false, dataIndex:'indicador_uinsert'},
 		{xtype:'datecolumn', header:'<?= Lang::get('indicador.columns_title.indicador_finsert'); ?>', align:'left', hidden:false, dataIndex:'indicador_finsert', format:'Y-m-d, g:i a'},
 		{xtype:'datecolumn', header:'<?= Lang::get('indicador.columns_title.indicador_fupdate'); ?>', align:'left', hidden:false, dataIndex:'indicador_fupdate', format:'Y-m-d, g:i a'}
@@ -95,6 +98,7 @@ var formIndicador = new Ext.FormPanel({
 			{name:'indicador_campos', mapping:'indicador_campos', type:'string'},
 			{name:'indicador_filtros', mapping:'indicador_filtros', type:'string'},
 			{name:'indicador_leaf', mapping:'indicador_leaf', type:'string'},
+			{name:'indicador_parent', mapping:'indicador_parent', type:'float'},
 			{name:'indicador_uinsert', mapping:'indicador_uinsert', type:'float'},
 			{name:'indicador_finsert', mapping:'indicador_finsert', type:'date'},
 			{name:'indicador_fupdate', mapping:'indicador_fupdate', type:'date'}
@@ -164,6 +168,15 @@ var formIndicador = new Ext.FormPanel({
 				,name:'indicador_leaf'
 				,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_leaf'); ?>'
 				,id:module+'indicador_leaf'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'numberfield'
+				,name:'indicador_parent'
+				,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_parent'); ?>'
+				,id:module+'indicador_parent'
 				,allowBlank:false
 			}]
 		},{
