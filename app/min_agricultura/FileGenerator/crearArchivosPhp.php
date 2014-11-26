@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "indicador"; //$_GET["tabla"];
+$nombre_tabla = "empresa"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";

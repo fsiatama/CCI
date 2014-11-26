@@ -10,7 +10,7 @@ $pais    = new Pais;
 if(isset($accion)){
 	switch($accion){
 		case "act":
-			$pais->setPais_id($pais_id);
+			$pais->setId_pais($id_pais);
 			$pais->setPais($pais);
 			$rs_pais = $paisAdo->actualizar($pais);
 			if($rs_pais !== true){
@@ -27,7 +27,7 @@ if(isset($accion)){
 			exit();
 		break;
 		case "del":
-			$pais->setPais_id($pais_id);
+			$pais->setId_pais($id_pais);
 			$rs_pais = $paisAdo->borrar($pais);
 			if($rs_pais !== true){
 				$success = false;
@@ -43,7 +43,7 @@ if(isset($accion)){
 			exit();
 		break;
 		case "crea":
-			$pais->setPais_id($pais_id);
+			$pais->setId_pais($id_pais);
 			$pais->setPais($pais);
 			$rs_pais = $paisAdo->insertar($pais);
 			if($rs_pais["success"] !== true){
@@ -54,17 +54,17 @@ if(isset($accion)){
 				echo json_encode($respuesta);
 				exit();
 			}
-			$pais_id = $rs_pais["insert_id"];
+			$id_pais = $rs_pais["insert_id"];
 			$respuesta = array(
 				"success"=>true,
-				"errors"=>array("reason"=>$pais_id)
+				"errors"=>array("reason"=>$id_pais)
 			);
 			echo json_encode($respuesta);
 			exit();
 		break;
 		case "lista":
 			$arr = array();
-			$pais->setPais_id($pais_id);
+			$pais->setId_pais($id_pais);
 			$pais->setPais($pais);
 			$rs_pais = $paisAdo->lista($pais);
 			if(!is_array($rs_pais)){

@@ -10,7 +10,7 @@ $posicion    = new Posicion;
 if(isset($accion)){
 	switch($accion){
 		case "act":
-			$posicion->setPosicion_id($posicion_id);
+			$posicion->setId_posicion($id_posicion);
 			$posicion->setPosicion($posicion);
 			$rs_posicion = $posicionAdo->actualizar($posicion);
 			if($rs_posicion !== true){
@@ -27,7 +27,7 @@ if(isset($accion)){
 			exit();
 		break;
 		case "del":
-			$posicion->setPosicion_id($posicion_id);
+			$posicion->setId_posicion($id_posicion);
 			$rs_posicion = $posicionAdo->borrar($posicion);
 			if($rs_posicion !== true){
 				$success = false;
@@ -43,7 +43,7 @@ if(isset($accion)){
 			exit();
 		break;
 		case "crea":
-			$posicion->setPosicion_id($posicion_id);
+			$posicion->setId_posicion($id_posicion);
 			$posicion->setPosicion($posicion);
 			$rs_posicion = $posicionAdo->insertar($posicion);
 			if($rs_posicion["success"] !== true){
@@ -54,17 +54,17 @@ if(isset($accion)){
 				echo json_encode($respuesta);
 				exit();
 			}
-			$posicion_id = $rs_posicion["insert_id"];
+			$id_posicion = $rs_posicion["insert_id"];
 			$respuesta = array(
 				"success"=>true,
-				"errors"=>array("reason"=>$posicion_id)
+				"errors"=>array("reason"=>$id_posicion)
 			);
 			echo json_encode($respuesta);
 			exit();
 		break;
 		case "lista":
 			$arr = array();
-			$posicion->setPosicion_id($posicion_id);
+			$posicion->setId_posicion($id_posicion);
 			$posicion->setPosicion($posicion);
 			$rs_posicion = $posicionAdo->lista($posicion);
 			if(!is_array($rs_posicion)){
@@ -75,13 +75,13 @@ if(isset($accion)){
 				echo json_encode($respuesta);
 				exit();
 			}
-			foreach($rs_posicion["datos"] as $key => $data){
+			foreach($rs_posicion["data"] as $key => $data){
 				$arr[] = sanear_string($data);
 			}
 			$respuesta = array(
 				"success"=>true,
 				"total"=>$rs_posicion["total"],
-				"datos"=>$arr
+				"data"=>$arr
 			);
 			echo json_encode($respuesta);
 			exit();
@@ -110,13 +110,13 @@ if(isset($accion)){
 				exit();
 			}
 			else{
-				foreach($rs_posicion["datos"] as $key => $data){
+				foreach($rs_posicion["data"] as $key => $data){
 					$arr[] = sanear_string($data);
 				}
 				$respuesta = array(
 					"success"=>true,
 					"total"=>$rs_posicion["total"],
-					"datos"=>$arr
+					"data"=>$arr
 				);
 				echo json_encode($respuesta);
 				exit();

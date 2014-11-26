@@ -1,15 +1,15 @@
 <?php
 class Pais {
 
-	private $pais_id;
+	private $id_pais;
 	private $pais;
 
-	public function setPais_id($pais_id){
-		$this->pais_id = $pais_id;
+	public function setId_pais($id_pais){
+		$this->id_pais = $id_pais;
 	}
 
-	public function getPais_id(){
-		return $this->pais_id;
+	public function getId_pais(){
+		return $this->id_pais;
 	}
 
 	public function setPais($pais){

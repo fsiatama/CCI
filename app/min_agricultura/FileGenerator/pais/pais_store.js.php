@@ -6,11 +6,11 @@ include_once('../../lib/config.php');
 var storePais = new Ext.data.JsonStore({
 	url:'pais/list'
 	,root:'data'
-	,sortInfo:{field:'pais_id',direction:'ASC'}
+	,sortInfo:{field:'id_pais',direction:'ASC'}
 	,totalProperty:'total'
 	,baseParams:{id:'<?= $id; ?>'}
 	,fields:[
-		{name:'pais_id', type:'float'},
+		{name:'id_pais', type:'float'},
 		{name:'pais', type:'string'}
 	]
 });
@@ -19,23 +19,24 @@ var comboPais = new Ext.form.ComboBox({
 	,id:module+'comboPais'
 	,fieldLabel:'<?= Lang::get('pais.columns_title.pais'); ?>'
 	,store:storePais
-	,valueField:'pais_id'
+	,valueField:'id_pais'
 	,displayField:'pais_name'
 	,typeAhead:true
 	,forceSelection:true
 	,triggerAction:'all'
 	,selectOnFocus:true
+	,allowBlank:false
 	,listeners:{
 		select: {
 			fn: function(combo,reg){
-				Ext.getCmp(module + 'pais_id').setValue(reg.data.pais_id);
+				Ext.getCmp(module + 'id_pais').setValue(reg.data.id_pais);
 			}
 		}
 	}
 });
 var cmPais = new Ext.grid.ColumnModel({
 	columns:[
-		{xtype:'numbercolumn', header:'<?= Lang::get('pais.columns_title.pais_id'); ?>', align:'right', hidden:false, dataIndex:'pais_id'},
+		{xtype:'numbercolumn', header:'<?= Lang::get('pais.columns_title.id_pais'); ?>', align:'right', hidden:false, dataIndex:'id_pais'},
 		{header:'<?= Lang::get('pais.columns_title.pais'); ?>', align:'left', hidden:false, dataIndex:'pais'}
 	]
 	,defaults:{
@@ -75,7 +76,7 @@ var formPais = new Ext.FormPanel({
 		root:'data'
 		,totalProperty:'total'
 		,fields:[
-			{name:'pais_id', mapping:'pais_id', type:'float'},
+			{name:'id_pais', mapping:'id_pais', type:'float'},
 			{name:'pais', mapping:'pais', type:'string'}
 		]
 	})
@@ -95,9 +96,9 @@ var formPais = new Ext.FormPanel({
 			defaults:{anchor:'100%'}
 			,items:[{
 				xtype:'numberfield'
-				,name:'pais_id'
-				,fieldLabel:'<?= Lang::get('pais.columns_title.pais_id'); ?>'
-				,id:module+'pais_id'
+				,name:'id_pais'
+				,fieldLabel:'<?= Lang::get('pais.columns_title.id_pais'); ?>'
+				,id:module+'id_pais'
 				,allowBlank:false
 			}]
 		},{

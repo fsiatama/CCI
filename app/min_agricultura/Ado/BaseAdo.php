@@ -118,6 +118,13 @@ abstract class BaseAdo extends Connection {
 		return $this->search();
 	}
 
+	public function notInSearch($model)
+	{
+		$this->setModel($model);
+		$this->setOperator('NOTIN');
+		return $this->search();
+	}
+
 	public function update($model)
 	{
 		$conn = $this->getConnection();

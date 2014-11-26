@@ -18,13 +18,13 @@ class PaisRepo extends BaseRepo {
 
 	public function getPrimaryKey()
 	{
-		return 'pais_id';
+		return 'id_pais';
 	}
 
 	public function validateModify($params)
 	{
 		extract($params);
-		$result = $this->findPrimaryKey($pais_id);
+		$result = $this->findPrimaryKey($id_pais);
 
 		if (!$result['success']) {
 			$result = [
@@ -42,7 +42,7 @@ class PaisRepo extends BaseRepo {
 		extract($params);
 
 		if ($action == 'modify') {
-			$result = $this->findPrimaryKey($pais_id);
+			$result = $this->findPrimaryKey($id_pais);
 
 			if (!$result['success']) {
 				$result = [
@@ -56,7 +56,7 @@ class PaisRepo extends BaseRepo {
 		}
 
 		if (
-			empty($pais_id) ||
+			empty($id_pais) ||
 			empty($pais)
 		) {
 			$result = array(
@@ -65,7 +65,7 @@ class PaisRepo extends BaseRepo {
 			);
 			return $result;
 		}
-			$this->model->setPais_id($pais_id);
+			$this->model->setId_pais($id_pais);
 			$this->model->setPais($pais);
 		
 

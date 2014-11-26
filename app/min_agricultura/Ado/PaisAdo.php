@@ -11,18 +11,18 @@ class PaisAdo extends BaseAdo {
 
 	protected function setPrimaryKey()
 	{
-		$this->primaryKey = 'pais_id';
+		$this->primaryKey = 'id_pais';
 	}
 
 	protected function setData()
 	{
 		$pais = $this->getModel();
 
-		$pais_id = $pais->getPais_id();
+		$id_pais = $pais->getId_pais();
 		$pais = $pais->getPais();
 
 		$this->data = compact(
-			'pais_id',
+			'id_pais',
 			'pais'
 		);
 	}
@@ -35,11 +35,11 @@ class PaisAdo extends BaseAdo {
 
 		$sql = '
 			INSERT INTO pais (
-				pais_id,
+				id_pais,
 				pais
 			)
 			VALUES (
-				"'.$this->data['pais_id'].'",
+				"'.$this->data['id_pais'].'",
 				"'.$this->data['pais'].'"
 			)
 		';
@@ -70,7 +70,7 @@ class PaisAdo extends BaseAdo {
 		}
 
 		$sql = 'SELECT
-			 pais_id,
+			 id_pais,
 			 pais
 			FROM pais
 		';

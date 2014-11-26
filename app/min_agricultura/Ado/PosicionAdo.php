@@ -11,18 +11,18 @@ class PosicionAdo extends BaseAdo {
 
 	protected function setPrimaryKey()
 	{
-		$this->primaryKey = 'posicion_id';
+		$this->primaryKey = 'id_posicion';
 	}
 
 	protected function setData()
 	{
 		$posicion = $this->getModel();
 
-		$posicion_id = $posicion->getPosicion_id();
+		$id_posicion = $posicion->getId_posicion();
 		$posicion = $posicion->getPosicion();
 
 		$this->data = compact(
-			'posicion_id',
+			'id_posicion',
 			'posicion'
 		);
 	}
@@ -35,11 +35,11 @@ class PosicionAdo extends BaseAdo {
 
 		$sql = '
 			INSERT INTO posicion (
-				posicion_id,
+				id_posicion,
 				posicion
 			)
 			VALUES (
-				"'.$this->data['posicion_id'].'",
+				"'.$this->data['id_posicion'].'",
 				"'.$this->data['posicion'].'"
 			)
 		';
@@ -58,25 +58,84 @@ class PosicionAdo extends BaseAdo {
 			if ($data <> ''){
 				if ($operator == '=') {
 					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
-				}
-				elseif ($operator == 'IN') {
+				} elseif ($operator == 'IN') {
 					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+				} elseif ($operator == 'NOTIN') {
+					$filter[] = 'NOT' . $key . ' IN ("' . $data . '")';
 				}
 				else {
-					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+					if (is_numeric($data)) {
+						$filter[] = $key . ' ' . $operator . ' "' . $data . '%"';
+					} else {
+						$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+					}
 					$joinOperator = ' OR ';
 				}
 			}
 		}
 
-		$sql = 'SELECT
-			 posicion_id,
-			 posicion
-			FROM posicion
+		$conn = $this->getConnection();
+		$sql = '
+			SELECT GROUP_CONCAT(DISTINCT SUBSTR(id_posicion,1,2)) AS capitulos,
+			GROUP_CONCAT(DISTINCT SUBSTR(id_posicion,1,4)) AS partidas,
+			GROUP_CONCAT(DISTINCT SUBSTR(id_posicion,1,6)) AS subpartidas 
+			FROM posicion 
+			LEFT JOIN arancel ON SUBSTRING(id_posicion,1,6) = CONCAT(cod_capitulo, cod_partida, cod_subpartida)
 		';
+		$sqlFilter = '';
 		if(!empty($filter)){
-			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+			$sqlFilter  = ' WHERE ('. implode( $joinOperator, $filter ).')';
+			$sql       .= $sqlFilter;
 		}
+		$arrArancel = $conn->getRow($sql);
+
+		$sql = '
+		SELECT * FROM (
+			SELECT * FROM (	
+				SELECT id_posicion, posicion
+				FROM posicion 
+				'.$sqlFilter.'
+			  ) AS posiciones ';
+		if (!empty($arrArancel['capitulos'])) {
+			$sql .= '
+			UNION SELECT * FROM (
+				SELECT cod_capitulo AS id_posicion, descripcion
+				FROM arancel
+				WHERE cod_capitulo IN ('.$arrArancel['capitulos'].')
+				  AND cod_partida    IS NULL
+				  AND cod_subpartida IS NULL
+				  AND cod_posicion   IS NULL 
+			  ) AS capitulos 
+			';
+			if (!empty($arrArancel['partidas'])) {
+				$sql .= '
+					UNION SELECT * FROM (
+						SELECT CONCAT(cod_capitulo,cod_partida)  AS id_posicion, descripcion
+						FROM arancel
+						WHERE CONCAT(cod_capitulo,cod_partida) IN ('.$arrArancel['partidas'].')
+						AND cod_subpartida IS NULL
+						AND cod_posicion  IS NULL
+					  ) AS partidas 
+				';
+				if (!empty($arrArancel['subpartidas'])) {
+					$sql .= '
+						UNION SELECT * FROM (
+							SELECT CONCAT(cod_capitulo,cod_partida,cod_subpartida)  AS id_posicion, descripcion
+							FROM arancel
+							WHERE CONCAT(cod_capitulo,cod_partida,cod_subpartida) IN ('.$arrArancel['subpartidas'].')
+							AND cod_posicion  IS NULL
+						  ) AS subpartidas
+					';
+				}
+			}
+		}
+		
+		$sql .= '
+		) AS qry
+		ORDER BY id_posicion 
+		';
+
+		//print($sql);
 
 		return $sql;
 	}

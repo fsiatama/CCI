@@ -4,32 +4,40 @@ include_once('../../lib/config.php');
 ?>
 /*<script>*/
 var storePosicion = new Ext.data.JsonStore({
-	url:'proceso/posicion/'
-	,root:'datos'
-	,sortInfo:{field:'posicion_id',direction:'ASC'}
+	url:'posicion/list'
+	,root:'data'
+	,sortInfo:{field:'id_posicion',direction:'ASC'}
 	,totalProperty:'total'
-	,baseParams:{accion:'lista'}
+	,baseParams:{id:'<?= $id; ?>'}
 	,fields:[
-		{name:'posicion_id', type:'string'},
+		{name:'id_posicion', type:'string'},
 		{name:'posicion', type:'string'}
 	]
 });
 var comboPosicion = new Ext.form.ComboBox({
 	hiddenName:'posicion'
-	,id:modulo+'comboPosicion'
-	,fieldLabel:'<?php print _POSICION; ?>'
+	,id:module+'comboPosicion'
+	,fieldLabel:'<?= Lang::get('posicion.columns_title.posicion'); ?>'
 	,store:storePosicion
-	,valueField:'posicion_id'
-	,displayField:'posicion_nombre'
+	,valueField:'id_posicion'
+	,displayField:'posicion_name'
 	,typeAhead:true
 	,forceSelection:true
 	,triggerAction:'all'
 	,selectOnFocus:true
+	,allowBlank:false
+	,listeners:{
+		select: {
+			fn: function(combo,reg){
+				Ext.getCmp(module + 'id_posicion').setValue(reg.data.id_posicion);
+			}
+		}
+	}
 });
 var cmPosicion = new Ext.grid.ColumnModel({
 	columns:[
-		{header:'<?php print _POSICION_ID; ?>', align:'left', hidden:false, dataIndex:'posicion_id'},
-		{header:'<?php print _POSICION; ?>', align:'left', hidden:false, dataIndex:'posicion'}
+		{header:'<?= Lang::get('posicion.columns_title.id_posicion'); ?>', align:'left', hidden:false, dataIndex:'id_posicion'},
+		{header:'<?= Lang::get('posicion.columns_title.posicion'); ?>', align:'left', hidden:false, dataIndex:'posicion'}
 	]
 	,defaults:{
 		sortable:true
@@ -40,7 +48,7 @@ var tbPosicion = new Ext.Toolbar();
 
 var gridPosicion = new Ext.grid.GridPanel({
 	store:storePosicion
-	,id:modulo+'gridPosicion'
+	,id:module+'gridPosicion'
 	,colModel:cmPosicion
 	,viewConfig: {
 		forceFit: true
@@ -65,10 +73,10 @@ var formPosicion = new Ext.FormPanel({
 	,monitorValid:true
 	,bodyStyle:'padding:15px;'
 	,reader: new Ext.data.JsonReader({
-		root:'datos'
+		root:'data'
 		,totalProperty:'total'
 		,fields:[
-			{name:'posicion_id', mapping:'posicion_id', type:'string'},
+			{name:'id_posicion', mapping:'id_posicion', type:'string'},
 			{name:'posicion', mapping:'posicion', type:'string'}
 		]
 	})
@@ -87,19 +95,19 @@ var formPosicion = new Ext.FormPanel({
 		,items:[{
 			defaults:{anchor:'100%'}
 			,items:[{
-				,xtype:'textfield'
-				,name:'posicion_id'
-				,fieldLabel:'<?php print _POSICION_ID; ?>'
-				,id:modulo+'posicion_id'
+				xtype:'textfield'
+				,name:'id_posicion'
+				,fieldLabel:'<?= Lang::get('posicion.columns_title.id_posicion'); ?>'
+				,id:module+'id_posicion'
 				,allowBlank:false
 			}]
 		},{
 			defaults:{anchor:'100%'}
 			,items:[{
-				,xtype:'textfield'
+				xtype:'textfield'
 				,name:'posicion'
-				,fieldLabel:'<?php print _POSICION; ?>'
-				,id:modulo+'posicion'
+				,fieldLabel:'<?= Lang::get('posicion.columns_title.posicion'); ?>'
+				,id:module+'posicion'
 				,allowBlank:false
 			}]
 		}]

@@ -18,7 +18,7 @@ class PosicionRepo extends BaseRepo {
 
 	public function getPrimaryKey()
 	{
-		return 'posicion_id';
+		return 'id_posicion';
 	}
 
 	public function setData($params, $action)
@@ -38,11 +38,11 @@ class PosicionRepo extends BaseRepo {
 
 		if (!empty($valuesqry) && $valuesqry) {
 			$query = explode('|',$query);
-			$posicion->setPosicion_id(implode('", "', $query));
+			$posicion->setId_posicion(implode('", "', $query));
 			return $posicionAdo->inSearch($posicion);
 		}
 		else {
-			$posicion->setPosicion_id($query);
+			$posicion->setId_posicion($query);
 			$posicion->setPosicion($query);
 			return $posicionAdo->paginate($posicion, 'LIKE', $limit, $page);
 		}

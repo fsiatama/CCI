@@ -110,6 +110,15 @@ class IndicadorController {
     	return $result;
     }
 
+    public function executeAction($urlParams, $postParams)
+    {
+    	$result = $this->userRepo->validateMenu('list', $postParams);
+    	if ($result['success']) {
+    		$result = $this->indicadorRepo->execute($postParams);
+    	}
+    	return $result;
+    }
+
 }
 	
 

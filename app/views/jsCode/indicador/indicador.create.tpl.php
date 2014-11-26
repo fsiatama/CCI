@@ -6,71 +6,89 @@
 	var configStorePosicion = {
 		url:'posicion/list'
 		,root:'data'
-		,sortInfo:{field:'posicion_id',direction:'ASC'}
+		,sortInfo:{field:'id_posicion',direction:'ASC'}
 		,totalProperty:'total'
 		,fields:[
-			{name:'posicion_id', type:'string'}
+			{name:'id_posicion', type:'string'}
 			,{name:'posicion', type:'string'}
 		]
 	};
 
 	var storePosicion  = new Ext.data.JsonStore(configStorePosicion);
 
-	var resultTpl = new Ext.XTemplate(
+	var resultTplPosicion = new Ext.XTemplate(
 		'<tpl for=".">' +
-			'<div class="search-item x-combo-list-item" ext:qtip="{posicion_id}">' +
-				'<span><b>{posicion_id}</b>&nbsp;-&nbsp;{posicion}</span>' +
+			'<div class="search-item x-combo-list-item" ext:qtip="{id_posicion}">' +
+				'<span><b>{id_posicion}</b>&nbsp;-&nbsp;{posicion}</span>' +
 			'</div>' +
 		'</tpl>'
 	);
 
-	var PosicionCombo = Ext.extend(Ext.ux.form.SuperBoxSelect, {
+	var Combo = Ext.extend(Ext.ux.form.SuperBoxSelect, {
 		xtype:'superboxselect'
 		,resizable:false
 		,anchor:'88%'
 		,minChars:2
-		,displayField:'posicion'
-		,valueField:'posicion_id'
 		,forceSelection:true
 		,allowNewData:true
 		,extraItemCls:'x-tag'
 		,allowBlank:false
 		,extraItemStyle:'border-width:2px'
 		,stackItems:true
-		,tpl: resultTpl
 		,mode:'remote'
 		,queryDelay:0
 		,triggerAction:'all'
 		,itemSelector:'.search-item'
 		,pageSize:10
-		,displayFieldTpl:'({posicion_id}) - {posicion}'
 	});
 
-	var comboPosicion = new PosicionCombo({
+	var comboPosicion = new Combo({
 		id:module+'comboPosicion'
 		,fieldLabel:'<?= Lang::get('indicador.columns_title.posicion'); ?>'
-		,name:'posicion[]'
+		,name:'id_posicion[]'
 		,store:storePosicion
+		,displayField:'posicion'
+		,valueField:'id_posicion'
+		,tpl: resultTplPosicion
+		,displayFieldTpl:'({id_posicion}) - {posicion}'
 	});
 
 	var storePais = new Ext.data.JsonStore({
 		url:'pais/list'
 		,id:module+'storePais'
 		,root:'data'
-		,sortInfo:{field:'pais_id',direction:'ASC'}
+		,sortInfo:{field:'id_pais',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams:{id:'<?= $id; ?>'}
 		,fields:[
-			{name:'pais_id', type:'float'},
+			{name:'id_pais', type:'float'},
 			{name:'pais', type:'string'}
 		]
 	});
-	var comboPais = new Ext.form.ComboBox({
+	var resultTplPais = new Ext.XTemplate(
+		'<tpl for=".">' +
+			'<div class="search-item x-combo-list-item" ext:qtip="{id_pais}">' +
+				'<span><b>{id_pais}</b>&nbsp;-&nbsp;{pais}</span>' +
+			'</div>' +
+		'</tpl>'
+	);
+	var comboPais = new Combo({
+		id:module+'comboPais'
+		,singleMode:true
+		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
+		,name:'id_pais[]'
+		,store:storePais
+		,displayField:'pais'
+		,valueField:'id_pais'
+		,tpl: resultTplPais
+		,displayFieldTpl:'({id_pais}) - {pais}'
+	});
+	/*var comboPais = new Ext.form.ComboBox({
 		hiddenName:'pais'
 		,id:module+'comboPais'
 		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
 		,store:storePais
-		,valueField:'pais_id'
+		,valueField:'id_pais'
 		,displayField:'pais'
 		,typeAhead:true
 		,forceSelection:true
@@ -80,11 +98,11 @@
 		,listeners:{
 			select: {
 				fn: function(combo,reg){
-					Ext.getCmp(module + 'pais_id').setValue(reg.data.pais_id);
+					Ext.getCmp(module + 'id_pais').setValue(reg.data.id_pais);
 				}
 			}
 		}
-	});
+	});*/
 
 	
 	var formIndicador = new Ext.FormPanel({
@@ -152,10 +170,6 @@
 				defaults:{anchor:'100%'}
 				,columnWidth:1
 				,items:[comboPosicion]
-			},{
-				xtype:'hidden'
-				,name:'pais_id'
-				,id:module+'pais_id'
 			},{
 				xtype:'hidden'
 				,name:'indicador_tipo_indicador_id'

@@ -52,6 +52,25 @@ CREATE TABLE `acuerdo_det` (
   PRIMARY KEY (`acuerdo_det_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+/*Table structure for table `arancel` */
+
+DROP TABLE IF EXISTS `arancel`;
+
+CREATE TABLE `arancel` (
+  `id_seccion` int(2) NOT NULL DEFAULT '0',
+  `cod_capitulo` int(2) unsigned zerofill NOT NULL DEFAULT '00',
+  `cod_partida` int(2) unsigned zerofill DEFAULT NULL,
+  `cod_subpartida` int(2) unsigned zerofill DEFAULT NULL,
+  `cod_posicion` int(4) unsigned zerofill DEFAULT NULL,
+  `descripcion` varchar(200) NOT NULL DEFAULT '',
+  `gravamen` varchar(5) DEFAULT NULL,
+  `iva` varchar(5) DEFAULT NULL,
+  `ciiu` int(5) DEFAULT NULL,
+  `cuode` int(5) DEFAULT NULL,
+  `notas` longtext,
+  KEY `idx_posicion` (`cod_capitulo`,`cod_partida`,`cod_subpartida`,`cod_posicion`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 /*Table structure for table `category_menu` */
 
 DROP TABLE IF EXISTS `category_menu`;
@@ -102,7 +121,10 @@ CREATE TABLE `declaraexp` (
   `periodo` smallint(2) unsigned NOT NULL,
   `id_empresa` varchar(20) NOT NULL,
   `id_paisdestino` smallint(3) unsigned NOT NULL,
-  `id_posicion` varchar(10) DEFAULT NULL,
+  `id_capitulo` char(2) NOT NULL,
+  `id_partida` char(4) NOT NULL,
+  `id_subpartida` char(6) NOT NULL,
+  `id_posicion` char(10) NOT NULL,
   `id_ciiu` smallint(3) unsigned NOT NULL,
   `valorfob` float(13,2) NOT NULL,
   `valorcif` float(13,2) NOT NULL,
@@ -126,7 +148,10 @@ CREATE TABLE `declaraimp` (
   `id_paisorigen` smallint(3) unsigned NOT NULL,
   `id_paiscompra` smallint(3) unsigned NOT NULL,
   `id_paisprocedencia` smallint(3) unsigned NOT NULL,
-  `id_posicion` varchar(10) DEFAULT NULL,
+  `id_capitulo` char(2) NOT NULL,
+  `id_partida` char(4) NOT NULL,
+  `id_subpartida` char(6) NOT NULL,
+  `id_posicion` char(10) NOT NULL,
   `id_ciiu` smallint(3) unsigned NOT NULL,
   `valorcif` float(13,2) NOT NULL,
   `valorfob` float(13,2) NOT NULL,
@@ -144,7 +169,7 @@ CREATE TABLE `declaraimp` (
 DROP TABLE IF EXISTS `empresa`;
 
 CREATE TABLE `empresa` (
-  `empresa_id` varchar(20) NOT NULL DEFAULT '0',
+  `id_empresa` varchar(20) NOT NULL DEFAULT '0',
   `digito_cheq` varchar(1) NOT NULL DEFAULT '0',
   `empresa` varchar(60) NOT NULL,
   `representante` varchar(50) NOT NULL DEFAULT '',
@@ -166,7 +191,7 @@ CREATE TABLE `empresa` (
   `web` varchar(60) DEFAULT '',
   `contacto1` varchar(100) DEFAULT '',
   `id_tipo_empresa` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`empresa_id`),
+  PRIMARY KEY (`id_empresa`),
   KEY `id_departamentos` (`id_departamentos`),
   KEY `id_ciudad` (`id_ciudad`),
   KEY `id_tipo_empresa` (`id_tipo_empresa`)
@@ -183,11 +208,12 @@ CREATE TABLE `indicador` (
   `indicador_campos` text NOT NULL,
   `indicador_filtros` text NOT NULL,
   `indicador_leaf` enum('0','1') NOT NULL,
+  `indicador_parent` int(10) unsigned NOT NULL,
   `indicador_uinsert` int(10) unsigned NOT NULL,
   `indicador_finsert` datetime NOT NULL,
   `indicador_fupdate` datetime NOT NULL,
   PRIMARY KEY (`indicador_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `menu` */
 
@@ -208,10 +234,9 @@ CREATE TABLE `menu` (
 DROP TABLE IF EXISTS `pais`;
 
 CREATE TABLE `pais` (
-  `pais_id` smallint(3) unsigned NOT NULL,
+  `id_pais` smallint(3) unsigned NOT NULL,
   `pais` varchar(40) NOT NULL,
-  PRIMARY KEY (`pais_id`),
-  UNIQUE KEY `paises` (`pais`)
+  PRIMARY KEY (`id_pais`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `permissions` */
@@ -236,9 +261,9 @@ CREATE TABLE `permissions` (
 DROP TABLE IF EXISTS `posicion`;
 
 CREATE TABLE `posicion` (
-  `posicion_id` varchar(10) NOT NULL,
+  `id_posicion` varchar(10) NOT NULL,
   `posicion` varchar(250) NOT NULL,
-  PRIMARY KEY (`posicion_id`)
+  PRIMARY KEY (`id_posicion`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `profile` */

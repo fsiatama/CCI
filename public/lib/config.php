@@ -16,6 +16,7 @@ define("EXT_TEMA", "xtheme-gray-extend.css");
 
 define("PATH_RAIZ", "C:/wamp/www/CCI/public/");
 define("PATH_APP", "C:/wamp/www/CCI/app/");
+define("PATH_MODELS", PATH_APP."/min_agricultura/");
 define("PATH_REPORTES", PATH_RAIZ."/rep/");
 
 define("DEFAULT_LANGUAGE", "es");

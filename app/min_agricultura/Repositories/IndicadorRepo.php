@@ -41,10 +41,10 @@ class IndicadorRepo extends BaseRepo {
 	{
 		extract($params);
 		if (empty($tipo_indicador_id)) {
-			$result = array(
+			return [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
-			);
+			];
 			return $result;
 		}
 		$this->model->setIndicador_uinsert($_SESSION['user_id']);
@@ -90,7 +90,7 @@ class IndicadorRepo extends BaseRepo {
 					$css = "silk-report-magnify";
 				}
 										
-				$arr[] = array(
+				$arr[] = [
 					'id'        => $data['indicador_id'],
 					'nodeID'    => $data['indicador_id'],
 					'pnodeID'   => $data['indicador_parent'],
@@ -98,7 +98,7 @@ class IndicadorRepo extends BaseRepo {
 					'leaf'      => ( $data['indicador_leaf'] == '0' ) ? 'false' : 'true',
 					'qtip'      => $qtip,
 					'iconCls'   => $css,
-				);
+				];
 			}
 
 			$result = $arr;
@@ -115,13 +115,12 @@ class IndicadorRepo extends BaseRepo {
 			$result = $this->findPrimaryKey($indicador_id);
 
 			if (!$result['success']) {
-				$result = [
+				return [
 					'success'  => false,
 					'closeTab' => true,
 					'tab'      => 'tab-'.$module,
 					'error'    => $result['error']
 				];
-				return $result;
 			}
 		}
 
@@ -132,11 +131,10 @@ class IndicadorRepo extends BaseRepo {
 			empty($indicador_tipo_indicador_id) ||
 			empty($indicador_filtros)
 		) {
-			$result = array(
+			return [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
-			);
-			return $result;
+			];
 		}
 
 		$this->model->setIndicador_nombre($indicador_nombre);
@@ -151,8 +149,7 @@ class IndicadorRepo extends BaseRepo {
 		elseif ($action == 'modify') {
 			$this->model->setIndicador_fupdate(Helpers::getDateTimeNow());
 		}
-		$result = array('success' => true);
-		return $result;
+		return [ 'success' => true ];
 	}
 
 	public function getFiltersValue($params)
@@ -163,21 +160,70 @@ class IndicadorRepo extends BaseRepo {
 
 		$arrFiltersValue = [];
 
-		foreach ($arrFiltersName as $key) {
-			if (array_key_exists($key, $params)) {
-				
-				if (is_array($params[$key])) {
-					$arrFiltersValue[] = $key . ':' .implode(',', $params[$key]);
+		foreach ($arrFiltersName as $filter) {
+			$fieldName = $filter['field'];
+
+			if ($filter['required'] && array_key_exists($fieldName, $params)) {
+				if (is_array($params[$fieldName]) && !empty($params[$fieldName])) {
+					$arrFiltersValue[] = $fieldName . ':' .implode(',', $params[$fieldName]);
 				} else {
-					$arrFiltersValue[] = $key . ':' .$params[$key];
+					//si el parametro no es un array, o esta vacio
+					//retorna vacio para que genere error
+					return '';
 				}
-				
-			} else {
-				//retorna una cadena vacia ya que los filtros no estan completos
-				return '';
+			} elseif (array_key_exists($fieldName, $params)) {
+				if (is_array($params[$fieldName]) && !empty($params[$fieldName])) {
+					$arrFiltersValue[] = $fieldName . ':' .implode(',', $params[$fieldName]);
+				}
 			}
 		}
 		return implode('||', $arrFiltersValue);
+	}
+
+	public function execute($params)
+	{
+		extract($params);
+		
+		if (empty($indicador_id)) {
+			return [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+		}
+		$this->model->setIndicador_id($indicador_id);
+		$result = $this->modelAdo->exactSearch($this->model);
+		if ($result['success']) {
+			$row = array_shift($result['data']);
+
+			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+
+			$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.'.$row['indicador_tipo_indicador_id']);
+
+			$repoFileName   = PATH_MODELS.'Repositories/'.$arrExecuteConfig['repoClassName'].'.php';
+			$repoClassName  = $arrExecuteConfig['repoClassName'];
+			$repoMethodName = 'execute' . $arrExecuteConfig['methodName'];
+
+			if ( ! file_exists($repoFileName)) {
+				return [
+					'success' => false,
+					'error'   => 'unavailable repo '. $repoClassName
+				];
+			}
+
+			require $repoFileName;
+
+			$repo = new $repoClassName();
+
+			if (method_exists($repo, $repoMethodName)) {
+				$result = call_user_func_array([$repo, $repoMethodName], $params);
+			} else {
+				return [
+					'success' => false,
+					'error'   => 'unavailable method '. $repoMethodName
+				];
+			}			
+		}
+		return $result;
 	}
 
 }	
