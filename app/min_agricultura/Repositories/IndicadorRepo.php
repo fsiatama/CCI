@@ -198,6 +198,7 @@ class IndicadorRepo extends BaseRepo {
 			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 
 			$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.'.$row['indicador_tipo_indicador_id']);
+			$arrFiltersName   = Helpers::arrayGet($lines, 'filters.'.$row['indicador_tipo_indicador_id']);
 
 			$repoFileName   = PATH_MODELS.'Repositories/'.$arrExecuteConfig['repoClassName'].'.php';
 			$repoClassName  = $arrExecuteConfig['repoClassName'];
@@ -213,9 +214,8 @@ class IndicadorRepo extends BaseRepo {
 			require $repoFileName;
 
 			$repo = new $repoClassName();
-
 			if (method_exists($repo, $repoMethodName)) {
-				$result = call_user_func_array([$repo, $repoMethodName], $params);
+				$result = call_user_func_array([$repo, $repoMethodName], compact('row', 'arrFiltersName'));
 			} else {
 				return [
 					'success' => false,

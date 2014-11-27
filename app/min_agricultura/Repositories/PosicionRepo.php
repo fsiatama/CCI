@@ -44,6 +44,9 @@ class PosicionRepo extends BaseRepo {
 		else {
 			$posicion->setId_posicion($query);
 			$posicion->setPosicion($query);
+			if (!empty($selected)) {
+				$posicionAdo->setSelectedValues($selected);
+			}
 			return $posicionAdo->paginate($posicion, 'LIKE', $limit, $page);
 		}
 

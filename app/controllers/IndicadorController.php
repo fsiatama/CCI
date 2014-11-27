@@ -92,9 +92,19 @@ class IndicadorController {
     		if (!$result['success']) {
     			return $result;
     		}
-    		$row = array_shift($result['data']);
+    		$rowTipoIndicador = array_shift($result['data']);
+
+    		//verifica que exista el indicador y trae los datos
+    		$result = $this->indicadorRepo->validateModify($postParams);
+    		if (!$result['success']) {
+    			return $result;
+    		}
+    		$rowIndicador = array_shift($result['data']);
+
     		$postParams['is_template'] = true;
-    		$params = array_merge($postParams, $row, compact('action'));
+    		
+    		$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action'));
+
     		return new View('jsCode/indicador/indicador.execute', $params);
 		}
 		return $result;

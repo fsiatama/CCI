@@ -4,6 +4,8 @@ require_once ('BaseAdo.php');
 
 class PaisAdo extends BaseAdo {
 
+	protected $selectedValues = NULL;
+
 	protected function setTable()
 	{
 		$this->table = 'pais';
@@ -25,6 +27,16 @@ class PaisAdo extends BaseAdo {
 			'id_pais',
 			'pais'
 		);
+	}
+
+	public function setSelectedValues($selectedValues)
+	{
+		$this->setSelectedValues = $selectedValues;
+	}
+
+	public function getSelectedValues()
+	{
+		return $this->selectedValues;
 	}
 
 	public function create($pais)
@@ -74,10 +86,18 @@ class PaisAdo extends BaseAdo {
 			 pais
 			FROM pais
 		';
-		if(!empty($filter)){
-			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+		$sqlFilter = '';
+		if (!empty($selectedValues)) {
+			$sqlFilter = '
+			WHERE ( NOT '.$this->primaryKey.' IN ('.$selectedValues.'))';
+			if (!empty($filter)) {
+				$sqlFilter .= ' AND ('. implode( $joinOperator, $filter ).')';
+			}
+		} elseif (!empty($filter)) {
+			$sqlFilter  = ' WHERE ('. implode( $joinOperator, $filter ).')';
 		}
-
+		$sql .= $sqlFilter;
+		
 		return $sql;
 	}
 

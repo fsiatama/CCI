@@ -45,5 +45,19 @@ class Helpers
 		}
 		exit("File does not exist at path {$path}");
 	}
+
+	public static function filterValuesToArray($value)
+	{
+		$arrFilters = explode("||", $value);
+		$arrFields  = [];
+	    
+	    foreach($arrFilters as $key => $filter) {
+	        $field = explode(':', $filter);
+	        
+	        $arrFields[$field[0]] = $field[1];
+	    }
+	    
+	    return $arrFields;
+	}
 		
 }

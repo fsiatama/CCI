@@ -59,12 +59,11 @@
 		,enableColumnMove:false
 		,id:module+'gridBalanza'			
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar:[]
-		,tbar:[]
+		,bbar:new Ext.PagingToolbar({pageSize:1000, store:storeBalanza, displayInfo:true})
 		,iconCls:'silk-grid'
-		,plugins:[new Ext.ux.grid.Excel({position:'top', title:Ext.ux.lang.buttons.save_as})]
+		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:panelHeight
+		,height:300
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
@@ -76,15 +75,23 @@
 	
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
-		,layout:'border'
+		,layout:'column'
 		,border:false
-		,bodyCssClass:'mainbar'
-		,items:[{
-			region:'north'
+		,baseCls:'x-plain'
+		,autoWidth:true
+		,autoScroll:true
+		,bodyStyle:	'padding:15px;position:relative;'
+		,defaults:{
+			columnWidth:1
 			,border:false
-			,html: '<div class="bootstrap-styles">' +
+			,xtype:'panel'
+			,style:{padding:'10px'}
+			,layout:'fit'
+		}
+		,items:[{
+			html: '<div class="bootstrap-styles">' +
 						'<div class="page-head">' +
-							'<h2 class="text-center"><?= $tipo_indicador_nombre; ?>: </h2>' +
+							'<h4 class="nopadding"><i class="styleColor fa fa-area-chart"></i> <?= $tipo_indicador_nombre; ?>: <small><?= $indicador_nombre; ?></small></h4>' +
 				        	'<div class="clearfix"></div>' +
 						'</div>' +
 					'</div>'
@@ -95,37 +102,19 @@
 				}
 			}
 		},{
-			layout:'column'
-			,baseCls:''
-			,region:'center'
-			,defaults:{columnWidth:1}
-			,bodyStyle:'padding:10px;'
+			html: ''
+			,tbar:[{text:'prueba'}]
+		},{
+			height:230
+			,html:'<div id="chart_panel_balanza"></div>'
 			,items:[{
-				xtype:'fieldset'
-				,title:''
-				,collapsible:false
-				,layout:'column'
-				,defaults:{
-					columnWidth:0.5
-					,border:false
-					,xtype:'panel'
-					,style:{padding:'10px'}
-					,layout:'fit'
-				}
-				,items:[{
-					defaults:{anchor:'100%'}
-					,height:panelHeight+20
-					,html:'<div id="chart_panel_balanza"></div>'
-					,items:[{
-						xtype:'panel'
-						,id:'chart_panel_balanza'
-						,plain:true
-					}]
-				},{
-					defaults:{anchor:'100%'}
-					,items:[gridBalanza]
-				}]
+				xtype:'panel'
+				,id:'chart_panel_balanza'
+				,plain:true
 			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[gridBalanza]
 		}]
 	});
 	

@@ -4,10 +4,14 @@ return [
 		'1' => [
 			[
 				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
 				'required'   => true,
 				'multivalue' => true,
 			],[
 				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
 				'required'   => true,
 				'multivalue' => true,
 			]
@@ -15,10 +19,14 @@ return [
 		'2' => [
 			[
 				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
 				'required'   => true,
 				'multivalue' => true,
 			],[
 				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
 				'required'   => true,
 				'multivalue' => true,
 			]
@@ -26,10 +34,14 @@ return [
 		'3' => [
 			[
 				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
 				'required'   => true,
 				'multivalue' => true,
 			],[
 				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
 				'required'   => true,
 				'multivalue' => true,
 			]

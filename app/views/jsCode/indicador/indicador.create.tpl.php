@@ -51,6 +51,14 @@
 		,valueField:'id_posicion'
 		,tpl: resultTplPosicion
 		,displayFieldTpl:'({id_posicion}) - {posicion}'
+		,listeners:{
+			'beforequery':{
+				fn: function(queryEvent) {
+					var store = this.getStore();
+					store.setBaseParam('selected', this.getValue());
+				}
+			}
+		}
 	});
 
 	var storePais = new Ext.data.JsonStore({
