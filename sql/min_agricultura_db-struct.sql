@@ -91,7 +91,7 @@ CREATE TABLE `ciiu` (
   `ciiu` varchar(100) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_ciiu`),
   UNIQUE KEY `ciiu` (`ciiu`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `correlativa` */
 
@@ -213,7 +213,7 @@ CREATE TABLE `indicador` (
   `indicador_finsert` datetime NOT NULL,
   `indicador_fupdate` datetime NOT NULL,
   PRIMARY KEY (`indicador_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `menu` */
 
@@ -263,7 +263,13 @@ DROP TABLE IF EXISTS `posicion`;
 CREATE TABLE `posicion` (
   `id_posicion` varchar(10) NOT NULL,
   `posicion` varchar(250) NOT NULL,
-  PRIMARY KEY (`id_posicion`)
+  `id_capitulo` char(2) NOT NULL,
+  `id_partida` char(4) NOT NULL,
+  `id_subpartida` char(6) NOT NULL,
+  PRIMARY KEY (`id_posicion`),
+  KEY `id_capitulo` (`id_capitulo`),
+  KEY `id_partida` (`id_partida`),
+  KEY `id_subpartida` (`id_subpartida`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `profile` */
