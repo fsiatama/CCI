@@ -136,12 +136,39 @@ class DeclaracionesRepo extends BaseRepo {
 				$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
 				
 				$arrData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
+
 			}
 
+			$arrSeries = [
+				'valor_expo'    => Lang::get('indicador.columns_title.valor_expo'),
+				'valor_impo'    => Lang::get('indicador.columns_title.valor_impo'),
+				'valor_balanza' => Lang::get('indicador.columns_title.valor_balanza')
+			];
+
+			$columnChart = Helpers::jsonChart(
+				$arrData,
+				'anio',
+				$arrSeries,
+				COLUMNAS
+			);
+
+			$arrSeries = [
+				'valor_balanza' => Lang::get('indicador.columns_title.valor_balanza')
+			];
+
+			$areaChart = Helpers::jsonChart(
+				$arrData,
+				'anio',
+				$arrSeries,
+				AREA
+			);
+
 			$result = [
-				'success' => $result['success'],
-				'data'    => $arrData,
-				'total'   => $result['total']
+				'success'         => $result['success'],
+				'data'            => $arrData,
+				'total'           => $result['total'],
+				'columnChartData' => $columnChart,
+				'areaChartData'   => $areaChart,
 			];
 
 		}

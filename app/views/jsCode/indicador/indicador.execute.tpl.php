@@ -23,13 +23,21 @@
 	
 	storeBalanza.on('load', function(store){
 		FusionCharts.setCurrentRenderer('javascript');
-		if(FusionCharts(module + 'chartId')){
-			FusionCharts(module + 'chartId').dispose();
+		if(FusionCharts(module + 'ColumnChartId')){
+			FusionCharts(module + 'ColumnChartId').dispose();
 		}
-		var myChart = new FusionCharts('".AREA."', module + 'chartId', '100%', '100%', '0', '1');
-		myChart.setTransparent(true);
-		myChart.setJSONData(store.reader.jsonData.chartData);
-		myChart.render(module + 'chart_panel_balanza');
+		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
+		chart.setTransparent(true);
+		chart.setJSONData(store.reader.jsonData.columnChartData);
+		chart.render(module + 'ColumnChart');
+
+		if(FusionCharts(module + 'AreaChartId')){
+			FusionCharts(module + 'AreaChartId').dispose();
+		}
+		var chart = new FusionCharts('<?= AREA; ?>', module + 'AreaChartId', '100%', '100%', '0', '1');
+		chart.setTransparent(true);
+		chart.setJSONData(store.reader.jsonData.areaChartData);
+		chart.render(module + 'AreaChart');
 		
 	});
 	var colModelBalanza = new Ext.grid.ColumnModel({
@@ -101,15 +109,25 @@
 					}				
 				}
 			}
-		},{
+		/*},{
 			html: ''
-			,tbar:[{text:'prueba'}]
+			,tbar:[{text:'prueba'}]*/
 		},{
-			height:230
-			,html:'<div id="' + module + 'chart_panel_balanza"></div>'
+			columnWidth:.5
+			,height:430
+			,html:'<div id="' + module + 'ColumnChart"></div>'
 			,items:[{
 				xtype:'panel'
-				,id: module + 'chart_panel_balanza'
+				,id: module + 'ColumnChart'
+				,plain:true
+			}]
+		},{
+			columnWidth:.5
+			,height:430
+			,html:'<div id="' + module + 'AreaChart"></div>'
+			,items:[{
+				xtype:'panel'
+				,id: module + 'AreaChart'
 				,plain:true
 			}]
 		},{

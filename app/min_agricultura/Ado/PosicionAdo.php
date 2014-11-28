@@ -18,14 +18,19 @@ class PosicionAdo extends BaseAdo {
 
 	protected function setData()
 	{
-		$posicion = $this->getModel();
-
-		$id_posicion = $posicion->getId_posicion();
-		$posicion = $posicion->getPosicion();
+		$posicion      = $this->getModel();
+		$id_posicion   = $posicion->getId_posicion();
+		$id_capitulo   = $posicion->getId_capitulo();
+		$id_partida    = $posicion->getId_partida();
+		$id_subpartida = $posicion->getId_subpartida();
+		$posicion      = $posicion->getPosicion();
 
 		$this->data = compact(
 			'id_posicion',
-			'posicion'
+			'posicion',
+			'id_capitulo',
+			'id_partida',
+			'id_subpartida'
 		);
 	}
 
@@ -48,11 +53,17 @@ class PosicionAdo extends BaseAdo {
 		$sql = '
 			INSERT INTO posicion (
 				id_posicion,
-				posicion
+				posicion,
+				id_capitulo,
+				id_partida,
+				id_subpartida
 			)
 			VALUES (
 				"'.$this->data['id_posicion'].'",
-				"'.$this->data['posicion'].'"
+				"'.$this->data['posicion'].'",
+				"'.$this->data['id_capitulo'].'",
+				"'.$this->data['id_partida'].'",
+				"'.$this->data['id_subpartida'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -73,6 +84,7 @@ class PosicionAdo extends BaseAdo {
 					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
 				} elseif ($operator == 'IN') {
 					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+					$joinOperator = ' OR ';
 				} elseif ($operator == 'NOTIN') {
 					$filter[] = 'NOT' . $key . ' IN ("' . $data . '")';
 				}

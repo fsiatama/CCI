@@ -37,6 +37,26 @@ class IndicadorRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function listId($params)
+	{
+		$this->modelAdo->setColumns([
+			'indicador_id',
+			'indicador_nombre',
+			'indicador_filtros',
+			'indicador_tipo_indicador_id',
+		]);
+
+		$result = $this->validateModify($params);
+		if ($result['success']) {
+			$row = array_shift($result['data']);
+
+			$arrFiltersValues = Helpers::filterValuesToArray($row['indicador_filtros']);
+			$result['data'][] = array_merge($row, $arrFiltersValues);
+		}
+
+		return $result;
+	}
+
 	public function listUserId($params)
 	{
 		extract($params);
@@ -124,11 +144,14 @@ class IndicadorRepo extends BaseRepo {
 			}
 		}
 
+		$indicador_campos = $this->getDescriptionValue($description);
+
 		$indicador_filtros = $this->getFiltersValue($params);
 
 		if (
 			empty($indicador_nombre) ||
 			empty($indicador_tipo_indicador_id) ||
+			empty($indicador_campos) ||
 			empty($indicador_filtros)
 		) {
 			return [
@@ -139,6 +162,7 @@ class IndicadorRepo extends BaseRepo {
 
 		$this->model->setIndicador_nombre($indicador_nombre);
 		$this->model->setIndicador_tipo_indicador_id($indicador_tipo_indicador_id);
+		$this->model->setIndicador_campos($indicador_campos);
 		$this->model->setIndicador_filtros($indicador_filtros);
 		$this->model->setIndicador_leaf('1');
 		
@@ -152,6 +176,18 @@ class IndicadorRepo extends BaseRepo {
 		return [ 'success' => true ];
 	}
 
+	public function getDescriptionValue($description)
+	{
+		$arr = [];
+		$arrDescription = json_decode($description, true);
+		if (!empty($arrDescription)) {
+			foreach ($arrDescription as $key => $value) {
+				$arr[] = Inflector::cleanInputString($value['label']) . ': ' . Inflector::cleanInputString(implode(',', $value['values']));
+			}
+		}
+		return implode('||', $arr);
+	}
+
 	public function getFiltersValue($params)
 	{
 		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
@@ -159,24 +195,26 @@ class IndicadorRepo extends BaseRepo {
 		$arrFiltersName = Helpers::arrayGet($lines, 'filters.'.$params['indicador_tipo_indicador_id']);
 
 		$arrFiltersValue = [];
+		if (!empty($arrFiltersName)) {
+			foreach ($arrFiltersName as $filter) {
+				$fieldName = $filter['field'];
 
-		foreach ($arrFiltersName as $filter) {
-			$fieldName = $filter['field'];
-
-			if ($filter['required'] && array_key_exists($fieldName, $params)) {
-				if (is_array($params[$fieldName]) && !empty($params[$fieldName])) {
-					$arrFiltersValue[] = $fieldName . ':' .implode(',', $params[$fieldName]);
-				} else {
-					//si el parametro no es un array, o esta vacio
-					//retorna vacio para que genere error
-					return '';
-				}
-			} elseif (array_key_exists($fieldName, $params)) {
-				if (is_array($params[$fieldName]) && !empty($params[$fieldName])) {
-					$arrFiltersValue[] = $fieldName . ':' .implode(',', $params[$fieldName]);
+				if ($filter['required'] && array_key_exists($fieldName, $params)) {
+					if (is_array($params[$fieldName]) && !empty($params[$fieldName])) {
+						$arrFiltersValue[] = $fieldName . ':' .implode(',', $params[$fieldName]);
+					} else {
+						//si el parametro no es un array, o esta vacio
+						//retorna vacio para que genere error
+						return '';
+					}
+				} elseif (array_key_exists($fieldName, $params)) {
+					if (is_array($params[$fieldName]) && !empty($params[$fieldName])) {
+						$arrFiltersValue[] = $fieldName . ':' .implode(',', $params[$fieldName]);
+					}
 				}
 			}
 		}
+
 		return implode('||', $arrFiltersValue);
 	}
 

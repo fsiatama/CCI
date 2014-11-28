@@ -57,7 +57,10 @@ class PosicionRepo extends BaseRepo {
 
 		if (
 			empty($id_posicion) ||
-			empty($posicion)
+			empty($posicion) ||
+			empty($id_capitulo) ||
+			empty($id_partida) ||
+			empty($id_subpartida)
 		) {
 			$result = array(
 				'success' => false,
@@ -67,6 +70,9 @@ class PosicionRepo extends BaseRepo {
 		}
 			$this->model->setId_posicion($id_posicion);
 			$this->model->setPosicion($posicion);
+			$this->model->setId_capitulo($id_capitulo);
+			$this->model->setId_partida($id_partida);
+			$this->model->setId_subpartida($id_subpartida);
 		
 
 		if ($action == 'create') {

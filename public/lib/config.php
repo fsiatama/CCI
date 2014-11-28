@@ -22,3 +22,10 @@ define("PATH_REPORTES", PATH_RAIZ."/rep/");
 define("DEFAULT_LANGUAGE", "es");
 
 define("MAXREGEXCEL", 65000);
+
+//DEFINE LOS TIPOS DE GRAFICA
+define("COLUMNAS", "MSColumn3D.swf");     //GRAFICA DE BARRAS
+define("BARRAS", "MSBar3D.swf");     //GRAFICA DE BARRAS
+define("PIE", "Pie3D.swf");        //GRAFICA DE PIE
+define("LINEAL", "MSLine.swf");      //GRAFICA LINEAL
+define("AREA", "StackedArea2D.swf");      //GRAFICA LINEAL

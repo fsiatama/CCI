@@ -11,13 +11,16 @@ var storePosicion = new Ext.data.JsonStore({
 	,baseParams:{id:'<?= $id; ?>'}
 	,fields:[
 		{name:'id_posicion', type:'string'},
-		{name:'posicion', type:'string'}
+		{name:'posicion', type:'string'},
+		{name:'id_capitulo', type:'string'},
+		{name:'id_partida', type:'string'},
+		{name:'id_subpartida', type:'string'}
 	]
 });
 var comboPosicion = new Ext.form.ComboBox({
 	hiddenName:'posicion'
 	,id:module+'comboPosicion'
-	,fieldLabel:'<?= Lang::get('posicion.columns_title.posicion'); ?>'
+	,fieldLabel:'<?= Lang::get('posicion.columns_title.id_subpartida'); ?>'
 	,store:storePosicion
 	,valueField:'id_posicion'
 	,displayField:'posicion_name'
@@ -37,7 +40,10 @@ var comboPosicion = new Ext.form.ComboBox({
 var cmPosicion = new Ext.grid.ColumnModel({
 	columns:[
 		{header:'<?= Lang::get('posicion.columns_title.id_posicion'); ?>', align:'left', hidden:false, dataIndex:'id_posicion'},
-		{header:'<?= Lang::get('posicion.columns_title.posicion'); ?>', align:'left', hidden:false, dataIndex:'posicion'}
+		{header:'<?= Lang::get('posicion.columns_title.posicion'); ?>', align:'left', hidden:false, dataIndex:'posicion'},
+		{header:'<?= Lang::get('posicion.columns_title.id_capitulo'); ?>', align:'left', hidden:false, dataIndex:'id_capitulo'},
+		{header:'<?= Lang::get('posicion.columns_title.id_partida'); ?>', align:'left', hidden:false, dataIndex:'id_partida'},
+		{header:'<?= Lang::get('posicion.columns_title.id_subpartida'); ?>', align:'left', hidden:false, dataIndex:'id_subpartida'}
 	]
 	,defaults:{
 		sortable:true
@@ -77,7 +83,10 @@ var formPosicion = new Ext.FormPanel({
 		,totalProperty:'total'
 		,fields:[
 			{name:'id_posicion', mapping:'id_posicion', type:'string'},
-			{name:'posicion', mapping:'posicion', type:'string'}
+			{name:'posicion', mapping:'posicion', type:'string'},
+			{name:'id_capitulo', mapping:'id_capitulo', type:'string'},
+			{name:'id_partida', mapping:'id_partida', type:'string'},
+			{name:'id_subpartida', mapping:'id_subpartida', type:'string'}
 		]
 	})
 	,items:[{
@@ -108,6 +117,33 @@ var formPosicion = new Ext.FormPanel({
 				,name:'posicion'
 				,fieldLabel:'<?= Lang::get('posicion.columns_title.posicion'); ?>'
 				,id:module+'posicion'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'id_capitulo'
+				,fieldLabel:'<?= Lang::get('posicion.columns_title.id_capitulo'); ?>'
+				,id:module+'id_capitulo'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'id_partida'
+				,fieldLabel:'<?= Lang::get('posicion.columns_title.id_partida'); ?>'
+				,id:module+'id_partida'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'id_subpartida'
+				,fieldLabel:'<?= Lang::get('posicion.columns_title.id_subpartida'); ?>'
+				,id:module+'id_subpartida'
 				,allowBlank:false
 			}]
 		}]

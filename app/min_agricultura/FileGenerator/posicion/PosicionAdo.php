@@ -20,10 +20,16 @@ class PosicionAdo extends BaseAdo {
 
 		$id_posicion = $posicion->getId_posicion();
 		$posicion = $posicion->getPosicion();
+		$id_capitulo = $posicion->getId_capitulo();
+		$id_partida = $posicion->getId_partida();
+		$id_subpartida = $posicion->getId_subpartida();
 
 		$this->data = compact(
 			'id_posicion',
-			'posicion'
+			'posicion',
+			'id_capitulo',
+			'id_partida',
+			'id_subpartida'
 		);
 	}
 
@@ -36,11 +42,17 @@ class PosicionAdo extends BaseAdo {
 		$sql = '
 			INSERT INTO posicion (
 				id_posicion,
-				posicion
+				posicion,
+				id_capitulo,
+				id_partida,
+				id_subpartida
 			)
 			VALUES (
 				"'.$this->data['id_posicion'].'",
-				"'.$this->data['posicion'].'"
+				"'.$this->data['posicion'].'",
+				"'.$this->data['id_capitulo'].'",
+				"'.$this->data['id_partida'].'",
+				"'.$this->data['id_subpartida'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -71,7 +83,10 @@ class PosicionAdo extends BaseAdo {
 
 		$sql = 'SELECT
 			 id_posicion,
-			 posicion
+			 posicion,
+			 id_capitulo,
+			 id_partida,
+			 id_subpartida
 			FROM posicion
 		';
 		if(!empty($filter)){

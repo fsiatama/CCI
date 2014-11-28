@@ -29,8 +29,8 @@ class PosicionRepo extends BaseRepo {
 	public function listAll($params)
 	{
 		extract($params);
-		$posicion    = $this->model;
-		$posicionAdo = $this->modelAdo;
+		$posicion    = $this->getModel();
+		$posicionAdo = $this->getModelAdo();
 
 		$start = ( isset($start) ) ? $start : 0;
 		$limit = ( isset($limit) ) ? $limit : 30;
@@ -39,6 +39,8 @@ class PosicionRepo extends BaseRepo {
 		if (!empty($valuesqry) && $valuesqry) {
 			$query = explode('|',$query);
 			$posicion->setId_posicion(implode('", "', $query));
+			$posicion->setId_capitulo(implode('", "', $query));
+
 			return $posicionAdo->inSearch($posicion);
 		}
 		else {

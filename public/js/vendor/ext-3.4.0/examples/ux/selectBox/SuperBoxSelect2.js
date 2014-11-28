@@ -1243,6 +1243,27 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect, Ext.form.Com
         return false;
     },
     /**
+     * Returns an array of records associated with the selected items.
+     * @methodOf Ext.ux.form.SuperBoxSelect
+     * @name getSelectedRecords
+     * @return {Array} An array of records associated with the selected items. 
+     */
+    getSelectedRecords : function(){
+        var  ret =[];
+        if(this.removeValuesFromStore){
+            ret = this.usedRecords.getRange();
+        }else{
+            var vals = [];
+            this.items.each(function(item){
+                vals.push(item.value);
+            });
+            Ext.each(vals,function(val){
+                ret.push(this.findInStore(val));
+            },this);
+        }
+        return ret;
+    },
+    /**
      * Returns a String value containing a concatenated list of item values. The list is concatenated with the {@link #Ext.ux.form.SuperBoxSelect-valueDelimiter}.
      * @methodOf Ext.ux.form.SuperBoxSelect
      * @name getValue

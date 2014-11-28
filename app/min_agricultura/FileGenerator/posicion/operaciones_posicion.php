@@ -12,6 +12,9 @@ if(isset($accion)){
 		case "act":
 			$posicion->setId_posicion($id_posicion);
 			$posicion->setPosicion($posicion);
+			$posicion->setId_capitulo($id_capitulo);
+			$posicion->setId_partida($id_partida);
+			$posicion->setId_subpartida($id_subpartida);
 			$rs_posicion = $posicionAdo->actualizar($posicion);
 			if($rs_posicion !== true){
 				$success = false;
@@ -45,6 +48,9 @@ if(isset($accion)){
 		case "crea":
 			$posicion->setId_posicion($id_posicion);
 			$posicion->setPosicion($posicion);
+			$posicion->setId_capitulo($id_capitulo);
+			$posicion->setId_partida($id_partida);
+			$posicion->setId_subpartida($id_subpartida);
 			$rs_posicion = $posicionAdo->insertar($posicion);
 			if($rs_posicion["success"] !== true){
 				$respuesta = array(
@@ -66,6 +72,9 @@ if(isset($accion)){
 			$arr = array();
 			$posicion->setId_posicion($id_posicion);
 			$posicion->setPosicion($posicion);
+			$posicion->setId_capitulo($id_capitulo);
+			$posicion->setId_partida($id_partida);
+			$posicion->setId_subpartida($id_subpartida);
 			$rs_posicion = $posicionAdo->lista($posicion);
 			if(!is_array($rs_posicion)){
 				$respuesta = array(

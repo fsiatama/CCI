@@ -91,27 +91,6 @@
 		,tpl: resultTplPais
 		,displayFieldTpl:'({id_pais}) - {pais}'
 	});
-	/*var comboPais = new Ext.form.ComboBox({
-		hiddenName:'pais'
-		,id:module+'comboPais'
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
-		,store:storePais
-		,valueField:'id_pais'
-		,displayField:'pais'
-		,typeAhead:true
-		,forceSelection:true
-		,triggerAction:'all'
-		,selectOnFocus:true
-		,allowBlank:false
-		,listeners:{
-			select: {
-				fn: function(combo,reg){
-					Ext.getCmp(module + 'id_pais').setValue(reg.data.id_pais);
-				}
-			}
-		}
-	});*/
-
 	
 	var formIndicador = new Ext.FormPanel({
 		baseCls:'x-plain'
@@ -130,9 +109,8 @@
 				{name:'indicador_id', mapping:'indicador_id', type:'float'},
 				{name:'indicador_tipo_indicador_id', mapping:'indicador_tipo_indicador_id', type:'float'},
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
-				{name:'indicador_campos', mapping:'indicador_campos', type:'string'},
-				{name:'indicador_filtros', mapping:'indicador_filtros', type:'string'},
-				{name:'indicador_leaf', mapping:'indicador_leaf', type:'string'},
+				{name:'id_posicion', mapping:'id_posicion', type:'string'},
+				{name:'id_pais', mapping:'id_pais', type:'string'}
 			]
 		})
 		,items:[{
@@ -183,6 +161,11 @@
 				,name:'indicador_tipo_indicador_id'
 				,id:module+'indicador_tipo_indicador_id'
 				,value: '<?= $tipo_indicador_id; ?>'
+			},{
+				xtype:'hidden'
+				,name:'indicador_id'
+				,id:module+'indicador_id'
+
 			}]
 		}]
 		,buttons: [{
@@ -208,7 +191,7 @@
 		echo "
 	formIndicador.on('show', function(){
 		formIndicador.form.load({
-			 url: 'indicador/listId'
+			url: 'indicador/listId'
 			,params:{
 				indicador_id: '$indicador_id'
 				,id: '$id'
@@ -217,7 +200,8 @@
 			,waitTitle:'Loading......'
 			,waitMsg: 'Loading......'
 			,success: function(formulario, response) {
-				Ext.getCmp(module+'comboPosicion').setValue(response.result.data.correlativa_origen);
+				Ext.getCmp(module+'comboPosicion').setValue(response.result.data.id_posicion);
+				Ext.getCmp(module+'comboPais').setValue(response.result.data.id_pais);
 			}
 		});
 	});";
@@ -229,6 +213,34 @@
 
 	/*********************************************** Start functions***********************************************/
 
+	function getDescription () {
+		var arrDescription = [];
+		
+		var arrValues      = [];
+		var selection      = Ext.getCmp(module+'comboPais').getSelectedRecords();
+		var label          = Ext.getCmp(module+'comboPais').fieldLabel;
+		
+		Ext.each(selection,function(row){
+			arrValues.push('['+row.get('id_pais')+'] ' + row.get('pais'));
+		});
+		arrDescription.push({
+			label: label
+			,values: arrValues
+		});
+
+		arrValues      = [];
+		selection      = Ext.getCmp(module+'comboPosicion').getSelectedRecords();
+		label          = Ext.getCmp(module+'comboPosicion').fieldLabel;
+		
+		Ext.each(selection,function(row){
+			arrValues.push('['+row.get('id_posicion')+'] ' + row.get('posicion'));
+		});
+		arrDescription.push({
+			label: label
+			,values: arrValues
+		});
+		return arrDescription;
+	}
 	function fnCloseTab(){
 		var tabs = Ext.getCmp('tabpanel');
 		tabs.remove(tabs.activeTab, true);
@@ -236,8 +248,10 @@
 
 	function fnSave () {
 		if(formIndicador.form.isValid()){
+			var description = getDescription();
 			params = {
 				id: '<?= $id; ?>'
+				,description: Ext.encode(description)
 			};
 			formIndicador.getForm().submit({
 				waitMsg: 'Saving....'

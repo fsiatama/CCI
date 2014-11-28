@@ -25,6 +25,17 @@ class IndicadorController {
 		}
 		return $result;
     }
+
+    public function listIdAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('list', $postParams);
+
+		if ($result['success']) {
+			$result = $this->indicadorRepo->listId($postParams);
+		}
+
+		return $result;
+	}
 	
 	public function jscodeAction($urlParams, $postParams)
     {
@@ -119,6 +130,16 @@ class IndicadorController {
     	}
     	return $result;
     }
+
+    public function modifyAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('modify', $postParams);
+
+		if ($result['success']) {
+			$result = $this->indicadorRepo->modify($postParams);
+		}
+		return $result;
+	}
 
     public function executeAction($urlParams, $postParams)
     {
