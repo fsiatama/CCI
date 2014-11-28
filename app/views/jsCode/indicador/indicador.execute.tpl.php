@@ -7,14 +7,13 @@
 	var storeBalanza = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
-		,sortInfo:{field:'id',direction:'ASC'}
+		,sortInfo:{field:'anio',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
 			,indicador_id: '<?= $indicador_id; ?>'
 		}
 		,fields:[
-			{name:'id', type:'float'},
 			{name:'anio', type:'float'},
 			{name:'valor_impo', type:'float'},
 			{name:'valor_expo', type:'float'},
@@ -24,24 +23,25 @@
 	
 	storeBalanza.on('load', function(store){
 		FusionCharts.setCurrentRenderer('javascript');
-		if(FusionCharts('myChartId_balanza".$pais."')){
-			FusionCharts('myChartId_balanza".$pais."').dispose();
+		if(FusionCharts(module + 'chartId')){
+			FusionCharts(module + 'chartId').dispose();
 		}
-		var myChart = new FusionCharts('".AREA."', 'myChartId_balanza".$pais."', '100%', '100%', '0', '1');
+		var myChart = new FusionCharts('".AREA."', module + 'chartId', '100%', '100%', '0', '1');
 		myChart.setTransparent(true);
-		myChart.setJSONData(store.reader.jsonData.json_grafico);
-		myChart.render('chart_panel_balanza".$pais."');
+		myChart.setJSONData(store.reader.jsonData.chartData);
+		myChart.render(module + 'chart_panel_balanza');
 		
 	});
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.anio'); ?>', hidden:false, dataIndex:'anio'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', hidden:false, dataIndex:'valor_impo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', hidden:false, dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', hidden:false, dataIndex:'valor_balanza' ,'renderer':numberFormat}
+			{header:'<?= Lang::get('indicador.columns_title.anio'); ?>', dataIndex:'anio'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'valor_balanza' ,'renderer':numberFormat}
 		]
 		,defaults: {
-			sortable:true
+			sortable: true
+			,align: 'right'
 		}
 	});
 	
@@ -106,10 +106,10 @@
 			,tbar:[{text:'prueba'}]
 		},{
 			height:230
-			,html:'<div id="chart_panel_balanza"></div>'
+			,html:'<div id="' + module + 'chart_panel_balanza"></div>'
 			,items:[{
 				xtype:'panel'
-				,id:'chart_panel_balanza'
+				,id: module + 'chart_panel_balanza'
 				,plain:true
 			}]
 		},{

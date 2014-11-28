@@ -44,23 +44,109 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 	}
 
+	public function findBalanzaData($filters, $filtersConfig)
+	{
+		require PATH_MODELS.'Entities/Declaraimp.php';
+		require PATH_MODELS.'Ado/DeclaraimpAdo.php';
+
+		$arrFiltersValues = Helpers::filterValuesToArray($filters);
+		
+		$this->model = new Declaraimp;
+		$this->modelAdo = new DeclaraimpAdo;
+
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'impo');
+
+		$this->modelAdo->setPivotRowFields('anio');
+		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		$rsDeclaraimp = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$rsDeclaraimp['success']) {
+			return $rsDeclaraimp;
+		}
+		if ($rsDeclaraimp['total'] == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		require PATH_MODELS.'Entities/Declaraexp.php';
+		require PATH_MODELS.'Ado/DeclaraexpAdo.php';
+
+		$this->model = new Declaraexp;
+		$this->modelAdo = new DeclaraexpAdo;
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo');
+
+		$this->modelAdo->setPivotRowFields('anio');
+		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$rsDeclaraexp['success']) {
+			return $rsDeclaraexp;
+		}
+		if ($rsDeclaraexp['total'] == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		$arrData = [];
+
+		foreach ($rsDeclaraexp['data'] as $keyImpo => $rowExpo) {
+			
+			foreach ($rsDeclaraimp['data'] as $keyExpo => $rowImpo) {
+
+				if($rowImpo["anio"] == $rowExpo["anio"]){
+					$arrData[] = [
+						'anio'          => $rowImpo["anio"],
+						'valor_expo'    => $rowExpo["valorfob"],
+						'valor_impo'    => $rowImpo["valorfob"],
+					];
+				}
+
+			}
+
+		}
+
+		return [
+			'success' => true,
+			'data'    => $arrData,
+			'total'   => count($arrData)
+		];
+	}
+
 	public function executeBalanza($rowIndicador, $filtersConfig)
 	{
 		extract($rowIndicador);
 
-		require PATH_MODELS.'Entities/Declaraimp.php';
-		require PATH_MODELS.'Ado/DeclaraimpAdo.php';
+		$result = $this->findBalanzaData($indicador_filtros, $filtersConfig);
+		if ($result['success']) {
 
-		$this->model = new Declaraimp;
-		$this->modelAdo = new DeclaraimpAdo;
+			$arrData = [];
 
-		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+			foreach ($result['data'] as $key => $value) {
 
-		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'impo');
+				$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
+				
+				$arrData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
+			}
 
-		$result = $this->modelAdo->inSearch($this->model);
+			$result = [
+				'success' => $result['success'],
+				'data'    => $arrData,
+				'total'   => $result['total']
+			];
 
-		var_dump($result);
+		}
+
+		return $result;
 
 	}
 }	

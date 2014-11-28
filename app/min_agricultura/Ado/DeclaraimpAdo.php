@@ -7,6 +7,31 @@ require_once ('BaseAdo.php');
 
 class DeclaraimpAdo extends BaseAdo {
 
+	protected $pivotRowFields        = '';
+	protected $pivotColumnFields     = '';
+	protected $pivotTotalFields      = '';
+	protected $pivotGroupingFunction = '';
+
+	public function setPivotRowFields($pivotRowFields)
+	{
+		$this->pivotRowFields = $pivotRowFields;
+	}
+
+	public function setPivotColumnFields($pivotColumnFields)
+	{
+		$this->pivotColumnFields = $pivotColumnFields;
+	}
+
+	public function setPivotTotalFields($pivotTotalFields)
+	{
+		$this->pivotTotalFields = $pivotTotalFields;
+	}
+
+	public function setPivotGroupingFunction($pivotGroupingFunction)
+	{
+		$this->pivotGroupingFunction = $pivotGroupingFunction;
+	}
+
 	protected function setTable()
 	{
 		$this->table = 'declaraimp';
@@ -122,19 +147,25 @@ class DeclaraimpAdo extends BaseAdo {
 
 	public function buildPivotSelect()
 	{
-		require PATH_APP.'adodb5/pivottable.inc.php';
+		require_once PATH_APP.'adodb5/pivottable.inc.php';
 		
-		$conn   = $this->getConnection();
-		$table  = $this->getTable();
-		$where .= $this->buildSelectWhere();
+		$conn  = $this->getConnection();
+		$table = $this->getTable();
+		$where = $this->buildSelectWhere();
 
 		$sql = PivotTableSQL(
 		 	$conn,  										# adodb connection
 		 	$table,									  		# tables
-			'CompanyName,QuantityPerUnit',					# row fields
-			'CategoryName',									# column fields
-			$where 											# joins/where
+			$this->pivotRowFields,							# row fields
+			$this->pivotColumnFields,						# column fields
+			$where, 										# joins/where
+			$this->pivotTotalFields, 						# SUM fields
+			'',												# Function Label
+			$this->pivotGroupingFunction,					# Function (SUM, COUNT, AGV)
+			false
 		);
+
+		//var_dump($sql);
 
 		return $sql;
 	}

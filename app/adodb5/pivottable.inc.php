@@ -31,19 +31,28 @@
  function PivotTableSQL(&$db,$tables,$rowfields,$colfield, $where=false,
  	$aggfield = false,$sumlabel='Sum ',$aggfn ='SUM', $showcount = true)
  {
-	if ($aggfield) $hidecnt = true;
-	else $hidecnt = false;
+	if ($aggfield) {
+		$hidecnt = true;
+	} else {
+		$hidecnt = false;
+	}
 
 	$iif = strpos($db->databaseType,'access') !== false;
 		// note - vfp 6 still doesn' work even with IIF enabled || $db->databaseType == 'vfp';
 
 	//$hidecnt = false;
 
- 	if ($where) $where = "\nWHERE $where";
-	if (!is_array($colfield)) $colarr = $db->GetCol("select distinct $colfield from $tables $where order by 1");
-	if (!$aggfield) $hidecnt = false;
+ 	$where = "\n $where";
+
+	if (!is_array($colfield)) {
+		$colarr = $db->GetCol("select distinct $colfield from $tables $where order by 1");
+	}
+	if (!$aggfield) {
+		$hidecnt = false;
+	}
 
 	$sel = "$rowfields, ";
+
 	if (is_array($colfield)) {
 		foreach ($colfield as $k => $v) {
 			$k = trim($k);
@@ -61,36 +70,44 @@
 			}
 		}
 	} else {
-		foreach ($colarr as $v) {
-			if (!is_numeric($v)) $vq = $db->qstr($v);
-			else $vq = $v;
-			$v = trim($v);
-			if (strlen($v) == 0	) $v = 'null';
-			if (!$hidecnt) {
-				$sel .= $iif ?
-					"\n\t$aggfn(IIF($colfield=$vq,1,0)) AS \"$v\", "
-					:
-					"\n\t$aggfn(CASE WHEN $colfield=$vq THEN 1 ELSE 0 END) AS \"$v\", ";
-			}
-			if ($aggfield) {
-				if ($hidecnt) $label = $v;
-				else $label = "{$v}_$aggfield";
-				$sel .= $iif ?
-					"\n\t$aggfn(IIF($colfield=$vq,$aggfield,0)) AS \"$label\", "
-					:
-					"\n\t$aggfn(CASE WHEN $colfield=$vq THEN $aggfield ELSE 0 END) AS \"$label\", ";
+		if (is_array($colarr)) {
+			foreach ($colarr as $v) {
+				if (!is_numeric($v)) $vq = $db->qstr($v);
+				else $vq = $v;
+				$v = trim($v);
+				if (strlen($v) == 0	) {
+					$v = 'null';
+				}
+				if (!$hidecnt) {
+					$sel .= $iif ?
+						"\n\t$aggfn(IIF($colfield=$vq,1,0)) AS \"$v\", "
+						:
+						"\n\t$aggfn(CASE WHEN $colfield=$vq THEN 1 ELSE 0 END) AS \"$v\", ";
+				}
+				if ($aggfield) {
+					if ($hidecnt) {
+						$label = $v;
+					} else {
+						$label = "{$v}_$aggfield";
+					}
+					$sel .= $iif ?
+						"\n\t$aggfn(IIF($colfield=$vq,$aggfield,0)) AS \"$label\", "
+						:
+						"\n\t$aggfn(CASE WHEN $colfield=$vq THEN $aggfield ELSE 0 END) AS \"$label\", ";
+				}
 			}
 		}
 	}
 	if ($aggfield && $aggfield != '1'){
-		$agg = "$aggfn($aggfield)";
+		$agg  = "$aggfn($aggfield)";
 		$sel .= "\n\t$agg as \"$sumlabel$aggfield\", ";
 	}
 
-	if ($showcount)
+	if ($showcount) {
 		$sel .= "\n\tSUM(1) as Total";
-	else
+	} else {
 		$sel = substr($sel,0,strlen($sel)-2);
+	}
 
 
 	// Strip aliases

@@ -4,6 +4,31 @@ require_once ('BaseAdo.php');
 
 class DeclaraexpAdo extends BaseAdo {
 
+	protected $pivotRowFields        = '';
+	protected $pivotColumnFields     = '';
+	protected $pivotTotalFields      = '';
+	protected $pivotGroupingFunction = '';
+
+	public function setPivotRowFields($pivotRowFields)
+	{
+		$this->pivotRowFields = $pivotRowFields;
+	}
+
+	public function setPivotColumnFields($pivotColumnFields)
+	{
+		$this->pivotColumnFields = $pivotColumnFields;
+	}
+
+	public function setPivotTotalFields($pivotTotalFields)
+	{
+		$this->pivotTotalFields = $pivotTotalFields;
+	}
+
+	public function setPivotGroupingFunction($pivotGroupingFunction)
+	{
+		$this->pivotGroupingFunction = $pivotGroupingFunction;
+	}
+
 	protected function setTable()
 	{
 		$this->table = 'declaraexp';
@@ -93,26 +118,47 @@ class DeclaraexpAdo extends BaseAdo {
 		return $result;
 	}
 
+	public function pivotSearch($model)
+	{
+		$this->setModel($model);
+		$this->setOperator('IN');
+		
+		$conn = $this->getConnection();
+		$this->setData();
+
+		$sql = $this->buildPivotSelect();
+
+		$resultSet = $conn->Execute($sql);
+		$result = $this->buildResult($resultSet);
+
+		return $result;
+	}
+
+	public function buildPivotSelect()
+	{
+		require_once PATH_APP.'adodb5/pivottable.inc.php';
+		
+		$conn  = $this->getConnection();
+		$table = $this->getTable();
+		$where = $this->buildSelectWhere();
+
+		$sql = PivotTableSQL(
+		 	$conn,  										# adodb connection
+		 	$table,									  		# tables
+			$this->pivotRowFields,							# row fields
+			$this->pivotColumnFields,						# column fields
+			$where, 										# joins/where
+			$this->pivotTotalFields, 						# SUM fields
+			'',												# Function Label
+			$this->pivotGroupingFunction,					# Function (SUM, COUNT, AGV)
+			false
+		);
+
+		return $sql;
+	}
+
 	public function buildSelect()
 	{
-		$filter = array();
-		$operator = $this->getOperator();
-		$joinOperator = ' AND ';
-		foreach($this->data as $key => $data){
-			if ($data <> ''){
-				if ($operator == '=') {
-					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
-				}
-				elseif ($operator == 'IN') {
-					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
-				}
-				else {
-					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
-					$joinOperator = ' OR ';
-				}
-			}
-		}
-
 		$sql = 'SELECT
 			 id,
 			 anio,
@@ -129,10 +175,48 @@ class DeclaraexpAdo extends BaseAdo {
 			 peso_neto
 			FROM declaraexp
 		';
-		if(!empty($filter)){
-			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+		
+		$sql .= $this->buildSelectWhere();
+
+		return $sql;
+	}
+
+	public function buildSelectWhere()
+	{
+		$filter = array();
+		$filterPosicion = array();
+		$operator = $this->getOperator();
+		$joinOperator = ' AND ';
+		foreach($this->data as $key => $data){
+			if ($data <> ''){
+				if ($operator == '=') {
+					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
+				}
+				elseif ($operator == 'IN') {
+					if ($key == 'id_capitulo' || $key == 'id_partida' || $key == 'id_subpartida' || $key == 'id_posicion') {
+						$filterPosicion[] = $key . ' ' . $operator . '("' . $data . '")';
+					} else {
+						$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+					}
+				}
+				else {
+					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+					$joinOperator = ' OR ';
+				}
+			}
 		}
 
+		$sql             = '';
+		$whereAssignment = false;
+
+		if(!empty($filter)){
+			$sql            .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+			$whereAssignment = true;
+		}
+		if(!empty($filterPosicion)){
+			$sql .= ($whereAssignment) ? ' '.$joinOperator : ' WHERE ' ;
+			$sql .= ' ('. implode( ' OR ', $filterPosicion ).')';
+		}
 		return $sql;
 	}
 

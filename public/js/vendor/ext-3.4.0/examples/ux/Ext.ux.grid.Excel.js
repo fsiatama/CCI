@@ -154,7 +154,7 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 		if(columnas){
 			parametros[this.paramNames.fields] = Ext.encode(columnas);
 			parametros[this.paramNames.format] = val;
-			parametros[this.paramNames.limit] = Ext.util.lang.reports.maxRows;
+			parametros[this.paramNames.limit] = Ext.ux.lang.reports.maxRows;
 		}
 		
 		Ext.Ajax.request({
