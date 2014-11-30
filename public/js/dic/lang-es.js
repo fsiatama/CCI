@@ -20,6 +20,7 @@ Ext.ux.lang.reports = {
 	,excel97: 'Libro Excel 97-2003 (*.xls)'
 	,maxRows: 65000
 	,filters: 'Filtros'
+	,selectYear: 'Seleccione el Año'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');

@@ -52,4 +52,8 @@ return [
 		'2' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'Balanza'],
 		'3' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaVariacion'],
 	],
+	'yearsAvailable' => ['2010', '2011', '2012', '2013', '2014'],
+	'groupBy' => [
+		'year' => ''
+	]
 ];

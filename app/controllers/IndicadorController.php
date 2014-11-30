@@ -80,11 +80,13 @@ class IndicadorController {
 			$postParams['is_template'] = true;
 			$params = array_merge($postParams, $row, compact('action'));
 
+			$tipo_indicador = $row['tipo_indicador_id'];
+
 			//el template de adicionar y editar son los mismos
 			$action = ($action == 'modify') ? 'create' : $action;
 
 			//var_dump($params);
-			return new View('jsCode/indicador/indicador.'.$action, $params);
+			return new View('jsCode/indicador/indicador.create.'.$tipo_indicador, $params);
 		}
 
 		return $result;
@@ -113,10 +115,15 @@ class IndicadorController {
     		$rowIndicador = array_shift($result['data']);
 
     		$postParams['is_template'] = true;
-    		
-    		$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action'));
 
-    		return new View('jsCode/indicador/indicador.execute', $params);
+    		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
+    		
+    		$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action', 'yearsAvailable'));
+
+    		$tipo_indicador = $rowTipoIndicador['tipo_indicador_id'];
+
+    		return new View('jsCode/indicador/indicador.execute.'.$tipo_indicador, $params);
 		}
 		return $result;
     }

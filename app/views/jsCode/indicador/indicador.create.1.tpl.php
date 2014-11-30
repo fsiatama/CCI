@@ -221,7 +221,7 @@
 		var label          = Ext.getCmp(module+'comboPais').fieldLabel;
 		
 		Ext.each(selection,function(row){
-			arrValues.push('['+row.get('id_pais')+'] ' + row.get('pais'));
+			arrValues.push(row.get('pais'));
 		});
 		arrDescription.push({
 			label: label

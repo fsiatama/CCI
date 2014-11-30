@@ -94,10 +94,11 @@ class Helpers
 			,'rotatevalues'      =>'1'
 			,'divlineisdashed'   =>'1'
 			,'placevaluesinside' =>'1'
-			,'exportenabled'     =>'1'
+			,'exportenabled'     =>'0'
 			,'areaovercolumns'   =>'0'
 			,'showaboutmenuitem' =>'0'
 			,'showlabels'        =>'1'
+			,'showBorder'        =>'0'
 			,'palettecolors'     => '#008ee4,#6baa01,#f8bd19,#e44a00,#33bdda,#d35400,#bdc3c7,#95a5a6,#34495e,#1abc9c'
 		];
 
@@ -144,6 +145,41 @@ class Helpers
 				'data' => $value
 			];
 		}
+
+		$arr_chart['styles']['definition'] = [
+			[
+				'name'     => 'Anim1',
+				'type'     => 'animation',
+				'param'    => '_xscale',
+				'start'    => '0',
+				'duration' => '1'
+			],[
+				'name'     => 'Anim2',
+				'type'     => 'animation',
+				'param'    => '_alpha',
+				'start'    => '0',
+				'duration' => '1'
+			],[
+				'name'  => 'DataShadow',
+				'type'  => 'Shadow',
+				'alpha' => '20'
+			]
+		];
+		$arr_chart['application'] = [
+			[
+				'toobject' => 'DIVLINES',
+				'styles'   => 'Anim1'
+			],[
+				'toobject' => 'HGRID',
+				'styles'   => 'Anim2'
+			],[
+				'toobject' => 'DATALABELS',
+				'styles'   => 'DataShadow'
+			],[
+				'toobject' => 'DATALABELS',
+				'styles'   => 'Anim2'
+			]
+		];
 
 
 		return $arr_chart;
@@ -214,40 +250,7 @@ class Helpers
 			$arr_chart['dataset'][] = $serie_adicional;
 		}
 		
-		$arr_chart['styles']['definition'] = [
-			[
-				'name'     => 'Anim1',
-				'type'     => 'animation',
-				'param'    => '_xscale',
-				'start'    => '0',
-				'duration' => '1'
-			],[
-				'name'     => 'Anim2',
-				'type'     => 'animation',
-				'param'    => '_alpha',
-				'start'    => '0',
-				'duration' => '1'
-			],[
-				'name'  => 'DataShadow',
-				'type'  => 'Shadow',
-				'alpha' => '20'
-			]
-		];
-		$arr_chart['application'] = [
-			[
-				'toobject' => 'DIVLINES',
-				'styles'   => 'Anim1'
-			],[
-				'toobject' => 'HGRID',
-				'styles'   => 'Anim2'
-			],[
-				'toobject' => 'DATALABELS',
-				'styles'   => 'DataShadow'
-			],[
-				'toobject' => 'DATALABELS',
-				'styles'   => 'Anim2'
-			]
-		];
+		
 
 		//print_r($arr_chart);
 		return $arr_chart;

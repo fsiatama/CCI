@@ -221,7 +221,7 @@ Ext.onReady(function(){
 				});
 			}
 			,'exception': function(a,b,c,d,e,f,g){ 	
-				console.log(a,b,c,d,e,f,g);
+				//console.log(a,b,c,d,e,f,g);
 			}
 		}
 	});
@@ -229,7 +229,7 @@ Ext.onReady(function(){
 	Ext.override(Ext.data.Connection,{
 		listeners:{
 			'requestexception': function(conn, response, options){
-				console.log(conn, response, options);
+				//console.log(conn, response, options);
 			}
 		}
 	});

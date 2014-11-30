@@ -1,3 +1,19 @@
+<?php
+
+$arrDescription  = explode('||', $indicador_campos);
+
+$htmlDescription = '<ol class="breadcrumb">';
+
+foreach ($arrDescription as $value) {
+	$arr = explode(':', $value);
+	$text = (empty($arr[1])) ? '' : $arr[1] ;
+	$htmlDescription .= '<li class="active">'.$text.'</li>';
+}
+
+$htmlDescription .= '</ol>';
+
+?>
+
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
@@ -67,9 +83,9 @@
 		,enableColumnMove:false
 		,id:module+'gridBalanza'			
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar:new Ext.PagingToolbar({pageSize:1000, store:storeBalanza, displayInfo:true})
+		//,bbar:new Ext.PagingToolbar({pageSize:1000, store:storeBalanza, displayInfo:true})
 		,iconCls:'silk-grid'
-		,plugins:[new Ext.ux.grid.Excel()]
+		//,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
 		,height:300
 		,autoWidth:true
@@ -83,6 +99,7 @@
 	
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
+		,id:module + 'excuteIndicadorContainer'
 		,layout:'column'
 		,border:false
 		,baseCls:'x-plain'
@@ -97,10 +114,11 @@
 			,layout:'fit'
 		}
 		,items:[{
-			html: '<div class="bootstrap-styles">' +
+			style:{padding:'0px'}
+			,html: '<div class="bootstrap-styles">' +
 						'<div class="page-head">' +
 							'<h4 class="nopadding"><i class="styleColor fa fa-area-chart"></i> <?= $tipo_indicador_nombre; ?>: <small><?= $indicador_nombre; ?></small></h4>' +
-				        	'<div class="clearfix"></div>' +
+				        	'<div class="clearfix"></div><?= $htmlDescription; ?>' +
 						'</div>' +
 					'</div>'
 			,listeners:{
@@ -109,12 +127,12 @@
 					}				
 				}
 			}
-		/*},{
-			html: ''
-			,tbar:[{text:'prueba'}]*/
 		},{
-			columnWidth:.5
-			,height:430
+			style:{padding:'0px'}
+			,html: ''
+			,tbar:[{text:'prueba'}]
+		},{
+			height:430
 			,html:'<div id="' + module + 'ColumnChart"></div>'
 			,items:[{
 				xtype:'panel'
@@ -122,8 +140,7 @@
 				,plain:true
 			}]
 		},{
-			columnWidth:.5
-			,height:430
+			height:430
 			,html:'<div id="' + module + 'AreaChart"></div>'
 			,items:[{
 				xtype:'panel'
@@ -135,7 +152,9 @@
 			,items:[gridBalanza]
 		}]
 	});
-	
+	Ext.getCmp(module + 'excuteIndicadorContainer').on('deactivate', function(){
+		console.log('view');
+	});
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
