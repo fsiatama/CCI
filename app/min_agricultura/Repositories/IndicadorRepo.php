@@ -239,11 +239,9 @@ class IndicadorRepo extends BaseRepo {
 	public function execute($params)
 	{
 		extract($params);
-		
-		if (empty($indicador_id) ||
-			empty($year) ||
-			empty($period)
-		) {
+		$year   = (empty($year)) ? '' : $year ;
+		$period = (empty($period)) ? 12 : $period ;
+		if (empty($indicador_id)) {
 			return [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'

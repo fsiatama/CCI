@@ -113,6 +113,7 @@
 				{name:'id_pais', mapping:'id_pais', type:'string'}
 			]
 		})
+		,defaults: {anchor:'97%'}
 		,items:[{
 			xtype:'fieldset'
 			,title:''

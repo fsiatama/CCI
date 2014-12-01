@@ -182,6 +182,7 @@
 				{name:'hasta_fin', mapping:'hasta_fin', type:'float'}
 			]
 		})
+		,defaults: {anchor:'97%'}
 		,items:[{
 			xtype:'fieldset'
 			,title:''

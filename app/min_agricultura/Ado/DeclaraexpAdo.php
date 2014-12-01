@@ -194,9 +194,12 @@ class DeclaraexpAdo extends BaseAdo {
 				}
 				elseif ($operator == 'IN') {
 					if ($key == 'id_capitulo' || $key == 'id_partida' || $key == 'id_subpartida' || $key == 'id_posicion') {
-						$filterPosicion[] = $key . ' ' . $operator . '("' . $data . '")';
+						//debe colocarle comillas a cada valor dentro del IN
+						$arr              = explode(',', $data);
+						$filterPosicion[] = $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
 					} else {
-						$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+						$arr      = explode(',', $data);
+						$filter[] = $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
 					}
 				}
 				else {

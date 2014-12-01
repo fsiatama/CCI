@@ -263,8 +263,8 @@ class Helpers
 			case 6:
 				$column = '
 					(CASE 
-					   WHEN 0 < periodo AND periodo <= 6 THEN "1"
-					   WHEN 6 < periodo THEN "2"
+					   WHEN 0 < periodo AND periodo <= 6 THEN "'.Lang::get('indicador.reports.semester').' 1"
+					   WHEN 6 < periodo THEN "'.Lang::get('indicador.reports.semester').' 2"
 					 END
 					) AS periodo
 				';
@@ -272,16 +272,16 @@ class Helpers
 			case 3:
 				$column = '
 					(CASE 
-					   WHEN 0 < periodo AND periodo <= 3 THEN "1"
-					   WHEN 3 < periodo AND periodo <= 6 THEN "2"
-					   WHEN 6 < periodo AND periodo <= 9 THEN "3"
-					   WHEN 9 < periodo THEN "4"
+					   WHEN 0 < periodo AND periodo <= 3 THEN "'.Lang::get('indicador.reports.quarter').' 1"
+					   WHEN 3 < periodo AND periodo <= 6 THEN "'.Lang::get('indicador.reports.quarter').' 2"
+					   WHEN 6 < periodo AND periodo <= 9 THEN "'.Lang::get('indicador.reports.quarter').' 3"
+					   WHEN 9 < periodo THEN "'.Lang::get('indicador.reports.quarter').' 4"
 					 END
 					) AS periodo
 				';
 			break;
 			case 1:
-				$column = 'periodo';
+				$column = 'CONCAT("'.Lang::get('indicador.reports.month').' ", periodo) as periodo';
 			break;
 		}
 		return $column;

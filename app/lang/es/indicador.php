@@ -14,5 +14,6 @@ return [
 		'semester' => 'Semestre',
 		'quarter'  => 'Trimestre',
 		'montly'   => 'Mensual',
+		'month'    => 'Mes',
     ]
 ];

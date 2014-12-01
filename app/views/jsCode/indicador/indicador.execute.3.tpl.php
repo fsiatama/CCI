@@ -23,27 +23,29 @@ $htmlDescription .= '</ol>';
 	var storeBalanza = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
-		,sortInfo:{field:'periodo',direction:'ASC'}
+		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
 			,indicador_id: '<?= $indicador_id; ?>'
 		}
 		,fields:[
-			{name:'periodo', type:'float'},
-			{name:'valor_impo', type:'float'},
-			{name:'valor_expo', type:'float'},
+			{name:'id', type:'float'},
+			{name:'firstPeriod', type:'string'},
+			{name:'firstValImpo', type:'float'},
+			{name:'firstValExpo', type:'float'},
+			{name:'lastPeriod', type:'string'},
+			{name:'lastValImpo', type:'float'},
+			{name:'lastValExpo', type:'float'},
 			{name:'valor_balanza', type:'float'}
 		]
 	});
 
 	storeBalanza.on('beforeload', function(){
-		var year   = Ext.getCmp(module + 'comboYear').getValue();
 		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		if (!year || !period) {
+		if (!period) {
 			return false;
 		};
-		this.setBaseParam('year', year);
 		this.setBaseParam('period', period);
 	});
 	
@@ -57,20 +59,23 @@ $htmlDescription .= '</ol>';
 		chart.setJSONData(store.reader.jsonData.columnChartData);
 		chart.render(module + 'ColumnChart');
 
-		if(FusionCharts(module + 'AreaChartId')){
+		/*if(FusionCharts(module + 'AreaChartId')){
 			FusionCharts(module + 'AreaChartId').dispose();
 		}
 		var chart = new FusionCharts('<?= AREA; ?>', module + 'AreaChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
 		chart.setJSONData(store.reader.jsonData.areaChartData);
-		chart.render(module + 'AreaChart');
+		chart.render(module + 'AreaChart');*/
 		
 	});
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'firstPeriod'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'firstValImpo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'firstValExpo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'lastPeriod'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'lastValImpo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'lastValExpo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'valor_balanza' ,'renderer':numberFormat}
 		]
 		,defaults: {
@@ -103,9 +108,6 @@ $htmlDescription .= '</ol>';
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridBalanza.getItemId());
-	
-	var arrYears = <?= json_encode($yearsAvailable); ?>;
-	var defaultYear = <?= end($yearsAvailable); ?>;
 	
 	var arrPeriods = <?= json_encode($periods); ?>;
 
@@ -152,27 +154,6 @@ $htmlDescription .= '</ol>';
 			    ,selectOnFocus:true
 			    ,value: 12
 			    ,width: 100
-			    ,listeners:{
-	    			select: {
-	    				fn: function(combo,reg){
-	    					Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
-	    				}
-	    			}
-	    		}
-			},'-',{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectYear + ': '
-			},{
-				xtype: 'combo'
-				,store: arrYears
-				,id: module + 'comboYear'
-			    ,typeAhead: true
-			    ,forceSelection: true
-			    ,triggerAction: 'all'
-			    ,selectOnFocus:true
-			    ,value: defaultYear
-			    ,disabled: true
-			    ,width: 100
 	        },'-',{
 	        	text: Ext.ux.lang.buttons.generate
 	        	,iconCls: 'icon-refresh'
@@ -188,14 +169,14 @@ $htmlDescription .= '</ol>';
 				,id: module + 'ColumnChart'
 				,plain:true
 			}]
-		},{
+		/*},{
 			height:430
 			,html:'<div id="' + module + 'AreaChart"></div>'
 			,items:[{
 				xtype:'panel'
 				,id: module + 'AreaChart'
 				,plain:true
-			}]
+			}]*/
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridBalanza]

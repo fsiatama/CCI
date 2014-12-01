@@ -111,9 +111,15 @@
 
 
 	// Strip aliases
-	$rowfields = preg_replace('/ AS (\w+)/i', '', $rowfields);
+	$rowfields   = preg_replace('/ AS (\w+)/i', '', $rowfields);
+	//siempre extrae el primer campo, el cual deberia ser el id
+	$group_arr   = explode(',',$rowfields);
+	$id          = array_shift($group_arr);
+	$groupFields = implode(',', $group_arr);
 
-	$sql = "SELECT $sel \nFROM $tables $where \nGROUP BY $rowfields";
+	$sql = "SELECT $sel \nFROM $tables $where \nGROUP BY $groupFields \nORDER BY id";
+
+	//print_r($sql);
 
 	return $sql;
  }

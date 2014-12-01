@@ -23,14 +23,15 @@ $htmlDescription .= '</ol>';
 	var storeBalanza = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
-		,sortInfo:{field:'periodo',direction:'ASC'}
+		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
 			,indicador_id: '<?= $indicador_id; ?>'
 		}
 		,fields:[
-			{name:'periodo', type:'float'},
+			{name:'id', type:'float'},
+			{name:'periodo', type:'string'},
 			{name:'valor_impo', type:'float'},
 			{name:'valor_expo', type:'float'},
 			{name:'valor_balanza', type:'float'}
