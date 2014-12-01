@@ -255,5 +255,36 @@ class Helpers
 		//print_r($arr_chart);
 		return $arr_chart;
 	}
+
+	public static function getPeriodColumnSql($period)
+	{
+		$column = 'anio AS periodo';
+		switch ($period) {
+			case 6:
+				$column = '
+					(CASE 
+					   WHEN 0 < periodo AND periodo <= 6 THEN "1"
+					   WHEN 6 < periodo THEN "2"
+					 END
+					) AS periodo
+				';
+			break;
+			case 3:
+				$column = '
+					(CASE 
+					   WHEN 0 < periodo AND periodo <= 3 THEN "1"
+					   WHEN 3 < periodo AND periodo <= 6 THEN "2"
+					   WHEN 6 < periodo AND periodo <= 9 THEN "3"
+					   WHEN 9 < periodo THEN "4"
+					 END
+					) AS periodo
+				';
+			break;
+			case 1:
+				$column = 'periodo';
+			break;
+		}
+		return $column;
+	}
 		
 }

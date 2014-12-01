@@ -188,6 +188,15 @@ class IndicadorRepo extends BaseRepo {
 		return implode('||', $arr);
 	}
 
+    /**
+     * getFiltersValue
+     * 
+     * @param array $params Recibe los parametros que son enviados desde el formulario.
+     *        de crear o modificar el indicador
+     * @access public
+     *
+     * @return string con los filtros para almacenar en la base de datos.
+     */
 	public function getFiltersValue($params)
 	{
 		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
@@ -200,16 +209,25 @@ class IndicadorRepo extends BaseRepo {
 				$fieldName = $filter['field'];
 
 				if ($filter['required'] && array_key_exists($fieldName, $params)) {
+					
 					if (is_array($params[$fieldName]) && !empty($params[$fieldName])) {
+						
 						$arrFiltersValue[] = $fieldName . ':' .implode(',', $params[$fieldName]);
+
+					} elseif (!empty($params[$fieldName])) {
+						$arrFiltersValue[] = $fieldName . ':' .$params[$fieldName];
 					} else {
 						//si el parametro no es un array, o esta vacio
 						//retorna vacio para que genere error
 						return '';
 					}
+
 				} elseif (array_key_exists($fieldName, $params)) {
+					
 					if (is_array($params[$fieldName]) && !empty($params[$fieldName])) {
+						
 						$arrFiltersValue[] = $fieldName . ':' .implode(',', $params[$fieldName]);
+					
 					}
 				}
 			}
@@ -222,7 +240,10 @@ class IndicadorRepo extends BaseRepo {
 	{
 		extract($params);
 		
-		if (empty($indicador_id)) {
+		if (empty($indicador_id) ||
+			empty($year) ||
+			empty($period)
+		) {
 			return [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
@@ -253,7 +274,7 @@ class IndicadorRepo extends BaseRepo {
 
 			$repo = new $repoClassName();
 			if (method_exists($repo, $repoMethodName)) {
-				$result = call_user_func_array([$repo, $repoMethodName], compact('row', 'arrFiltersName'));
+				$result = call_user_func_array([$repo, $repoMethodName], compact('row', 'arrFiltersName', 'year', 'period'));
 			} else {
 				return [
 					'success' => false,

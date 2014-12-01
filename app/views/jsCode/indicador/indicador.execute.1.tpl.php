@@ -12,8 +12,6 @@ foreach ($arrDescription as $value) {
 
 $htmlDescription .= '</ol>';
 
-
-
 ?>
 
 /*<script>*/
@@ -25,14 +23,14 @@ $htmlDescription .= '</ol>';
 	var storeBalanza = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
-		,sortInfo:{field:'anio',direction:'ASC'}
+		,sortInfo:{field:'periodo',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
 			,indicador_id: '<?= $indicador_id; ?>'
 		}
 		,fields:[
-			{name:'anio', type:'float'},
+			{name:'periodo', type:'float'},
 			{name:'valor_impo', type:'float'},
 			{name:'valor_expo', type:'float'},
 			{name:'valor_balanza', type:'float'}
@@ -40,15 +38,13 @@ $htmlDescription .= '</ol>';
 	});
 
 	storeBalanza.on('beforeload', function(){
-		var year = Ext.getCmp(module + 'comboYear').getValue();
-		var multipleYears = Ext.getCmp(module + 'comboYear').getValue();
-		var period = Ext.getCmp(module + 'periodRadiogroup').getForm().getGroupValue();
+		var year   = Ext.getCmp(module + 'comboYear').getValue();
+		var period = Ext.getCmp(module + 'comboPeriod').getValue();
+		if (!year || !period) {
+			return false;
+		};
 		this.setBaseParam('year', year);
-		this.setBaseParam('multipleYears', multipleYears);
 		this.setBaseParam('period', period);
-		/*store_". $reporte.".setBaseParam('limit', cantidad_reg);
-		store_". $reporte.".setBaseParam('filtros_adicionales', filtros_adicionales);
-		store_". $reporte.".setBaseParam('periodo', '".$periodo."');*/
 	});
 	
 	storeBalanza.on('load', function(store){
@@ -72,7 +68,7 @@ $htmlDescription .= '</ol>';
 	});
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.anio'); ?>', dataIndex:'anio'},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'valor_balanza' ,'renderer':numberFormat}
@@ -109,14 +105,15 @@ $htmlDescription .= '</ol>';
 	Ext.state.Manager.clear(gridBalanza.getItemId());
 	
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
-	var storeYear = new Ext.KeyMap ( arrYears, function(x) {
-	    return {name: x, value: x, somethingElseSetAlwaysToTrue: true};
-	}, this);
+	var defaultYear = <?= end($yearsAvailable); ?>;
+	
+	var arrPeriods = <?= json_encode($periods); ?>;
 
 	/******************************************************************************************************************************************************************************/
 	
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
+		,id:module + 'excuteIndicadorContainer'
 		,layout:'column'
 		,border:false
 		,baseCls:'x-plain'
@@ -143,33 +140,42 @@ $htmlDescription .= '</ol>';
 			,border:true
 			,html: ''
 			,tbar:[{
-				text: '<?= Lang::get('indicador.reports.multipleYears'); ?>'
-				,enableToggle: true
-				,pressed: true
-				,toggleHandler: multipleYearToggle
+				xtype: 'label'
+				,text: Ext.ux.lang.reports.selectPeriod + ': '
+			},{
+				xtype: 'combo'
+				,store: arrPeriods
+				,id: module + 'comboPeriod'
+			    ,typeAhead: true
+			    ,forceSelection: true
+			    ,triggerAction: 'all'
+			    ,selectOnFocus:true
+			    ,value: 12
+			    ,width: 100
+			    ,listeners:{
+	    			select: {
+	    				fn: function(combo,reg){
+	    					Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
+	    				}
+	    			}
+	    		}
 			},'-',{
+				xtype: 'label'
+				,text: Ext.ux.lang.reports.selectYear + ': '
+			},{
 				xtype: 'combo'
 				,store: arrYears
 				,id: module + 'comboYear'
 			    ,typeAhead: true
 			    ,forceSelection: true
 			    ,triggerAction: 'all'
-			    ,emptyText: Ext.ux.lang.reports.selectYear
 			    ,selectOnFocus:true
+			    ,value: defaultYear
 			    ,disabled: true
-			},'-',{
-				xtype: 'radiogroup'
-				,disabled: true
-				,id: module + 'periodRadiogroup'
-				,columns: [90, 90, 90]
-				,itemCls: 'x-check-group-alt'
-	            ,items: [
-	                {boxLabel: '<?= Lang::get('indicador.reports.semester'); ?>', name: 'period', inputValue: 1},
-	                {boxLabel: '<?= Lang::get('indicador.reports.quarter'); ?>', name: 'period', inputValue: 2},
-	                {boxLabel: '<?= Lang::get('indicador.reports.montly'); ?>', name: 'period', inputValue: 3, checked: true}
-	            ]
+			    ,width: 100
 	        },'-',{
-	        	'text': Ext.ux.lang.buttons.generate
+	        	text: Ext.ux.lang.buttons.generate
+	        	,iconCls: 'icon-refresh'
 	        	,handler: function () {
 	        		storeBalanza.load();
 	        	}
@@ -213,10 +219,6 @@ $htmlDescription .= '</ol>';
 		else{
 			return value;
 		}
-	}
-	function multipleYearToggle (item, pressed) {
-		Ext.getCmp(module + 'comboYear').setDisabled(pressed);
-		Ext.getCmp(module + 'periodRadiogroup').setDisabled(pressed);
 	}
 
 	/*********************************************** End functions***********************************************/

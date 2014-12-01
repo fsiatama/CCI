@@ -107,7 +107,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			}]
 			,listeners: {
 				'beforecollapsenode': function(node, deep, anim){
-					panelInicial();
+					initialPanel();
 				}
 				,'click': function(node, e){
 					Ext.getCmp(module + 'btnEdit').setDisabled(!node.leaf);
@@ -118,7 +118,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 						IndicadorTree.consultar(node.id)
 					}
 					else{
-						panelInicial();
+						initialPanel();
 					}
 				}
 				,'contextmenu': function(node, e){
@@ -126,7 +126,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 						return false;
 					}
 					else{
-						panelInicial();
+						initialPanel();
 					}
 				}
 			}
@@ -192,7 +192,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 	IndicadorTree.getLoader().on('beforeload', function(loader, node, callback){
 		if(Ext.getCmp(module+'lpIndicador').items.items.length == 0){
 			IndicadorTree.getRootNode().select();
-			panelInicial();
+			initialPanel();
 		}
 	});
 
@@ -247,7 +247,23 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 	return indicadorLayout;
 	/*********************************************** Start functions***********************************************/
 
-	function panelInicial(){
+	function initialPanel(){
+		Ext.getCmp(module + 'btnEdit').setDisabled(true);
+		Ext.getCmp(module + 'btnDel').setDisabled(true);
+		if(!Ext.getCmp(module+'initialPanel')){
+			var lp = Ext.getCmp(module + 'lpIndicador');
+
+			var remove = lp.removeAll(true);
+
+			var initialPanel = {
+				xtype:'panel'
+				,id:module+'initialPanel'
+				,border:false
+				,items:[]
+			}
+			Ext.getCmp(module+'lpIndicador').add(initialPanel);
+			Ext.getCmp(module+'lpIndicador').doLayout();
+		}
 	}
 	function cfg_reporte(action){
 		var url = 'indicador/jscodeCfg/' + action;

@@ -21,6 +21,14 @@ Ext.ux.lang.reports = {
 	,maxRows: 65000
 	,filters: 'Filtros'
 	,selectYear: 'Seleccione el Año'
+	,selectYearFrom: 'Año desde'
+	,selectYearTo: 'Año Hasta'
+	,selectPeriod: 'Seleccione el Periodo'
+	,selectMonth: 'Seleccione el Mes'
+	,selectMonthFrom: 'Mes desde'
+	,selectMonthTo: 'Mes Hasta'
+	,initialRank: 'Rango Inicial'
+	,finalRank: 'Rango Final'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');

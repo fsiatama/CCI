@@ -44,7 +44,7 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 	}
 
-	public function findBalanzaData($filters, $filtersConfig)
+	public function findBalanzaData($filters, $filtersConfig, $year, $period)
 	{
 		require PATH_MODELS.'Entities/Declaraimp.php';
 		require PATH_MODELS.'Ado/DeclaraimpAdo.php';
@@ -53,11 +53,18 @@ class DeclaracionesRepo extends BaseRepo {
 		
 		$this->model = new Declaraimp;
 		$this->modelAdo = new DeclaraimpAdo;
+		
+		$rowField = Helpers::getPeriodColumnSql($period);
 
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'impo');
 
-		$this->modelAdo->setPivotRowFields('anio');
+		//si el periodo es diferente a anual debe filtrar por año
+		if ($period != 12 && !empty($year)) {
+			$this->model->setAnio($year);
+		}
+
+		$this->modelAdo->setPivotRowFields($rowField);
 		$this->modelAdo->setPivotTotalFields('valorfob');
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
@@ -66,12 +73,12 @@ class DeclaracionesRepo extends BaseRepo {
 		if (!$rsDeclaraimp['success']) {
 			return $rsDeclaraimp;
 		}
-		if ($rsDeclaraimp['total'] == 0) {
+		/*if ($rsDeclaraimp['total'] == 0) {
 			return [
 				'success' => false,
 				'error'   => Lang::get('error.no_records_found')
 			];
-		}
+		}*/
 
 		require PATH_MODELS.'Entities/Declaraexp.php';
 		require PATH_MODELS.'Ado/DeclaraexpAdo.php';
@@ -81,7 +88,12 @@ class DeclaracionesRepo extends BaseRepo {
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo');
 
-		$this->modelAdo->setPivotRowFields('anio');
+		//si el periodo es diferente a anual debe filtrar por año
+		if ($period != 12 && !empty($year)) {
+			$this->model->setAnio($year);
+		}
+
+		$this->modelAdo->setPivotRowFields($rowField);
 		$this->modelAdo->setPivotTotalFields('valorfob');
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
@@ -90,29 +102,53 @@ class DeclaracionesRepo extends BaseRepo {
 		if (!$rsDeclaraexp['success']) {
 			return $rsDeclaraexp;
 		}
-		if ($rsDeclaraexp['total'] == 0) {
+		/*if ($rsDeclaraexp['total'] == 0) {
 			return [
 				'success' => false,
 				'error'   => Lang::get('error.no_records_found')
 			];
-		}
+		}*/
 
 		$arrData = [];
+		$arrPeriods = [];
 
-		foreach ($rsDeclaraexp['data'] as $keyImpo => $rowExpo) {
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
 			
-			foreach ($rsDeclaraimp['data'] as $keyExpo => $rowImpo) {
+			$valor_impo = 0;
 
-				if($rowImpo["anio"] == $rowExpo["anio"]){
-					$arrData[] = [
-						'anio'          => $rowImpo["anio"],
-						'valor_expo'    => $rowExpo["valorfob"],
-						'valor_impo'    => $rowImpo["valorfob"],
-					];
+			foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
+
+				if($rowImpo['periodo'] == $rowExpo['periodo']){
+					$valor_impo = $rowImpo['valorfob'];
+					$arrPeriods[] = $rowImpo['periodo'];
 				}
 
 			}
 
+			$arrData[] = [
+				'periodo'    => $rowExpo['periodo'],
+				'valor_expo' => $rowExpo['valorfob'],
+				'valor_impo' => $valor_impo,
+			];
+		}
+
+		foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
+			
+			if(!in_array($rowImpo['periodo'], $arrPeriods)){
+				$arrData[] = [
+					'periodo'    => $rowImpo['periodo'],
+					'valor_expo' => 0,
+					'valor_impo' => $rowImpo['valorfob'],
+				];
+			}
+
+		}
+
+		if (count($arrData) == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
 		}
 
 		return [
@@ -122,11 +158,11 @@ class DeclaracionesRepo extends BaseRepo {
 		];
 	}
 
-	public function executeBalanza($rowIndicador, $filtersConfig)
+	public function executeBalanza($rowIndicador, $filtersConfig, $year, $period)
 	{
 		extract($rowIndicador);
 
-		$result = $this->findBalanzaData($indicador_filtros, $filtersConfig);
+		$result = $this->findBalanzaData($indicador_filtros, $filtersConfig, $year, $period);
 		if ($result['success']) {
 
 			$arrData = [];
@@ -147,7 +183,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 			$columnChart = Helpers::jsonChart(
 				$arrData,
-				'anio',
+				'periodo',
 				$arrSeries,
 				COLUMNAS
 			);
@@ -158,7 +194,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 			$areaChart = Helpers::jsonChart(
 				$arrData,
-				'anio',
+				'periodo',
 				$arrSeries,
 				AREA
 			);
@@ -177,11 +213,11 @@ class DeclaracionesRepo extends BaseRepo {
 
 	}
 
-	public function executeBalanzaRelativa($rowIndicador, $filtersConfig)
+	public function executeBalanzaRelativa($rowIndicador, $filtersConfig, $year, $period)
 	{
 		extract($rowIndicador);
 
-		$result = $this->findBalanzaData($indicador_filtros, $filtersConfig);
+		$result = $this->findBalanzaData($indicador_filtros, $filtersConfig, $year, $period);
 		if ($result['success']) {
 
 			$arrData = [];
@@ -202,7 +238,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 			$columnChart = Helpers::jsonChart(
 				$arrData,
-				'anio',
+				'periodo',
 				$arrSeries,
 				COLUMNAS
 			);
@@ -213,7 +249,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 			$areaChart = Helpers::jsonChart(
 				$arrData,
-				'anio',
+				'periodo',
 				$arrSeries,
 				AREA
 			);

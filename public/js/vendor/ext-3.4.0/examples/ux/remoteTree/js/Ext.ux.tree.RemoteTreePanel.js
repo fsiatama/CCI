@@ -586,11 +586,12 @@ Ext.ux.tree.RemoteTreePanel = Ext.extend(Ext.tree.TreePanel, {
 	,appendChild:function(childNode, insert) {
 
 		var params = this.applyBaseParams();
-		params[this.paramNames.cmd] = true === insert ? this.cmdNames.insertChild : this.cmdNames.appendChild;
+		var cmd = true === insert ? this.cmdNames.insertChild : this.cmdNames.appendChild;
+		params[this.paramNames.cmd] = cmd;
 		params[this.paramNames.id] = childNode.parentNode.id;
 		params[this.paramNames.text] = childNode.text;
 
-		var o = Ext.apply(this.getOptions(), {
+		var o = Ext.apply(this.getOptions(cmd), {
 			 action:true === insert ? 'insertChild' : 'appendChild'
 			,node:childNode
 			,params:params
@@ -610,9 +611,12 @@ Ext.ux.tree.RemoteTreePanel = Ext.extend(Ext.tree.TreePanel, {
 	 * @return {Object} options for request
 	 * @private
 	 */
-	,getOptions:function() {
+	,getOptions:function(method) {
+		var url = this.loader.url || this.loader.dataUrl || this.url || this.dataUrl;
+		url = url.replace('/list', '/'+method);
+
 		return {
-			 url:this.loader.url || this.loader.dataUrl || this.url || this.dataUrl
+			 url:url
 			,method:this.loader.method || this.method || 'POST'
 			,scope:this
 			,callback:this.actionCallback
@@ -924,7 +928,7 @@ Ext.ux.tree.RemoteTreePanel = Ext.extend(Ext.tree.TreePanel, {
 		params[this.paramNames.target] = e.target.id;
 		params[this.paramNames.point] = e.point;
 
-		var o = Ext.apply(this.getOptions(), {
+		var o = Ext.apply(this.getOptions(this.cmdNames.moveNode), {
 			 action:'moveNode'
 			,e:e
 			,node:e.dropNode
@@ -966,7 +970,7 @@ Ext.ux.tree.RemoteTreePanel = Ext.extend(Ext.tree.TreePanel, {
 				params[this.paramNames.cmd] = this.cmdNames.removeNode;
 				params[this.paramNames.id] = node.id;
 
-				var o = Ext.apply(this.getOptions(), {
+				var o = Ext.apply(this.getOptions(this.cmdNames.removeNode), {
 					 action:'removeNode'
 					,node:node
 					,params:params
@@ -997,7 +1001,7 @@ Ext.ux.tree.RemoteTreePanel = Ext.extend(Ext.tree.TreePanel, {
 		params[this.paramNames.newText] = newText;
 		params[this.paramNames.oldText] = node.text || '';
 
-		var o = Ext.apply(this.getOptions(), {
+		var o = Ext.apply(this.getOptions(this.cmdNames.renameNode), {
 			 action:'renameNode'
 			,node:node
 			,params:params

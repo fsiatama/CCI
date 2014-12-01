@@ -78,7 +78,11 @@ class IndicadorController {
 			}
 			$row = array_shift($result['data']);
 			$postParams['is_template'] = true;
-			$params = array_merge($postParams, $row, compact('action'));
+
+			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
+			
+			$params = array_merge($postParams, $row, compact('action', 'yearsAvailable'));
 
 			$tipo_indicador = $row['tipo_indicador_id'];
 
@@ -118,8 +122,9 @@ class IndicadorController {
 
     		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
-    		
-    		$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action', 'yearsAvailable'));
+			$periods = Helpers::arrayGet($lines, 'periods');
+
+			$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action', 'yearsAvailable', 'periods'));
 
     		$tipo_indicador = $rowTipoIndicador['tipo_indicador_id'];
 
