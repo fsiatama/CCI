@@ -1,29 +1,37 @@
 <?php
 
-//require PATH_APP.'min_agricultura/Ado/DeclaracionesAdo.php';
+require PATH_MODELS.'Entities/Declaraimp.php';
+require PATH_MODELS.'Ado/DeclaraimpAdo.php';
+require PATH_MODELS.'Entities/Declaraexp.php';
+require PATH_MODELS.'Ado/DeclaraexpAdo.php';
 
 require_once ('BaseRepo.php');
 
 class DeclaracionesRepo extends BaseRepo {
 
-	public function getModel()
-	{
+	public function getModel() {}
+	public function getModelAdo() {}
+	public function getPrimaryKey() {}
+	public function setData($params, $action) {}
 
+	public function getModelImpo()
+	{
+		return new Declaraimp;
 	}
 	
-	public function getModelAdo()
+	public function getModelImpoAdo()
 	{
-
+		return new DeclaraimpAdo;
 	}
 
-	public function getPrimaryKey()
+	public function getModelExpo()
 	{
-
+		return new Declaraexp;
 	}
-
-	public function setData($params, $action)
+	
+	public function getModelExpoAdo()
 	{
-
+		return new DeclaraexpAdo;
 	}
 
 	public function setFiltersValues($arrFiltersValues, $filtersConfig, $trade, $range)
@@ -81,26 +89,24 @@ class DeclaracionesRepo extends BaseRepo {
 
 	public function findBalanzaData($filters, $filtersConfig, $year, $period, $range = false)
 	{
-		require_once PATH_MODELS.'Entities/Declaraimp.php';
-		require_once PATH_MODELS.'Ado/DeclaraimpAdo.php';
-
 		$arrFiltersValues = Helpers::filterValuesToArray($filters);
-		
 
-		$this->model = new Declaraimp;
-		$this->modelAdo = new DeclaraimpAdo;
+		$this->model      = $this->getModelImpo();
+		$this->modelAdo   = $this->getModelImpoAdo();
 		
 		$rowField = Helpers::getPeriodColumnSql($period);
 
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'impo', $range);
 
+		$row = 'anio AS id';
 		//si el periodo es diferente a anual debe filtrar por año
 		if ($period != 12 && !empty($year)) {
 			$this->model->setAnio($year);
+			$row = 'periodo AS id';
 		}
 
-		$arrRowField = ['periodo AS id', $rowField];
+		$arrRowField = [$row, $rowField];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields('valorfob');
@@ -118,20 +124,21 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}*/
 
-		require_once PATH_MODELS.'Entities/Declaraexp.php';
-		require_once PATH_MODELS.'Ado/DeclaraexpAdo.php';
+		
 
-		$this->model = new Declaraexp;
-		$this->modelAdo = new DeclaraexpAdo;
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', $range);
 
+		$row = 'anio AS id';
 		//si el periodo es diferente a anual debe filtrar por año
 		if ($period != 12 && !empty($year)) {
 			$this->model->setAnio($year);
+			$row = 'periodo AS id';
 		}
 
-		$arrRowField = ['periodo AS id', $rowField];
+		$arrRowField = [$row, $rowField];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields('valorfob');
@@ -312,8 +319,6 @@ class DeclaracionesRepo extends BaseRepo {
 
 	public function executeBalanzaVariacion($rowIndicador, $filtersConfig, $year, $period)
 	{
-		//var_dump($rowIndicador, $filtersConfig, $year, $period);
-
 		extract($rowIndicador);
 
 		$result = $this->findBalanzaData($indicador_filtros, $filtersConfig, $year, $period, 'ini');
@@ -436,6 +441,47 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		return $result;
+	}
+
+	public function executeOfertaExportable($rowIndicador, $filtersConfig, $year, $period)
+	{
+		extract($rowIndicador);
+
+		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
+
+		//Trae los productos configurados como agricolas
+		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$productsAgriculture = Helpers::arrayGet($lines, 'productsAgriculture');
+
+		$productsAgriculture = implode(',', $productsAgriculture);
+
+		$this->model->setId_posicion($productsAgriculture);
+
+
+		$arrRowField = ['id', 'id_posicion'];
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn('valorfob DESC');
+
+		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$rsDeclaraexp['success']) {
+			return $rsDeclaraexp;
+		}
+
+		var_dump($rsDeclaraexp['data']);
+
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+			foreach ($rowExpo as $key => $valor) {
+			}
+		}
 	}
 }	
 

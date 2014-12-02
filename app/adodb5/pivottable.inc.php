@@ -117,7 +117,7 @@
 	$id          = array_shift($group_arr);
 	$groupFields = implode(',', $group_arr);
 
-	$sql = "SELECT $sel \nFROM $tables $where \nGROUP BY $groupFields \nORDER BY id";
+	$sql = "SELECT $sel \nFROM $tables $where \nGROUP BY $groupFields";
 
 	//print_r($sql);
 

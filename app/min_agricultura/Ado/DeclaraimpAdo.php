@@ -11,6 +11,7 @@ class DeclaraimpAdo extends BaseAdo {
 	protected $pivotColumnFields     = '';
 	protected $pivotTotalFields      = '';
 	protected $pivotGroupingFunction = '';
+	protected $pivotSortColumn       = '';
 
 	public function setPivotRowFields($pivotRowFields)
 	{
@@ -30,6 +31,11 @@ class DeclaraimpAdo extends BaseAdo {
 	public function setPivotGroupingFunction($pivotGroupingFunction)
 	{
 		$this->pivotGroupingFunction = $pivotGroupingFunction;
+	}
+
+	public function setPivotSortColumn($pivotSortColumn)
+	{
+		$this->pivotSortColumn = $pivotSortColumn;
 	}
 
 	protected function setTable()
@@ -164,6 +170,9 @@ class DeclaraimpAdo extends BaseAdo {
 			$this->pivotGroupingFunction,					# Function (SUM, COUNT, AGV)
 			false
 		);
+
+		$sql .= ' ORDER BY ';
+		$sql .= (empty($this->pivotSortColumn)) ? 'id' : $this->pivotSortColumn ;
 
 		//var_dump($sql);
 

@@ -81,12 +81,34 @@ return [
 				'required'   => true,
 				'itComplements' => true, //son complemento del filtro anio
 			]
+		],
+		'4' => [
+			[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'dateRange'  => ['desde_ini', 'hasta_ini'],
+			],[
+				'field'      => 'desde_ini',
+				'field_expo' => 'periodo',
+				'field_impo' => 'periodo',
+				'required'   => true,
+				'itComplements' => true, //son complemento del filtro anio
+			],[
+				'field'      => 'hasta_ini',
+				'field_expo' => 'periodo',
+				'field_impo' => 'periodo',
+				'required'   => true,
+				'itComplements' => true, //son complemento del filtro anio
+			]
 		]
 	],
 	'executeConfig' => [
 		'1' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaRelativa'],
 		'2' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'Balanza'],
 		'3' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaVariacion'],
+		'4' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'OfertaExportable'],
 	],
 	'yearsAvailable' => ['2010', '2011', '2012', '2013', '2014'],
 	'periods' => [
@@ -95,5 +117,5 @@ return [
 		[3,  Lang::get('indicador.reports.quarter')],
 		[1,  Lang::get('indicador.reports.montly')]
 	],
-	'months' => []
+	'productsAgriculture' => ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '5201', '5202', '5203']
 ];

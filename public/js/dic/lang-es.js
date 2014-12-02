@@ -27,8 +27,9 @@ Ext.ux.lang.reports = {
 	,selectMonth: 'Seleccione el Mes'
 	,selectMonthFrom: 'Mes desde'
 	,selectMonthTo: 'Mes Hasta'
-	,initialRank: 'Rango Inicial'
-	,finalRank: 'Rango Final'
+	,initialRange: 'Rango Inicial'
+	,finalRange: 'Rango Final'
+	,period: 'Period'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');

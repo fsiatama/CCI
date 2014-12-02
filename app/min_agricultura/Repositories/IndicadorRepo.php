@@ -182,7 +182,10 @@ class IndicadorRepo extends BaseRepo {
 		$arrDescription = json_decode($description, true);
 		if (!empty($arrDescription)) {
 			foreach ($arrDescription as $key => $value) {
-				$arr[] = Inflector::cleanInputString($value['label']) . ': ' . Inflector::cleanInputString(implode(',', $value['values']));
+				$label = (empty($value['label'])) ? '' : Inflector::cleanInputString($value['label']) ;
+				$values = (empty($value['values'])) ? '' : Inflector::cleanInputString(implode(',', $value['values'])) ;
+
+				$arr[] = $label . ': ' . $values;
 			}
 		}
 		return implode('||', $arr);
@@ -200,6 +203,10 @@ class IndicadorRepo extends BaseRepo {
 	public function getFiltersValue($params)
 	{
 		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+
+		if (empty($params['indicador_tipo_indicador_id'])) {
+			return '';
+		}
 
 		$arrFiltersName = Helpers::arrayGet($lines, 'filters.'.$params['indicador_tipo_indicador_id']);
 

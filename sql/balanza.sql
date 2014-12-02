@@ -29,7 +29,14 @@ GROUP BY (CASE
 	   WHEN 9 < periodo AND periodo <= 12 THEN 4
 	 END
 	)
-	
+
+
+SELECT id,id_posicion, 
+	SUM(valorfob) AS "valorfob" 
+FROM declaraexp 
+  WHERE (anio IN("2014") AND periodo IN("1","2","3","4","5","6","7","8","9","10","11","12"))  AND  (id_capitulo IN("01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24") OR id_partida IN("5201","5202","5203")) 
+GROUP BY id_posicion 
+ORDER BY 3 DESC
 	
 	
 	
