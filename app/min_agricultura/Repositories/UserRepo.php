@@ -65,7 +65,7 @@ class UserRepo extends BaseRepo {
 			
 				$row = array_shift($result['data']);
 				$permissionsRepo = new PermissionsRepo;
-				$result = $permissionsRepo->listProfileMenu($row['user_id']);
+				$result = $permissionsRepo->listProfileMenu($row['user_profile_id']);
 
 				if ($result['success'] && $result['total'] > 0) {
 
