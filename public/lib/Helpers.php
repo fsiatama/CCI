@@ -117,7 +117,7 @@ class Helpers
 
 			foreach ($row as $key => $value) {
 				
-				$tooltext = $row[$eje_x];
+				$label = $row[$eje_x];
 
 				if ($key == $eje_x) {
 					
@@ -127,9 +127,12 @@ class Helpers
 
 					$seriesname = $series[$key];
 
+					$tooltext = ($typeChart == PIE) ? $label : number_format($value,2) ;
+
 					$rowData[$seriesname][] = [
 						'value'    => $value,
-						'tooltext' => number_format($value,2)
+						'tooltext' => $tooltext,
+						'label'    => $label
 					];
 
 				}
@@ -281,10 +284,43 @@ class Helpers
 				';
 			break;
 			case 1:
-				$column = 'CONCAT("'.Lang::get('indicador.reports.month').' ", periodo) as periodo';
+				$column = '
+					(CASE 
+					   WHEN 1 = periodo THEN "'.Lang::get('indicador.months.1').'"
+					   WHEN 2 = periodo THEN "'.Lang::get('indicador.months.2').'"
+					   WHEN 3 = periodo THEN "'.Lang::get('indicador.months.3').'"
+					   WHEN 4 = periodo THEN "'.Lang::get('indicador.months.4').'"
+					   WHEN 5 = periodo THEN "'.Lang::get('indicador.months.5').'"
+					   WHEN 6 = periodo THEN "'.Lang::get('indicador.months.6').'"
+					   WHEN 7 = periodo THEN "'.Lang::get('indicador.months.7').'"
+					   WHEN 8 = periodo THEN "'.Lang::get('indicador.months.8').'"
+					   WHEN 9 = periodo THEN "'.Lang::get('indicador.months.9').'"
+					   WHEN 10 = periodo THEN "'.Lang::get('indicador.months.10').'"
+					   WHEN 11 = periodo THEN "'.Lang::get('indicador.months.11').'"
+					   WHEN 12 = periodo THEN "'.Lang::get('indicador.months.12').'"
+					 END
+					) AS periodo
+				';
 			break;
 		}
 		return $column;
+	}
+
+	public static function getPeriodName($period, $number)
+	{
+		$periodName = Lang::get('indicador.reports.annual');
+		switch ($period) {
+			case 6:
+				$periodName = Lang::get('indicador.reports.semester').' '.$number;
+			break;
+			case 3:
+				$periodName = Lang::get('indicador.reports.quarter').' '.$number;
+			break;
+			case 1:
+				$periodName = Lang::get('indicador.months.'.$number);
+			break;
+		}
+		return $periodName;
 	}
 		
 }

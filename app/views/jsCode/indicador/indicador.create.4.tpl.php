@@ -3,6 +3,54 @@
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module; ?>';
 
+	var Combo = Ext.extend(Ext.ux.form.SuperBoxSelect, {
+		xtype:'superboxselect'
+		,resizable:false
+		,anchor:'88%'
+		,minChars:2
+		,forceSelection:true
+		,allowNewData:true
+		,extraItemCls:'x-tag'
+		,allowBlank:false
+		,extraItemStyle:'border-width:2px'
+		,stackItems:true
+		,mode:'remote'
+		,queryDelay:0
+		,triggerAction:'all'
+		,itemSelector:'.search-item'
+		,pageSize:10
+	});
+	var storePais = new Ext.data.JsonStore({
+		url:'pais/list'
+		,id:module+'storePais'
+		,root:'data'
+		,sortInfo:{field:'id_pais',direction:'ASC'}
+		,totalProperty:'total'
+		,baseParams:{id:'<?= $id; ?>'}
+		,fields:[
+			{name:'id_pais', type:'float'},
+			{name:'pais', type:'string'}
+		]
+	});
+	var resultTplPais = new Ext.XTemplate(
+		'<tpl for=".">' +
+			'<div class="search-item x-combo-list-item" ext:qtip="{id_pais}">' +
+				'<span><b>{id_pais}</b>&nbsp;-&nbsp;{pais}</span>' +
+			'</div>' +
+		'</tpl>'
+	);
+	var comboPais = new Combo({
+		id:module+'comboPais'
+		,singleMode:true
+		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
+		,name:'id_pais[]'
+		,store:storePais
+		,displayField:'pais'
+		,valueField:'id_pais'
+		,tpl: resultTplPais
+		,displayFieldTpl:'({id_pais}) - {pais}'
+	});
+
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 	var arrMonths = [
 		[1, Date.monthNames[0]],
@@ -65,6 +113,7 @@
 				{name:'indicador_id', mapping:'indicador_id', type:'float'},
 				{name:'indicador_tipo_indicador_id', mapping:'indicador_tipo_indicador_id', type:'float'},
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
+				{name:'id_pais', mapping:'id_pais', type:'string'},
 				{name:'anio_ini', mapping:'anio_ini', type:'float'},
 				{name:'anio_fin', mapping:'anio_fin', type:'float'},
 				{name:'desde_ini', mapping:'desde_ini', type:'float'},
@@ -117,6 +166,10 @@
 			},{
 				defaults:{anchor:'100%'}
 				,items:[comboHasta_ini]
+			},{
+				defaults:{anchor:'100%'}
+				,columnWidth:1
+				,items:[comboPais]
 			}]
 		},{
 			xtype:'hidden'
@@ -159,6 +212,9 @@
 			,method: 'POST'
 			,waitTitle:'Loading......'
 			,waitMsg: 'Loading......'
+			,success: function(formulario, response) {
+				Ext.getCmp(module+'comboPais').setValue(response.result.data.id_pais);
+			}
 		});
 	});";
 	}
@@ -171,14 +227,23 @@
 
 	function getDescription () {
 		var arrDescription = [];
-		
 		var arrValues      = [];
+		var selection      = Ext.getCmp(module+'comboPais').getSelectedRecords();
+		var label          = Ext.getCmp(module+'comboPais').fieldLabel;
+		
+		Ext.each(selection,function(row){
+			arrValues.push(row.get('pais'));
+		});
+		arrDescription.push({
+			label: label
+			,values: arrValues
+		});
+
 		var year      = Ext.getCmp(module+'comboAnio_ini').getValue();
 		var perIni    = Ext.getCmp(module+'comboDesde_ini').getRawValue();
 		var perFin    = Ext.getCmp(module+'comboHasta_ini').getRawValue();
+		arrValues     = [];
 
-		console.log(year, perIni, perFin);
-		
 		arrValues.push(year + ' ' + perIni + ' - ' + perFin);
 		
 		arrDescription.push({

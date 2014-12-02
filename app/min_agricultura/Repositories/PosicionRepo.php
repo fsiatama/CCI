@@ -39,6 +39,8 @@ class PosicionRepo extends BaseRepo {
 		if (!empty($valuesqry) && $valuesqry) {
 			$query = explode('|',$query);
 			$posicion->setId_posicion(implode('", "', $query));
+			$posicion->setId_partida(implode('", "', $query));
+			$posicion->setId_subpartida(implode('", "', $query));
 			$posicion->setId_capitulo(implode('", "', $query));
 
 			return $posicionAdo->inSearch($posicion);

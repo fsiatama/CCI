@@ -84,6 +84,12 @@ return [
 		],
 		'4' => [
 			[
+				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
+				'required'   => true,
+				'multivalue' => true,
+			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
 				'field_impo' => 'anio',
@@ -117,5 +123,6 @@ return [
 		[3,  Lang::get('indicador.reports.quarter')],
 		[1,  Lang::get('indicador.reports.montly')]
 	],
-	'productsAgriculture' => ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '5201', '5202', '5203']
+	'productsAgriculture' => ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '5201', '5202', '5203'],
+	'ConcentrationExportableSupply' => 80,
 ];

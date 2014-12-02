@@ -1,14 +1,18 @@
 <?php
 
+/*include_once(PATH_APP.'adodb5/toexport.inc.php');
+include_once(PATH_APP.'adodb5/pivottable.inc.php'); */
+
 require_once ('BaseAdo.php');
 
-class DeclaraexpAdo extends BaseAdo {
+class DeclaraimpAdo extends BaseAdo {
 
 	protected $pivotRowFields        = '';
 	protected $pivotColumnFields     = '';
 	protected $pivotTotalFields      = '';
 	protected $pivotGroupingFunction = '';
 	protected $pivotSortColumn       = '';
+	protected $arrJoins       		 = [];
 
 	public function setPivotRowFields($pivotRowFields)
 	{
@@ -37,7 +41,14 @@ class DeclaraexpAdo extends BaseAdo {
 
 	protected function setTable()
 	{
-		$this->table = 'declaraexp';
+		$this->table = 'declaraimp AS decl, posicion';
+	}
+
+	protected function setJoins()
+	{
+		$this->arrJoins = [
+			'decl.id_posicion = posicion.id_posicion'
+		];
 	}
 
 	protected function setPrimaryKey()
@@ -47,59 +58,65 @@ class DeclaraexpAdo extends BaseAdo {
 
 	protected function setData()
 	{
-		$declaraexp = $this->getModel();
+		$declaraimp = $this->getModel();
 
-		$id = $declaraexp->getId();
-		$anio = $declaraexp->getAnio();
-		$periodo = $declaraexp->getPeriodo();
-		$id_empresa = $declaraexp->getId_empresa();
-		$id_paisdestino = $declaraexp->getId_paisdestino();
-		$id_capitulo = $declaraexp->getId_capitulo();
-		$id_partida = $declaraexp->getId_partida();
-		$id_subpartida = $declaraexp->getId_subpartida();
-		$id_posicion = $declaraexp->getId_posicion();
-		$id_ciiu = $declaraexp->getId_ciiu();
-		$valorfob = $declaraexp->getValorfob();
-		$valorcif = $declaraexp->getValorcif();
-		$peso_neto = $declaraexp->getPeso_neto();
+		$id = $declaraimp->getId();
+		$anio = $declaraimp->getAnio();
+		$periodo = $declaraimp->getPeriodo();
+		$id_empresa = $declaraimp->getId_empresa();
+		$id_paisorigen = $declaraimp->getId_paisorigen();
+		$id_paiscompra = $declaraimp->getId_paiscompra();
+		$id_paisprocedencia = $declaraimp->getId_paisprocedencia();
+		$id_capitulo = $declaraimp->getId_capitulo();
+		$id_partida = $declaraimp->getId_partida();
+		$id_subpartida = $declaraimp->getId_subpartida();
+		$id_posicion = $declaraimp->getId_posicion();
+		$id_ciiu = $declaraimp->getId_ciiu();
+		$valorcif = $declaraimp->getValorcif();
+		$valorfob = $declaraimp->getValorfob();
+		$peso_neto = $declaraimp->getPeso_neto();
 
 		$this->data = compact(
-			'id',
-			'anio',
-			'periodo',
-			'id_empresa',
-			'id_paisdestino',
-			'id_capitulo',
-			'id_partida',
-			'id_subpartida',
-			'id_posicion',
-			'id_ciiu',
-			'valorfob',
-			'valorcif',
-			'peso_neto'
+			'decl.id',
+			'decl.anio',
+			'decl.periodo',
+			'decl.id_empresa',
+			'decl.id_paisorigen',
+			'decl.id_paiscompra',
+			'decl.id_paisprocedencia',
+			'decl.id_capitulo',
+			'decl.id_partida',
+			'decl.id_subpartida',
+			'decl.id_posicion',
+			'decl.id_ciiu',
+			'decl.valorcif',
+			'decl.valorfob',
+			'decl.peso_neto'
 		);
 	}
 
-	public function create($declaraexp)
+	public function create($declaraimp)
 	{
 		$conn = $this->getConnection();
-		$this->setModel($declaraexp);
+		$this->setModel($declaraimp);
 		$this->setData();
 
 		$sql = '
-			INSERT INTO declaraexp (
+			INSERT INTO declaraimp (
 				id,
 				anio,
 				periodo,
 				id_empresa,
-				id_paisdestino,
+				id_paisorigen,
+				id_paiscompra,
+				id_paisprocedencia,
 				id_capitulo,
 				id_partida,
 				id_subpartida,
 				id_posicion,
 				id_ciiu,
-				valorfob,
 				valorcif,
+				valorfob,
 				peso_neto
 			)
 			VALUES (
@@ -107,14 +124,16 @@ class DeclaraexpAdo extends BaseAdo {
 				"'.$this->data['anio'].'",
 				"'.$this->data['periodo'].'",
 				"'.$this->data['id_empresa'].'",
-				"'.$this->data['id_paisdestino'].'",
+				"'.$this->data['id_paisorigen'].'",
+				"'.$this->data['id_paiscompra'].'",
+				"'.$this->data['id_paisprocedencia'].'",
 				"'.$this->data['id_capitulo'].'",
 				"'.$this->data['id_partida'].'",
 				"'.$this->data['id_subpartida'].'",
 				"'.$this->data['id_posicion'].'",
 				"'.$this->data['id_ciiu'].'",
-				"'.$this->data['valorfob'].'",
 				"'.$this->data['valorcif'].'",
+				"'.$this->data['valorfob'].'",
 				"'.$this->data['peso_neto'].'"
 			)
 		';
@@ -146,6 +165,9 @@ class DeclaraexpAdo extends BaseAdo {
 		
 		$conn  = $this->getConnection();
 		$table = $this->getTable();
+		
+		$this->setJoins();
+		
 		$where = $this->buildSelectWhere();
 
 		$sql = PivotTableSQL(
@@ -163,7 +185,7 @@ class DeclaraexpAdo extends BaseAdo {
 		$sql .= ' ORDER BY ';
 		$sql .= (empty($this->pivotSortColumn)) ? 'id' : $this->pivotSortColumn ;
 
-		//print_r($sql);
+		//var_dump($sql);
 
 		return $sql;
 	}
@@ -171,20 +193,22 @@ class DeclaraexpAdo extends BaseAdo {
 	public function buildSelect()
 	{
 		$sql = 'SELECT
-			 id,
-			 anio,
-			 periodo,
-			 id_empresa,
-			 id_paisdestino,
-			 id_capitulo,
-			 id_partida,
-			 id_subpartida,
-			 id_posicion,
-			 id_ciiu,
-			 valorfob,
-			 valorcif,
-			 peso_neto
-			FROM declaraexp
+			 decl.id,
+			 decl.anio,
+			 decl.periodo,
+			 decl.id_empresa,
+			 decl.id_paisorigen,
+			 decl.id_paiscompra,
+			 decl.id_paisprocedencia,
+			 decl.id_capitulo,
+			 decl.id_partida,
+			 decl.id_subpartida,
+			 decl.id_posicion,
+			 decl.id_ciiu,
+			 decl.valorcif,
+			 decl.valorfob,
+			 decl.peso_neto
+			FROM declaraimp AS decl
 		';
 		
 		$sql .= $this->buildSelectWhere();
@@ -223,8 +247,14 @@ class DeclaraexpAdo extends BaseAdo {
 		$sql             = '';
 		$whereAssignment = false;
 
+		if (!empty($this->arrJoins)) {
+			$sql            .= ' WHERE ('. implode( ' AND ', $this->arrJoins ).')';
+			$whereAssignment = true;
+		}
+
 		if(!empty($filter)){
-			$sql            .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+			$sql 			.= ($whereAssignment) ? ' AND ' : ' WHERE ' ;
+			$sql            .= ' ('. implode( $joinOperator, $filter ).')';
 			$whereAssignment = true;
 		}
 		if(!empty($filterPosicion)){

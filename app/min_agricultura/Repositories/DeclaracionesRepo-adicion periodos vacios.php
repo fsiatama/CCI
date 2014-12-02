@@ -106,10 +106,6 @@ class DeclaracionesRepo extends BaseRepo {
 			$row = 'periodo AS id';
 		}
 
-		if ($range !== false) {
-			$row = 'periodo AS id';
-		}
-
 		$arrRowField = [$row, $rowField];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
@@ -135,7 +131,8 @@ class DeclaracionesRepo extends BaseRepo {
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', $range);
 
-		
+		$arrRowField = [$row, $rowField];
+
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields('valorfob');
 		$this->modelAdo->setPivotGroupingFunction('SUM');
@@ -152,8 +149,8 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}*/
 
-		$arrData = [];
-		$arrPeriods = [];
+		$arrData       = [];
+		$arrPeriods    = [];
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
 			
@@ -168,7 +165,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 			}
 
-			$arrData[] = [
+			$arrData[$rowExpo['id']] = [
 				'id'         => $rowExpo['id'],
 				'periodo'    => $rowExpo['periodo'],
 				'valor_expo' => $rowExpo['valorfob'],
@@ -179,7 +176,10 @@ class DeclaracionesRepo extends BaseRepo {
 		foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
 			
 			if(!in_array($rowImpo['periodo'], $arrPeriods)){
-				$arrData[] = [
+				
+				$arrPeriods[] = $rowImpo['periodo'];
+
+				$arrData[$rowImpo['id']] = [
 					'id'         => $rowImpo['id'],
 					'periodo'    => $rowImpo['periodo'],
 					'valor_expo' => 0,
@@ -195,6 +195,42 @@ class DeclaracionesRepo extends BaseRepo {
 				'error'   => Lang::get('error.no_records_found')
 			];
 		}
+		//var_dump($arrData, $arrPeriods);
+
+		//si el reporte no es anual y no encuentra informacion en algun periodo,
+		//debe rrellenar con una fila en ceros
+		$numberPeriods = (12 / $period);
+		$rangePeriods  = range(1, $numberPeriods);
+		$index         = 0;
+
+
+		if ($period != 12 && !empty($year) && count($arrData) < $numberPeriods) {
+			foreach ($rangePeriods as $number) {
+
+				//var_dump($number);
+				
+				$periodName = Helpers::getPeriodName($period, $number);
+
+				if (!in_array($periodName, $arrPeriods)) {
+
+					//var_dump($periodName, $arrPeriods);
+					$index       += 1;
+					$arrPeriods[] = $periodName;
+
+					$arrData[$index] = [
+						'id'         => $index,
+						'periodo'    => $periodName,
+						'valor_expo' => 0,
+						'valor_impo' => 0,
+					];
+				}
+
+			}
+			
+		}
+
+		ksort($arrData);
+
 
 		return [
 			'success' => true,
@@ -269,7 +305,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 			foreach ($result['data'] as $key => $value) {
 
-				$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] ) / ( $value['valor_expo'] + $value['valor_impo'] );
+				$valor_balanza = (( $value['valor_expo'] + $value['valor_impo'] ) == 0) ? 0 : ( $value['valor_expo'] - $value['valor_impo'] ) / ( $value['valor_expo'] + $value['valor_impo'] ) ;
 				
 				$arrData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
 
@@ -329,8 +365,6 @@ class DeclaracionesRepo extends BaseRepo {
 				$firstRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
 
 			}
-
-			//var_dump($firstRangeData);
 
 			$result = $this->findBalanzaData($indicador_filtros, $filtersConfig, $year, $period, 'fin');
 			
@@ -419,8 +453,6 @@ class DeclaracionesRepo extends BaseRepo {
 				$arrSeries = [
 					'valor_balanza' => Lang::get('indicador.columns_title.valor_balanza')
 				];
-
-				//var_dump($arrChartData);
 
 				$columnChart = Helpers::jsonChart(
 					$arrChartData,
@@ -514,7 +546,7 @@ class DeclaracionesRepo extends BaseRepo {
 		//agrega la fila con el registro acumulado de las demas posiciones
 		$arrData[] = [
 			'id'            => $othersId,
-			'id_posicion'   => Lang::get('indicador.reports.others'),
+			'id_posicion'   => '**********',
 			//'posicion'      => Lang::get('indicador.reports.others'),
 			'valor_expo'    => $othersValue,
 			'participacion' => $othersRate

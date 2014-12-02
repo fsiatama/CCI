@@ -174,7 +174,7 @@ class DeclaraimpAdo extends BaseAdo {
 		$sql .= ' ORDER BY ';
 		$sql .= (empty($this->pivotSortColumn)) ? 'id' : $this->pivotSortColumn ;
 
-		//var_dump($sql);
+		//print_r($sql);
 
 		return $sql;
 	}

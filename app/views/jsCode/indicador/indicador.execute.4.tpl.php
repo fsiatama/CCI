@@ -38,32 +38,29 @@ $htmlDescription .= '</ol>';
 		]
 	});
 
-	storeBalanza.on('beforeload', function(){
+	/*storeBalanza.on('beforeload', function(){
 		var period = Ext.getCmp(module + 'comboPeriod').getValue();
 		if (!period) {
 			return false;
 		};
 		this.setBaseParam('period', period);
-	});
+	});*/
 	
 	storeBalanza.on('load', function(store){
 		FusionCharts.setCurrentRenderer('javascript');
 		
-		if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
+		if(FusionCharts(module + 'PieChartId')){
+			FusionCharts(module + 'PieChartId').dispose();
 		}
-		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
+		var chart = new FusionCharts('<?= PIE; ?>', module + 'PieChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.columnChartData);
-		chart.render(module + 'ColumnChart');
-
-		
-		
+		chart.setJSONData(store.reader.jsonData.pieChartData);
+		chart.render(module + 'PieChart');
 	});
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.posicion'); ?>', dataIndex:'id_posicion'},
-			{header:'<?= Lang::get('indicador.columns_title.desc_posicion'); ?>', dataIndex:'posicion', align: 'left'},
+			{header:'<?= Lang::get('indicador.columns_title.posicion'); ?>', dataIndex:'id_posicion', align: 'left'},
+			//{header:'<?= Lang::get('indicador.columns_title.desc_posicion'); ?>', dataIndex:'posicion', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':numberFormat},
 		]
@@ -126,7 +123,7 @@ $htmlDescription .= '</ol>';
 					'<div class="clearfix"></div><?= $htmlDescription; ?>' +
 				'</div>' +
 			'</div>'
-		},{
+		/*},{
 			style:{padding:'0px'}
 			,border:true
 			,html: ''
@@ -149,13 +146,13 @@ $htmlDescription .= '</ol>';
 	        	,handler: function () {
 	        		storeBalanza.load();
 	        	}
-			}]
+			}]*/
 		},{
 			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
+			,html:'<div id="' + module + 'PieChart"></div>'
 			,items:[{
 				xtype:'panel'
-				,id: module + 'ColumnChart'
+				,id: module + 'PieChart'
 				,plain:true
 			}]
 		/*},{
