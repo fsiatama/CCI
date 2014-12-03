@@ -12,7 +12,6 @@ class DeclaraimpAdo extends BaseAdo {
 	protected $pivotTotalFields      = '';
 	protected $pivotGroupingFunction = '';
 	protected $pivotSortColumn       = '';
-	protected $arrJoins       		 = [];
 
 	public function setPivotRowFields($pivotRowFields)
 	{
@@ -41,14 +40,7 @@ class DeclaraimpAdo extends BaseAdo {
 
 	protected function setTable()
 	{
-		$this->table = 'declaraimp AS decl, posicion';
-	}
-
-	protected function setJoins()
-	{
-		$this->arrJoins = [
-			'decl.id_posicion = posicion.id_posicion'
-		];
+		$this->table = 'declaraimp';
 	}
 
 	protected function setPrimaryKey()
@@ -77,21 +69,21 @@ class DeclaraimpAdo extends BaseAdo {
 		$peso_neto = $declaraimp->getPeso_neto();
 
 		$this->data = compact(
-			'decl.id',
-			'decl.anio',
-			'decl.periodo',
-			'decl.id_empresa',
-			'decl.id_paisorigen',
-			'decl.id_paiscompra',
-			'decl.id_paisprocedencia',
-			'decl.id_capitulo',
-			'decl.id_partida',
-			'decl.id_subpartida',
-			'decl.id_posicion',
-			'decl.id_ciiu',
-			'decl.valorcif',
-			'decl.valorfob',
-			'decl.peso_neto'
+			'id',
+			'anio',
+			'periodo',
+			'id_empresa',
+			'id_paisorigen',
+			'id_paiscompra',
+			'id_paisprocedencia',
+			'id_capitulo',
+			'id_partida',
+			'id_subpartida',
+			'id_posicion',
+			'id_ciiu',
+			'valorcif',
+			'valorfob',
+			'peso_neto'
 		);
 	}
 
@@ -165,9 +157,6 @@ class DeclaraimpAdo extends BaseAdo {
 		
 		$conn  = $this->getConnection();
 		$table = $this->getTable();
-		
-		$this->setJoins();
-		
 		$where = $this->buildSelectWhere();
 
 		$sql = PivotTableSQL(
@@ -185,7 +174,7 @@ class DeclaraimpAdo extends BaseAdo {
 		$sql .= ' ORDER BY ';
 		$sql .= (empty($this->pivotSortColumn)) ? 'id' : $this->pivotSortColumn ;
 
-		//var_dump($sql);
+		//print_r($sql);
 
 		return $sql;
 	}
@@ -193,22 +182,22 @@ class DeclaraimpAdo extends BaseAdo {
 	public function buildSelect()
 	{
 		$sql = 'SELECT
-			 decl.id,
-			 decl.anio,
-			 decl.periodo,
-			 decl.id_empresa,
-			 decl.id_paisorigen,
-			 decl.id_paiscompra,
-			 decl.id_paisprocedencia,
-			 decl.id_capitulo,
-			 decl.id_partida,
-			 decl.id_subpartida,
-			 decl.id_posicion,
-			 decl.id_ciiu,
-			 decl.valorcif,
-			 decl.valorfob,
-			 decl.peso_neto
-			FROM declaraimp AS decl
+			 id,
+			 anio,
+			 periodo,
+			 id_empresa,
+			 id_paisorigen,
+			 id_paiscompra,
+			 id_paisprocedencia,
+			 id_capitulo,
+			 id_partida,
+			 id_subpartida,
+			 id_posicion,
+			 id_ciiu,
+			 valorcif,
+			 valorfob,
+			 peso_neto
+			FROM declaraimp
 		';
 		
 		$sql .= $this->buildSelectWhere();
@@ -247,14 +236,8 @@ class DeclaraimpAdo extends BaseAdo {
 		$sql             = '';
 		$whereAssignment = false;
 
-		if (!empty($this->arrJoins)) {
-			$sql            .= ' WHERE ('. implode( ' AND ', $this->arrJoins ).')';
-			$whereAssignment = true;
-		}
-
 		if(!empty($filter)){
-			$sql 			.= ($whereAssignment) ? ' AND ' : ' WHERE ' ;
-			$sql            .= ' ('. implode( $joinOperator, $filter ).')';
+			$sql            .= ' WHERE ('. implode( $joinOperator, $filter ).')';
 			$whereAssignment = true;
 		}
 		if(!empty($filterPosicion)){

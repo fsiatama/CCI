@@ -355,11 +355,36 @@
 			label: label
 			,values: arrValues
 		});
+
+		var year      = Ext.getCmp(module+'comboAnio_ini').getValue();
+		var perIni    = Ext.getCmp(module+'comboDesde_ini').getRawValue();
+		var perFin    = Ext.getCmp(module+'comboHasta_ini').getRawValue();
+		arrValues     = [];
+
+		arrValues.push(year + ' ' + perIni + ' - ' + perFin);
+		
+		arrDescription.push({
+			label: Ext.ux.lang.reports.initialRange
+			,values: arrValues
+		});
+
+		year      = Ext.getCmp(module+'comboAnio_fin').getValue();
+		perIni    = Ext.getCmp(module+'comboDesde_fin').getRawValue();
+		perFin    = Ext.getCmp(module+'comboHasta_fin').getRawValue();
+		arrValues     = [];
+
+		arrValues.push(year + ' ' + perIni + ' - ' + perFin);
+		
+		arrDescription.push({
+			label: Ext.ux.lang.reports.finalRange
+			,values: arrValues
+		});
 		return arrDescription;
 	}
 	function fnCloseTab(){
-		var tabs = Ext.getCmp('tabpanel');
-		tabs.remove(tabs.activeTab, true);
+		if(Ext.getCmp('<?= $tree; ?>')){
+			Ext.getCmp('<?= $tree; ?>').cargar('<?= $indicador_id; ?>');
+		}
 	}
 
 	function fnSave () {

@@ -152,8 +152,8 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}*/
 
-		$arrData = [];
-		$arrPeriods = [];
+		$arrData       = [];
+		$arrPeriods    = [];
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
 			
@@ -194,6 +194,40 @@ class DeclaracionesRepo extends BaseRepo {
 				'success' => false,
 				'error'   => Lang::get('error.no_records_found')
 			];
+		}
+
+		//si el reporte no es anual y no encuentra informacion en algun periodo,
+		//debe rrellenar con una fila en ceros
+		$numberPeriods = (12 / $period);
+		if (count($arrData) < $numberPeriods) {
+			
+			$arrFinal = [];
+			$rangePeriods  = Helpers::getPeriodRange($period);
+
+			foreach ($rangePeriods as $number => $range) {
+
+				$findId = false;
+				foreach ($arrData as $row) {
+
+					if (in_array($row['id'], $range)) {
+						$findId = true;
+						$arrFinal[$number] = $row;
+					}
+				}
+
+				if (!$findId) {
+					$periodName = Helpers::getPeriodName($period, $number);
+
+					$arrFinal[$number] = [
+						'id'         => array_shift($range),
+						'periodo'    => $periodName,
+						'valor_expo' => 0,
+						'valor_impo' => 0,
+					];
+				}
+				
+			}
+			$arrData = $arrFinal;
 		}
 
 		return [
@@ -269,7 +303,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 			foreach ($result['data'] as $key => $value) {
 
-				$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] ) / ( $value['valor_expo'] + $value['valor_impo'] );
+				$valor_balanza = (( $value['valor_expo'] + $value['valor_impo'] ) == 0) ? 0 : ( $value['valor_expo'] - $value['valor_impo'] ) / ( $value['valor_expo'] + $value['valor_impo'] );
 				
 				$arrData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
 
@@ -317,6 +351,11 @@ class DeclaracionesRepo extends BaseRepo {
 	{
 		extract($rowIndicador);
 
+		$arrFilters = Helpers::filterValuesToArray($indicador_filtros);
+
+		$arrRangeIni = range($arrFilters['desde_ini'], $arrFilters['hasta_ini']);
+		$arrRangeFin = range($arrFilters['desde_fin'], $arrFilters['hasta_fin']);
+
 		$result = $this->findBalanzaData($indicador_filtros, $filtersConfig, $year, $period, 'ini');
 		if ($result['success']) {
 
@@ -324,13 +363,15 @@ class DeclaracionesRepo extends BaseRepo {
 			$firstRangeData = [];
 			foreach ($result['data'] as $key => $value) {
 
-				$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
-				
-				$firstRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
+				if ( in_array($value['id'], $arrRangeIni) ) {
+					$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
+					
+					$firstRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
+				}
 
 			}
 
-			//var_dump($firstRangeData);
+			//var_dump($firstRangeData, $result['data']);
 
 			$result = $this->findBalanzaData($indicador_filtros, $filtersConfig, $year, $period, 'fin');
 			
@@ -340,9 +381,12 @@ class DeclaracionesRepo extends BaseRepo {
 				$lastRangeData = [];
 				foreach ($result['data'] as $key => $value) {
 
-					$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
-					
-					$lastRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
+					if ( in_array($value['id'], $arrRangeFin) ) {
+
+						$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
+						
+						$lastRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
+					}
 
 				}
 
@@ -372,7 +416,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 					}
 
-					$valor_balanza = (($lastValBalanza - $firstRange['valor_balanza']) / $firstRange['valor_balanza']);
+					$valor_balanza = ($firstRange['valor_balanza'] == 0) ? 0: (($lastValBalanza - $firstRange['valor_balanza']) / $firstRange['valor_balanza']);
 
 					$arrData[] = [
 						'id'            => $firstRange['id'],
@@ -463,7 +507,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->model->setId_posicion($productsAgriculture);
 
 
-		$arrRowField = ['id', 'id_posicion'];
+		$arrRowField = ['id', 'decl.id_posicion', 'posicion'];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields('valorfob');
@@ -474,6 +518,12 @@ class DeclaracionesRepo extends BaseRepo {
 
 		if (!$rsDeclaraexp['success']) {
 			return $rsDeclaraexp;
+		}
+		if ($rsDeclaraexp['total'] == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
 		}
 
 
@@ -499,7 +549,7 @@ class DeclaracionesRepo extends BaseRepo {
 				$arrData[] = [
 					'id'            => $keyExpo,
 					'id_posicion'   => $rowExpo['id_posicion'],
-					//'posicion'      => $rowExpo['posicion'],
+					'posicion'      => $rowExpo['posicion'],
 					'valor_expo'    => $rowExpo['valorfob'],
 					'participacion' => $rate
 				];
@@ -515,7 +565,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$arrData[] = [
 			'id'            => $othersId,
 			'id_posicion'   => Lang::get('indicador.reports.others'),
-			//'posicion'      => Lang::get('indicador.reports.others'),
+			'posicion'      => '*************************',
 			'valor_expo'    => $othersValue,
 			'participacion' => $othersRate
 		];

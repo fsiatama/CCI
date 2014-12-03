@@ -135,9 +135,11 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 	Ext.extend(Indicador.tree, Ext.ux.tree.RemoteTreePanel, {
 		consultar:function(indicador){
 			var node = this.getNodeById(indicador);
+			Ext.getCmp('tab-' + module).purgeListeners();
 			if(node){
 				Ext.getCmp(module + 'btnEdit').setDisabled(false);
 				Ext.getCmp(module + 'btnDel').setDisabled(false);
+
 
 				var dataViewer = new Ext.Panel({
 					autoScroll: false
@@ -154,6 +156,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 							,tipo_indicador_id: '<?= $tipo_indicador_id; ?>'
 							,tree: module + 'TreeIndicador'
 							,module: 'execute_' + module
+							,panel: 'tab-' + module
 						}
 						,disableCaching:false
 						,method:'POST'
@@ -250,6 +253,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 	function initialPanel(){
 		Ext.getCmp(module + 'btnEdit').setDisabled(true);
 		Ext.getCmp(module + 'btnDel').setDisabled(true);
+		Ext.getCmp('tab-' + module).purgeListeners();
 		if(!Ext.getCmp(module+'initialPanel')){
 			var lp = Ext.getCmp(module + 'lpIndicador');
 

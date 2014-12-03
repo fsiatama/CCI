@@ -12,6 +12,7 @@ Ext.ux.lang.messages = {
 	,confirmation: 'Confirmar'
 	,error: 'Error'
 	,question_delete: '¿Seguro que quiere eliminar el registro seleccionado?'
+	,please_wait: 'Espere por favor...'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.reports');

@@ -3,6 +3,9 @@ Ext.onReady(function(){
 	new Ext.ux.inactivityMonitor({
 		 inactivityTimeout: 1200000 // 1200000 = 20min / 1 min = 60000
 	});
+
+	Ext.ns('Ext.ux', 'Ext.ux.bodyMask');
+	Ext.ux.bodyMask = new Ext.LoadMask(Ext.getBody(), {msg: Ext.ux.lang.messages.please_wait});
 	
 	document.oncontextmenu = function(){return false;}
 	
@@ -210,7 +213,8 @@ Ext.onReady(function(){
 	
 	Ext.override(Ext.data.Store, {
 		listeners:{
-			'loadexception': function(proxy, options, response){ 	
+			'loadexception': function(proxy, options, response){
+				Ext.ux.bodyMask.hide();
 				//console.log(proxy, options, response);		
 				Ext.MessageBox.show({
 					title: '',

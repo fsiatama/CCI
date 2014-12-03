@@ -23,6 +23,7 @@ $htmlDescription .= '</ol>';
 	var storeBalanza = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
+		,id:module+'storeBalanza'
 		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
@@ -47,33 +48,37 @@ $htmlDescription .= '</ol>';
 			return false;
 		};
 		this.setBaseParam('period', period);
+		Ext.ux.bodyMask.show();
 	});
 	
 	storeBalanza.on('load', function(store){
 		FusionCharts.setCurrentRenderer('javascript');
-		if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
-		}
+		
+		disposeCharts();
+
 		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
 		chart.setJSONData(store.reader.jsonData.columnChartData);
 		chart.render(module + 'ColumnChart');
-
-		/*if(FusionCharts(module + 'AreaChartId')){
-			FusionCharts(module + 'AreaChartId').dispose();
-		}
-		var chart = new FusionCharts('<?= AREA; ?>', module + 'AreaChartId', '100%', '100%', '0', '1');
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.areaChartData);
-		chart.render(module + 'AreaChart');*/
-		
+		Ext.ux.bodyMask.hide();
 	});
+
+	var titles = [
+		{header: Ext.ux.lang.reports.initialRange, colspan: 3, align: 'center'},
+		{header: Ext.ux.lang.reports.finalRange, colspan: 3, align: 'center'},
+		{header: '', colspan: 1, align: 'center'}
+	];
+
+	var group = new Ext.ux.grid.ColumnHeaderGroup({
+		rows: [titles]
+	});
+
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'firstPeriod'},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'firstPeriod', align:'left'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'firstValImpo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'firstValExpo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'lastPeriod'},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'lastPeriod', align:'left'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'lastValImpo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'lastValExpo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'valor_balanza' ,'renderer':numberFormat}
@@ -101,8 +106,9 @@ $htmlDescription .= '</ol>';
 		//,bbar:new Ext.PagingToolbar({pageSize:1000, store:storeBalanza, displayInfo:true})
 		,iconCls:'silk-grid'
 		//,plugins:[new Ext.ux.grid.Excel()]
+		,plugins: group
 		,layout:'fit'
-		,height:300
+		,height:400
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
@@ -148,18 +154,18 @@ $htmlDescription .= '</ol>';
 				xtype: 'combo'
 				,store: arrPeriods
 				,id: module + 'comboPeriod'
-			    ,typeAhead: true
-			    ,forceSelection: true
-			    ,triggerAction: 'all'
-			    ,selectOnFocus:true
-			    ,value: 12
-			    ,width: 100
-	        },'-',{
-	        	text: Ext.ux.lang.buttons.generate
-	        	,iconCls: 'icon-refresh'
-	        	,handler: function () {
-	        		storeBalanza.load();
-	        	}
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: 12
+				,width: 100
+			},'-',{
+				text: Ext.ux.lang.buttons.generate
+				,iconCls: 'icon-refresh'
+				,handler: function () {
+					storeBalanza.load();
+				}
 			}]
 		},{
 			height:430
@@ -181,6 +187,21 @@ $htmlDescription .= '</ol>';
 			defaults:{anchor:'100%'}
 			,items:[gridBalanza]
 		}]
+		,listeners:{
+			beforedestroy: {
+				fn: function(p){
+					disposeCharts();
+				}
+			}
+		}
+	});
+
+	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p){
+		disposeCharts();
+	});
+
+	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
+		storeBalanza.load();
 	});
 	
 	storeBalanza.load();
@@ -200,6 +221,11 @@ $htmlDescription .= '</ol>';
 		else{
 			return value;
 		}
+	}
+	function disposeCharts () {
+		if(FusionCharts(module + 'ColumnChartId')){
+			FusionCharts(module + 'ColumnChartId').dispose();
+		}		
 	}
 
 	/*********************************************** End functions***********************************************/

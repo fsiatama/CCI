@@ -322,5 +322,43 @@ class Helpers
 		}
 		return $periodName;
 	}
+
+	public static function getPeriodRange($period)
+	{
+		$periodRange = [];
+		switch ($period) {
+			case 6:
+				$periodRange = [
+					1 => ['1','2','3','4','5','6'],
+					2 => ['7','8','9','10','11','12']
+				];
+			break;
+			case 3:
+				$periodRange = [
+					1 => ['1','2','3'],
+					2 => ['4','5','6'],
+					3 => ['7','8','9'],
+					4 => ['10','11','12']
+				];
+			break;
+			case 1:
+				$periodRange = [
+					1 => ['1'],
+					2 => ['2'],
+					3 => ['3'],
+					4 => ['4'],
+					5 => ['5'],
+					6 => ['6'],
+					7 => ['7'],
+					8 => ['8'],
+					9 => ['9'],
+					10 => ['10'],
+					11 => ['11'],
+					12 => ['12']
+				];
+			break;
+		}
+		return $periodRange;
+	}
 		
 }

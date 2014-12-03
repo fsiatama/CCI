@@ -126,6 +126,8 @@ class IndicadorController {
 
 			$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action', 'yearsAvailable', 'periods'));
 
+			//var_dump($params);
+
     		$tipo_indicador = $rowTipoIndicador['tipo_indicador_id'];
 
     		return new View('jsCode/indicador/indicador.execute.'.$tipo_indicador, $params);

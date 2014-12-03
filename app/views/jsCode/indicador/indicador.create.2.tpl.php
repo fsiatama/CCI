@@ -243,8 +243,9 @@
 		return arrDescription;
 	}
 	function fnCloseTab(){
-		var tabs = Ext.getCmp('tabpanel');
-		tabs.remove(tabs.activeTab, true);
+		if(Ext.getCmp('<?= $tree; ?>')){
+			Ext.getCmp('<?= $tree; ?>').cargar('<?= $indicador_id; ?>');
+		}
 	}
 
 	function fnSave () {

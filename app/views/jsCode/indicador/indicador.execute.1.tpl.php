@@ -23,6 +23,7 @@ $htmlDescription .= '</ol>';
 	var storeBalanza = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
+		,id:module+'storeBalanza'
 		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
@@ -46,30 +47,23 @@ $htmlDescription .= '</ol>';
 		};
 		this.setBaseParam('year', year);
 		this.setBaseParam('period', period);
+		Ext.ux.bodyMask.show();
 	});
 	
 	storeBalanza.on('load', function(store){
 		FusionCharts.setCurrentRenderer('javascript');
-		/*if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
-		}
-		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.columnChartData);
-		chart.render(module + 'ColumnChart');*/
-
-		if(FusionCharts(module + 'AreaChartId')){
-			FusionCharts(module + 'AreaChartId').dispose();
-		}
+		
+		disposeCharts();
+		
 		var chart = new FusionCharts('<?= AREA; ?>', module + 'AreaChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
 		chart.setJSONData(store.reader.jsonData.areaChartData);
 		chart.render(module + 'AreaChart');
-		
+		Ext.ux.bodyMask.hide();
 	});
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo'},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'valor_balanza' ,'renderer':numberFormat}
@@ -147,19 +141,19 @@ $htmlDescription .= '</ol>';
 				xtype: 'combo'
 				,store: arrPeriods
 				,id: module + 'comboPeriod'
-			    ,typeAhead: true
-			    ,forceSelection: true
-			    ,triggerAction: 'all'
-			    ,selectOnFocus:true
-			    ,value: 12
-			    ,width: 100
-			    ,listeners:{
-	    			select: {
-	    				fn: function(combo,reg){
-	    					Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
-	    				}
-	    			}
-	    		}
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: 12
+				,width: 100
+				,listeners:{
+					select: {
+						fn: function(combo,reg){
+							Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
+						}
+					}
+				}
 			},'-',{
 				xtype: 'label'
 				,text: Ext.ux.lang.reports.selectYear + ': '
@@ -167,19 +161,19 @@ $htmlDescription .= '</ol>';
 				xtype: 'combo'
 				,store: arrYears
 				,id: module + 'comboYear'
-			    ,typeAhead: true
-			    ,forceSelection: true
-			    ,triggerAction: 'all'
-			    ,selectOnFocus:true
-			    ,value: defaultYear
-			    ,disabled: true
-			    ,width: 100
-	        },'-',{
-	        	text: Ext.ux.lang.buttons.generate
-	        	,iconCls: 'icon-refresh'
-	        	,handler: function () {
-	        		storeBalanza.load();
-	        	}
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: defaultYear
+				,disabled: true
+				,width: 100
+			},'-',{
+				text: Ext.ux.lang.buttons.generate
+				,iconCls: 'icon-refresh'
+				,handler: function () {
+					storeBalanza.load();
+				}
 			}]
 		/*},{
 			height:430
@@ -201,6 +195,21 @@ $htmlDescription .= '</ol>';
 			defaults:{anchor:'100%'}
 			,items:[gridBalanza]
 		}]
+		,listeners:{
+			beforedestroy: {
+				fn: function(p){
+					disposeCharts();
+				}
+			}
+		}
+	});
+
+	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p){
+		disposeCharts();
+	});
+
+	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
+		storeBalanza.load();
 	});
 	
 	storeBalanza.load();
@@ -219,6 +228,11 @@ $htmlDescription .= '</ol>';
 		}
 		else{
 			return value;
+		}
+	}
+	function disposeCharts () {
+		if(FusionCharts(module + 'AreaChartId')){
+			FusionCharts(module + 'AreaChartId').dispose();
 		}
 	}
 

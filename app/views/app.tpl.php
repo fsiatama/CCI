@@ -18,7 +18,7 @@
 		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/resources/css/xtheme-gray-extend.css">
 		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/resources/css/forms.css" />
 		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/examples/shared/icons/silk.css" />
-		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/examples/ux/locationBar/LocationBar.css" />
+		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/examples/ux/css/ColumnHeaderGroup.css" />
 		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/examples/ux/statusbar/css/statusbar.css">
 		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/examples/ux/remoteTree/css/remotetree.css" />
 		<link rel="stylesheet" type="text/css" href="js/vendor/ext-3.4.0/examples/ux/css/Spinner.css" />
@@ -95,7 +95,7 @@
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/checktree/js/Ext.ux.tree.CheckTreePanel.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/Ext.ux.tree.RemoteTreePanel.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/remoteTree/js/Ext.ux.tree.TreeFilterX.js"></script>
-		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/locationBar/Ext.ux.LocationBar.js"></script>
+		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/ColumnHeaderGroup.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/grid/Ext.ux.gridOrden.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/selectBox/SuperBoxSelect2.js"></script>		
 
