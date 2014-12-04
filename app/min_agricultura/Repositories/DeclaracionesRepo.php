@@ -584,10 +584,222 @@ class DeclaracionesRepo extends BaseRepo {
 		$result = [
 			'success'         => true,
 			'data'            => $arrData,
-   			'pieChartData'    => $pieChart,
+			'pieChartData'    => $pieChart,
 			'total'           => count($arrData)
 		];
 		return $result;
+	}
+
+	public function executeNumeroPaisesDestino($rowIndicador, $filtersConfig, $year, $period)
+	{
+		extract($rowIndicador);
+
+		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
+
+		//Trae los productos configurados como agricolas
+		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$productsAgriculture = Helpers::arrayGet($lines, 'productsAgriculture');
+
+		$productsAgriculture = implode(',', $productsAgriculture);
+
+		$this->model->setId_posicion($productsAgriculture);
+
+		//$rowField = Helpers::getPeriodColumnSql($period);
+
+		$arrRowField = ['id', 'decl.id_paisdestino', 'pais'];
+
+		//var_dump($arrRowField);
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn('valorfob DESC');
+
+		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$rsDeclaraexp['success']) {
+			return $rsDeclaraexp;
+		}
+		if ($rsDeclaraexp['total'] == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		$totalValue = 0;
+
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+			$totalValue += (float)$rowExpo['valorfob'];
+		}
+
+		$arrData           = [];
+
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+				
+			$rate = round( ($rowExpo['valorfob'] / $totalValue ) * 100 , 2 );
+			$arrData[] = [
+				'id'            => $keyExpo,
+				'pais'          => $rowExpo['pais'],
+				'valor_expo'    => $rowExpo['valorfob'],
+				'participacion' => $rate
+			];
+		}
+
+		/*$arrSeries = [
+			'valor_expo' => Lang::get('indicador.columns_title.valor_expo')
+		];
+
+		$pieChart = Helpers::jsonChart(
+			$arrData,
+			'pais',
+			$arrSeries,
+			PIE
+		);*/
+
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			//'pieChartData'    => $pieChart,
+			'total'           => count($arrData)
+		];
+		return $result;
+	}
+
+	public function executeTasaCrecimientoProductosNuevos($rowIndicador, $filtersConfig, $year, $period)
+	{
+		extract($rowIndicador);
+
+		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
+
+		//Trae los productos configurados como agricolas
+		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$productsAgriculture = Helpers::arrayGet($lines, 'productsAgriculture');
+
+		$productsAgriculture = implode(',', $productsAgriculture);
+
+		$this->model->setId_posicion($productsAgriculture);
+
+		//$rowField = Helpers::getPeriodColumnSql($period);
+
+		$arrRowField = ['id', 'decl.id_paisdestino', 'pais'];
+
+		//var_dump($arrRowField);
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn('valorfob DESC');
+
+		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$rsDeclaraexp['success']) {
+			return $rsDeclaraexp;
+		}
+		if ($rsDeclaraexp['total'] == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		$totalValue = 0;
+
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+			$totalValue += (float)$rowExpo['valorfob'];
+		}
+
+		$arrData           = [];
+
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+				
+			$rate = round( ($rowExpo['valorfob'] / $totalValue ) * 100 , 2 );
+			$arrData[] = [
+				'id'            => $keyExpo,
+				'pais'          => $rowExpo['pais'],
+				'valor_expo'    => $rowExpo['valorfob'],
+				'participacion' => $rate
+			];
+		}
+
+
+
+		$arrSeries = [
+			'valor_expo' => Lang::get('indicador.columns_title.valor_expo')
+		];
+
+		$pieChart = Helpers::jsonChart(
+			$arrData,
+			'pais',
+			$arrSeries,
+			PIE
+		);
+
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			'pieChartData'    => $pieChart,
+			'total'           => count($arrData)
+		];
+		return $result;
+	}
+
+	public function executeIHH($rowIndicador, $filtersConfig, $year, $period)
+	{
+		extract($rowIndicador);
+
+		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+		$trade            = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
+		
+		if ($trade == 'impo') {
+			$this->model      = $this->getModelImpo();
+			$this->modelAdo   = $this->getModelImpoAdo();
+		} else {
+			$this->model      = $this->getModelExpo();
+			$this->modelAdo   = $this->getModelExpoAdo();
+		}
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues($arrFiltersValues, $filtersConfig, $trade, 'ini');
+
+		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$productsAgriculture = Helpers::arrayGet($lines, 'productsAgriculture');
+
+		$productsAgriculture = implode(',', $productsAgriculture);
+
+		$this->model->setId_posicion($productsAgriculture);
+
+		$arrRowField = ['id', 'decl.id_capitulo'];
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn('valorfob DESC');
+
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$rsDeclaraciones['success']) {
+			return $rsDeclaraciones;
+		}
+		if ($rsDeclaraciones['total'] == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		//var_dump($rsDeclaraciones['data']);
+
+		return $rsDeclaraciones;
 	}
 }	
 

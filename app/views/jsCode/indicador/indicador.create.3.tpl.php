@@ -1,7 +1,7 @@
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
-	var module = '<?= $module; ?>';
+	var module = '<?= $module.'_'.$indicador_id; ?>';
 
 	var configStorePosicion = {
 		url:'posicion/list'

@@ -121,39 +121,14 @@ i.fa        { text-decoration:none !important;}
 .transparent    { background:transparent !important;}
 .color-white    { color:#fff !important;    }
 
-.bootstrap-styles .styleColor {
-  color:#9db667 !important;
-}
+.bootstrap-styles .styleColor {color:#9db667 !important; }
+.bootstrap-styles div{font-family:Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#3e3f3a;background-color:#fff}
+div.countTo strong {display: block; font-size: 50px; line-height: 50px; font-weight: 600; }
+div.countTo label {font-weight: 300; font-size: 22px; line-height: 22px; }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 80px;
-}
-.form-group.last {
-  margin-bottom:0px;
-}
+.footer {position: absolute; bottom: 0; width: 100%; height: 80px; } 
+.form-group.last {margin-bottom:0px; }
 
-#loading-mask {
-     position: absolute;
-     top: 0;
-     left: 0;
-     width: 100%;
-     height: 100%;
-     background: #999999;
-     z-index: 1;
-}
-#loading {
-     position: absolute;
-     top: 40%;
-     left: 45%;
-     z-index: 2;
-}
-#loading SPAN {
-  background: url('../img/progress.gif') no-repeat top left;
-  display: block;
-  color:#666;
-  padding-left:20px;
-  padding:5px 0 20px 40px;
-}
+#loading-mask {position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #999999; z-index: 1; }
+#loading {position: absolute; top: 40%; left: 45%; z-index: 2; }
+#loading span {background: url('../img/progress.gif') no-repeat top left; display: block; color:#666; padding-left:20px; padding:5px 0 20px 40px; }

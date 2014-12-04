@@ -20,10 +20,11 @@ $htmlDescription .= '</ol>';
 	var module = '<?= $module.'_'.$indicador_id; ?>';
 	var panelHeight = Math.floor(Ext.getCmp('tabpanel').getInnerHeight() - 260);
 
-	var storeBalanza = new Ext.data.JsonStore({
+	var storeIndicador = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
-		,id:module+'storeBalanza'
+		,id:module+'storeIndicador'
+		,autoDestroy:true
 		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
@@ -32,58 +33,53 @@ $htmlDescription .= '</ol>';
 		}
 		,fields:[
 			{name:'id', type:'float'},
-			{name:'periodo', type:'string'},
-			{name:'valor_impo', type:'float'},
+			{name:'pais', type:'string'},
 			{name:'valor_expo', type:'float'},
-			{name:'valor_balanza', type:'float'}
+			{name:'participacion', type:'float'}
 		]
 	});
 
-	storeBalanza.on('beforeload', function(){
-		var year   = Ext.getCmp(module + 'comboYear').getValue();
-		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		if (!year || !period) {
-			return false;
-		};
-		this.setBaseParam('year', year);
-		this.setBaseParam('period', period);
+
+	storeIndicador.on('beforeload', function(){
 		Ext.ux.bodyMask.show();
 	});
-	
-	storeBalanza.on('load', function(store){
-		FusionCharts.setCurrentRenderer('javascript');
-		
-		disposeCharts();
-		
-		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.columnChartData);
-		chart.render(module + 'ColumnChart');
 
-		var chart = new FusionCharts('<?= AREA; ?>', module + 'AreaChartId', '100%', '100%', '0', '1');
+	storeIndicador.on('load', function(store){
+
+		var height = (store.reader.jsonData.total * 23);
+
+		var el = Ext.Element.get(module + 'total_records');
+
+		el.update(store.reader.jsonData.total);
+
+		//gridIndicador.setHeight(height);
+		/*FusionCharts.setCurrentRenderer('javascript');
+
+		disposeCharts();
+
+		var chart = new FusionCharts('<?= PIE; ?>', module + 'PieChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.areaChartData);
-		chart.render(module + 'AreaChart');
+		chart.setJSONData(store.reader.jsonData.pieChartData);
+		chart.render(module + 'PieChart');*/
 		Ext.ux.bodyMask.hide();
 	});
-	var colModelBalanza = new Ext.grid.ColumnModel({
+	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>', dataIndex:'pais', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'valor_balanza' ,'renderer':numberFormat}
+			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':numberFormat},
 		]
 		,defaults: {
 			sortable: true
 			,align: 'right'
 		}
 	});
-	
-	var gridBalanza = new Ext.grid.GridPanel({
+
+	var gridIndicador = new Ext.grid.GridPanel({
 		border:true
 		,monitorResize:true
-		,store:storeBalanza
-		,colModel:colModelBalanza
+		,store:storeIndicador
+		,colModel:colModelIndicador
 		,stateful:true
 		,columnLines:true
 		,stripeRows:true
@@ -91,26 +87,23 @@ $htmlDescription .= '</ol>';
 			forceFit:true
 		}
 		,enableColumnMove:false
-		,id:module+'gridBalanza'			
+		,id:module+'gridIndicador'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		//,bbar:new Ext.PagingToolbar({pageSize:1000, store:storeBalanza, displayInfo:true})
+		//,bbar:new Ext.PagingToolbar({pageSize:1000, store:storeIndicador, displayInfo:true})
 		,iconCls:'silk-grid'
 		//,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:300
+		,height:panelHeight
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
-	Ext.state.Manager.clear(gridBalanza.getItemId());
-	
-	var arrYears = <?= json_encode($yearsAvailable); ?>;
-	var defaultYear = <?= end($yearsAvailable); ?>;
-	
+	Ext.state.Manager.clear(gridIndicador.getItemId());
+
 	var arrPeriods = <?= json_encode($periods); ?>;
 
 	/******************************************************************************************************************************************************************************/
-	
+
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
 		,id:module + 'excuteIndicadorContainer'
@@ -137,6 +130,17 @@ $htmlDescription .= '</ol>';
 			'</div>'
 		},{
 			style:{padding:'0px'}
+			,html: '<div class="bootstrap-styles">' +
+				'<div class="row text-center countTo">' +
+					'<div class="col-md-4 col-md-offset-4">' +
+						'<label>' + Ext.ux.lang.reports.total_records + '</label>' +
+						'<strong id="' + module + 'total_records">0</strong>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
+
+		/*},{
+			style:{padding:'0px'}
 			,border:true
 			,html: ''
 			,tbar:[{
@@ -146,78 +150,51 @@ $htmlDescription .= '</ol>';
 				xtype: 'combo'
 				,store: arrPeriods
 				,id: module + 'comboPeriod'
-			    ,typeAhead: true
-			    ,forceSelection: true
-			    ,triggerAction: 'all'
-			    ,selectOnFocus:true
-			    ,value: 12
-			    ,width: 100
-			    ,listeners:{
-	    			select: {
-	    				fn: function(combo,reg){
-	    					Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
-	    				}
-	    			}
-	    		}
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: 12
+				,width: 100
 			},'-',{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectYear + ': '
-			},{
-				xtype: 'combo'
-				,store: arrYears
-				,id: module + 'comboYear'
-			    ,typeAhead: true
-			    ,forceSelection: true
-			    ,triggerAction: 'all'
-			    ,selectOnFocus:true
-			    ,value: defaultYear
-			    ,disabled: true
-			    ,width: 100
-	        },'-',{
-	        	text: Ext.ux.lang.buttons.generate
-	        	,iconCls: 'icon-refresh'
-	        	,handler: function () {
-	        		storeBalanza.load();
-	        	}
+				text: Ext.ux.lang.buttons.generate
+				,iconCls: 'icon-refresh'
+				,handler: function () {
+					storeIndicador.load();
+				}
 			}]
 		},{
 			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
+			,html:'<div id="' + module + 'PieChart"></div>'
 			,items:[{
 				xtype:'panel'
-				,id: module + 'ColumnChart'
+				,id: module + 'PieChart'
 				,plain:true
-			}]
-		},{
-			height:430
-			,html:'<div id="' + module + 'AreaChart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'AreaChart'
-				,plain:true
-			}]
+			}]*/
 		},{
 			defaults:{anchor:'100%'}
-			,items:[gridBalanza]
+			,items:[gridIndicador]
 		}]
 		,listeners:{
 			beforedestroy: {
 				fn: function(p){
-					disposeCharts();
+					//disposeCharts();
 				}
 			}
 		}
 	});
 
-	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p){
+	/*Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
+		//console.log('deactivate');
 		disposeCharts();
-	});
+	}, this);
 
-	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
-		storeBalanza.load();
-	});
-	
-	storeBalanza.load();
+	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
+		//console.log(p, storeIndicador);
+		storeIndicador.load();
+	}, this);*/
+
+	storeIndicador.load();
 
 	return indicadorContainer;
 
@@ -236,12 +213,9 @@ $htmlDescription .= '</ol>';
 		}
 	}
 	function disposeCharts () {
-		if(FusionCharts(module + 'AreaChartId')){
-			FusionCharts(module + 'AreaChartId').dispose();
-		}
-		if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
-		}		
+		/*if(FusionCharts(module + 'PieChartId')){
+			FusionCharts(module + 'PieChartId').dispose();
+		}*/
 	}
 
 	/*********************************************** End functions***********************************************/

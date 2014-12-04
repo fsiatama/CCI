@@ -40,7 +40,8 @@
 	
 	gridTipo_indicadorExpander = new Ext.grid.RowExpander({
 		tpl: new Ext.Template(
-			 '<br><p style="margin:0 0 4px 8px"><b><?= Lang::get('tipo_indicador.columns_title.tipo_indicador_calculo'); ?>:</b> {tipo_indicador_calculo}</p>'
+			 '<br><p style="margin:0 0 4px 8px"><b><?= Lang::get('tipo_indicador.columns_title.tipo_indicador_nombre'); ?>:</b> {tipo_indicador_nombre}</p>'
+			 ,'<p style="margin:0 0 4px 8px"><b><?= Lang::get('tipo_indicador.columns_title.tipo_indicador_definicion'); ?>:</b> {tipo_indicador_calculo}</p>'
 			 ,'<p style="margin:0 0 4px 8px"><b><?= Lang::get('tipo_indicador.columns_title.tipo_indicador_definicion'); ?>:</b> {tipo_indicador_definicion}</p>'
 		)
 	});

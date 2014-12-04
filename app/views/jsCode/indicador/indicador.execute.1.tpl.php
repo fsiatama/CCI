@@ -17,7 +17,7 @@ $htmlDescription .= '</ol>';
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
-	var module = '<?= $module; ?>';
+	var module = '<?= $module.'_'.$indicador_id; ?>';
 	var panelHeight = Math.floor(Ext.getCmp('tabpanel').getInnerHeight() - 260);
 
 	var storeBalanza = new Ext.data.JsonStore({

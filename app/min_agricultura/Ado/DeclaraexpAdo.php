@@ -38,13 +38,14 @@ class DeclaraexpAdo extends BaseAdo {
 
 	protected function setTable()
 	{
-		$this->table = 'declaraexp AS decl, posicion';
+		$this->table = 'declaraexp AS decl, posicion, pais';
 	}
 
 	protected function setJoins()
 	{
 		$this->arrJoins = [
-			'decl.id_posicion = posicion.id_posicion'
+			'decl.id_posicion = posicion.id_posicion',
+			'decl.id_paisdestino = pais.id_pais',
 		];
 	}
 
@@ -72,19 +73,19 @@ class DeclaraexpAdo extends BaseAdo {
 		$peso_neto = $declaraexp->getPeso_neto();
 
 		$this->data = compact(
-			'decl.id',
-			'decl.anio',
-			'decl.periodo',
-			'decl.id_empresa',
-			'decl.id_paisdestino',
-			'decl.id_capitulo',
-			'decl.id_partida',
-			'decl.id_subpartida',
-			'decl.id_posicion',
-			'decl.id_ciiu',
-			'decl.valorfob',
-			'decl.valorcif',
-			'decl.peso_neto'
+			'id',
+			'anio',
+			'periodo',
+			'id_empresa',
+			'id_paisdestino',
+			'id_capitulo',
+			'id_partida',
+			'id_subpartida',
+			'id_posicion',
+			'id_ciiu',
+			'valorfob',
+			'valorcif',
+			'peso_neto'
 		);
 	}
 
@@ -174,7 +175,7 @@ class DeclaraexpAdo extends BaseAdo {
 		$sql .= ' ORDER BY ';
 		$sql .= (empty($this->pivotSortColumn)) ? 'id' : $this->pivotSortColumn ;
 
-		//var_dump($sql);
+		//echo $sql;
 
 		return $sql;
 	}
@@ -212,20 +213,20 @@ class DeclaraexpAdo extends BaseAdo {
 		foreach($this->data as $key => $data){
 			if ($data <> ''){
 				if ($operator == '=') {
-					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
+					$filter[] = 'decl.' . $key . ' ' . $operator . ' "' . $data . '"';
 				}
 				elseif ($operator == 'IN') {
 					if ($key == 'id_capitulo' || $key == 'id_partida' || $key == 'id_subpartida' || $key == 'id_posicion') {
 						//debe colocarle comillas a cada valor dentro del IN
 						$arr              = explode(',', $data);
-						$filterPosicion[] = $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
+						$filterPosicion[] = 'decl.' . $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
 					} else {
 						$arr      = explode(',', $data);
-						$filter[] = $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
+						$filter[] = 'decl.' . $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
 					}
 				}
 				else {
-					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+					$filter[] = 'decl.' . $key . ' ' . $operator . ' "%' . $data . '%"';
 					$joinOperator = ' OR ';
 				}
 			}

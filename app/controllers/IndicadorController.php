@@ -81,8 +81,9 @@ class IndicadorController {
 
 			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
+			$trade = Helpers::arrayGet($lines, 'trade');
 			
-			$params = array_merge($postParams, $row, compact('action', 'yearsAvailable'));
+			$params = array_merge($postParams, $row, compact('action', 'yearsAvailable', 'trade'));
 
 			$tipo_indicador = $row['tipo_indicador_id'];
 

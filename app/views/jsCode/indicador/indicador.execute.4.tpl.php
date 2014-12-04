@@ -49,7 +49,6 @@ $htmlDescription .= '</ol>';
 
 		var height = (store.reader.jsonData.total * 30);
 
-		console.log(height);
 		gridBalanza.setHeight(height);
 		FusionCharts.setCurrentRenderer('javascript');
 

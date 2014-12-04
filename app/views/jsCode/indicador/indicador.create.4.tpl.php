@@ -1,7 +1,7 @@
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
-	var module = '<?= $module; ?>';
+	var module = '<?= $module.'_'.$indicador_id; ?>';
 
 	var Combo = Ext.extend(Ext.ux.form.SuperBoxSelect, {
 		xtype:'superboxselect'
@@ -115,7 +115,6 @@
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
 				{name:'id_pais', mapping:'id_pais', type:'string'},
 				{name:'anio_ini', mapping:'anio_ini', type:'float'},
-				{name:'anio_fin', mapping:'anio_fin', type:'float'},
 				{name:'desde_ini', mapping:'desde_ini', type:'float'},
 				{name:'hasta_ini', mapping:'hasta_ini', type:'float'},
 			]

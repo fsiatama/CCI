@@ -31,6 +31,8 @@ Ext.ux.lang.reports = {
 	,initialRange: 'Rango Inicial'
 	,finalRange: 'Rango Final'
 	,period: 'Period'
+	,trade: 'Intercambio'
+	,total_records: 'Total de Registros'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');
