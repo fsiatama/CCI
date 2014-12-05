@@ -13,6 +13,7 @@ return [
 		'valor_expo'       => 'Expo FOB (US$)',
 		'valor_balanza'    => 'Balanza FOB (US$)',
 		'pais_destino'     => 'País Destino',
+		'IHH'              => 'IHH',
     ],
     'reports' => [
 		'annual'   => 'Anual',

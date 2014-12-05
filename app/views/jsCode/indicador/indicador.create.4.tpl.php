@@ -139,7 +139,7 @@
 					xtype:'textfield'
 					,name:'indicador_nombre'
 					,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_nombre'); ?>'
-					,id:module+'correlativa_decreto'
+					,id:module+'indicador_nombre'
 					,allowBlank:false
 				}]
 			}]

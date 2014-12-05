@@ -25,17 +25,15 @@ $htmlDescription .= '</ol>';
 		,root:'data'
 		,id:module+'storeIndicador'
 		,autoDestroy:true
-		,sortInfo:{field:'valorfob',direction:'DESC'}
+		,sortInfo:{field:'periodo',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
 			,indicador_id: '<?= $indicador_id; ?>'
 		}
 		,fields:[
-			{name:'id', type:'float'},
-			{name:'id_capitulo', type:'string'},
-			{name:'valorfob', type:'float'},
-			{name:'participacion', type:'float'}
+			{name:'periodo', type:'string'},
+			{name:'IHH', type:'float'}
 		]
 	});
 
@@ -46,28 +44,21 @@ $htmlDescription .= '</ol>';
 
 	storeIndicador.on('load', function(store){
 
-		var height = (store.reader.jsonData.total * 23);
-
-		var el = Ext.Element.get(module + 'total_records');
-
-		el.update(store.reader.jsonData.total);
-
-		//gridIndicador.setHeight(height);
-		/*FusionCharts.setCurrentRenderer('javascript');
-
+		FusionCharts.setCurrentRenderer('javascript');
+		
 		disposeCharts();
 
-		var chart = new FusionCharts('<?= PIE; ?>', module + 'PieChartId', '100%', '100%', '0', '1');
+		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.pieChartData);
-		chart.render(module + 'PieChart');*/
+		chart.setJSONData(store.reader.jsonData.columnChartData);
+		chart.render(module + 'ColumnChart');
 		Ext.ux.bodyMask.hide();
+
 	});
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.capitulo'); ?>', dataIndex:'id_capitulo', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valorfob'); ?>', dataIndex:'valorfob' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
+			{header:'<?= Lang::get('indicador.columns_title.IHH'); ?>', dataIndex:'IHH' ,'renderer':numberFormat},
 		]
 		,defaults: {
 			sortable: true
@@ -129,15 +120,13 @@ $htmlDescription .= '</ol>';
 				'</div>' +
 			'</div>'
 		},{
-			style:{padding:'0px'}
-			,html: '<div class="bootstrap-styles">' +
-				'<div class="row text-center countTo">' +
-					'<div class="col-md-4 col-md-offset-4">' +
-						'<label>' + Ext.ux.lang.reports.total_records + '</label>' +
-						'<strong id="' + module + 'total_records">0</strong>' +
-					'</div>' +
-				'</div>' +
-			'</div>'
+			height:430
+			,html:'<div id="' + module + 'ColumnChart"></div>'
+			,items:[{
+				xtype:'panel'
+				,id: module + 'ColumnChart'
+				,plain:true
+			}]
 
 		/*},{
 			style:{padding:'0px'}
@@ -184,15 +173,13 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
-	/*Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
-		//console.log('deactivate');
+	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
 		disposeCharts();
 	}, this);
 
 	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
-		//console.log(p, storeIndicador);
 		storeIndicador.load();
-	}, this);*/
+	}, this);
 
 	storeIndicador.load();
 
@@ -213,9 +200,9 @@ $htmlDescription .= '</ol>';
 		}
 	}
 	function disposeCharts () {
-		/*if(FusionCharts(module + 'PieChartId')){
-			FusionCharts(module + 'PieChartId').dispose();
-		}*/
+		if(FusionCharts(module + 'ColumnChartId')){
+			FusionCharts(module + 'ColumnChartId').dispose();
+		}
 	}
 
 	/*********************************************** End functions***********************************************/

@@ -52,21 +52,7 @@
 	});
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
-	var arrMonths = [
-		[1, Date.monthNames[0]],
-		[2, Date.monthNames[1]],
-		[3, Date.monthNames[2]],
-		[4, Date.monthNames[3]],
-		[5, Date.monthNames[4]],
-		[6, Date.monthNames[5]],
-		[7, Date.monthNames[6]],
-		[8, Date.monthNames[7]],
-		[9, Date.monthNames[8]],
-		[10, Date.monthNames[9]],
-		[11, Date.monthNames[10]],
-		[12, Date.monthNames[11]]
-	];
-
+	
 	var arrTrade = <?= json_encode($trade); ?>;
 
 	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
@@ -91,7 +77,14 @@
 		,store:arrYears
 		,fieldLabel:Ext.ux.lang.reports.selectYearFrom
 	});
-	var comboDesde_ini = new simpleCombo({
+
+	var comboAnio_fin = new simpleCombo({
+		hiddenName:'anio_fin'
+		,id:module+'comboAnio_fin'
+		,store:arrYears
+		,fieldLabel:Ext.ux.lang.reports.selectYearTo
+	});
+	/*var comboDesde_ini = new simpleCombo({
 		hiddenName:'desde_ini'
 		,id:module+'comboDesde_ini'
 		,store:arrMonths
@@ -102,7 +95,7 @@
 		,id:module+'comboHasta_ini'
 		,store:arrMonths
 		,fieldLabel:Ext.ux.lang.reports.selectMonthTo
-	});
+	});*/
 
 	
 	var formIndicador = new Ext.FormPanel({
@@ -125,8 +118,7 @@
 				{name:'id_pais', mapping:'id_pais', type:'string'},
 				{name:'intercambio', mapping:'intercambio', type:'string'},
 				{name:'anio_ini', mapping:'anio_ini', type:'float'},
-				{name:'desde_ini', mapping:'desde_ini', type:'float'},
-				{name:'hasta_ini', mapping:'hasta_ini', type:'float'},
+				{name:'anio_fin', mapping:'anio_fin', type:'float'},
 			]
 		})
 		,defaults: {anchor:'97%'}
@@ -149,7 +141,7 @@
 					xtype:'textfield'
 					,name:'indicador_nombre'
 					,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_nombre'); ?>'
-					,id:module+'correlativa_decreto'
+					,id:module+'indicador_nombre'
 					,allowBlank:false
 				}]
 			}]
@@ -171,10 +163,8 @@
 				,items:[comboAnio_ini]
 			},{
 				defaults:{anchor:'100%'}
-				,items:[comboDesde_ini]
-			},{
-				defaults:{anchor:'100%'}
-				,items:[comboHasta_ini]
+				,columnWidth:.2
+				,items:[comboAnio_fin]
 			},{
 				defaults:{anchor:'100%'}
 				,items:[comboIntercambio]
@@ -185,13 +175,13 @@
 			}]
 		},{
 			xtype:'hidden'
-				,name:'indicador_tipo_indicador_id'
-				,id:module+'indicador_tipo_indicador_id'
-				,value: '<?= $tipo_indicador_id; ?>'
-			},{
-				xtype:'hidden'
-				,name:'indicador_id'
-				,id:module+'indicador_id'
+			,name:'indicador_tipo_indicador_id'
+			,id:module+'indicador_tipo_indicador_id'
+			,value: '<?= $tipo_indicador_id; ?>'
+		},{
+			xtype:'hidden'
+			,name:'indicador_id'
+			,id:module+'indicador_id'
 		}]
 		,buttons: [{
 			text:Ext.ux.lang.buttons.cancel
@@ -259,12 +249,11 @@
 			,values: arrValues
 		});
 
-		var year      = Ext.getCmp(module+'comboAnio_ini').getValue();
-		var perIni    = Ext.getCmp(module+'comboDesde_ini').getRawValue();
-		var perFin    = Ext.getCmp(module+'comboHasta_ini').getRawValue();
+		var yearIni      = Ext.getCmp(module+'comboAnio_ini').getValue();
+		var yearFin      = Ext.getCmp(module+'comboAnio_fin').getValue();
 		arrValues     = [];
 
-		arrValues.push(year + ' ' + perIni + ' - ' + perFin);
+		arrValues.push(yearIni + ' - ' + yearFin);
 		
 		arrDescription.push({
 			label: Ext.ux.lang.reports.period
