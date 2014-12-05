@@ -102,18 +102,18 @@ class Declaraexp {
 					$arrPosicion[] = $value;
 			}
 		}
-		if (!empty($arrCapitulo)) {
+		//if (!empty($arrCapitulo)) {
 			$this->setId_capitulo(implode(',', $arrCapitulo));
-		}
-		if (!empty($arrPartida)) {
+		//}
+		//if (!empty($arrPartida)) {
 			$this->setId_partida(implode(',', $arrPartida));
-		}
-		if (!empty($arrSubpartida)) {
+		//}
+		//if (!empty($arrSubpartida)) {
 			$this->setId_subpartida(implode(',', $arrSubpartida));
-		}
-		if (!empty($arrPosicion)) {
+		//}
+		//if (!empty($arrPosicion)) {
 			$this->id_posicion = implode(',', $arrPosicion);
-		}
+		//}
 	}
 
 	public function getId_posicion(){

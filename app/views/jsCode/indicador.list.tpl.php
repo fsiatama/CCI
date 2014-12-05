@@ -284,9 +284,12 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 
 		var remove = lp.removeAll(true);
 		var panelCfg = {
-			xtype:'panel'
-			,border:false
-			,layout:'fit'
+			autoScroll: false
+			,layout: 'fit'
+			,autoShow: true
+			,frame:false
+			,border: false
+			,autoDestroy:true
 			,plugins: new Ext.ux.Plugin.RemoteComponent({
 				url:url
 				,params:{

@@ -34,6 +34,18 @@ class DeclaracionesRepo extends BaseRepo {
 		return new DeclaraexpAdo;
 	}
 
+    /**
+     * setFiltersValues
+     * 
+     * @param array  $arrFiltersValues Array con los filtros configurados por el usuario.
+     * @param array  $filtersConfig    Configuracion de los filtros en app/lib/indicador.config.php
+     * @param string $trade            impo o expo.
+     * @param string $range            Puede contener ini o fin o vacio, sirve para asignar un rango de meses cuando el tipo_indicador lo necesite.
+     *
+     * @access public
+     *
+     * @return mixed Value.
+     */
 	public function setFiltersValues($arrFiltersValues, $filtersConfig, $trade, $range)
 	{
 
@@ -603,14 +615,135 @@ class DeclaracionesRepo extends BaseRepo {
 	{
 		extract($rowIndicador);
 
+		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+		
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
+		
+		//Trae los productos configurados como agricolas
+		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$productsAgriculture = Helpers::arrayGet($lines, 'productsAgriculture');
+		
+		$productsAgriculture = implode(',', $productsAgriculture);
+		
+		$this->model->setId_posicion($productsAgriculture);
+		
+		//$rowField = Helpers::getPeriodColumnSql($period);
+		
+		$arrRowField = ['id', 'decl.id_paisdestino', 'pais'];
+		
+		//var_dump($arrRowField);
+		
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn('valorfob DESC');
+		
+		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
+		
+		if (!$rsDeclaraexp['success']) {
+			return $rsDeclaraexp;
+		}
+		if ($rsDeclaraexp['total'] == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+		
+		$totalValue = 0;
+		
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+			$totalValue += (float)$rowExpo['valorfob'];
+		}
+		
+		$arrData           = [];
+		
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+				
+			$rate = round( ($rowExpo['valorfob'] / $totalValue ) * 100 , 2 );
+			$arrData[] = [
+				'id'            => $keyExpo,
+				'pais'          => $rowExpo['pais'],
+				'valor_expo'    => $rowExpo['valorfob'],
+				'participacion' => $rate
+			];
+		}
+		
+		/*$arrSeries = [
+			'valor_expo' => Lang::get('indicador.columns_title.valor_expo')
+		];
+		
+		$pieChart = Helpers::jsonChart(
+			$arrData,
+			'pais',
+			$arrSeries,
+			PIE
+		);*/
+		
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			//'pieChartData'    => $pieChart,
+			'total'           => count($arrData)
+		];
+		return $result;
 		
 	}
 
-	public function executeTasaCrecimientoProductosNuevos($rowIndicador, $filtersConfig, $year, $period)
+	public function executeParticipacionExpoSectorAgricola($rowIndicador, $filtersConfig, $year, $period)
 	{
 		extract($rowIndicador);
 
-		
+		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+
+		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
+
+		$lines                 = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$energeticMiningSector = Helpers::arrayGet($lines, 'energeticMiningSector');
+		$energeticMiningSector = implode(',', $energeticMiningSector);
+		$productsAgriculture   = Helpers::arrayGet($lines, 'productsAgriculture');
+		$productsAgriculture   = implode(',', $productsAgriculture);
+
+		$this->model->setId_posicion($energeticMiningSector);
+
+		$rowField = Helpers::getPeriodColumnSql($period);
+		$row = 'periodo AS id';
+
+		$arrRowField   = [$row, $rowField];
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		//busca los datos del sector energetico
+		$result = $this->modelAdo->pivotSearch($this->model);
+
+		if ($result['success']) {
+			$arrDataEnergeticMiningSector = $result['data'];
+
+			//busca los datos del sector agricola
+			$this->model->setId_posicion($productsAgriculture);
+			$result = $this->modelAdo->pivotSearch($this->model);
+
+			if ($result['success']) {
+				$arrDataProductsAgriculture = $result['data'];
+
+				//busca el total de las exportaciones 
+				$this->model->setId_posicion(NULL);
+				$result = $this->modelAdo->pivotSearch($this->model);
+				if ($result['success']) {
+					$arrDataTotal = $result['data'];
+				}
+			}
+		}
+
+		return $result;
 	}
 
 	public function executeIHH($rowIndicador, $filtersConfig, $year, $period)
@@ -681,6 +814,9 @@ class DeclaracionesRepo extends BaseRepo {
 		foreach ($rsDeclaraciones['data'] as $row) {
 			foreach ($row as $key => $value) {
 				if (in_array($key, $arrSeries)) {
+
+					//var_dump($key, $value, $arrTotals[$key], ( $value / $arrTotals[$key] ),  (( $value / $arrTotals[$key] ) * ( $value / $arrTotals[$key] )) );
+
 					$IHH = ( $value / $arrTotals[$key] );
 					$IHH = pow($IHH, 2);
 					if (empty($arrIHH[$key])) {

@@ -91,6 +91,31 @@
 		,tpl: resultTplPais
 		,displayFieldTpl:'({id_pais}) - {pais}'
 	});
+
+	var arrYears = <?= json_encode($yearsAvailable); ?>;
+
+	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
+		typeAhead:false
+		,forceSelection:true
+		,selectOnFocus:true
+		,allowBlank:false
+		,triggerAction:'all'
+		,flex:true
+	});
+
+	var comboAnio_ini = new simpleCombo({
+		hiddenName:'anio_ini'
+		,id:module+'comboAnio_ini'
+		,store:arrYears
+		,fieldLabel:Ext.ux.lang.reports.selectYearFrom
+	});
+
+	var comboAnio_fin = new simpleCombo({
+		hiddenName:'anio_fin'
+		,id:module+'comboAnio_fin'
+		,store:arrYears
+		,fieldLabel:Ext.ux.lang.reports.selectYearTo
+	});
 	
 	var formIndicador = new Ext.FormPanel({
 		baseCls:'x-plain'
@@ -110,7 +135,9 @@
 				{name:'indicador_tipo_indicador_id', mapping:'indicador_tipo_indicador_id', type:'float'},
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
 				{name:'id_posicion', mapping:'id_posicion', type:'string'},
-				{name:'id_pais', mapping:'id_pais', type:'string'}
+				{name:'id_pais', mapping:'id_pais', type:'string'},
+				{name:'anio_ini', mapping:'anio_ini', type:'float'},
+				{name:'anio_fin', mapping:'anio_fin', type:'float'}
 			]
 		})
 		,defaults: {anchor:'97%'}
@@ -136,6 +163,27 @@
 					,id:module+'indicador_nombre'
 					,allowBlank:false
 				}]
+			}]
+		},{
+			xtype:'fieldset'
+			,title:Ext.ux.lang.reports.range
+			,layout:'column'
+			,defaults:{
+				columnWidth:.4
+				,layout:'form'
+				,labelAlign:'top'
+				,border:false
+				,xtype:'panel'
+				,bodyStyle:'padding:0 18px 0 0'
+			}
+			,items:[{
+				defaults:{anchor:'100%'}
+				,columnWidth:.2
+				,items:[comboAnio_ini]
+			},{
+				defaults:{anchor:'100%'}
+				,columnWidth:.2
+				,items:[comboAnio_fin]
 			}]
 		},{
 			xtype:'fieldset'
@@ -238,6 +286,17 @@
 		});
 		arrDescription.push({
 			label: label
+			,values: arrValues
+		});
+
+		var yearIni      = Ext.getCmp(module+'comboAnio_ini').getValue();
+		var yearFin      = Ext.getCmp(module+'comboAnio_fin').getValue();
+		arrValues     = [];
+
+		arrValues.push(yearIni + ' - ' + yearFin);
+		
+		arrDescription.push({
+			label: Ext.ux.lang.reports.period
 			,values: arrValues
 		});
 		return arrDescription;

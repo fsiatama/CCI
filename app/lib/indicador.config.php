@@ -14,6 +14,18 @@ return [
 				'field_impo' => 'id_posicion',
 				'required'   => true,
 				'multivalue' => true,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'yearRange'  => ['anio_fin'],
+			],[
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
 			]
 		],
 		'2' => [
@@ -109,11 +121,11 @@ return [
 				'itComplements' => true, //son complemento del filtro anio
 			]
 		],
-		'5' => [
+		'5' => [ //pendiente
 			[
 			]
 		],
-		'6' => [
+		'6' => [ //pendiente
 			[
 				'field'      => 'id_pais',
 				'field_expo' => 'id_paisdestino',
@@ -206,6 +218,33 @@ return [
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
 		],
+		'9' => [
+			[
+				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'dateRange'  => ['desde_ini', 'hasta_ini'],
+			],[
+				'field'      => 'desde_ini',
+				'field_expo' => 'periodo',
+				'field_impo' => 'periodo',
+				'required'   => true,
+				'itComplements' => true, //son complemento del filtro anio
+			],[
+				'field'      => 'hasta_ini',
+				'field_expo' => 'periodo',
+				'field_impo' => 'periodo',
+				'required'   => true,
+				'itComplements' => true, //son complemento del filtro anio
+			]
+		],
 	],
 	'executeConfig' => [
 		'1' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaRelativa'],
@@ -216,6 +255,7 @@ return [
 		'6' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'TasaCrecimientoProductosNuevos'],
 		'7' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'NumeroPaisesDestino'],
 		'8' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'IHH'],
+		'9' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ParticipacionExpoSectorAgricola'],
 	],
 	'yearsAvailable' => ['2010', '2011', '2012', '2013', '2014'],
 	'periods' => [
@@ -229,5 +269,6 @@ return [
 		['expo', Lang::get('indicador.reports.exports')]
 	],
 	'productsAgriculture' => ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '5201', '5202', '5203'],
+	'energeticMiningSector' => ['25', '26', '27', '71'],
 	'ConcentrationExportableSupply' => 80,
 ];
