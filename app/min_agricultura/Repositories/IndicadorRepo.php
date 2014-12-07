@@ -202,12 +202,12 @@ class IndicadorRepo extends BaseRepo {
      */
 	public function getFiltersValue($params)
 	{
-		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 
 		if (empty($params['indicador_tipo_indicador_id'])) {
 			return '';
 		}
 
+		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 		$arrFiltersName = Helpers::arrayGet($lines, 'filters.'.$params['indicador_tipo_indicador_id']);
 
 		$arrFiltersValue = [];
@@ -215,26 +215,33 @@ class IndicadorRepo extends BaseRepo {
 			foreach ($arrFiltersName as $filter) {
 				$fieldName = $filter['field'];
 
-				if ($filter['required'] && array_key_exists($fieldName, $params)) {
-					
-					if (is_array($params[$fieldName]) && !empty($params[$fieldName])) {
-						
-						$arrFiltersValue[] = $fieldName . ':' .implode(',', $params[$fieldName]);
+				if ($filter['required']) {
 
-					} elseif (!empty($params[$fieldName])) {
-						$arrFiltersValue[] = $fieldName . ':' .$params[$fieldName];
+					if (!array_key_exists($fieldName, $params)) {
+						//si el campo es requerido y el valor no viene dentro de los parametros
+						//retorna vacio para que genere error
+						return '';
+					}
+
+					$values = (is_array($params[$fieldName])) ? implode(',', $params[$fieldName]) : $params[$fieldName] ;
+					
+					//var_dump($fieldName, $params[$fieldName], $values);
+
+					if (!empty($values)) {
+						$arrFiltersValue[] = $fieldName . ':' .$values;
 					} else {
-						//si el parametro no es un array, o esta vacio
+						//si el campo es requerido y el valor no viene vacio
 						//retorna vacio para que genere error
 						return '';
 					}
 
 				} elseif (array_key_exists($fieldName, $params)) {
-					
-					if (is_array($params[$fieldName]) && !empty($params[$fieldName])) {
-						
-						$arrFiltersValue[] = $fieldName . ':' .implode(',', $params[$fieldName]);
-					
+
+					$values = (is_array($params[$fieldName])) ? implode(',', $params[$fieldName]) : $params[$fieldName] ;
+
+					if (!empty($values)) {
+						//si el campo es opcional y el valor no viene vacio, lo agraga a la configuracion
+						$arrFiltersValue[] = $fieldName . ':' .$values;
 					}
 				}
 			}

@@ -4,7 +4,7 @@
 * ClassName
 *
 * @author   Fabian Siatama
-* 
+*
 * Se definen varias utilidades comunes a toda la aplicacion
 */
 class Helpers
@@ -13,7 +13,7 @@ class Helpers
 	{
 		return date('Y-m-d H:i:s');
 	}
-	
+
 	public static function getDateNow()
 	{
 		return date('Y-m-d');
@@ -50,39 +50,39 @@ class Helpers
 	{
 		$arrFilters = explode('||', $value);
 		$arrFields  = [];
-	    
-	    foreach($arrFilters as $key => $filter) {
-	        $field = explode(':', $filter);
-	        
-	        $arrFields[$field[0]] = $field[1];
-	    }
-	    
-	    return $arrFields;
+
+		foreach($arrFilters as $key => $filter) {
+			$field = explode(':', $filter);
+
+			$arrFields[$field[0]] = $field[1];
+		}
+
+		return $arrFields;
 	}
 
-    /**
-     * jsonChart
-     * 
-     * @param mixed $arr_data        array con los datos.
-     * @param mixed $eje_x           Description.
-     * @param mixed $filas           Description.
-     * @param mixed $columnas        Description.
-     * @param mixed $typeChart		 Description.
-     * @param mixed $serie_adicional Description.
-     *
-     * @access public
-     * @static
-     *
-     * @return mixed Value.
-     */
+	/**
+	 * jsonChart
+	 *
+	 * @param mixed $arr_data        array con los datos.
+	 * @param mixed $eje_x           Description.
+	 * @param mixed $filas           Description.
+	 * @param mixed $columnas        Description.
+	 * @param mixed $typeChart		 Description.
+	 * @param mixed $serie_adicional Description.
+	 *
+	 * @access public
+	 * @static
+	 *
+	 * @return mixed Value.
+	 */
 	public static function jsonChart($arr_data, $eje_x, $series, $typeChart, $serie_adicional = false)
 	{
 
 		$arrCategories = array();
 		$rowData       = array();
-		
+
 		$arr_cols      = array();
-		
+
 		$arr_chart          = [];
 
 		$arr_chart['chart'] = [
@@ -110,17 +110,17 @@ class Helpers
 			$arr_chart['chart']['showlabels']    = '0';
 			$arr_chart['chart']['showlegend']    = '1';
 		}
-		
+
 		foreach ($arr_data as $row) {
 
 			$seriesname = '';
 
 			foreach ($row as $key => $value) {
-				
+
 				$label = $row[$eje_x];
 
 				if ($key == $eje_x) {
-					
+
 					$arrCategories['category'][] = ['label' => $value];
 
 				} elseif (array_key_exists($key, $series)) {
@@ -137,11 +137,11 @@ class Helpers
 
 				}
 			}
-			
+
 		}
 
 		$arr_chart['categories'] = $arrCategories;
-		
+
 		foreach ($rowData as $key => $value) {
 			$arr_chart['dataset'][] = [
 				'seriesname' => $key,
@@ -203,15 +203,15 @@ class Helpers
 			$arr_tmp['data'] = [];
 
 			$seriesname = '';
-			
+
 			foreach ($data as $key => $valor) {
-				
+
 				$nombre_columna = $key;
-				
+
 				if ($origCampo) {
 					$nombre_columna = $origCampo['nombre'];
 				}
-				
+
 				$tooltext = $data[$eje_x];
 				if ($key == $eje_x) {
 					$seriesname = $valor;
@@ -219,7 +219,7 @@ class Helpers
 				} else {
 					//var_dump($key, $filas);
 					if (!in_array($key, $filas)) {
-						
+
 						$arr_cols[$key]                      = $key;
 						$arr_tmp['data'][]                   = ['value' => $valor, 'tooltext' => $tooltext, 'label' => $nombre_columna];
 						$arr_tmp2['data'][$nombre_columna][] = ['value' => $valor, 'tooltext' => $valor, 'label' => $tooltext];
@@ -232,17 +232,17 @@ class Helpers
 		//var_dump($arr_cols);
 
 		foreach ($arr_cols as $key => $data) {
-			
+
 			$arr_tmp['categorias']['category'][] = [ 'label' => $data ];
 
 		}
-		
+
 		if((($typeChart == LINEAL || $typeChart == AREA) && count($arr_cols) <= 2) || $typeChart == PIE ){
-			
+
 			$arr_chart['categories'] = array_merge( $arr_tmp2['categorias'], ['font' => 'Arial','fontsize' => '8', 'fontcolor' => '000000'] );
-			
+
 			$arr_chart['dataset'] = [];
-			
+
 			foreach ($arr_tmp2['data'] as $key => $data) {
 				$arr_chart['dataset'][] = ['seriesname'=>$key, 'data'=>$data];
 			}
@@ -252,8 +252,8 @@ class Helpers
 		if ($serie_adicional && is_array($serie_adicional)) {
 			$arr_chart['dataset'][] = $serie_adicional;
 		}
-		
-		
+
+
 
 		//print_r($arr_chart);
 		return $arr_chart;
@@ -265,7 +265,7 @@ class Helpers
 		switch ($period) {
 			case 6:
 				$column = '
-					(CASE 
+					(CASE
 					   WHEN 0 < periodo AND periodo <= 6 THEN "'.Lang::get('indicador.reports.semester').' 1"
 					   WHEN 6 < periodo THEN "'.Lang::get('indicador.reports.semester').' 2"
 					 END
@@ -274,7 +274,7 @@ class Helpers
 			break;
 			case 3:
 				$column = '
-					(CASE 
+					(CASE
 					   WHEN 0 < periodo AND periodo <= 3 THEN "'.Lang::get('indicador.reports.quarter').' 1"
 					   WHEN 3 < periodo AND periodo <= 6 THEN "'.Lang::get('indicador.reports.quarter').' 2"
 					   WHEN 6 < periodo AND periodo <= 9 THEN "'.Lang::get('indicador.reports.quarter').' 3"
@@ -285,7 +285,7 @@ class Helpers
 			break;
 			case 1:
 				$column = '
-					(CASE 
+					(CASE
 					   WHEN 1 = periodo THEN "'.Lang::get('indicador.months.1').'"
 					   WHEN 2 = periodo THEN "'.Lang::get('indicador.months.2').'"
 					   WHEN 3 = periodo THEN "'.Lang::get('indicador.months.3').'"
@@ -360,5 +360,17 @@ class Helpers
 		}
 		return $periodRange;
 	}
-		
+
+	public static function findKeyInArrayMulti($array, $key, $value)
+	{
+		foreach ($array as $subarray){
+
+			if (isset($subarray[$key]) && $subarray[$key] == $value) {
+				return $subarray;
+			}
+		}
+
+		return false;
+	}
+
 }

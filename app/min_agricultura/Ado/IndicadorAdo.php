@@ -111,8 +111,10 @@ class IndicadorAdo extends BaseAdo {
 			 indicador_parent,
 			 indicador_uinsert,
 			 indicador_finsert,
-			 indicador_fupdate
+			 indicador_fupdate,
+			 tipo_indicador_activador
 			FROM indicador
+			LEFT JOIN tipo_indicador ON indicador_tipo_indicador_id = tipo_indicador_id
 		';
 		if(!empty($filter)){
 			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';

@@ -34,7 +34,7 @@ $htmlDescription .= '</ol>';
 		,fields:[
 			{name:'id', type:'float'},
 			{name:'periodo', type:'string'},
-			{name:'valor_expo_agricola', type:'float'},
+			{name:'valor_expo_sector', type:'float'},
 			{name:'valor_expo', type:'float'},
 			{name:'participacion', type:'float'}
 		]
@@ -65,7 +65,7 @@ $htmlDescription .= '</ol>';
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo_agricola'); ?>', dataIndex:'valor_expo_agricola' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo_sector'); ?>', dataIndex:'valor_expo_sector' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':numberFormat},
 		]
