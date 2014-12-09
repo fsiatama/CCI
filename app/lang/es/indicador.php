@@ -30,6 +30,7 @@ return [
 		'initialRange' => 'Rango Inicial',
 		'finalRange'   => 'Rango Final',
 		'variation'    => 'Variación',
+		'relation'     => 'Relación',
     ],
     'months' => [
 		'1'  => 'Enero',

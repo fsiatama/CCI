@@ -81,7 +81,7 @@ $htmlDescription .= '</ol>';
 			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'firstValue' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'lastPeriod', align:'left'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'lastValue' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':numberFormat}
+			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':unsignedFormat}
 		]
 		,defaults: {
 			sortable: true
@@ -209,19 +209,6 @@ $htmlDescription .= '</ol>';
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
-	function numberFormat (value, decimals) {
-		if(!isNaN(parseFloat(value)) && isFinite(value)){
-			if(decimals){
-				return Ext.util.Format.number(value,'0,0.00');
-			}
-			else{
-				return Ext.util.Format.number(value,'0,0');
-			}
-		}
-		else{
-			return value;
-		}
-	}
 	function disposeCharts () {
 		if(FusionCharts(module + 'ColumnChartId')){
 			FusionCharts(module + 'ColumnChartId').dispose();

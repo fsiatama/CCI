@@ -158,7 +158,10 @@ class IndicadorRepo extends BaseRepo {
 
 		$result = $this->modelAdo->create($this->model);
 		if ($result['success']) {
-			return ['success' => true];
+			return [
+				'success' => true,
+				'id' => $result['insertId']
+			];
 		}
 
 		return $result;
@@ -252,6 +255,8 @@ class IndicadorRepo extends BaseRepo {
 	{
 		extract($params);
 
+		$indicador_parent = ($parentId == $module . 'root') ? 0 : $parentId ;
+
 		if ($action == 'modify') {
 			$result = $this->findPrimaryKey($indicador_id);
 
@@ -286,6 +291,7 @@ class IndicadorRepo extends BaseRepo {
 		$this->model->setIndicador_campos($indicador_campos);
 		$this->model->setIndicador_filtros($indicador_filtros);
 		$this->model->setIndicador_leaf('1');
+		$this->model->setIndicador_parent($indicador_parent);
 		
 		if ($action == 'create') {
 			$this->model->setIndicador_uinsert($_SESSION['user_id']);

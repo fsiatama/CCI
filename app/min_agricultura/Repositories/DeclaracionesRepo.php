@@ -133,6 +133,10 @@ class DeclaracionesRepo extends BaseRepo {
 		if ($period != 12 && !empty($year)) {
 			$this->model->setAnio($year);
 			$row = 'periodo AS id';
+		} else {
+			if (array_key_exists('anio_'.$range, $arrFiltersValues)) {
+				$year = $arrFiltersValues['anio_'.$range];
+			}
 		}
 
 		if ($range !== false) {
@@ -249,7 +253,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 					$arrFinal[$number] = [
 						'id'         => array_shift($range),
-						'periodo'    => $periodName,
+						'periodo'    => $year . ' ' . $periodName,
 						'valor_expo' => 0,
 						'valor_impo' => 0,
 					];
@@ -923,11 +927,12 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
 
-		$lines                 = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$lines               = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 		$productsTraditional = Helpers::arrayGet($lines, 'productsTraditional');
 		$productsTraditional = implode(',', $productsTraditional);
-		$productsAgriculture   = Helpers::arrayGet($lines, 'productsAgriculture');
-		$productsAgriculture   = implode(',', $productsAgriculture);
+		
+		$productsAgriculture = Helpers::arrayGet($lines, 'productsAgriculture');
+		$productsAgriculture = implode(',', $productsAgriculture);
 
 		$this->model->setId_posicion($productsTraditional);
 
@@ -980,7 +985,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 				$arrSeries = [
 					'valor_expo_no_tradi' => Lang::get('indicador.columns_title.valor_expo_no_tradi'),
-					'valor_expo'          => Lang::get('indicador.columns_title.valor_expo'),
+					'valor_expo'          => Lang::get('indicador.columns_title.valor_expo_agricola'),
 				];
 
 				$columnChart = Helpers::jsonChart(

@@ -41,7 +41,7 @@
 	);
 	var comboPais = new Combo({
 		id:module+'comboPais'
-		,singleMode:true
+		//,singleMode:true
 		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
 		,name:'id_pais[]'
 		,store:storePais
@@ -263,6 +263,8 @@
 			var description = getDescription();
 			params = {
 				id: '<?= $id; ?>'
+				,parentId: '<?= $parent; ?>'
+				,module: '<?= $module; ?>'
 				,description: Ext.encode(description)
 			};
 			formIndicador.getForm().submit({

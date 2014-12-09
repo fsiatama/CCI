@@ -262,6 +262,8 @@
 			var description = getDescription();
 			params = {
 				id: '<?= $id; ?>'
+				,parentId: '<?= $parent; ?>'
+				,module: '<?= $module; ?>'
 				,description: Ext.encode(description)
 			};
 			formIndicador.getForm().submit({

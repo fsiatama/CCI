@@ -22,8 +22,9 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
 	Ext.ns('Indicador');
-	var module = '<?= $module; ?>';
+	var module       = '<?= $module; ?>';
 	var indicador_id = 0;
+	var folder_id    = 0;
 
 	var root = new Ext.tree.AsyncTreeNode({
 		text: '<?= $title; ?>'
@@ -33,6 +34,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 		,expanded: true
 		,uiProvider: false
 		,iconCls: 'silk-folder'
+		,leaf: false
 	});
 
 	Indicador.tree = function() {
@@ -116,9 +118,11 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 
 					if(node.leaf){
 						indicador_id = node.id;
+						folder_id    = node.parentNode.id;
 						IndicadorTree.consultar(node.id)
 					}
 					else{
+						folder_id    = node.id;
 						initialPanel();
 					}
 				}
@@ -173,6 +177,9 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 		,cargar:function(indicador){
 			var node = this.getNodeById(indicador);
 			indicador_id = indicador;
+			if (node) {
+				folder_id = node.parentNode.id;
+			};
 			this.getRootNode().reload();
 		}
 	});
@@ -180,17 +187,20 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 	var IndicadorTree = new Indicador.tree();
 	IndicadorTree.filter = new Ext.ux.tree.TreeFilterX(IndicadorTree);
 
-	IndicadorTree.getLoader().on('load', function(loader, node, callback){
-		if(indicador_id != 0){
-			var nodo = IndicadorTree.getNodeById(indicador_id);
-			if(nodo){
-				node = nodo;
+	IndicadorTree.getLoader().on('load', function(loader, node, response){
+		var parent = IndicadorTree.getRootNode();
+		if (folder_id != '0') {
+			parent = IndicadorTree.getNodeById(folder_id);
+			if(parent){
+				node = parent;
 			}
 			else{
 				IndicadorTree.getRootNode().expand(true, false);
 			}
-		}
-		IndicadorTree.fireEvent('click', node);
+		};
+		if (parent) {
+			IndicadorTree.fireEvent('click', parent);
+		};
 	});
 
 	IndicadorTree.getLoader().on('beforeload', function(loader, node, callback){
@@ -272,15 +282,18 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 	}
 	function cfg_reporte(action){
 		Ext.getCmp('tab-' + module).purgeListeners();
+		
 		var url = 'indicador/jscodeCfg/' + action;
+		
 		var node;
+
 		if(IndicadorTree.getSelectionModel().getSelectedNode()){
 			node = IndicadorTree.getSelectionModel().getSelectedNode();
 		}
 		else{
 			node = IndicadorTree.getRootNode();
 		}
-		var parent   = (node.leaf)?node.parentNode.id:node.id;
+		var parent = (node.leaf) ? node.parentNode.id: node.id;
 
 		var lp = Ext.getCmp(module + 'lpIndicador');
 

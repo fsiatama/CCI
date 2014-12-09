@@ -38,21 +38,21 @@ Ext.onReady(function(){
 		}
 		,confirmValText:'The value should be the same'
 		,confirmValPass: function(val, field) {
-            if (field.initialField) {
+			if (field.initialField) {
 				var pwd = Ext.getCmp(field.initialField); 
 				return (val == pwd.getValue());
 			}
 			return true;
-        }
-        ,confirmValPassText: 'Passwords do not match'
+		}
+		,confirmValPassText: 'Passwords do not match'
 		,confirmValEmail: function(val, field) {
-            if (field.initialField) {
+			if (field.initialField) {
 				var pwd = Ext.getCmp(field.initialField); 
 				return (val == pwd.getValue());
 			}
 			return true;
-        }
-        ,confirmValEmailText: 'Your email addresses do not match'
+		}
+		,confirmValEmailText: 'Your email addresses do not match'
 		,password: function(val, field) {
 			if (!/[0-9]/.test(val)) {
 				return false;
@@ -258,9 +258,42 @@ Ext.onReady(function(){
 			}
 		}
 	});
+
 });
 
 Ext.ns('Ext.ux', 'Ext.ux.routes');
 Ext.ux.routes = {
 	 url_index: 'http://cci.local'
+}
+function unsignedFormat(value){
+	if(value > 0){
+		value = Ext.util.Format.number(value,'0,0.00');
+		return '<span style="color:green;">' + value + '</span>';
+	} else {
+		value = Ext.util.Format.number(value,'0,0.00');
+		return '<span style="color:red;">' + value + '</span>';
+	}
+	return value;
+}
+function rateFormat(value){
+	if(value > 0){
+		value = Ext.util.Format.number(value,'0,0.00');
+		return '<span style="color:green;">' + value + '%</span>';
+	} else {
+		value = Ext.util.Format.number(value,'0,0.00');
+		return '<span style="color:red;">' + value + '%</span>';
+	}
+	return value;
+}
+function numberFormat (value, decimals) {
+	if(!isNaN(parseFloat(value)) && isFinite(value)){
+		if(decimals){
+			return Ext.util.Format.number(value,'0,0.00');
+		} else{
+			return Ext.util.Format.number(value,'0,0');
+		}
+	}
+	else{
+		return value;
+	}
 }

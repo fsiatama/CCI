@@ -67,7 +67,7 @@ $htmlDescription .= '</ol>';
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>', dataIndex:'pais', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat},
 		]
 		,defaults: {
 			sortable: true
@@ -199,19 +199,6 @@ $htmlDescription .= '</ol>';
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
-	function numberFormat (value, decimals) {
-		if(!isNaN(parseFloat(value)) && isFinite(value)){
-			if(decimals){
-				return Ext.util.Format.number(value,'0,0.00');
-			}
-			else{
-				return Ext.util.Format.number(value,'0,0');
-			}
-		}
-		else{
-			return value;
-		}
-	}
 	function disposeCharts () {
 		/*if(FusionCharts(module + 'PieChartId')){
 			FusionCharts(module + 'PieChartId').dispose();
