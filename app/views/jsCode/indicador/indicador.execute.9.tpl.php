@@ -167,7 +167,7 @@ $htmlDescription .= '</ol>';
 		,listeners:{
 			beforedestroy: {
 				fn: function(p){
-					//disposeCharts();
+					disposeCharts();
 				}
 			}
 		}

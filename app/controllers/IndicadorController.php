@@ -17,16 +17,16 @@ class IndicadorController {
 	}
 
 	public function listAction($urlParams, $postParams)
-    {
-        $result = $this->userRepo->validateMenu('list', $postParams);
+	{
+		$result = $this->userRepo->validateMenu('list', $postParams);
 
 		if ($result['success']) {
 			$result = $this->indicadorRepo->listUserId($postParams);
 		}
 		return $result;
-    }
+	}
 
-    public function listIdAction($urlParams, $postParams)
+	public function listIdAction($urlParams, $postParams)
 	{
 		$result = $this->userRepo->validateMenu('list', $postParams);
 
@@ -38,8 +38,8 @@ class IndicadorController {
 	}
 	
 	public function jscodeAction($urlParams, $postParams)
-    {
-        $action = array_shift($urlParams);
+	{
+		$action = array_shift($urlParams);
 		$action = (empty($action)) ? 'list' : $action;
 
 		$result = $this->userRepo->validateMenu($action, $postParams);
@@ -60,11 +60,11 @@ class IndicadorController {
 		}
 
 		return $result;
-    }
+	}
 
-    public function jscodeCfgAction($urlParams, $postParams)
-    {
-        $action = array_shift($urlParams);
+	public function jscodeCfgAction($urlParams, $postParams)
+	{
+		$action = array_shift($urlParams);
 		$action = (empty($action)) ? 'list' : $action;
 
 		$result = $this->userRepo->validateMenu($action, $postParams);
@@ -95,33 +95,33 @@ class IndicadorController {
 		}
 
 		return $result;
-    }
+	}
 
-    public function jscodeExecuteAction($urlParams, $postParams)
-    {
-    	$action = array_shift($urlParams);
+	public function jscodeExecuteAction($urlParams, $postParams)
+	{
+		$action = array_shift($urlParams);
 		$action = (empty($action)) ? 'list' : $action;
 
 		$result = $this->userRepo->validateMenu($action, $postParams);
 
 		if ($result['success']) {
 			//verifica que exista el tipo de indicador y trae los datos
-    		$result = $this->tipo_indicadorRepo->validateModify($postParams);
-    		if (!$result['success']) {
-    			return $result;
-    		}
-    		$rowTipoIndicador = array_shift($result['data']);
+			$result = $this->tipo_indicadorRepo->validateModify($postParams);
+			if (!$result['success']) {
+				return $result;
+			}
+			$rowTipoIndicador = array_shift($result['data']);
 
-    		//verifica que exista el indicador y trae los datos
-    		$result = $this->indicadorRepo->validateModify($postParams);
-    		if (!$result['success']) {
-    			return $result;
-    		}
-    		$rowIndicador = array_shift($result['data']);
+			//verifica que exista el indicador y trae los datos
+			$result = $this->indicadorRepo->validateModify($postParams);
+			if (!$result['success']) {
+				return $result;
+			}
+			$rowIndicador = array_shift($result['data']);
 
-    		$postParams['is_template'] = true;
+			$postParams['is_template'] = true;
 
-    		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
 			$periods = Helpers::arrayGet($lines, 'periods');
 
@@ -129,24 +129,24 @@ class IndicadorController {
 
 			//var_dump($params);
 
-    		$tipo_indicador = $rowTipoIndicador['tipo_indicador_id'];
+			$tipo_indicador = $rowTipoIndicador['tipo_indicador_id'];
 
-    		return new View('jsCode/indicador/indicador.execute.'.$tipo_indicador, $params);
+			return new View('jsCode/indicador/indicador.execute.'.$tipo_indicador, $params);
 		}
 		return $result;
-    }
+	}
 
-    public function createAction($urlParams, $postParams)
-    {
-    	$result = $this->userRepo->validateMenu('create', $postParams);
+	public function createAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('create', $postParams);
 
-    	if ($result['success']) {
-    		$result = $this->indicadorRepo->create($postParams);
-    	}
-    	return $result;
-    }
+		if ($result['success']) {
+			$result = $this->indicadorRepo->create($postParams);
+		}
+		return $result;
+	}
 
-    public function modifyAction($urlParams, $postParams)
+	public function modifyAction($urlParams, $postParams)
 	{
 		$result = $this->userRepo->validateMenu('modify', $postParams);
 
@@ -156,14 +156,65 @@ class IndicadorController {
 		return $result;
 	}
 
-    public function executeAction($urlParams, $postParams)
-    {
-    	$result = $this->userRepo->validateMenu('list', $postParams);
-    	if ($result['success']) {
-    		$result = $this->indicadorRepo->execute($postParams);
-    	}
-    	return $result;
-    }
+	public function executeAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('list', $postParams);
+		if ($result['success']) {
+			$result = $this->indicadorRepo->execute($postParams);
+		}
+		return $result;
+	}
+
+	/**
+	 * treeAdminAction
+	 * 
+	 * @param array $urlParams  Parametrso pasados por url.
+	 * @param array $postParams parametros via POST (action, tipo_indicador_id, id de la opcion de menu, entre otros).
+	 *
+	 * @access public
+	 *
+	 * @return mixed Value.
+	 */
+	public function treeAdminAction($urlParams, $postParams)
+	{
+		$action = (empty($postParams['actionId'])) ? '' : $postParams['actionId'] ;
+		//por el funcionamiento del plugin TreeRemoteComponent
+		//por este controlador llegan todos los metodos para administrar las carpetas y los reportes
+		$result = $this->userRepo->validateMenu('list', $postParams);
+
+		if ($result['success']) {
+			switch ($action) {
+				case 'list':
+					$result = $this->indicadorRepo->listUserId($postParams);
+				break;
+				case 'insertTreeChild':
+					$result = $this->userRepo->validateMenu('create', $postParams);
+					if ($result['success']) {
+						$result = $this->indicadorRepo->createFolder($postParams);
+					}
+				break;
+				case 'moveTreeNode':
+					$result = $this->userRepo->validateMenu('modify', $postParams);
+					if ($result['success']) {
+						$result = $this->indicadorRepo->moveNode($postParams);
+					}
+				break;
+				case 'removeTreeNode':
+					$result = $this->userRepo->validateMenu('delete', $postParams);
+					if ($result['success']) {
+						$result = $this->indicadorRepo->removeNode($postParams);
+					}
+				break;
+				case 'renameTreeNode':
+					$result = $this->userRepo->validateMenu('modify', $postParams);
+					if ($result['success']) {
+						$result = $this->indicadorRepo->renameNode($postParams);
+					}
+				break;
+			}
+		}
+		return $result;
+	}
 
 }
 	

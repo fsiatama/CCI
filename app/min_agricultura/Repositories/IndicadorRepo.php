@@ -60,6 +60,9 @@ class IndicadorRepo extends BaseRepo {
 	public function listUserId($params)
 	{
 		extract($params);
+		
+		$indicador_parent = ($node == $module . 'root') ? '0' : $node ;
+
 		if (empty($tipo_indicador_id)) {
 			return [
 				'success' => false,
@@ -67,6 +70,7 @@ class IndicadorRepo extends BaseRepo {
 			];
 			return $result;
 		}
+		$this->model->setIndicador_parent($indicador_parent);
 		$this->model->setIndicador_uinsert($_SESSION['user_id']);
 		$this->model->setIndicador_tipo_indicador_id($tipo_indicador_id);
 
@@ -115,7 +119,7 @@ class IndicadorRepo extends BaseRepo {
 					'nodeID'    => $data['indicador_id'],
 					'pnodeID'   => $data['indicador_parent'],
 					'text'      => $data['indicador_nombre'],
-					'leaf'      => ( $data['indicador_leaf'] == '0' ) ? 'false' : 'true',
+					'leaf'      => ( $data['indicador_leaf'] == '0' ) ? false : true,
 					'qtip'      => $qtip,
 					'iconCls'   => $css,
 				];
@@ -125,6 +129,123 @@ class IndicadorRepo extends BaseRepo {
 		}
 		return $result;
 
+	}
+
+	public function createFolder($params)
+	{
+		extract($params);
+
+		if (
+			empty($text) ||
+			empty($tipo_indicador_id) ||
+			empty($parentId) ||
+			empty($module)
+		) {
+			return [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+		}
+
+		$indicador_parent = ($parentId == $module . 'root') ? 0 : $parentId ;
+		
+		$this->model->setIndicador_nombre($text);
+		$this->model->setIndicador_tipo_indicador_id($tipo_indicador_id);
+		$this->model->setIndicador_leaf('0');
+		$this->model->setIndicador_parent($indicador_parent);
+		$this->model->setIndicador_uinsert($_SESSION['user_id']);
+		$this->model->setIndicador_finsert(Helpers::getDateTimeNow());
+
+		$result = $this->modelAdo->create($this->model);
+		if ($result['success']) {
+			return ['success' => true];
+		}
+
+		return $result;
+	}
+	
+	public function moveNode($params)
+	{
+		extract($params);
+
+		$indicador_id = $parentId;
+
+		//verifica que exista el indicador
+		$result = $this->validateModify(compact('indicador_id'));
+		if (!$result['success']) {
+			return $result;
+		}
+
+		if (
+			empty($target) ||
+			empty($parentId)
+		) {
+			return [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+		}
+
+		$this->model->setIndicador_parent($target);
+		
+		$result = $this->modelAdo->update($this->model);
+
+		if ($result['success']) {
+			return ['success' => true];
+		}
+
+		return $result;
+	}
+
+	public function removeNode($params)
+	{
+		extract($params);
+
+		$indicador_id = $parentId;
+
+		//verifica que exista el indicador
+		$result = $this->validateModify(compact('indicador_id'));
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$result = $this->modelAdo->delete($this->model);
+
+		if ($result['success']) {
+			return ['success' => true];
+		}
+
+		return $result;
+	}
+
+	public function renameNode($params)
+	{
+		extract($params);
+
+		$indicador_id = $parentId;
+
+		//verifica que exista el indicador
+		$result = $this->validateModify(compact('indicador_id'));
+		if (!$result['success']) {
+			return $result;
+		}
+
+		if (empty($newText)) {
+			return [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+		}
+
+		$this->model->setIndicador_nombre($newText);
+		
+		$result = $this->modelAdo->update($this->model);
+
+		if ($result['success']) {
+			return ['success' => true];
+		}
+
+		return $result;
 	}
 
 	public function setData($params, $action)

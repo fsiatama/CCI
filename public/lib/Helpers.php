@@ -266,8 +266,8 @@ class Helpers
 			case 6:
 				$column = '
 					(CASE
-					   WHEN 0 < periodo AND periodo <= 6 THEN "'.Lang::get('indicador.reports.semester').' 1"
-					   WHEN 6 < periodo THEN "'.Lang::get('indicador.reports.semester').' 2"
+					   WHEN 0 < periodo AND periodo <= 6 THEN CONCAT(anio, " '.Lang::get('indicador.reports.semester').' 1")
+					   WHEN 6 < periodo THEN CONCAT(anio, " '.Lang::get('indicador.reports.semester').' 2")
 					 END
 					) AS periodo
 				';
@@ -275,10 +275,10 @@ class Helpers
 			case 3:
 				$column = '
 					(CASE
-					   WHEN 0 < periodo AND periodo <= 3 THEN "'.Lang::get('indicador.reports.quarter').' 1"
-					   WHEN 3 < periodo AND periodo <= 6 THEN "'.Lang::get('indicador.reports.quarter').' 2"
-					   WHEN 6 < periodo AND periodo <= 9 THEN "'.Lang::get('indicador.reports.quarter').' 3"
-					   WHEN 9 < periodo THEN "'.Lang::get('indicador.reports.quarter').' 4"
+					   WHEN 0 < periodo AND periodo <= 3 THEN CONCAT(anio, " '.Lang::get('indicador.reports.quarter').' 1")
+					   WHEN 3 < periodo AND periodo <= 6 THEN CONCAT(anio, " '.Lang::get('indicador.reports.quarter').' 2")
+					   WHEN 6 < periodo AND periodo <= 9 THEN CONCAT(anio, " '.Lang::get('indicador.reports.quarter').' 3")
+					   WHEN 9 < periodo THEN CONCAT(anio, " '.Lang::get('indicador.reports.quarter').' 4")
 					 END
 					) AS periodo
 				';
@@ -286,18 +286,18 @@ class Helpers
 			case 1:
 				$column = '
 					(CASE
-					   WHEN 1 = periodo THEN "'.Lang::get('indicador.months.1').'"
-					   WHEN 2 = periodo THEN "'.Lang::get('indicador.months.2').'"
-					   WHEN 3 = periodo THEN "'.Lang::get('indicador.months.3').'"
-					   WHEN 4 = periodo THEN "'.Lang::get('indicador.months.4').'"
-					   WHEN 5 = periodo THEN "'.Lang::get('indicador.months.5').'"
-					   WHEN 6 = periodo THEN "'.Lang::get('indicador.months.6').'"
-					   WHEN 7 = periodo THEN "'.Lang::get('indicador.months.7').'"
-					   WHEN 8 = periodo THEN "'.Lang::get('indicador.months.8').'"
-					   WHEN 9 = periodo THEN "'.Lang::get('indicador.months.9').'"
-					   WHEN 10 = periodo THEN "'.Lang::get('indicador.months.10').'"
-					   WHEN 11 = periodo THEN "'.Lang::get('indicador.months.11').'"
-					   WHEN 12 = periodo THEN "'.Lang::get('indicador.months.12').'"
+					   WHEN 1  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.1' ).'")
+					   WHEN 2  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.2' ).'")
+					   WHEN 3  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.3' ).'")
+					   WHEN 4  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.4' ).'")
+					   WHEN 5  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.5' ).'")
+					   WHEN 6  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.6' ).'")
+					   WHEN 7  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.7' ).'")
+					   WHEN 8  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.8' ).'")
+					   WHEN 9  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.9' ).'")
+					   WHEN 10 = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.10').'")
+					   WHEN 11 = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.11').'")
+					   WHEN 12 = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.12').'")
 					 END
 					) AS periodo
 				';

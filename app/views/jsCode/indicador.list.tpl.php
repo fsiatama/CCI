@@ -70,11 +70,12 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 			,width:	200
 			,root:root
 			,loader: {
-				url:'indicador/list'
+				url:'indicador/treeAdmin'
 				,baseParams:{
 					tipo_indicador_id:'<?= $tipo_indicador_id; ?>'
 					,id: '<?= $id; ?>'
 					,module: module
+					,actionId: 'list'
 				}
 				,baseAttrs: {
 					 iconCls: 'silk-folder'
@@ -270,6 +271,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 		}
 	}
 	function cfg_reporte(action){
+		Ext.getCmp('tab-' + module).purgeListeners();
 		var url = 'indicador/jscodeCfg/' + action;
 		var node;
 		if(IndicadorTree.getSelectionModel().getSelectedNode()){

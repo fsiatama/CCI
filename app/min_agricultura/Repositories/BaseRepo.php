@@ -50,7 +50,7 @@ abstract class BaseRepo {
 
 	public function create($params)
 	{
-		extract($params);
+		//extract($params);
 		
 		$result = $this->setData($params, 'create');
 		if (!$result['success']) {

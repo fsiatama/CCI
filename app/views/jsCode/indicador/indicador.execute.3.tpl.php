@@ -35,10 +35,12 @@ $htmlDescription .= '</ol>';
 			{name:'firstPeriod', type:'string'},
 			{name:'firstValImpo', type:'float'},
 			{name:'firstValExpo', type:'float'},
+			{name:'firstValue', type:'float'},
 			{name:'lastPeriod', type:'string'},
 			{name:'lastValImpo', type:'float'},
 			{name:'lastValExpo', type:'float'},
-			{name:'valor_balanza', type:'float'}
+			{name:'lastValue', type:'float'},
+			{name:'rateVariation', type:'float'}
 		]
 	});
 
@@ -64,8 +66,8 @@ $htmlDescription .= '</ol>';
 	});
 
 	var titles = [
-		{header: Ext.ux.lang.reports.initialRange, colspan: 3, align: 'center'},
-		{header: Ext.ux.lang.reports.finalRange, colspan: 3, align: 'center'},
+		{header: Ext.ux.lang.reports.initialRange, colspan: 2, align: 'center'},
+		{header: Ext.ux.lang.reports.finalRange, colspan: 2, align: 'center'},
 		{header: '', colspan: 1, align: 'center'}
 	];
 
@@ -76,12 +78,10 @@ $htmlDescription .= '</ol>';
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'firstPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'firstValImpo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'firstValExpo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'firstValue' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'lastPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'lastValImpo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'lastValExpo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'valor_balanza' ,'renderer':numberFormat}
+			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'lastValue' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':numberFormat}
 		]
 		,defaults: {
 			sortable: true

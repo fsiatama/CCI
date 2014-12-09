@@ -41,6 +41,18 @@ return [
 				'field_impo' => 'id_posicion',
 				'required'   => true,
 				'multivalue' => true,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'yearRange'  => ['anio_fin'],
+			],[
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
 			]
 		],
 		'3' => [
@@ -305,6 +317,57 @@ return [
 				'itComplements' => true, //son complemento del filtro anio
 			]
 		],
+		'12' => [
+			[
+				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
+				'required'   => true,
+				'multivalue' => true,
+			],[
+				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'dateRange'  => ['desde_ini', 'hasta_ini'],
+			],[
+				'field'      => 'anio_fin',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'dateRange'  => ['desde_fin', 'hasta_fin'],
+			],[
+				'field'      => 'desde_ini',
+				'field_expo' => 'periodo',
+				'field_impo' => 'periodo',
+				'required'   => true,
+				'itComplements' => true, //son complemento del filtro anio
+			],[
+				'field'      => 'hasta_ini',
+				'field_expo' => 'periodo',
+				'field_impo' => 'periodo',
+				'required'   => true,
+				'itComplements' => true, //son complemento del filtro anio
+			],[
+				'field'      => 'desde_fin',
+				'field_expo' => 'periodo',
+				'field_impo' => 'periodo',
+				'required'   => true,
+				'itComplements' => true, //son complemento del filtro anio
+			],[
+				'field'      => 'hasta_fin',
+				'field_expo' => 'periodo',
+				'field_impo' => 'periodo',
+				'required'   => true,
+				'itComplements' => true, //son complemento del filtro anio
+			]
+		],
 	],
 	'executeConfig' => [
 		'1'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaRelativa'],
@@ -318,6 +381,7 @@ return [
 		'9'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ParticipacionExpoSectorAgricola'],
 		'10' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ParticipacionExpoNoTradicional'],
 		'11' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ParticipacionExpoPorProducto'],
+		'12' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'CrecimientoExportadores'],
 	],
 	'yearsAvailable' => ['2010', '2011', '2012', '2013', '2014'],
 	'periods' => [
