@@ -14,8 +14,7 @@
 		]
 	};
 
-	var storePosicionOrigen  = new Ext.data.JsonStore(configStorePosicion);
-	var storePosicionDestino = new Ext.data.JsonStore(configStorePosicion);
+	var storePosicion  = new Ext.data.JsonStore(configStorePosicion);
 
 	var resultTpl = new Ext.XTemplate(
 		'<tpl for=".">' +
@@ -43,10 +42,10 @@
 		,pageSize:10
 	});
 
-	var comboPosicionOrigen = new Combo({
-		id:module+'comboPosicionOrigen'
+	var comboPosicion = new Combo({
+		id:module+'comboPosicion'
 		,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_origen'); ?>'
-		,name:'correlativa_origen[]'
+		,name:'sector_productos[]'
 		,store:storePosicionOrigen
 		,displayField:'posicion'
 		,valueField:'id_posicion'
@@ -62,28 +61,10 @@
 		}
 	});
 
-	var comboPosicionDestino = new Combo({
-		id:module+'comboPosicionDestino'
-		,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_origen'); ?>'
-		,name:'correlativa_destino[]'
-		,store:storePosicionDestino
-		,displayField:'posicion'
-		,valueField:'id_posicion'
-		,tpl: resultTpl
-		,displayFieldTpl:'({id_posicion}) - {posicion}'
-		,listeners:{
-			'beforequery':{
-				fn: function(queryEvent) {
-					var store = this.getStore();
-					store.setBaseParam('selected', this.getValue());
-				}
-			}
-		}
-	});
 
-	var formCorrelativa = new Ext.FormPanel({
+	var formSector = new Ext.FormPanel({
 		baseCls:'x-plain'
-		,id:module + 'formCorrelativa'
+		,id:module + 'formSector'
 		,method:'POST'
 		,autoWidth:true
 		,autoScroll:true
@@ -95,12 +76,9 @@
 			root:'data'
 			,totalProperty:'total'
 			,fields:[
-				{name:'correlativa_id', mapping:'correlativa_id', type:'float'},
-				{name:'correlativa_fvigente', mapping:'correlativa_fvigente', type:'string'},
-				{name:'correlativa_decreto', mapping:'correlativa_decreto', type:'string'},
-				{name:'correlativa_observacion', mapping:'correlativa_observacion', type:'string'},
-				{name:'correlativa_origen', mapping:'correlativa_origen', type:'string'},
-				{name:'correlativa_destino', mapping:'correlativa_destino', type:'string'},
+				{name:'sector_id', mapping:'sector_id', type:'float'},
+				{name:'sector_nombre', mapping:'sector_nombre', type:'string'},
+				{name:'sector_productos', mapping:'sector_productos', type:'string'}
 			]
 		})
 		,items:[{
@@ -120,41 +98,18 @@
 				defaults:{anchor:'100%'}
 				,items:[{
 					xtype:'textfield'
-					,name:'correlativa_decreto'
-					,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_decreto'); ?>'
-					,id:module+'correlativa_decreto'
+					,name:'sector_nombre'
+					,fieldLabel:'<?= Lang::get('sector.columns_title.sector'); ?>'
+					,id:module+'sector_nombre'
 					,allowBlank:false
 				}]
 			},{
 				defaults:{anchor:'100%'}
-				,items:[{
-					xtype:'datefield'
-					,name:'correlativa_fvigente'
-					,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_fvigente'); ?>'
-					,id:module+'correlativa_fvigente'
-					,format:'Y-m-d'
-					,allowBlank:false
-				}]
-			},{
-				defaults:{anchor:'100%'}
-				,columnWidth:1
-				,items:[{
-					xtype:'textarea'
-					,name:'correlativa_observacion'
-					,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_observacion'); ?>'
-					,id:module+'correlativa_observacion'
-					,allowBlank:false
-				}]
-			},{
-				defaults:{anchor:'100%'}
-				,items:[comboPosicionOrigen]
-			},{
-				defaults:{anchor:'100%'}
-				,items:[comboPosicionDestino]
+				,items:[comboPosicion]
 			},{
 				xtype:'hidden'
-				,name:'correlativa_id'
-				,id:module+'correlativa_id'
+				,name:'sector_id'
+				,id:module+'sector_id'
 			}]
 		}]
 		,buttons: [{
@@ -178,26 +133,25 @@
 	if ($action == 'modify') {
 
 		echo "
-	formCorrelativa.on('show', function(){
-		formCorrelativa.form.load({
+	formSector.on('show', function(){
+		formSector.form.load({
 			 url: 'correlativa/listId'
 			,params:{
-				 correlativa_id: '$correlativa_id'
+				 sector_id: '$sector_id'
 				,id: '$id'
 			}
 			,method: 'POST'
 			,waitTitle:'Loading......'
 			,waitMsg: 'Loading......'
 			,success: function(formulario, response) {
-				Ext.getCmp(module+'comboPosicionOrigen').setValue(response.result.data.correlativa_origen);
-				Ext.getCmp(module+'comboPosicionDestino').setValue(response.result.data.correlativa_destino);
+				Ext.getCmp(module+'comboPosicion').setValue(response.result.data.sector_productos);
 			}
 		});
 	});";
 	}
 	?>
 
-	return formCorrelativa;
+	return formSector;
 
 
 	/*********************************************** Start functions***********************************************/
@@ -208,18 +162,18 @@
 	}
 
 	function fnSave () {
-		if(formCorrelativa.form.isValid()){
+		if(formSector.form.isValid()){
 			params = {
 				id: '<?= $id; ?>'
 			};
-			formCorrelativa.getForm().submit({
+			formSector.getForm().submit({
 				waitMsg: 'Saving....'
 				,waitTitle:'Wait please...'
 				,url:'correlativa/<?= $action; ?>'
 				,params: params
 				,success: function(form, action){
-					if(Ext.getCmp('<?= $parent; ?>gridCorrelativa')){
-						Ext.getCmp('<?= $parent; ?>gridCorrelativa').getStore().reload();
+					if(Ext.getCmp('<?= $parent; ?>gridSector')){
+						Ext.getCmp('<?= $parent; ?>gridSector').getStore().reload();
 					}
 					fnCloseTab();
 				}
