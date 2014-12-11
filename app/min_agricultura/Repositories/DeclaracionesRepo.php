@@ -4,12 +4,38 @@ require PATH_MODELS.'Entities/Declaraimp.php';
 require PATH_MODELS.'Ado/DeclaraimpAdo.php';
 require PATH_MODELS.'Entities/Declaraexp.php';
 require PATH_MODELS.'Ado/DeclaraexpAdo.php';
+require PATH_MODELS.'Repositories/SectorRepo.php';
 
 require_once ('BaseRepo.php');
 
 class DeclaracionesRepo extends BaseRepo {
 
-	protected $columnValue;
+	protected $arrFiltersValues;
+	protected $columnValueImpo;
+	protected $columnValueExpo;
+	protected $rowIndicador;
+	protected $filtersConfig;
+	protected $year;
+	protected $period;
+	protected $range = false;
+	protected $trade;
+	protected $tipo_indicador_activador;
+	protected $linesConfig;
+
+	public function __construct($rowIndicador, $filtersConfig, $year, $period)
+	{
+		$this->rowIndicador  = $rowIndicador;
+		$this->filtersConfig = $filtersConfig;
+		$this->year          = $year;
+		$this->period        = $period;
+
+		extract($rowIndicador);
+
+		$this->arrFiltersValues         = Helpers::filterValuesToArray($indicador_filtros);
+		$this->tipo_indicador_activador = $tipo_indicador_activador;
+		$this->setColumnValue();
+		$this->linesConfig = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+	}
 
 	public function getModel() {}
 	public function getModelAdo() {}
@@ -36,9 +62,25 @@ class DeclaracionesRepo extends BaseRepo {
 		return new DeclaraexpAdo;
 	}
 
-	protected function setColumnValue($tipo_indicador_activador)
+	protected function setRange($range)
 	{
-		$this->columnValue = ($tipo_indicador_activador == 'precio') ? 'valorfob': 'peso_neto' ;
+		$this->range = $range;
+	}
+
+	protected function setTrade($trade)
+	{
+		$this->trade = $trade;
+	}
+
+	protected function setColumnValue()
+	{
+		if ($this->tipo_indicador_activador == 'precio') {
+			$this->columnValueImpo = 'valorcif';
+			$this->columnValueExpo = 'valorfob';
+		} else {
+			$this->columnValueImpo = 'peso_neto';
+			$this->columnValueExpo = 'peso_neto';
+		}
 	}
 
     /**
@@ -53,8 +95,12 @@ class DeclaracionesRepo extends BaseRepo {
      *
      * @return mixed Value.
      */
-	public function setFiltersValues($arrFiltersValues, $filtersConfig, $trade, $range)
+	public function setFiltersValues()
 	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$filtersConfig    = $this->filtersConfig;
+		$trade            = $this->trade;
+		$range            = $this->range;
 
 		foreach ($filtersConfig as $filter) {
 
@@ -116,9 +162,32 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 	}
 
-	public function findBalanzaData($filters, $filtersConfig, $year, $period, $range = false)
+	public function findProductsBySector($sector)
 	{
-		$arrFiltersValues = Helpers::filterValuesToArray($filters);
+		$sector_id  = Helpers::arrayGet($this->linesConfig, $sector);
+		$sectorRepo = new SectorRepo;
+		$result     = $sectorRepo->findPrimaryKey($sector_id);
+
+		if (!$result['success']) {
+			return [
+				'success' => false,
+				'error'   => 'No existe configuración para el sector ' . $sector
+			];
+		}
+		$row = array_shift($result['data']);
+		return [
+			'success' => true,
+			'data'    => $row['sector_productos']
+		];
+	}
+
+	public function findBalanzaData()
+	{
+		$year   = $this->year;
+		$period = $this->period;
+		$range  = $this->range;
+
+		$this->setTrade('impo');
 
 		$this->model      = $this->getModelImpo();
 		$this->modelAdo   = $this->getModelImpoAdo();
@@ -126,7 +195,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$rowField = Helpers::getPeriodColumnSql($period);
 
 		//asigna los valores de filtro del indicador al modelo
-		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'impo', $range);
+		$this->setFiltersValues();
 
 		$row = 'anio AS id';
 		//si el periodo es diferente a anual debe filtrar por año
@@ -134,8 +203,8 @@ class DeclaracionesRepo extends BaseRepo {
 			$this->model->setAnio($year);
 			$row = 'periodo AS id';
 		} else {
-			if (array_key_exists('anio_'.$range, $arrFiltersValues)) {
-				$year = $arrFiltersValues['anio_'.$range];
+			if (array_key_exists('anio_'.$range, $this->arrFiltersValues)) {
+				$year = $this->arrFiltersValues['anio_'.$range];
 			}
 		}
 
@@ -145,32 +214,27 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrRowField = [$row, $rowField];
 
+
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotTotalFields($this->columnValueImpo);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
 		$rsDeclaraimp = $this->modelAdo->pivotSearch($this->model);
 
+
 		if (!$rsDeclaraimp['success']) {
 			return $rsDeclaraimp;
 		}
-		/*if ($rsDeclaraimp['total'] == 0) {
-			return [
-				'success' => false,
-				'error'   => Lang::get('error.no_records_found')
-			];
-		}*/
-
 		
+		$this->setTrade('expo');
 
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
 		//asigna los valores de filtro del indicador al modelo
-		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', $range);
-
+		$this->setFiltersValues();
 		
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
 		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
@@ -178,13 +242,7 @@ class DeclaracionesRepo extends BaseRepo {
 		if (!$rsDeclaraexp['success']) {
 			return $rsDeclaraexp;
 		}
-		/*if ($rsDeclaraexp['total'] == 0) {
-			return [
-				'success' => false,
-				'error'   => Lang::get('error.no_records_found')
-			];
-		}*/
-
+		
 		$arrData       = [];
 		$arrPeriods    = [];
 
@@ -195,7 +253,7 @@ class DeclaracionesRepo extends BaseRepo {
 			foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
 
 				if($rowImpo['periodo'] == $rowExpo['periodo']){
-					$valor_impo = $rowImpo['valorfob'];
+					$valor_impo   = $rowImpo[$this->columnValueImpo];
 					$arrPeriods[] = $rowImpo['periodo'];
 				}
 
@@ -204,7 +262,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData[] = [
 				'id'         => $rowExpo['id'],
 				'periodo'    => $rowExpo['periodo'],
-				'valor_expo' => $rowExpo['valorfob'],
+				'valor_expo' => $rowExpo[$this->columnValueExpo],
 				'valor_impo' => $valor_impo,
 			];
 		}
@@ -270,11 +328,10 @@ class DeclaracionesRepo extends BaseRepo {
 		];
 	}
 
-	public function executeBalanza($rowIndicador, $filtersConfig, $year, $period)
+	public function executeBalanza()
 	{
-		extract($rowIndicador);
+		$result = $this->findBalanzaData();
 
-		$result = $this->findBalanzaData($indicador_filtros, $filtersConfig, $year, $period);
 		if ($result['success']) {
 
 			$arrData = [];
@@ -325,11 +382,10 @@ class DeclaracionesRepo extends BaseRepo {
 
 	}
 
-	public function executeBalanzaRelativa($rowIndicador, $filtersConfig, $year, $period)
+	public function executeBalanzaRelativa()
 	{
-		extract($rowIndicador);
+		$result = $this->findBalanzaData();
 
-		$result = $this->findBalanzaData($indicador_filtros, $filtersConfig, $year, $period);
 		if ($result['success']) {
 
 			$arrData = [];
@@ -341,19 +397,6 @@ class DeclaracionesRepo extends BaseRepo {
 				$arrData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
 
 			}
-
-			/*$arrSeries = [
-				'valor_expo'    => Lang::get('indicador.columns_title.valor_expo'),
-				'valor_impo'    => Lang::get('indicador.columns_title.valor_impo'),
-				'valor_balanza' => Lang::get('indicador.columns_title.valor_balanza')
-			];
-
-			$columnChart = Helpers::jsonChart(
-				$arrData,
-				'periodo',
-				$arrSeries,
-				COLUMNAS
-			);*/
 
 			$arrSeries = [
 				'valor_balanza' => Lang::get('indicador.columns_title.valor_balanza')
@@ -380,16 +423,16 @@ class DeclaracionesRepo extends BaseRepo {
 
 	}
 
-	public function executeBalanzaVariacion($rowIndicador, $filtersConfig, $year, $period)
+	public function executeBalanzaVariacion()
 	{
-		extract($rowIndicador);
+		$arrFiltersValues = $this->arrFiltersValues;
 
-		$arrFilters = Helpers::filterValuesToArray($indicador_filtros);
 
-		$arrRangeIni = range($arrFilters['desde_ini'], $arrFilters['hasta_ini']);
-		$arrRangeFin = range($arrFilters['desde_fin'], $arrFilters['hasta_fin']);
+		$arrRangeIni = range($arrFiltersValues['desde_ini'], $arrFiltersValues['hasta_ini']);
+		$arrRangeFin = range($arrFiltersValues['desde_fin'], $arrFiltersValues['hasta_fin']);
 
-		$result = $this->findBalanzaData($indicador_filtros, $filtersConfig, $year, $period, 'ini');
+		$this->setRange('ini');
+		$result = $this->findBalanzaData();
 		if ($result['success']) {
 
 			//calcula el valor de la balanza simple para el primer conjunto de resultados
@@ -403,10 +446,8 @@ class DeclaracionesRepo extends BaseRepo {
 				}
 
 			}
-
-			//var_dump($firstRangeData, $result['data']);
-
-			$result = $this->findBalanzaData($indicador_filtros, $filtersConfig, $year, $period, 'fin');
+			$this->setRange('fin');
+			$result = $this->findBalanzaData();
 			
 			if ($result['success']) {
 				
@@ -513,22 +554,23 @@ class DeclaracionesRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function executeOfertaExportable($rowIndicador, $filtersConfig, $year, $period)
+	public function executeOfertaExportable()
 	{
-		extract($rowIndicador);
-
-		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
 
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
 		//asigna los valores de filtro del indicador al modelo
-		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
+		$this->setFiltersValues();
 
 		//Trae los productos configurados como agricolas
-		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-		$productsAgriculture = Helpers::arrayGet($lines, 'productsAgriculture');
-
-		$productsAgriculture = implode(',', $productsAgriculture);
+		$result = $this->findProductsBySector('sectorIdAgriculture');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsAgriculture = $result['data'];
 
 		$this->model->setId_posicion($productsAgriculture);
 
@@ -536,9 +578,9 @@ class DeclaracionesRepo extends BaseRepo {
 		$arrRowField = ['id', 'decl.id_posicion', 'posicion'];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
-		$this->modelAdo->setPivotSortColumn('valorfob DESC');
+		$this->modelAdo->setPivotSortColumn($this->columnValueExpo . ' DESC');
 
 		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
 
@@ -556,7 +598,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$totalValue = 0;
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
-			$totalValue += (float)$rowExpo['valorfob'];
+			$totalValue += (float)$rowExpo[$this->columnValueExpo];
 		}
 
 		$arrData           = [];
@@ -564,23 +606,23 @@ class DeclaracionesRepo extends BaseRepo {
 		$othersId          = 0;
 		$othersRate        = 0;
 		$cumulativeRate    = 0;
-		$ConcentrationRate = Helpers::arrayGet($lines, 'ConcentrationExportableSupply');
+		$ConcentrationRate = Helpers::arrayGet($this->linesConfig, 'ConcentrationExportableSupply');
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
 				
-			$rate = round( ($rowExpo['valorfob'] / $totalValue ) * 100 , 2 );
+			$rate = round( ($rowExpo[$this->columnValueExpo] / $totalValue ) * 100 , 2 );
 			$cumulativeRate += $rate;
 			if ($cumulativeRate <= 80) {
 				$arrData[] = [
 					'id'            => $keyExpo,
 					'id_posicion'   => $rowExpo['id_posicion'],
 					'posicion'      => $rowExpo['posicion'],
-					'valor_expo'    => $rowExpo['valorfob'],
+					'valor_expo'    => $rowExpo[$this->columnValueExpo],
 					'participacion' => $rate
 				];
 			} else {
 				$othersRate  += $rate;
-				$othersValue += $rowExpo['valorfob'];
+				$othersValue += $rowExpo[$this->columnValueExpo];
 				$othersId     = $keyExpo;
 			}
 		}
@@ -615,35 +657,32 @@ class DeclaracionesRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function executeNumeroPaisesDestino($rowIndicador, $filtersConfig, $year, $period)
+	public function executeNumeroPaisesDestino()
 	{
-		extract($rowIndicador);
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
 
-		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
-		
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
 		//asigna los valores de filtro del indicador al modelo
-		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
-		
+		$this->setFiltersValues();
+
 		//Trae los productos configurados como agricolas
-		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-		$productsAgriculture = Helpers::arrayGet($lines, 'productsAgriculture');
-		
-		$productsAgriculture = implode(',', $productsAgriculture);
-		
+		$result = $this->findProductsBySector('sectorIdAgriculture');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsAgriculture = $result['data'];
+
 		$this->model->setId_posicion($productsAgriculture);
-		
-		//$rowField = Helpers::getPeriodColumnSql($period);
-		
+
 		$arrRowField = ['id', 'decl.id_paisdestino', 'pais'];
 		
-		//var_dump($arrRowField);
-		
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
-		$this->modelAdo->setPivotSortColumn('valorfob DESC');
+		$this->modelAdo->setPivotSortColumn($this->columnValueExpo . ' DESC');
 		
 		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
 		
@@ -660,75 +699,69 @@ class DeclaracionesRepo extends BaseRepo {
 		$totalValue = 0;
 		
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
-			$totalValue += (float)$rowExpo['valorfob'];
+			$totalValue += (float)$rowExpo[$this->columnValueExpo];
 		}
 		
 		$arrData           = [];
 		
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
 				
-			$rate = round( ($rowExpo['valorfob'] / $totalValue ) * 100 , 2 );
+			$rate = round( ($rowExpo[$this->columnValueExpo] / $totalValue ) * 100 , 2 );
 			$arrData[] = [
 				'id'            => $keyExpo,
 				'pais'          => $rowExpo['pais'],
-				'valor_expo'    => $rowExpo['valorfob'],
+				'valor_expo'    => $rowExpo[$this->columnValueExpo],
 				'participacion' => $rate
 			];
 		}
 		
-		/*$arrSeries = [
-			'valor_expo' => Lang::get('indicador.columns_title.valor_expo')
-		];
-		
-		$pieChart = Helpers::jsonChart(
-			$arrData,
-			'pais',
-			$arrSeries,
-			PIE
-		);*/
-		
 		$result = [
 			'success'         => true,
 			'data'            => $arrData,
-			//'pieChartData'    => $pieChart,
 			'total'           => count($arrData)
 		];
 		return $result;
 		
 	}
 
-	public function executeIHH($rowIndicador, $filtersConfig, $year, $period)
+	public function executeIHH()
 	{
-		extract($rowIndicador);
-
-		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+		$arrFiltersValues = $this->arrFiltersValues;
 		$trade            = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
+
+		$this->setTrade($trade);
+		$this->setRange('ini');
 		
 		if ($trade == 'impo') {
 			$this->model      = $this->getModelImpo();
 			$this->modelAdo   = $this->getModelImpoAdo();
+			$columnValue      = $this->columnValueImpo;
 		} else {
 			$this->model      = $this->getModelExpo();
 			$this->modelAdo   = $this->getModelExpoAdo();
+			$columnValue      = $this->columnValueExpo;
 		}
+
 		//asigna los valores de filtro del indicador al modelo
-		$this->setFiltersValues($arrFiltersValues, $filtersConfig, $trade, 'ini');
+		$this->setFiltersValues();
 
-		$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-		$productsAgriculture = Helpers::arrayGet($lines, 'productsAgriculture');
-
-		$productsAgriculture = implode(',', $productsAgriculture);
+		//Trae los productos configurados como agricolas
+		$result = $this->findProductsBySector('sectorIdAgriculture');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsAgriculture = $result['data'];
 
 		$this->model->setId_posicion($productsAgriculture);
 
 		$arrRowField   = ['id', 'decl.id_capitulo'];
-		$arrFieldAlias = ['id', 'id_capitulo', 'valorfob'];
+		$arrFieldAlias = ['id', 'id_capitulo', $columnValue];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotColumnFields('anio');
-		$this->modelAdo->setPivotTotalFields('valorfob');
+		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
-		$this->modelAdo->setPivotSortColumn('valorfob DESC');
+		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
 
 		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
 
@@ -808,34 +841,40 @@ class DeclaracionesRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function executeParticipacionExpoSectorAgricola($rowIndicador, $filtersConfig, $year, $period)
+	public function executeParticipacionExpoSectorAgricola()
 	{
-		extract($rowIndicador);
-
-		$this->setColumnValue($tipo_indicador_activador);
-
-		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
 
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
+		$columnValue      = $this->columnValueExpo;
+		$this->setFiltersValues();
 
-		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
+		//Trae los productos configurados como agricolas
+		$result = $this->findProductsBySector('sectorIdAgriculture');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsAgriculture = $result['data'];
 
-		$lines                 = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-		$energeticMiningSector = Helpers::arrayGet($lines, 'energeticMiningSector');
-		$energeticMiningSector = implode(',', $energeticMiningSector);
-		$productsAgriculture   = Helpers::arrayGet($lines, 'productsAgriculture');
-		$productsAgriculture   = implode(',', $productsAgriculture);
+		//Trae los productos configurados como agricolas
+		$result = $this->findProductsBySector('sectorIdMiningSector');
+		if (!$result['success']) {
+			return $result;
+		}
+		$energeticMiningSector = $result['data'];
 
 		$this->model->setId_posicion($energeticMiningSector);
 
-		$rowField = Helpers::getPeriodColumnSql($period);
+		$rowField = Helpers::getPeriodColumnSql($this->period);
 		$row = 'periodo AS id';
 
 		$arrRowField   = [$row, $rowField];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields($this->columnValue);
+		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
 		//busca los datos del sector energetico
@@ -872,10 +911,10 @@ class DeclaracionesRepo extends BaseRepo {
 							$rowTotal['periodo']
 						);
 
-						$totalProductsAgriculture   = ($rowProductsAgriculture   !== false) ? $rowProductsAgriculture[$this->columnValue]   : 0 ;
-						$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? $rowEnergeticMiningSector[$this->columnValue] : 0 ;
+						$totalProductsAgriculture   = ($rowProductsAgriculture   !== false) ? $rowProductsAgriculture[$columnValue]   : 0 ;
+						$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? $rowEnergeticMiningSector[$columnValue] : 0 ;
 
-						$total = $rowTotal[$this->columnValue] - $totalEnergeticMiningSector;
+						$total = $rowTotal[$columnValue] - $totalEnergeticMiningSector;
 						$total = ($total == 0) ? 1 : $total ;
 						$rate  = round( ($totalProductsAgriculture / $total ) * 100 , 2 );
 
@@ -889,8 +928,8 @@ class DeclaracionesRepo extends BaseRepo {
 					}
 
 					$arrSeries = [
-						'valor_expo_agricola'    => Lang::get('indicador.columns_title.valor_expo_agricola'),
-						'valor_expo'    => Lang::get('indicador.columns_title.valor_expo'),
+						'valor_expo_agricola' => Lang::get('indicador.columns_title.valor_expo_agricola'),
+						'valor_expo'          => Lang::get('indicador.columns_title.valor_expo'),
 					];
 
 					$columnChart = Helpers::jsonChart(
@@ -914,35 +953,38 @@ class DeclaracionesRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function executeParticipacionExpoNoTradicional($rowIndicador, $filtersConfig, $year, $period)
+	public function executeParticipacionExpoNoTradicional()
 	{
-		extract($rowIndicador);
-
-		$this->setColumnValue($tipo_indicador_activador);
-
-		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
 
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
+		$columnValue      = $this->columnValueExpo;
+		$this->setFiltersValues();
 
-		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
+		$result = $this->findProductsBySector('sectorIdAgriculture');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsAgriculture = $result['data'];
 
-		$lines               = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-		$productsTraditional = Helpers::arrayGet($lines, 'productsTraditional');
-		$productsTraditional = implode(',', $productsTraditional);
-		
-		$productsAgriculture = Helpers::arrayGet($lines, 'productsAgriculture');
-		$productsAgriculture = implode(',', $productsAgriculture);
+		$result = $this->findProductsBySector('sectorIdTraditional');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsTraditional = $result['data'];
 
 		$this->model->setId_posicion($productsTraditional);
 
-		$rowField = Helpers::getPeriodColumnSql($period);
+		$rowField = Helpers::getPeriodColumnSql($this->period);
 		$row = 'periodo AS id';
 
 		$arrRowField   = [$row, $rowField];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields($this->columnValue);
+		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
 		//busca los datos de los productos tradicionales
@@ -968,10 +1010,10 @@ class DeclaracionesRepo extends BaseRepo {
 						$rowTotal['periodo']
 					);
 
-					$totalProductsTraditional    = ($rowProductsTraditional !== false) ? $rowProductsTraditional[$this->columnValue] : 0 ;
-					$totalProductsNonTraditional = $rowTotal[$this->columnValue] - $totalProductsTraditional;
+					$totalProductsTraditional    = ($rowProductsTraditional !== false) ? $rowProductsTraditional[$columnValue] : 0 ;
+					$totalProductsNonTraditional = $rowTotal[$columnValue] - $totalProductsTraditional;
 					
-					$total = ($rowTotal[$this->columnValue] == 0) ? 1 : $rowTotal[$this->columnValue] ;
+					$total = ($rowTotal[$columnValue] == 0) ? 1 : $rowTotal[$columnValue] ;
 					$rate  = round( ($totalProductsNonTraditional / $total ) * 100 , 2 );
 
 					$arrData[] = [
@@ -1000,7 +1042,6 @@ class DeclaracionesRepo extends BaseRepo {
 					'data'            => $arrData,
 					'total'           => $result['total'],
 					'columnChartData' => $columnChart,
-					//'areaChartData'   => $areaChart,
 				];
 			}
 		}
@@ -1008,26 +1049,25 @@ class DeclaracionesRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function ExecuteParticipacionExpoPorProducto($rowIndicador, $filtersConfig, $year, $period)
+	public function ExecuteParticipacionExpoPorProducto()
 	{
-		extract($rowIndicador);
-
-		$this->setColumnValue($tipo_indicador_activador);
-
-		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
 
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
+		$columnValue      = $this->columnValueExpo;
+		$this->setFiltersValues();
 
-		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
 
-		$rowField = Helpers::getPeriodColumnSql($period);
+		$rowField = Helpers::getPeriodColumnSql($this->period);
 		$row = 'periodo AS id';
 
 		$arrRowField   = [$row, $rowField];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields($this->columnValue);
+		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
 		//busca los datos de los productos seleccionados
@@ -1060,9 +1100,9 @@ class DeclaracionesRepo extends BaseRepo {
 						$rowTotal['periodo']
 					);
 
-					$totalProduct = ($rowProduct !== false) ? $rowProduct[$this->columnValue] : 0 ;
+					$totalProduct = ($rowProduct !== false) ? $rowProduct[$columnValue] : 0 ;
 					
-					$total = ($rowTotal[$this->columnValue] == 0) ? 1 : $rowTotal[$this->columnValue] ;
+					$total = ($rowTotal[$columnValue] == 0) ? 1 : $rowTotal[$columnValue] ;
 					$rate  = round( ($totalProduct / $total ) * 100 , 2 );
 
 					$arrData[] = [
@@ -1091,7 +1131,6 @@ class DeclaracionesRepo extends BaseRepo {
 					'data'            => $arrData,
 					'total'           => $result['total'],
 					'columnChartData' => $columnChart,
-					//'areaChartData'   => $areaChart,
 				];
 			}
 		}
@@ -1099,28 +1138,29 @@ class DeclaracionesRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function ExecuteCrecimientoExportadores($rowIndicador, $filtersConfig, $year, $period)
+	public function ExecuteCrecimientoExportadores()
 	{
-		extract($rowIndicador);
-
-		$columnValue = 'id_empresa';
-
-		$arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
 
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
+		$this->setFiltersValues();
 
-		$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'ini');
+		$columnValue = 'id_empresa';
 
 		if (!array_key_exists('posicion', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
-			$lines                 = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-			$productsAgriculture   = Helpers::arrayGet($lines, 'productsAgriculture');
-			$productsAgriculture   = implode(',', $productsAgriculture);
+			$result = $this->findProductsBySector('sectorIdAgriculture');
+			if (!$result['success']) {
+				return $result;
+			}
+			$productsAgriculture = $result['data'];
 			$this->model->setId_posicion($productsAgriculture);
 		}
 
-		$rowField = Helpers::getPeriodColumnSql($period);
+		$rowField = Helpers::getPeriodColumnSql($this->period);
 		$row = 'periodo AS id';
 
 		$arrRowField   = [$row, $rowField];
@@ -1137,8 +1177,9 @@ class DeclaracionesRepo extends BaseRepo {
 			$firstRangeData = $result['data'];
 			
 			//busca los datos del segundo rango de fechas
+			$this->setRange('fin');
+			$this->setFiltersValues();
 
-			$this->setFiltersValues($arrFiltersValues, $filtersConfig, 'expo', 'fin');
 			$result = $this->modelAdo->pivotSearch($this->model);
 
 			if ($result['success']) {
@@ -1209,7 +1250,6 @@ class DeclaracionesRepo extends BaseRepo {
 					'data'            => $arrData,
 					'total'           => $result['total'],
 					'columnChartData' => $columnChart,
-					//'areaChartData'   => $areaChart,
 				];
 			}
 		}

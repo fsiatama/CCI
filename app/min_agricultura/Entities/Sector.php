@@ -18,7 +18,7 @@ class Sector {
 	}
 
 	public function setSector_nombre($sector_nombre){
-		$this->sector_nombre = $sector_nombre;
+		$this->sector_nombre = Inflector::cleanInputString($sector_nombre);
 	}
 
 	public function getSector_nombre(){

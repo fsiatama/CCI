@@ -7,13 +7,13 @@
 	var storeSector = new Ext.data.JsonStore({
 		url:'sector/list'
 		,root:'data'
-		,sortInfo:{field:'id_sector',direction:'ASC'}
+		,sortInfo:{field:'sector_id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams:{id:'<?= $id; ?>'}
 		,fields:[
-			{name:'id_sector', type:'float'},
-			{name:'sector', type:'string'},
-			{name:'id_posicion', type:'string'}
+			{name:'sector_id', type:'float'},
+			{name:'sector_nombre', type:'string'},
+			{name:'sector_productos', type:'string'}
 		]
 	});
 	
@@ -42,8 +42,8 @@
 	
 	var cmSector = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('sector.columns_title.sector'); ?>', align:'left', hidden:false, dataIndex:'sector'},
-			{header:'<?= Lang::get('sector.columns_title.id_posicion'); ?>', align:'left', hidden:false, dataIndex:'id_posicion'},
+			{header:'<?= Lang::get('sector.columns_title.sector_nombre'); ?>', align:'left', hidden:false, dataIndex:'sector_nombre'},
+			{header:'<?= Lang::get('sector.columns_title.sector_productos'); ?>', align:'left', hidden:false, dataIndex:'sector_productos'},
 			gridSectorAction
 		]
 		,defaults:{
@@ -116,7 +116,7 @@
 	/*********************************************** Start functions***********************************************/
 	
 	function fnEditItm(record){
-		var key = record.get('id_sector');
+		var key = record.get('sector_id');
 		if(Ext.getCmp('tab-add_'+module)){
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
@@ -136,7 +136,7 @@
 					,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
 					,module: 'edit_' + module
 					,parent: module
-					,id_sector: key
+					,sector_id: key
 				}
 			};
 			Ext.getCmp('oeste').addTab(this,this,data);
@@ -150,13 +150,13 @@
 			if(btn == 'yes'){
 				var gridMask = new Ext.LoadMask(gridSector.getEl(), { msg: 'Erasing .....' });
 				gridMask.show();
-				var key = record.get('id_sector');
+				var key = record.get('sector_id');
 
 				Ext.Ajax.request({
 					 url:'sector/delete'
 					,params: {
 						id: '<?= $id; ?>'
-						,id_sector: key
+						,sector_id: key
 					}
 					,callback: function(options, success, response){
 						gridMask.hide();

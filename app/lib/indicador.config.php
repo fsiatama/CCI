@@ -394,8 +394,8 @@ return [
 		['impo', Lang::get('indicador.reports.imports')],
 		['expo', Lang::get('indicador.reports.exports')]
 	],
-	'productsAgriculture' => ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '5201', '5202', '5203'],
-	'productsTraditional' => ['0901', '0603', '0803'],
-	'energeticMiningSector' => ['25', '26', '27', '71'],
+	'sectorIdAgriculture'  => 2,
+	'sectorIdTraditional'  => 3,
+	'sectorIdMiningSector' => 1,
 	'ConcentrationExportableSupply' => 80,
 ];

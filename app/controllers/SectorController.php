@@ -23,6 +23,41 @@ class SectorController {
     	return $result;
     }
 
+    public function listIdAction($urlParams, $postParams)
+	{
+		return $this->sectorRepo->validateModify($postParams);
+	}
+
+	public function createAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('create', $postParams);
+
+		if ($result['success']) {
+			$result = $this->sectorRepo->create($postParams);
+		}
+		return $result;
+	}
+
+	public function modifyAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('modify', $postParams);
+
+		if ($result['success']) {
+			$result = $this->sectorRepo->modify($postParams);
+		}
+		return $result;
+	}
+
+	public function deleteAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('delete', $postParams);
+
+		if ($result['success']) {
+			$result = $this->sectorRepo->delete($postParams);
+		}
+		return $result;
+	}
+
     public function jscodeAction($urlParams, $postParams)
 	{
 		$action = array_shift($urlParams);

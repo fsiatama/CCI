@@ -192,10 +192,32 @@ abstract class BaseAdo extends Connection {
 				$result['data'][] = $this->filterRow($resultSet->fields);
 				$resultSet->MoveNext();
 			}
+			/*if (!empty($result['data'])) {
+				$result['columns'] = $this->getColumnsType($resultSet);
+			}*/
 			$resultSet->Close();
 		}
 
 		return $result;
+	}
+
+	protected function getColumnsType(&$resultSet)
+	{
+		$fieldTypes = $resultSet->FieldTypesArray();
+		reset($fieldTypes);
+		$i = 0;
+		$elements = [];
+		while(list(,$o) = each($fieldTypes)) {
+			
+			$type = $resultSet->MetaType($o->type);
+
+			$v = ($o) ? $o->name : 'Field'.($i++);
+			$v = strip_tags(str_replace("\n", " ", str_replace("\r\n"," ",$v)));
+
+			$elements[] = ['type' => $type, 'col' => $v];
+		}
+
+		return $elements;
 	}
 
     /**

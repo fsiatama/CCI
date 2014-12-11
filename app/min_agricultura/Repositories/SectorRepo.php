@@ -93,13 +93,9 @@ class SectorRepo extends BaseRepo {
 		}
 
 		if (
-			empty($sector_id) ||
 			empty($sector_nombre) ||
 			empty($sector_productos) ||
-			empty($sector_uinsert) ||
-			empty($sector_finsert) ||
-			empty($sector_uupdate) ||
-			empty($sector_fupdate)
+			!is_array($sector_productos)
 		) {
 			$result = array(
 				'success' => false,
@@ -109,16 +105,16 @@ class SectorRepo extends BaseRepo {
 		}
 			$this->model->setSector_id($sector_id);
 			$this->model->setSector_nombre($sector_nombre);
-			$this->model->setSector_productos($sector_productos);
-			$this->model->setSector_uinsert($sector_uinsert);
-			$this->model->setSector_finsert($sector_finsert);
-			$this->model->setSector_uupdate($sector_uupdate);
-			$this->model->setSector_fupdate($sector_fupdate);
+			$this->model->setSector_productos(implode(',', $sector_productos));
 		
 
 		if ($action == 'create') {
+			$this->model->setSector_uinsert($_SESSION['user_id']);
+			$this->model->setSector_finsert(Helpers::getDateTimeNow());
 		}
 		elseif ($action == 'modify') {
+			$this->model->setSector_uupdate($_SESSION['user_id']);
+			$this->model->setSector_fupdate(Helpers::getDateTimeNow());
 		}
 		$result = array('success' => true);
 		return $result;

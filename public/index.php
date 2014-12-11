@@ -13,6 +13,7 @@ require 'lib/Inflector.php';
 require 'lib/Response.php';
 require 'lib/View.php';
 require 'lib/Lang.php';
+require 'lib/Excel.php';
 
 
 //Llamar al controlador indicado

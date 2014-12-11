@@ -411,9 +411,25 @@ class IndicadorRepo extends BaseRepo {
 
 			require $repoFileName;
 
-			$repo = new $repoClassName();
+			$repo = new $repoClassName(
+				$row,
+				$arrFiltersName,
+				$year,
+				$period
+			);
 			if (method_exists($repo, $repoMethodName)) {
-				$result = call_user_func_array([$repo, $repoMethodName], compact('row', 'arrFiltersName', 'year', 'period'));
+				$result = call_user_func_array([$repo, $repoMethodName], []);
+
+				$excel = new Excel (
+					$result['data'],
+					1,
+					[],
+					20,
+					'ddddd',
+					[]
+				);
+				//$data, $format, $head, $total, $fileName, $columnFormat
+				$excel->write();
 			} else {
 				return [
 					'success' => false,

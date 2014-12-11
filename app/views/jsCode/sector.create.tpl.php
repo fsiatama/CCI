@@ -44,9 +44,9 @@
 
 	var comboPosicion = new Combo({
 		id:module+'comboPosicion'
-		,fieldLabel:'<?= Lang::get('correlativa.columns_title.correlativa_origen'); ?>'
+		,fieldLabel:'<?= Lang::get('sector.columns_title.sector_productos'); ?>'
 		,name:'sector_productos[]'
-		,store:storePosicionOrigen
+		,store:storePosicion
 		,displayField:'posicion'
 		,valueField:'id_posicion'
 		,tpl: resultTpl
@@ -87,7 +87,7 @@
 			,layout:'column'
 			,flex: 1
 			,defaults:{
-				columnWidth:.5
+				columnWidth:1
 				,layout:'form'
 				,labelAlign:'top'
 				,border:false
@@ -135,7 +135,7 @@
 		echo "
 	formSector.on('show', function(){
 		formSector.form.load({
-			 url: 'correlativa/listId'
+			 url: 'sector/listId'
 			,params:{
 				 sector_id: '$sector_id'
 				,id: '$id'
@@ -169,7 +169,7 @@
 			formSector.getForm().submit({
 				waitMsg: 'Saving....'
 				,waitTitle:'Wait please...'
-				,url:'correlativa/<?= $action; ?>'
+				,url:'sector/<?= $action; ?>'
 				,params: params
 				,success: function(form, action){
 					if(Ext.getCmp('<?= $parent; ?>gridSector')){

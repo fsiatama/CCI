@@ -1,7 +1,7 @@
 <?php
 return [
     'columns_title' => [
-		'sector'      => 'Sector',
-		'id_posicion' => 'Producos que lo componen',
+		'sector_nombre'    => 'Sector',
+		'sector_productos' => 'Producos que lo componen',
     ]
 ];
