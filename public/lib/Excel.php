@@ -87,7 +87,7 @@ class Excel
 			$cell = $this->letterColumn($this->numberColumns);
 
 			$this->worksheet->getColumnDimension($cell)->setAutoSize(true);
-			$this->worksheet->setCellValueByColumnAndRow( ($this->numberColumns-1), $this->rowNumber, utf8_encode($fieldTitle) );
+			$this->worksheet->setCellValueByColumnAndRow( ($this->numberColumns-1), $this->rowNumber, ($fieldTitle) );
 			
 			$arrHead[$cell] = $fieldTitle;
 		}
@@ -124,7 +124,7 @@ class Excel
 					
 					if (array_key_exists($subKey, $this->head)) {
 						
-						$index = array_search($subKey,array_keys($this->$head));
+						$index = array_search($subKey,array_keys($this->head));
 
 						$arrData[$key][$index] = $dataCell;
 

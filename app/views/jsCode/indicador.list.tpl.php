@@ -116,12 +116,11 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 					Ext.getCmp(module + 'btnEdit').setDisabled(!node.leaf);
 					Ext.getCmp(module + 'btnDel').setDisabled(!node.leaf);
 
-					if(node.leaf){
+					if (node.leaf) {
 						indicador_id = node.id;
 						folder_id    = node.parentNode.id;
 						IndicadorTree.consultar(node.id)
-					}
-					else{
+					} else {
 						folder_id    = node.id;
 						initialPanel();
 					}
@@ -166,9 +165,9 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 						,disableCaching:false
 						,method:'POST'
 					})
-					,items:[]
+					,items: []
 				});
-				var lp = Ext.getCmp(module + 'lpIndicador');
+				var lp     = Ext.getCmp(module + 'lpIndicador');
 				var remove = lp.removeAll(true);
 				lp.add(dataViewer);
 				lp.doLayout();

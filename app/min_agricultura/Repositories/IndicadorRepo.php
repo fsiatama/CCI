@@ -382,6 +382,8 @@ class IndicadorRepo extends BaseRepo {
 		extract($params);
 		$year   = (empty($year)) ? '' : $year ;
 		$period = (empty($period)) ? 12 : $period ;
+		$format = (empty($format)) ? false : $format ;
+		$fields = (empty($fields)) ? [] : json_decode($fields, true) ;
 		if (empty($indicador_id)) {
 			return [
 				'success' => false,
@@ -422,11 +424,11 @@ class IndicadorRepo extends BaseRepo {
 
 				$excel = new Excel (
 					$result['data'],
-					1,
-					[],
+					$format,
+					$fields,
 					20,
-					'ddddd',
-					[]
+					$row['indicador_nombre'],
+					''
 				);
 				//$data, $format, $head, $total, $fileName, $columnFormat
 				$excel->write();
