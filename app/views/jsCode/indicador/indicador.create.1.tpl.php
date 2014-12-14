@@ -51,6 +51,7 @@
 		,valueField:'id_posicion'
 		,tpl: resultTplPosicion
 		,displayFieldTpl:'({id_posicion}) - {posicion}'
+		,allowBlank:true
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {

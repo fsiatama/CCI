@@ -232,6 +232,16 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo   = $this->getModelExpoAdo();
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
+
+		//si el periodo es diferente a anual debe filtrar por año
+		if ($period != 12 && !empty($year)) {
+			$this->model->setAnio($year);
+			$row = 'periodo AS id';
+		} else {
+			if (array_key_exists('anio_'.$range, $this->arrFiltersValues)) {
+				$year = $this->arrFiltersValues['anio_'.$range];
+			}
+		}
 		
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);

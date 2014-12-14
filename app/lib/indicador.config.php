@@ -12,7 +12,7 @@ return [
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',
 				'field_impo' => 'id_posicion',
-				'required'   => true,
+				'required'   => false,
 				'multivalue' => true,
 			],[
 				'field'      => 'anio_ini',

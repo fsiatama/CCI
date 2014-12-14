@@ -164,12 +164,14 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 			,timeout: 100000000
 			,params: parametros
 			,success: function(response){
-				results = Ext.decode(response.responseText);
+				var results = Ext.decode(response.responseText);
 				if(results.success){
 					try {
 						Ext.destroy(Ext.get('downloadIframe'));
 					}
 					catch(e) {}
+
+					console.log(results.file);
 					Ext.DomHelper.append(document.body, {
 						tag: 'iframe'
 						,id:'downloadIframe'
@@ -177,14 +179,14 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 						,width: 0
 						,height: 0
 						,css: 'display:none;visibility:hidden;height:0px;'
-						,src: 'download-excel/'+results.msg+'/'
+						,src: 'download/excel/'+results.file
 					});
 				}
 				else{
-					if (results.msg) {
+					if (results.error) {
 						Ext.MessageBox.show({
 							title: ''
-							,msg:results.msg
+							,msg:results.error
 							,buttons: Ext.Msg.OK
 							,closable:false
 							,icon: Ext.MessageBox.ERROR
@@ -194,15 +196,20 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 				delete(store.baseParams[this.paramNames.fields]);
 				delete(store.baseParams[this.paramNames.format]);
 				delete(store.baseParams[this.paramNames.limit]);
-			 }
-			 ,failure: function(response){
+			}
+			,failure: function(response){
 				results = Ext.decode(response.responseText);
-				if (results.msg) {
-					Ext.Msg.alert('Infomation',results.msg);
+				if (results.error) {
+					Ext.MessageBox.show({
+						title: ''
+						,msg:results.error
+						,buttons: Ext.Msg.OK
+						,closable:false
+						,icon: Ext.MessageBox.ERROR
+					});
 				}
-			 }
-		 });
-		
+			}
+		});
 		
 	} // eo function onTriggerSearch
 	

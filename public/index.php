@@ -14,6 +14,7 @@ require 'lib/Response.php';
 require 'lib/View.php';
 require 'lib/Lang.php';
 require 'lib/Excel.php';
+require 'lib/Download.php';
 
 
 //Llamar al controlador indicado

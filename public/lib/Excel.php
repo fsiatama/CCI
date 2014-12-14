@@ -186,7 +186,7 @@ class Excel
 			break;
 		}
 		$objWriter->setPreCalculateFormulas(false);
-		$objWriter->save(PATH_REPORTS.$fileName);
+		$objWriter->save(PATH_REPORTS . $fileName);
 		return $fileName;
 	}
 
@@ -200,6 +200,19 @@ class Excel
 		
 		$this->writeBody();
 
-		return $this->save();
+		$fileName = $this->save();
+
+		if (file_exists(PATH_REPORTS . $fileName)) {
+			$result = [
+				'success' => true,
+				'file'    => $fileName
+			];
+		} else {
+			$result = [
+				'success' => false,
+				'error'   => Lang::get('error.write_excel_error')
+			];
+		}
+		return $result;
 	}
 }

@@ -92,7 +92,7 @@ $htmlDescription .= '</ol>';
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:300
+		,height:350
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
