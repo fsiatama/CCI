@@ -41,13 +41,14 @@ class DeclaraimpAdo extends BaseAdo {
 
 	protected function setTable()
 	{
-		$this->table = 'declaraimp AS decl, posicion';
+		$this->table = 'declaraimp AS decl, posicion, pais';
 	}
 
 	protected function setJoins()
 	{
 		$this->arrJoins = [
-			'decl.id_posicion = posicion.id_posicion'
+			'decl.id_posicion = posicion.id_posicion',
+			'decl.id_paisorigen = pais.id_pais',
 		];
 	}
 

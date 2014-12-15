@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
 * DownloadController
 *
@@ -16,8 +14,8 @@ class DownloadController {
 	public function excelAction($urlParams, $postParams)
 	{
 		$fileName = array_shift($urlParams);
-
-		return Download::Excel($fileName);
+		
+		return Helpers::download($fileName);
 	}
 
 }

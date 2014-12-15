@@ -1,0 +1,10 @@
+{
+    "require": {
+        "php": ">=5.3",
+        "skyzyx/mimetypes": "~1.1",
+        "apfelbox/php-file-download": "2.*",
+        "phpoffice/phpexcel": "1.*",
+        "phpmailer/phpmailer": "5.*",
+        "mpdf/mpdf": "5.*"
+    }
+}

@@ -1,5 +1,6 @@
 <?php
 
+use Apfelbox\FileDownload\FileDownload;
 /**
 * ClassName
 *
@@ -371,6 +372,20 @@ class Helpers
 		}
 
 		return false;
+	}
+
+	public static function download($fileName, $deleteFile = true)
+	{
+		$filePath = PATH_REPORTS . $fileName;
+
+		$fileDownload = FileDownload::createFromFilePath($filePath);
+		
+		$result = $fileDownload->sendDownload($fileName);
+
+		if ($deleteFile) {
+			unlink($filePath);
+		}
+		return $result;
 	}
 
 }

@@ -88,7 +88,7 @@ $htmlDescription .= '</ol>';
 		,enableColumnMove:false
 		,id:module+'gridBalanza'			
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar: new Ext.PagingToolbar({pageSize:1000, store:storeBalanza, displayInfo:true})
+		,bbar: new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'

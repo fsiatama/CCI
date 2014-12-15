@@ -1,0 +1,267 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "f0cfad5c48cf37d94499d31df839b909",
+    "packages": [
+        {
+            "name": "apfelbox/php-file-download",
+            "version": "v2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/apfelbox/PHP-File-Download.git",
+                "reference": "01b0461e02e7514ccb8804cee9260e0b61e04069"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/apfelbox/PHP-File-Download/zipball/01b0461e02e7514ccb8804cee9260e0b61e04069",
+                "reference": "01b0461e02e7514ccb8804cee9260e0b61e04069",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "skyzyx/mimetypes": "~1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Apfelbox\\FileDownload\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Jannik Zschiesche",
+                    "email": "hello@apfelbox.net",
+                    "homepage": "http://apfelbox.net"
+                }
+            ],
+            "description": "A library to help with creating downloads for files in PHP",
+            "homepage": "https://github.com/apfelbox/PHP-File-Download",
+            "keywords": [
+                "download"
+            ],
+            "time": "2014-02-10 17:12:20"
+        },
+        {
+            "name": "mpdf/mpdf",
+            "version": "v5.7.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/finwe/mpdf.git",
+                "reference": "ace190986978df40b9c416cf7ba8761945fc1758"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/finwe/mpdf/zipball/ace190986978df40b9c416cf7ba8761945fc1758",
+                "reference": "ace190986978df40b9c416cf7ba8761945fc1758",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=4.3.10"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "mpdf.php",
+                    "classes"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-1.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Ian Back"
+                }
+            ],
+            "description": "A PHP class to generate PDF files from HTML with Unicode/UTF-8 and CJK support",
+            "homepage": "http://www.mpdf1.com/mpdf/index.php",
+            "keywords": [
+                "pdf",
+                "php",
+                "utf-8"
+            ],
+            "time": "2014-08-24 08:33:20"
+        },
+        {
+            "name": "phpmailer/phpmailer",
+            "version": "v5.2.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "73b61679809615850706f1dbf88e6df2ddc05745"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/73b61679809615850706f1dbf88e6df2ddc05745",
+                "reference": "73b61679809615850706f1dbf88e6df2ddc05745",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "*",
+                "phpunit/phpunit": "4.1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "class.phpmailer.php",
+                    "class.pop3.php",
+                    "class.smtp.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "time": "2014-09-26 18:33:30"
+        },
+        {
+            "name": "phpoffice/phpexcel",
+            "version": "1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PHPExcel.git",
+                "reference": "e69a5e4d0ffa7fb6f171859e0a04346e580df30b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/e69a5e4d0ffa7fb6f171859e0a04346e580df30b",
+                "reference": "e69a5e4d0ffa7fb6f171859e0a04346e580df30b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xml": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPExcel": "Classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Maarten Balliauw",
+                    "homepage": "http://blog.maartenballiauw.be"
+                },
+                {
+                    "name": "Mark Baker"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "http://blog.rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                }
+            ],
+            "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
+            "homepage": "http://phpexcel.codeplex.com",
+            "keywords": [
+                "OpenXML",
+                "excel",
+                "php",
+                "spreadsheet",
+                "xls",
+                "xlsx"
+            ],
+            "time": "2014-03-02 15:22:49"
+        },
+        {
+            "name": "skyzyx/mimetypes",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/skyzyx/mimetypes.git",
+                "reference": "bf8a41a13b187812fd9e71caaeee5c97ea4f0221"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/skyzyx/mimetypes/zipball/bf8a41a13b187812fd9e71caaeee5c97ea4f0221",
+                "reference": "bf8a41a13b187812fd9e71caaeee5c97ea4f0221",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "dflydev/apache-mime-types": "1.0.*@dev",
+                "twig/twig": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Skyzyx\\Components\\Mimetypes": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ryan Parman",
+                    "homepage": "http://ryanparman.com",
+                    "role": "Vanity Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "http://github.com/skyzyx/mimetypes/contributors"
+                }
+            ],
+            "description": "Creates a JSON document containing a thorough list of file extensions => mime types as provided by the Apache httpd project.",
+            "homepage": "http://github.com/skyzyx/mimetypes",
+            "keywords": [
+                "dictionary",
+                "map",
+                "mime",
+                "mimetype"
+            ],
+            "time": "2013-03-31 11:50:02"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.3"
+    },
+    "platform-dev": []
+}

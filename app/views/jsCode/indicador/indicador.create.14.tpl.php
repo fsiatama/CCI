@@ -51,7 +51,6 @@
 		,valueField:'id_posicion'
 		,tpl: resultTplPosicion
 		,displayFieldTpl:'({id_posicion}) - {posicion}'
-		,allowBlank:true
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {
@@ -83,7 +82,7 @@
 	);
 	var comboPais = new Combo({
 		id:module+'comboPais'
-		,singleMode:true
+		//,singleMode:true
 		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
 		,name:'id_pais[]'
 		,store:storePais

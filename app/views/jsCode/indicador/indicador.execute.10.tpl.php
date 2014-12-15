@@ -89,9 +89,9 @@ $htmlDescription .= '</ol>';
 		,enableColumnMove:false
 		,id:module+'gridIndicador'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		//,bbar:new Ext.PagingToolbar({pageSize:1000, store:storeIndicador, displayInfo:true})
+		,bbar: new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
 		,iconCls:'silk-grid'
-		//,plugins:[new Ext.ux.grid.Excel()]
+		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
 		,height:300
 		,autoWidth:true

@@ -8,13 +8,14 @@ require 'lib/config.php';
 require 'lib/Helpers.php';
 
 //Library
+require '../vendor/autoload.php';
 require 'lib/Request.php';
 require 'lib/Inflector.php';
 require 'lib/Response.php';
 require 'lib/View.php';
 require 'lib/Lang.php';
 require 'lib/Excel.php';
-require 'lib/Download.php';
+//require 'lib/FileDownload.php';
 
 
 //Llamar al controlador indicado

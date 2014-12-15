@@ -34,7 +34,7 @@ $htmlDescription .= '</ol>';
 		,fields:[
 			{name:'id', type:'float'},
 			{name:'periodo', type:'string'},
-			{name:'valor_expo_agricola', type:'float'},
+			{name:'valor_expo_sector', type:'float'},
 			{name:'valor_expo', type:'float'},
 			{name:'participacion', type:'float'}
 		]
@@ -51,7 +51,7 @@ $htmlDescription .= '</ol>';
 
 	storeIndicador.on('load', function(store){
 
-		FusionCharts.setCurrentRenderer('javascript');
+		/*FusionCharts.setCurrentRenderer('javascript');
 		
 		disposeCharts();
 
@@ -59,13 +59,13 @@ $htmlDescription .= '</ol>';
 		chart.setTransparent(true);
 		chart.setJSONData(store.reader.jsonData.columnChartData);
 		chart.render(module + 'ColumnChart');
-		Ext.ux.bodyMask.hide();
+		Ext.ux.bodyMask.hide();*/
 
 	});
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo_agricola'); ?>', dataIndex:'valor_expo_agricola' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo_sector'); ?>', dataIndex:'valor_expo_sector' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat},
 		]

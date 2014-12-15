@@ -3,6 +3,7 @@
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module.'_'.$indicador_id; ?>';
 
+
 	var Combo = Ext.extend(Ext.ux.form.SuperBoxSelect, {
 		xtype:'superboxselect'
 		,resizable:false
@@ -68,6 +69,8 @@
 		[12, Date.monthNames[11]]
 	];
 
+	var arrTrade = <?= json_encode($trade); ?>;
+
 	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
 		typeAhead:false
 		,forceSelection:true
@@ -75,6 +78,13 @@
 		,allowBlank:false
 		,triggerAction:'all'
 		,flex:true
+	});
+
+	var comboIntercambio = new simpleCombo({
+		hiddenName:'intercambio'
+		,id:module+'comboIntercambio'
+		,store:arrTrade
+		,fieldLabel:Ext.ux.lang.reports.trade
 	});
 
 	var comboAnio_ini = new simpleCombo({
@@ -133,6 +143,7 @@
 				{name:'indicador_tipo_indicador_id', mapping:'indicador_tipo_indicador_id', type:'float'},
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
 				{name:'id_pais', mapping:'id_pais', type:'string'},
+				{name:'intercambio', mapping:'intercambio', type:'string'},
 				{name:'anio_ini', mapping:'anio_ini', type:'float'},
 				{name:'anio_fin', mapping:'anio_fin', type:'float'},
 				{name:'desde_ini', mapping:'desde_ini', type:'float'},
@@ -164,6 +175,10 @@
 					,id:module+'indicador_nombre'
 					,allowBlank:false
 				}]
+			},{
+				defaults:{anchor:'100%'}
+				,columnWidth:.4
+				,items:[comboIntercambio]
 			}]
 		},{
 			xtype:'fieldset'
@@ -295,6 +310,14 @@
 		});
 		arrDescription.push({
 			label: label
+			,values: arrValues
+		});
+
+		var trade     = Ext.getCmp(module+'comboIntercambio').getRawValue();
+		arrValues     = [];
+		arrValues.push(trade);
+		arrDescription.push({
+			label: Ext.ux.lang.reports.trade
 			,values: arrValues
 		});
 

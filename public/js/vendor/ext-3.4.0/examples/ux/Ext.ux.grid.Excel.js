@@ -144,7 +144,6 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 			parametros['sort'] = sortInfo.field;
 			parametros['dir']  = sortInfo.direction;
 		}
-		//console.log(sortInfo);
 		// add fields and query to baseParams of store
 		delete(parametros[this.paramNames.fields]);
 		delete(parametros[this.paramNames.format]);
@@ -171,7 +170,6 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 					}
 					catch(e) {}
 
-					console.log(results.file);
 					Ext.DomHelper.append(document.body, {
 						tag: 'iframe'
 						,id:'downloadIframe'

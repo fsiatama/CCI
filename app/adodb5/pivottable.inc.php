@@ -72,8 +72,13 @@
 	} else {
 		if (is_array($colarr)) {
 			foreach ($colarr as $v) {
-				if (!is_numeric($v)) $vq = $db->qstr($v);
-				else $vq = $v;
+				
+				if (!is_numeric($v)) {
+					$vq = $db->qstr($v);
+				} else {
+					$vq = $v;
+				}
+
 				$v = trim($v);
 				if (strlen($v) == 0	) {
 					$v = 'null';
@@ -99,7 +104,11 @@
 		}
 	}
 	if ($aggfield && $aggfield != '1'){
-		$agg  = "$aggfn($aggfield)";
+		if ($aggfn == 'COUNT_DISTINCT') {
+			$agg  = "COUNT( DISTINCT $aggfield)";
+		} else {
+			$agg  = "$aggfn($aggfield)";
+		}
 		$sel .= "\n\t$agg as \"$sumlabel$aggfield\", ";
 	}
 
@@ -119,7 +128,7 @@
 
 	$sql = "SELECT $sel \nFROM $tables $where \nGROUP BY $groupFields";
 
-	//print_r($sql);
+	//echo '<pre>'.$sql.'</pre>';
 
 	return $sql;
  }

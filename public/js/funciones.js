@@ -297,3 +297,10 @@ function numberFormat (value, decimals) {
 		return value;
 	}
 }
+function integerFormat (value) {
+	if(!isNaN(parseInt(value)) && isFinite(value)){
+		return Ext.util.Format.number(value,'0,0');
+	} else {
+		return value;
+	}
+}

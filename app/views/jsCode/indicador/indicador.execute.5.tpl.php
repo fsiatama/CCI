@@ -20,11 +20,10 @@ $htmlDescription .= '</ol>';
 	var module = '<?= $module.'_'.$indicador_id; ?>';
 	var panelHeight = Math.floor(Ext.getCmp('tabpanel').getInnerHeight() - 260);
 
-	var storeIndicador = new Ext.data.JsonStore({
+	var storeBalanza = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
-		,id:module+'storeIndicador'
-		,autoDestroy:true
+		,id:module+'storeBalanza'
 		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
@@ -33,14 +32,15 @@ $htmlDescription .= '</ol>';
 		}
 		,fields:[
 			{name:'id', type:'float'},
-			{name:'periodo', type:'string'},
-			{name:'valor_expo_agricola', type:'float'},
-			{name:'valor_expo', type:'float'},
-			{name:'participacion', type:'float'}
+			{name:'impoPeriod', type:'string'},
+			{name:'impoValue', type:'float'},
+			{name:'expoPeriod', type:'string'},
+			{name:'expoValue', type:'float'},
+			{name:'variation', type:'float'}
 		]
 	});
 
-	storeIndicador.on('beforeload', function(){
+	storeBalanza.on('beforeload', function(){
 		var period = Ext.getCmp(module + 'comboPeriod').getValue();
 		if (!period) {
 			return false;
@@ -48,9 +48,8 @@ $htmlDescription .= '</ol>';
 		this.setBaseParam('period', period);
 		Ext.ux.bodyMask.show();
 	});
-
-	storeIndicador.on('load', function(store){
-
+	
+	storeBalanza.on('load', function(store){
 		FusionCharts.setCurrentRenderer('javascript');
 		
 		disposeCharts();
@@ -60,26 +59,37 @@ $htmlDescription .= '</ol>';
 		chart.setJSONData(store.reader.jsonData.columnChartData);
 		chart.render(module + 'ColumnChart');
 		Ext.ux.bodyMask.hide();
-
 	});
-	var colModelIndicador = new Ext.grid.ColumnModel({
+
+	var titles = [
+		{header: Ext.ux.lang.reports.initialRange, colspan: 2, align: 'center'},
+		{header: Ext.ux.lang.reports.finalRange, colspan: 2, align: 'center'},
+		{header: '', colspan: 1, align: 'center'}
+	];
+
+	var group = new Ext.ux.grid.ColumnHeaderGroup({
+		rows: [titles]
+	});
+
+	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo_agricola'); ?>', dataIndex:'valor_expo_agricola' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'impoPeriod', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.numero_productos'); ?>', dataIndex:'impoValue' ,'renderer':integerFormat},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'expoPeriod', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.numero_productos'); ?>', dataIndex:'expoValue' ,'renderer':integerFormat},
+			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'variation' ,'renderer':unsignedFormat}
 		]
 		,defaults: {
 			sortable: true
 			,align: 'right'
 		}
 	});
-
-	var gridIndicador = new Ext.grid.GridPanel({
+	
+	var gridBalanza = new Ext.grid.GridPanel({
 		border:true
 		,monitorResize:true
-		,store:storeIndicador
-		,colModel:colModelIndicador
+		,store:storeBalanza
+		,colModel:colModelBalanza
 		,stateful:true
 		,columnLines:true
 		,stripeRows:true
@@ -87,23 +97,23 @@ $htmlDescription .= '</ol>';
 			forceFit:true
 		}
 		,enableColumnMove:false
-		,id:module+'gridIndicador'
+		,id:module+'gridBalanza'			
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeIndicador, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
 		,iconCls:'silk-grid'
-		,plugins:[new Ext.ux.grid.Excel()]
+		,plugins:[group, new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:300
+		,height:400
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
-	Ext.state.Manager.clear(gridIndicador.getItemId());
-
+	Ext.state.Manager.clear(gridBalanza.getItemId());
+	
 	var arrPeriods = <?= json_encode($periods); ?>;
 
 	/******************************************************************************************************************************************************************************/
-
+	
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
 		,id:module + 'excuteIndicadorContainer'
@@ -149,7 +159,7 @@ $htmlDescription .= '</ol>';
 				text: Ext.ux.lang.buttons.generate
 				,iconCls: 'icon-refresh'
 				,handler: function () {
-					storeIndicador.load();
+					storeBalanza.load();
 				}
 			}]
 		},{
@@ -160,9 +170,17 @@ $htmlDescription .= '</ol>';
 				,id: module + 'ColumnChart'
 				,plain:true
 			}]
+		/*},{
+			height:430
+			,html:'<div id="' + module + 'AreaChart"></div>'
+			,items:[{
+				xtype:'panel'
+				,id: module + 'AreaChart'
+				,plain:true
+			}]*/
 		},{
 			defaults:{anchor:'100%'}
-			,items:[gridIndicador]
+			,items:[gridBalanza]
 		}]
 		,listeners:{
 			beforedestroy: {
@@ -173,15 +191,15 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
-	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
+	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p){
 		disposeCharts();
-	}, this);
+	});
 
-	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
-		storeIndicador.load();
-	}, this);
-
-	storeIndicador.load();
+	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
+		storeBalanza.load();
+	});
+	
+	storeBalanza.load();
 
 	return indicadorContainer;
 
@@ -189,7 +207,7 @@ $htmlDescription .= '</ol>';
 	function disposeCharts () {
 		if(FusionCharts(module + 'ColumnChartId')){
 			FusionCharts(module + 'ColumnChartId').dispose();
-		}
+		}		
 	}
 
 	/*********************************************** End functions***********************************************/

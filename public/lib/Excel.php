@@ -1,6 +1,8 @@
 <?php
 
-require_once(PATH_APP.'lib/PHPExcel/Classes/PHPExcel.php');
+//require_once(PATH_APP.'lib/PHPExcel/Classes/PHPExcel.php');
+
+use \PHPExcel;
 
 /**
 * Excel
@@ -152,6 +154,7 @@ class Excel
 		switch ($this->format){
 	    	case '1':
 				$fileName = $this->fileName.'.xlsx';
+				$objWriter = PHPExcel_IOFactory::createWriter($this->objPHPExcel, 'Excel2007');
 				$objWriter = new PHPExcel_Writer_Excel2007($this->objPHPExcel);
 			break;
 			case '2':

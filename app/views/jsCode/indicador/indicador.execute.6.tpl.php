@@ -32,13 +32,11 @@ $htmlDescription .= '</ol>';
 		}
 		,fields:[
 			{name:'id', type:'float'},
-			{name:'firstPeriod', type:'string'},
-			{name:'firstValImpo', type:'float'},
-			{name:'firstValExpo', type:'float'},
-			{name:'lastPeriod', type:'string'},
-			{name:'lastValImpo', type:'float'},
-			{name:'lastValExpo', type:'float'},
-			{name:'valor_balanza', type:'float'}
+			{name:'periodFirst', type:'string'},
+			{name:'valueFirst', type:'float'},
+			{name:'periodLast', type:'string'},
+			{name:'valueLast', type:'float'},
+			{name:'variation', type:'float'}
 		]
 	});
 
@@ -64,8 +62,8 @@ $htmlDescription .= '</ol>';
 	});
 
 	var titles = [
-		{header: Ext.ux.lang.reports.initialRange, colspan: 3, align: 'center'},
-		{header: Ext.ux.lang.reports.finalRange, colspan: 3, align: 'center'},
+		{header: Ext.ux.lang.reports.initialRange, colspan: 2, align: 'center'},
+		{header: Ext.ux.lang.reports.finalRange, colspan: 2, align: 'center'},
 		{header: '', colspan: 1, align: 'center'}
 	];
 
@@ -75,13 +73,11 @@ $htmlDescription .= '</ol>';
 
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'firstPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'firstValImpo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'firstValExpo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'lastPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'lastValImpo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'lastValExpo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'valor_balanza' ,'renderer':numberFormat}
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodFirst', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.numero_productos'); ?>', dataIndex:'valueFirst' ,'renderer':integerFormat},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodLast', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.numero_productos'); ?>', dataIndex:'valueLast' ,'renderer':integerFormat},
+			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'variation' ,'renderer':rateFormat}
 		]
 		,defaults: {
 			sortable: true
@@ -103,10 +99,9 @@ $htmlDescription .= '</ol>';
 		,enableColumnMove:false
 		,id:module+'gridBalanza'			
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		//,bbar:new Ext.PagingToolbar({pageSize:1000, store:storeBalanza, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
 		,iconCls:'silk-grid'
-		//,plugins:[new Ext.ux.grid.Excel()]
-		,plugins: group
+		,plugins:[group, new Ext.ux.grid.Excel()]
 		,layout:'fit'
 		,height:400
 		,autoWidth:true
