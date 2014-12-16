@@ -138,39 +138,6 @@ $htmlDescription .= '</ol>';
 					'</div>' +
 				'</div>' +
 			'</div>'
-
-		/*},{
-			style:{padding:'0px'}
-			,border:true
-			,html: ''
-			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
-			},{
-				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 12
-				,width: 100
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeIndicador.load();
-				}
-			}]
-		},{
-			height:430
-			,html:'<div id="' + module + 'PieChart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'PieChart'
-				,plain:true
-			}]*/
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridIndicador]
@@ -184,15 +151,6 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
-	/*Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
-		//console.log('deactivate');
-		disposeCharts();
-	}, this);
-
-	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
-		//console.log(p, storeIndicador);
-		storeIndicador.load();
-	}, this);*/
 
 	storeIndicador.load();
 
@@ -200,9 +158,7 @@ $htmlDescription .= '</ol>';
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-		/*if(FusionCharts(module + 'PieChartId')){
-			FusionCharts(module + 'PieChartId').dispose();
-		}*/
+		
 	}
 
 	/*********************************************** End functions***********************************************/

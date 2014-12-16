@@ -469,6 +469,33 @@ return [
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
 		],
+		'15' => [
+			[
+				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'yearRange'  => ['anio_fin'],
+			],[
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
+			]
+		]
 	],
 	'executeConfig' => [
 		'1'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaRelativa'],
@@ -485,6 +512,7 @@ return [
 		'12' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'CrecimientoExportadores'],
 		'13' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'PromedioPonderadoArancel'],
 		'14' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'RelacionCrecimientoImpoExpo'],
+		'15' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'RelacionCrecimientoExpoAgroExpoTot'],
 	],
 	'yearsAvailable' => ['2010', '2011', '2012', '2013', '2014'],
 	'periods' => [

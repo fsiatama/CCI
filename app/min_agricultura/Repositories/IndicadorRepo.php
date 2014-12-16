@@ -423,13 +423,21 @@ class IndicadorRepo extends BaseRepo {
 				$result = call_user_func_array([$repo, $repoMethodName], []);
 
 				if ($format !== false && !empty($fields) && $result['total'] > 0) {
+					$arrDescription   = [];
+					$arrDescription['title'] = $row['tipo_indicador_nombre'];
+					foreach (explode('||', $row['indicador_campos']) as $value) {
+						$arr  = explode(':', $value);
+						if (!empty($arr[1])) {
+							$arrDescription[$arr[0]] = $value;
+						}
+					}
+
 					$excel = new Excel (
-						$result['data'],
+						$result,
 						$format,
 						$fields,
-						20,
 						$row['indicador_nombre'],
-						''
+						$arrDescription
 					);
 					$result = $excel->write();
 				}

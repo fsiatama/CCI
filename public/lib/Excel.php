@@ -18,7 +18,7 @@ class Excel
 	private $head;
 	private $total;
 	private $fileName;
-	private $columnFormat;
+	private $description;
 	private $rendererName;
 	private $rendererLibraryPath;
 	private $objPHPExcel;
@@ -26,22 +26,99 @@ class Excel
 	private $worksheet;
 	private $numberColumns = 0;
 	
-	public function __construct($data, $format, $head, $total, $fileName, $columnFormat = "")
+
+	/**
+	 * __construct
+	 * 
+	 * @param array  $result       Array con todos los datos del resultado de la consulta (Datos, Total, Graficas)
+	 * @param string $format       Formato que el usuario pide de salida (xls, xlsx, pdf).
+	 * @param array  $head         Array con los titulos de la grilla.
+	 * @param string $fileName     Nombre del archivo de salida.
+	 * @param array  $description  array con el titulo del reporte y la descripcion de los filtros.
+	 *
+	 * @access public
+	 *
+	 * @return mixed Value.
+	 */
+	public function __construct(array $result, $format, array $head, $fileName, array $description = [])
 	{
-		$this->data         = $data;
-		$this->format       = $format;
-		$this->head         = $head;
-		$this->total        = $total;
-		$this->fileName     = $fileName;
-		$this->columnFormat = $columnFormat;
+		$this->data        = $result['data'];
+		$this->format      = $format;
+		$this->head        = $head;
+		$this->total       = $result['total'];
+		$this->fileName    = $fileName;
+		$this->description = $description;
 
 		$this->rendererName        = PHPExcel_Settings::PDF_RENDERER_MPDF;
 		$rendererLibrary           = 'MPDF54';
 		$this->rendererLibraryPath = PATH_APP.'lib/' . $rendererLibrary;
 		$this->objPHPExcel         = new PHPExcel();
 		$this->setProperties();
-		$this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
-		$this->objPHPExcel->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+		//$this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+		//$this->objPHPExcel->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+
+		$objPageSetup = new PHPExcel_Worksheet_PageSetup();
+		$objPageSetup->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_LETTER);
+		$objPageSetup->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT);
+		$objPageSetup->setFitToWidth(1);
+		$this->objPHPExcel->getActiveSheet()->setPageSetup($objPageSetup);
+	}
+
+	private function getHeaderStyle()
+	{
+		return [
+			'font' => [
+				'bold'  => true,
+				'color' => [ 'argb' => PHPExcel_Style_Color::COLOR_WHITE ]
+			],
+			'alignment' => [
+				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+			],
+			'borders' => [
+				'top'     => [ 'style' => PHPExcel_Style_Border::BORDER_THIN ]
+			],
+			'fill' => [
+				'type'       => PHPExcel_Style_Fill::FILL_SOLID,
+				'startcolor' => [ 'argb' => 'FF1F497D' ]
+			]
+		];
+	}
+
+	private function getTitleStyle()
+	{
+		return [
+			'font' => [
+				'bold' => true,
+				'size' => '12',
+			],
+			'borders' => [
+				'inside' => [
+					'style' => PHPExcel_Style_Border::BORDER_THIN,
+					'color' => [
+						'argb' => 'FFDFD7CA'
+					]
+				],
+				'outline' => [
+					'style' => PHPExcel_Style_Border::BORDER_THIN,
+					'color' => [
+						'argb' => 'FFDFD7CA'
+					]
+				]
+			],
+			'fill' => [
+				'type'       => PHPExcel_Style_Fill::FILL_SOLID,
+				'startcolor' => [ 'argb' => 'FFF8F5F0' ]
+			],
+		];
+	}
+
+	private function getDescriptionStyle()
+	{
+		return [
+			'font' => [
+				'size' => '8',
+			]
+		];
 	}
 
 	private function setRowNumber($rowNumber)
@@ -79,6 +156,34 @@ class Excel
 		return $letter;
 	}
 
+	private function writeTitle()
+	{
+		if (!empty($this->description)) {
+			
+			$numberColumns = count($this->head);
+			$rowNumber     = $this->rowNumber;
+
+			foreach ($this->description as $key => $value) {
+
+				$cell  = $this->letterColumn($numberColumns);
+				$range = 'A'.$rowNumber.':'.$cell.$rowNumber;
+				
+				$this->objPHPExcel->getActiveSheet()->mergeCells($range);
+				$this->objPHPExcel->getActiveSheet()->getCell('A'.$rowNumber)->setValue($value);
+
+				if ($key == 'title') {
+					$this->objPHPExcel->getActiveSheet()->getStyle($range)->applyFromArray( $this->getTitleStyle() );
+				} else {
+					$this->objPHPExcel->getActiveSheet()->getStyle($range)->applyFromArray( $this->getDescriptionStyle() );
+				}
+				$rowNumber += 1;
+				$this->setRowNumber($rowNumber);
+			}
+			$rowNumber += 1;
+			$this->setRowNumber($rowNumber);
+		}
+	}
+
 	private function writeHeader()
 	{
 		$cell = 'A';
@@ -94,24 +199,7 @@ class Excel
 			$arrHead[$cell] = $fieldTitle;
 		}
 
-		$this->objPHPExcel->getActiveSheet()->getStyle('A'.$this->rowNumber.':'.$cell.$this->rowNumber)->applyFromArray(
-			[
-				'font' => [
-					'bold'  => true,
-					'color' => [ 'argb' => PHPExcel_Style_Color::COLOR_WHITE ]
-				],
-				'alignment' => [
-					'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-				],
-				'borders' => [
-					'top'     => [ 'style' => PHPExcel_Style_Border::BORDER_THIN ]
-				],
-				'fill' => [
-					'type'       => PHPExcel_Style_Fill::FILL_SOLID,
-					'startcolor' => [ 'argb' => 'FF1F497D' ]
-				]
-			]
-		);
+		$this->objPHPExcel->getActiveSheet()->getStyle('A'.$this->rowNumber.':'.$cell.$this->rowNumber)->applyFromArray( $this->getHeaderStyle() );
 	}
 
 	private function writeBody()
@@ -152,7 +240,7 @@ class Excel
 	private function save()
 	{
 		switch ($this->format){
-	    	case '1':
+			case '1':
 				$fileName = $this->fileName.'.xlsx';
 				$objWriter = PHPExcel_IOFactory::createWriter($this->objPHPExcel, 'Excel2007');
 				$objWriter = new PHPExcel_Writer_Excel2007($this->objPHPExcel);
@@ -183,9 +271,9 @@ class Excel
 			case '4':
 				$fileName = $this->fileName.'.txt';
 				$objWriter = PHPExcel_IOFactory::createWriter($this->objPHPExcel, 'CSV')->setDelimiter(',')
-	                                                                  ->setEnclosure('"')
-	                                                                  ->setLineEnding("\r\n")
-	                                                                  ->setSheetIndex(0);
+																	  ->setEnclosure('"')
+																	  ->setLineEnding("\r\n")
+																	  ->setSheetIndex(0);
 			break;
 		}
 		$objWriter->setPreCalculateFormulas(false);
@@ -195,9 +283,11 @@ class Excel
 
 	public function write()
 	{
-		$rowNumber = 4;
+		$rowNumber = 2;
 		$this->setRowNumber($rowNumber);
 		$this->worksheet = $this->objPHPExcel->getActiveSheet();
+
+		$this->writeTitle();
 
 		$this->writeHeader();
 		

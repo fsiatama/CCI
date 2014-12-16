@@ -34,22 +34,28 @@ $htmlDescription .= '</ol>';
 		,fields:[
 			{name:'id', type:'float'},
 			{name:'periodo', type:'string'},
-			{name:'valor_expo_sector', type:'float'},
+			{name:'valor_expo_agricola', type:'float'},
 			{name:'valor_expo', type:'float'},
-			{name:'participacion', type:'float'}
 		]
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		if (!period) {
-			return false;
-		};
-		this.setBaseParam('period', period);
 		Ext.ux.bodyMask.show();
 	});
 
 	storeIndicador.on('load', function(store){
+
+		var el         = Ext.Element.get(module + 'growthRateExpo');
+		var growthRate = rateFormat(store.reader.jsonData.growthRateExpo);
+		el.update(growthRate);
+
+		el         = Ext.Element.get(module + 'growthRateAgriculture');
+		growthRate = rateFormat(store.reader.jsonData.growthRateAgriculture);
+		el.update(growthRate);
+
+		el         = Ext.Element.get(module + 'rateVariation');
+		growthRate = rateFormat(store.reader.jsonData.rateVariation);
+		el.update(growthRate);
 
 		FusionCharts.setCurrentRenderer('javascript');
 		
@@ -59,20 +65,16 @@ $htmlDescription .= '</ol>';
 		chart.setTransparent(true);
 		chart.setJSONData(store.reader.jsonData.columnChartData);
 		chart.render(module + 'ColumnChart');
+
 		Ext.ux.bodyMask.hide();
 
 	});
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo_sector'); ?>', dataIndex:'valor_expo_sector' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo_agricola'); ?>', dataIndex:'valor_expo_agricola' ,'renderer':numberFormat, align: 'right'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat, align: 'right'},
 		]
-		,defaults: {
-			sortable: true
-			,align: 'right'
-		}
 	});
 
 	var gridIndicador = new Ext.grid.GridPanel({
@@ -93,14 +95,12 @@ $htmlDescription .= '</ol>';
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:350
+		,height:panelHeight
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
-
-	var arrPeriods = <?= json_encode($periods); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -130,28 +130,22 @@ $htmlDescription .= '</ol>';
 			'</div>'
 		},{
 			style:{padding:'0px'}
-			,border:true
-			,html: ''
-			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
-			},{
-				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 12
-				,width: 100
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeIndicador.load();
-				}
-			}]
+			,html: '<div class="bootstrap-styles">' +
+				'<div class="row text-center countTo">' +
+					'<div class="col-md-4">' +
+						'<label>' + Ext.ux.lang.reports.growthRateAgriculture + '</label>' +
+						'<strong id="' + module + 'growthRateAgriculture">0</strong>' +
+					'</div>' +
+					'<div class="col-md-4">' +
+						'<label>' + Ext.ux.lang.reports.growthRateExpo + '</label>' +
+						'<strong id="' + module + 'growthRateExpo">0</strong>' +
+					'</div>' +
+					'<div class="col-md-4">' +
+						'<label><?= Lang::get('indicador.reports.variation'); ?></label>' +
+						'<strong id="' + module + 'rateVariation">0</strong>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
 		},{
 			height:430
 			,html:'<div id="' + module + 'ColumnChart"></div>'

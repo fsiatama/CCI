@@ -30,9 +30,14 @@ Ext.ux.lang.reports = {
 	,selectMonthTo: 'Mes Hasta'
 	,initialRange: 'Rango Inicial'
 	,finalRange: 'Rango Final'
-	,period: 'Period'
+	,period: 'Periodo'
 	,trade: 'Intercambio'
 	,total_records: 'Total de Registros'
+	,weighted_average: 'Promedio Ponderado'
+	,growthRateExpo: 'Indice de crecimiento Expo'
+	,growthRateImpo: 'Indice de crecimiento Impo'
+	,growthRateAgriculture: 'Indice de crecimiento Sector Agro.'
+	,growthRate: 'Indice de crecimiento'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');

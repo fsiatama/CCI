@@ -6,7 +6,7 @@ class DeclaraexpAdo extends BaseAdo {
 
 	protected $pivotRowFields        = '';
 	protected $pivotColumnFields     = '';
-	protected $pivotTotalFields      = '';
+	protected $pivotTotalFields      = [];
 	protected $pivotGroupingFunction = '';
 	protected $pivotSortColumn       = '';
 	protected $arrJoins       		 = [];
@@ -23,7 +23,7 @@ class DeclaraexpAdo extends BaseAdo {
 
 	public function setPivotTotalFields($pivotTotalFields)
 	{
-		$this->pivotTotalFields = $pivotTotalFields;
+		$this->pivotTotalFields = (is_array($pivotTotalFields)) ? $pivotTotalFields : [$pivotTotalFields];
 	}
 
 	public function setPivotGroupingFunction($pivotGroupingFunction)
@@ -175,7 +175,7 @@ class DeclaraexpAdo extends BaseAdo {
 		$sql .= ' ORDER BY ';
 		$sql .= (empty($this->pivotSortColumn)) ? 'id' : $this->pivotSortColumn ;
 
-		echo '<pre>'.$sql.'</pre>';
+		//echo '<pre>'.$sql.'</pre>';
 
 		return $sql;
 	}

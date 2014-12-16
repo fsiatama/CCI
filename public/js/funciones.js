@@ -275,6 +275,19 @@ function unsignedFormat(value){
 	}
 	return value;
 }
+function unsignedIntegerFormat (value) {
+	if(!isNaN(parseInt(value)) && isFinite(value)){
+		if(value > 0){
+			value = Ext.util.Format.number(value,'0,0');
+			return '<span style="color:green;">' + value + '</span>';
+		} else {
+			value = Ext.util.Format.number(value,'0,0');
+			return '<span style="color:red;">' + value + '</span>';
+		}
+	} else {
+		return value;
+	}
+}
 function rateFormat(value){
 	if(value > 0){
 		value = Ext.util.Format.number(value,'0,0.00');

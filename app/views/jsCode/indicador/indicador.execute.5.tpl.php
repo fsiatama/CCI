@@ -74,10 +74,10 @@ $htmlDescription .= '</ol>';
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'impoPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_productos'); ?>', dataIndex:'impoValue' ,'renderer':integerFormat},
+			{header:'<?= Lang::get('indicador.columns_title.numero_productos_impo'); ?>', dataIndex:'impoValue' ,'renderer':integerFormat},
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'expoPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_productos'); ?>', dataIndex:'expoValue' ,'renderer':integerFormat},
-			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'variation' ,'renderer':unsignedFormat}
+			{header:'<?= Lang::get('indicador.columns_title.numero_productos_expo'); ?>', dataIndex:'expoValue' ,'renderer':integerFormat},
+			{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat}
 		]
 		,defaults: {
 			sortable: true

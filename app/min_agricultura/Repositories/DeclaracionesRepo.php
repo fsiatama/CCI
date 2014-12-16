@@ -782,8 +782,8 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		$arrSeries = [
-			'impoValue' => Lang::get('indicador.reports.initialRange'),
-			'expoValue'  => Lang::get('indicador.reports.finalRange'),
+			'impoValue' => Lang::get('indicador.reports.imports'),
+			'expoValue'  => Lang::get('indicador.reports.exports'),
 		];
 
 		$columnChart = Helpers::jsonChart(
@@ -1157,7 +1157,7 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 		$productsAgriculture = $result['data'];
 
-		//Trae los productos configurados como agricolas
+		//Trae los productos configurados como sector minero
 		$result = $this->findProductsBySector('sectorIdMiningSector');
 		if (!$result['success']) {
 			return $result;
@@ -1448,7 +1448,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$columnValue = 'id_empresa';
 
-		if (!array_key_exists('posicion', $arrFiltersValues)) {
+		if (!array_key_exists('id_posicion', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
 			$result = $this->findProductsBySector('sectorIdAgriculture');
 			if (!$result['success']) {
@@ -1564,9 +1564,10 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo   = $this->getModelImpoAdo();
 		$this->setFiltersValues();
 
-		$columnValue = 'valorarancel';
+		$columnValue1 = 'valorarancel';
+		$columnValue2 = 'arancel_pagado';
 
-		if (!array_key_exists('posicion', $arrFiltersValues)) {
+		if (!array_key_exists('id_posicion', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
 			$result = $this->findProductsBySector('sectorIdAgriculture');
 			if (!$result['success']) {
@@ -1582,8 +1583,9 @@ class DeclaracionesRepo extends BaseRepo {
 		$arrRowField = ['id', 'decl.id_posicion', 'posicion', 'pais'];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotTotalFields([$columnValue1, $columnValue2]);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn($columnValue1 . ' DESC');
 
 		$result = $this->modelAdo->pivotSearch($this->model);
 
@@ -1592,7 +1594,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$totalValue = 0;
 
 			foreach ($result['data'] as $keyImpo => $rowImpo) {
-				$totalValue += (float)$rowImpo[$columnValue];
+				$totalValue += (float)$rowImpo[$columnValue1];
 			}
 
 			$arrData = [];
@@ -1600,16 +1602,17 @@ class DeclaracionesRepo extends BaseRepo {
 			
 			foreach ($result['data'] as $keyImpo => $rowImpo) {
 					
-				$rate     = ($rowImpo[$columnValue] / $totalValue );
-				$weighing = $rowImpo[$columnValue] * $rate;
+				$rate     = ($rowImpo[$columnValue1] / $totalValue );
+				$weighing = $rowImpo[$columnValue1] * $rate;
 				$average += $weighing;
 
 				$arrData[] = [
-					'id'            => $keyImpo,
-					'id_posicion'   => $rowImpo['id_posicion'],
-					'posicion'      => $rowImpo['posicion'],
-					'valorarancel'  => $rowImpo[$columnValue],
-					'participacion' => $rate
+					'id'             => $keyImpo,
+					'id_posicion'    => $rowImpo['id_posicion'],
+					'posicion'       => $rowImpo['posicion'],
+					'arancel_pagado' => $rowImpo[$columnValue2],
+					'valorarancel'   => $rowImpo[$columnValue1],
+					'participacion'  => ( $rate * 100 )
 				];
 			}
 			$result = [
@@ -1625,57 +1628,171 @@ class DeclaracionesRepo extends BaseRepo {
 
 	public function executeRelacionCrecimientoImpoExpo()
 	{
+		$result = $this->findBalanzaData();
+
+		if (!$result['success']) {
+			return $result;
+		}
+		$yearFirst = $this->arrFiltersValues['anio_ini'];
+
+		foreach ($result['data'] as $key => $value) {
+
+			if ($value['periodo'] == $yearFirst) {
+				$valueExpoFirst = $value['valor_expo'];
+				$valueImpoFirst = $value['valor_impo'];
+			}
+			$yearLast      = $value['periodo'];
+			$valueExpoLast = $value['valor_expo'];
+			$valueImpoLast = $value['valor_impo'];
+		}
+
+		$rangeYear     = range($yearFirst, $yearLast);
+		$numberPeriods = count($rangeYear);
+
+		$growthRateImpo = ( pow(($valueImpoLast / $valueImpoFirst), (1 / $numberPeriods)) - 1);
+		$growthRateExpo = ( pow(($valueExpoLast / $valueExpoFirst), (1 / $numberPeriods)) - 1);
+
+		//var_dump($growthRateImpo, $growthRateExpo);
+
+		$result = [
+			'success'        => true,
+			'data'           => $result['data'],
+			'growthRateImpo' => ($growthRateImpo * 100),
+			'growthRateExpo' => ($growthRateExpo * 100),
+			'rateVariation'  => ($growthRateExpo / $growthRateImpo),
+			'total'          => count($result['data'])
+		];
+
+		return $result;
+		
+	}
+
+	public function executeRelacionCrecimientoExpoAgroExpoTot()
+	{
 		$arrFiltersValues = $this->arrFiltersValues;
 		$this->setTrade('expo');
 		$this->setRange('ini');
 
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
+		$columnValue      = $this->columnValueExpo;
 		$this->setFiltersValues();
-
-		$yearFirst = $this->arrFiltersValues['anio_ini'];
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
 		$row = 'anio AS id';
 
-		$arrRowField = [$row, $rowField];
-
+		$arrRowField   = [$row, $rowField];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);
+		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
-		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
+		//busca los datos del sector agricola
+		if (!array_key_exists('id_posicion', $arrFiltersValues)) {
+			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
+			$result = $this->findProductsBySector('sectorIdAgriculture');
+			if (!$result['success']) {
+				return $result;
+			}
+			$productsAgriculture = $result['data'];
+			$this->model->setId_posicion($productsAgriculture);
+		}
+		$result = $this->modelAdo->pivotSearch($this->model);
 
-		if (!$rsDeclaraexp['success']) {
-			return $rsDeclaraexp;
+		if (!$result['success']) {
+			return $result;
+		}
+		$arrDataProductsAgriculture = $result['data'];
+
+		//Trae los productos configurados como sector minero
+		$result = $this->findProductsBySector('sectorIdMiningSector');
+		if (!$result['success']) {
+			return $result;
+		}
+		$energeticMiningSector = $result['data'];
+		//busca los datos del sector energetico
+		$this->model->setId_posicion($energeticMiningSector);
+		$result = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$result['success']) {
+			return $result;
+		}
+		$arrDataEnergeticMiningSector = $result['data'];
+
+		//busca el total de las exportaciones 
+		$this->model->setId_posicion('');
+		$result  = $this->modelAdo->pivotSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+		$arrData = [];
+
+		$arrDataTotal = $result['data'];
+
+		$yearFirst = $arrFiltersValues['anio_ini'];
+
+		foreach ($arrDataTotal as $rowTotal) {
+
+			$rowProductsAgriculture = Helpers::findKeyInArrayMulti(
+				$arrDataProductsAgriculture,
+				'periodo',
+				$rowTotal['periodo']
+			);
+			$rowEnergeticMiningSector = Helpers::findKeyInArrayMulti(
+				$arrDataEnergeticMiningSector,
+				'periodo',
+				$rowTotal['periodo']
+			);
+
+
+			$yearLast                   = $rowTotal['periodo'];
+			$valueLastAgriculture       = ($rowProductsAgriculture   !== false) ? $rowProductsAgriculture[$columnValue]   : 0 ;
+			$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? $rowEnergeticMiningSector[$columnValue] : 0 ;
+			$valueLastTotal             = $rowTotal[$columnValue] - $totalEnergeticMiningSector;
+			$valueLastTotal             = ($valueLastTotal == 0) ? 1 : $valueLastTotal ;
+
+			if ($rowTotal['periodo'] == $yearFirst) {
+				$valueAgricultureFirst = $valueLastAgriculture;
+				$valueFirstTotal       = $valueLastTotal;
+			}
+
+			$arrData[] = [
+				'id'                  => $rowTotal['id'],
+				'periodo'             => $rowTotal['periodo'],
+				'valor_expo_agricola' => $valueLastAgriculture,
+				'valor_expo'          => $valueLastTotal
+			];
 		}
 
-		$valueExpoFirst = $rsDeclaraexp['data'][0][$this->columnValueExpo];
+		$rangeYear     = range($yearFirst, $yearLast);
+		$numberPeriods = count($rangeYear);
 
-		//busca los datos de expo para el año final
-		$yearLast = $this->arrFiltersValues['anio_fin'];
-		$this->model->setAnio($yearLast);
-		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
+		$growthRateAgriculture = ( pow(($valueLastAgriculture / $valueAgricultureFirst), (1 / $numberPeriods)) - 1);
+		$growthRateExpo        = ( pow(($valueLastTotal / $valueFirstTotal), (1 / $numberPeriods)) - 1);
 
-		if (!$rsDeclaraexp['success']) {
-			return $rsDeclaraexp;
-		}
+		$arrSeries = [
+			'valor_expo_agricola' => Lang::get('indicador.columns_title.valor_expo_agricola'),
+			'valor_expo'          => Lang::get('indicador.columns_title.valor_expo'),
+		];
 
-		$valueExpoLast = $rsDeclaraexp['data'][0][$this->columnValueExpo];
-		
+		$columnChart = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			COLUMNAS
+		);
 
+		$result = [
+			'success'               => true,
+			'data'                  => $arrData,
+			'growthRateAgriculture' => ($growthRateAgriculture * 100),
+			'growthRateExpo'        => ($growthRateExpo * 100),
+			'rateVariation'         => ($growthRateAgriculture / $growthRateExpo),
+			'columnChartData'       => $columnChart,
+			'total'                 => count($arrData)
+		];
 
-
-
-	
-
-
-
-
-		//esta linea crea un rango entre el año inicial y el final
-		//$filterValue = range($arrFiltersValues[$filter['dateRange'][0]], $arrFiltersValues[$filter['dateRange'][1]]);
-		
+		return $result;
 	}
 }	
 

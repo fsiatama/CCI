@@ -112,7 +112,8 @@ class IndicadorAdo extends BaseAdo {
 			 indicador_uinsert,
 			 indicador_finsert,
 			 indicador_fupdate,
-			 tipo_indicador_activador
+			 tipo_indicador_activador,
+			 tipo_indicador_nombre
 			FROM indicador
 			LEFT JOIN tipo_indicador ON indicador_tipo_indicador_id = tipo_indicador_id
 		';

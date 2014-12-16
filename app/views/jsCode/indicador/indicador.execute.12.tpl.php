@@ -74,9 +74,9 @@ $htmlDescription .= '</ol>';
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'firstPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_empresas'); ?>', dataIndex:'firstValue' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.numero_empresas'); ?>', dataIndex:'firstValue' ,'renderer':integerFormat},
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'lastPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_empresas'); ?>', dataIndex:'lastValue' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.numero_empresas'); ?>', dataIndex:'lastValue' ,'renderer':integerFormat},
 			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':rateFormat}
 		]
 		,defaults: {
@@ -101,8 +101,7 @@ $htmlDescription .= '</ol>';
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
 		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
 		,iconCls:'silk-grid'
-		,plugins:[new Ext.ux.grid.Excel()]
-		,plugins: group
+		,plugins:[group, new Ext.ux.grid.Excel()]
 		,layout:'fit'
 		,height:400
 		,autoWidth:true

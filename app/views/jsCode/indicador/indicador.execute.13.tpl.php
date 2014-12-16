@@ -25,7 +25,7 @@ $htmlDescription .= '</ol>';
 		,root:'data'
 		,id:module+'storeIndicador'
 		,autoDestroy:true
-		,sortInfo:{field:'id',direction:'ASC'}
+		,sortInfo:{field:'valorarancel',direction:'DESC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
@@ -33,45 +33,37 @@ $htmlDescription .= '</ol>';
 		}
 		,fields:[
 			{name:'id', type:'float'},
-			{name:'periodo', type:'string'},
-			{name:'valor_expo_sector', type:'float'},
-			{name:'valor_expo', type:'float'},
+			{name:'id_posicion', type:'string'},
+			{name:'posicion', type:'string'},
+			{name:'valorarancel', type:'float'},
+			{name:'arancel_pagado', type:'float'},
 			{name:'participacion', type:'float'}
 		]
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		if (!period) {
-			return false;
-		};
-		this.setBaseParam('period', period);
 		Ext.ux.bodyMask.show();
 	});
 
 	storeIndicador.on('load', function(store){
 
-		/*FusionCharts.setCurrentRenderer('javascript');
-		
-		disposeCharts();
+		var el = Ext.Element.get(module + 'weighted_average');
+		var average = numberFormat(store.reader.jsonData.average);
 
-		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.columnChartData);
-		chart.render(module + 'ColumnChart');
-		Ext.ux.bodyMask.hide();*/
+		el.update(average);
+		Ext.ux.bodyMask.hide();
 
 	});
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo_sector'); ?>', dataIndex:'valor_expo_sector' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat},
+			{header:'<?= Lang::get('indicador.columns_title.posicion'); ?>', dataIndex:'id_posicion', align: 'left'},
+			{header:'<?= Lang::get('indicador.columns_title.desc_posicion'); ?>', dataIndex:'posicion', align: 'left'},
+			{header:'<?= Lang::get('indicador.columns_title.arancel_pagado'); ?>', dataIndex:'arancel_pagado' ,'renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.columns_title.valorarancel'); ?>', dataIndex:'valorarancel' ,'renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat, align:'right'},
 		]
 		,defaults: {
 			sortable: true
-			,align: 'right'
 		}
 	});
 
@@ -93,7 +85,7 @@ $htmlDescription .= '</ol>';
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:300
+		,height:panelHeight
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
@@ -130,36 +122,14 @@ $htmlDescription .= '</ol>';
 			'</div>'
 		},{
 			style:{padding:'0px'}
-			,border:true
-			,html: ''
-			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
-			},{
-				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 12
-				,width: 100
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeIndicador.load();
-				}
-			}]
-		},{
-			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'ColumnChart'
-				,plain:true
-			}]
+			,html: '<div class="bootstrap-styles">' +
+				'<div class="row text-center countTo">' +
+					'<div class="col-md-4 col-md-offset-4">' +
+						'<label>' + Ext.ux.lang.reports.weighted_average + '</label>' +
+						'<strong id="' + module + 'weighted_average">0</strong>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridIndicador]
@@ -173,23 +143,13 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
-	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
-		disposeCharts();
-	}, this);
-
-	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
-		storeIndicador.load();
-	}, this);
-
 	storeIndicador.load();
 
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-		if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
-		}
+		
 	}
 
 	/*********************************************** End functions***********************************************/

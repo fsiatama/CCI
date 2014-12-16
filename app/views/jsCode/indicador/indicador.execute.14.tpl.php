@@ -34,44 +34,39 @@ $htmlDescription .= '</ol>';
 		,fields:[
 			{name:'id', type:'float'},
 			{name:'periodo', type:'string'},
-			{name:'valor_expo_sector', type:'float'},
+			{name:'valor_impo', type:'float'},
 			{name:'valor_expo', type:'float'},
-			{name:'participacion', type:'float'}
 		]
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		if (!period) {
-			return false;
-		};
-		this.setBaseParam('period', period);
 		Ext.ux.bodyMask.show();
 	});
 
 	storeIndicador.on('load', function(store){
 
-		FusionCharts.setCurrentRenderer('javascript');
-		
-		disposeCharts();
+		var el         = Ext.Element.get(module + 'growthRateExpo');
+		var growthRate = rateFormat(store.reader.jsonData.growthRateExpo);
+		el.update(growthRate);
 
-		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.columnChartData);
-		chart.render(module + 'ColumnChart');
+		el         = Ext.Element.get(module + 'growthRateImpo');
+		growthRate = rateFormat(store.reader.jsonData.growthRateImpo);
+		el.update(growthRate);
+
+		el         = Ext.Element.get(module + 'rateVariation');
+		growthRate = rateFormat(store.reader.jsonData.rateVariation);
+		el.update(growthRate);
+
 		Ext.ux.bodyMask.hide();
 
 	});
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo_sector'); ?>', dataIndex:'valor_expo_sector' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat},
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat, align:'right'},
 		]
 		,defaults: {
-			sortable: true
-			,align: 'right'
 		}
 	});
 
@@ -93,7 +88,7 @@ $htmlDescription .= '</ol>';
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:300
+		,height:panelHeight
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
@@ -130,36 +125,22 @@ $htmlDescription .= '</ol>';
 			'</div>'
 		},{
 			style:{padding:'0px'}
-			,border:true
-			,html: ''
-			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
-			},{
-				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 12
-				,width: 100
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeIndicador.load();
-				}
-			}]
-		},{
-			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'ColumnChart'
-				,plain:true
-			}]
+			,html: '<div class="bootstrap-styles">' +
+				'<div class="row text-center countTo">' +
+					'<div class="col-md-4">' +
+						'<label>' + Ext.ux.lang.reports.growthRateExpo + '</label>' +
+						'<strong id="' + module + 'growthRateExpo">0</strong>' +
+					'</div>' +
+					'<div class="col-md-4">' +
+						'<label>' + Ext.ux.lang.reports.growthRateImpo + '</label>' +
+						'<strong id="' + module + 'growthRateImpo">0</strong>' +
+					'</div>' +
+					'<div class="col-md-4">' +
+						'<label><?= Lang::get('indicador.reports.variation'); ?></label>' +
+						'<strong id="' + module + 'rateVariation">0</strong>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridIndicador]
@@ -173,23 +154,13 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
-	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
-		disposeCharts();
-	}, this);
-
-	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
-		storeIndicador.load();
-	}, this);
-
 	storeIndicador.load();
 
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-		if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
-		}
+		
 	}
 
 	/*********************************************** End functions***********************************************/

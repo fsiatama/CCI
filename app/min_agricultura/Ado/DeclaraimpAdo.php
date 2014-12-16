@@ -9,7 +9,7 @@ class DeclaraimpAdo extends BaseAdo {
 
 	protected $pivotRowFields        = '';
 	protected $pivotColumnFields     = '';
-	protected $pivotTotalFields      = '';
+	protected $pivotTotalFields      = [];
 	protected $pivotGroupingFunction = '';
 	protected $pivotSortColumn       = '';
 	protected $arrJoins       		 = [];
@@ -26,7 +26,7 @@ class DeclaraimpAdo extends BaseAdo {
 
 	public function setPivotTotalFields($pivotTotalFields)
 	{
-		$this->pivotTotalFields = $pivotTotalFields;
+		$this->pivotTotalFields = (is_array($pivotTotalFields)) ? $pivotTotalFields : [$pivotTotalFields];
 	}
 
 	public function setPivotGroupingFunction($pivotGroupingFunction)
@@ -48,7 +48,7 @@ class DeclaraimpAdo extends BaseAdo {
 	{
 		$this->arrJoins = [
 			'decl.id_posicion = posicion.id_posicion',
-			'decl.id_paisorigen = pais.id_pais',
+			'decl.id_paisprocedencia = pais.id_pais',
 		];
 	}
 

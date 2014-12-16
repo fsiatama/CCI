@@ -31,6 +31,7 @@
  function PivotTableSQL(&$db,$tables,$rowfields,$colfield, $where=false,
  	$aggfield = false,$sumlabel='Sum ',$aggfn ='SUM', $showcount = true)
  {
+
 	if ($aggfield) {
 		$hidecnt = true;
 	} else {
@@ -90,26 +91,32 @@
 						"\n\t$aggfn(CASE WHEN $colfield=$vq THEN 1 ELSE 0 END) AS \"$v\", ";
 				}
 				if ($aggfield) {
-					if ($hidecnt) {
-						$label = $v;
-					} else {
-						$label = "{$v}_$aggfield";
+					foreach($aggfield as $field){
+						if ($hidecnt) {
+							$label = $v . " " .$field;
+						} else {
+							$label = "{$v}_".$field;
+						}
+						$sel .= $iif ?
+							"\n\t$aggfn(IIF($colfield=$vq,".$field.",0)) AS \"$label\", "
+							:
+							"\n\t$aggfn(CASE WHEN $colfield=$vq THEN ".$field." ELSE 0 END) AS \"$label\", ";
 					}
-					$sel .= $iif ?
-						"\n\t$aggfn(IIF($colfield=$vq,$aggfield,0)) AS \"$label\", "
-						:
-						"\n\t$aggfn(CASE WHEN $colfield=$vq THEN $aggfield ELSE 0 END) AS \"$label\", ";
 				}
 			}
 		}
 	}
-	if ($aggfield && $aggfield != '1'){
-		if ($aggfn == 'COUNT_DISTINCT') {
-			$agg  = "COUNT( DISTINCT $aggfield)";
-		} else {
-			$agg  = "$aggfn($aggfield)";
+	if ($aggfield && $aggfield != '1') {
+		foreach ($aggfield as $field) {
+
+			if ($aggfn == 'COUNT_DISTINCT') {
+				$agg  = "COUNT( DISTINCT $field)";
+			} else {
+				$agg  = "$aggfn($field)";
+			}
+			$sel .= "\n\t$agg as \"$sumlabel$field\", ";
 		}
-		$sel .= "\n\t$agg as \"$sumlabel$aggfield\", ";
+		
 	}
 
 	if ($showcount) {
