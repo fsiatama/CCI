@@ -157,12 +157,14 @@
 			}
 			,items:[{
 				defaults:{anchor:'100%'}
+				,columnWidth:1
 				,items:[{
 					xtype:'textfield'
 					,name:'indicador_nombre'
 					,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_nombre'); ?>'
 					,id:module+'indicador_nombre'
 					,allowBlank:false
+					,autoWidth:true
 				}]
 			}]
 		},{

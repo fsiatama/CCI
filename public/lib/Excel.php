@@ -1,9 +1,9 @@
 <?php
 
-//require_once(PATH_APP.'lib/PHPExcel/Classes/PHPExcel.php');
 
 use \PHPExcel;
 
+require 'PHPExcel_Cell_MyValueBinder.php';
 /**
 * Excel
 *
@@ -23,8 +23,11 @@ class Excel
 	private $rendererLibraryPath;
 	private $objPHPExcel;
 	private $rowNumber = 1;
+	private $rowHeaderNumber = 1;
 	private $worksheet;
 	private $numberColumns = 0;
+	private $arrHead = [];
+	private $arrChartData = [];
 	
 
 	/**
@@ -49,6 +52,16 @@ class Excel
 		$this->fileName    = $fileName;
 		$this->description = $description;
 
+		$area    = (!empty($result['areaChartData'])) ? $result['areaChartData'] : false ;
+		$pie     = (!empty($result['pieChartData'])) ? $result['pieChartData'] : false ;
+		$columns = (!empty($result['columnChartData'])) ? $result['columnChartData'] : false ;
+
+		$this->arrChartData = [
+			'columns' => $columns,
+			'area'    => $area,
+			'pie'     => $pie,
+		];
+
 		$this->rendererName        = PHPExcel_Settings::PDF_RENDERER_MPDF;
 		$rendererLibrary           = 'MPDF54';
 		$this->rendererLibraryPath = PATH_APP.'lib/' . $rendererLibrary;
@@ -62,6 +75,12 @@ class Excel
 		$objPageSetup->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT);
 		$objPageSetup->setFitToWidth(1);
 		$this->objPHPExcel->getActiveSheet()->setPageSetup($objPageSetup);
+		PHPExcel_Cell::setValueBinder( new PHPExcel_Cell_MyValueBinder() );
+	}
+
+	private function ValueBinder(PHPExcel_Cell $cell, $value = null)
+	{
+		var_dump($cell, $value);
 	}
 
 	private function getHeaderStyle()
@@ -121,6 +140,15 @@ class Excel
 		];
 	}
 
+	private function getStringFormat()
+	{
+		return [
+			'numberformat' => [
+				'code' => PHPExcel_Style_NumberFormat::FORMAT_GENERAL,
+			]
+		];
+	}
+
 	private function setRowNumber($rowNumber)
 	{
 		$this->rowNumber = $rowNumber;
@@ -156,6 +184,28 @@ class Excel
 		return $letter;
 	}
 
+	private function setColumnFormat()
+	{
+		foreach ($this->arrHead as $key => $value) {
+			
+			$arr          = array_column($this->data, $value);
+			$firstElement = array_shift($arr);
+			$range        = $key.($this->rowHeaderNumber + 1).':'.$key.($this->rowHeaderNumber + $this->total);
+			
+			if (is_numeric($firstElement) && $value != 'id_posicion' && $value != 'id_empresa' && $value != 'periodo') {
+				
+				//var_dump($range);
+				$this->objPHPExcel->getActiveSheet()->getStyle($range)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+
+			} else {
+				
+				$this->objPHPExcel->getActiveSheet()->getStyle($range)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+
+			}
+			
+		}
+	}
+
 	private function writeTitle()
 	{
 		if (!empty($this->description)) {
@@ -187,6 +237,8 @@ class Excel
 	private function writeHeader()
 	{
 		$cell = 'A';
+
+		$arrHead = [];
 		
 		foreach($this->head as $fieldName => $fieldTitle) {
 			$this->numberColumns += 1;
@@ -196,8 +248,10 @@ class Excel
 			$this->worksheet->getColumnDimension($cell)->setAutoSize(true);
 			$this->worksheet->setCellValueByColumnAndRow( ($this->numberColumns-1), $this->rowNumber, ($fieldTitle) );
 			
-			$arrHead[$cell] = $fieldTitle;
+			$arrHead[$cell] = $fieldName;
 		}
+
+		$this->arrHead = $arrHead;
 
 		$this->objPHPExcel->getActiveSheet()->getStyle('A'.$this->rowNumber.':'.$cell.$this->rowNumber)->applyFromArray( $this->getHeaderStyle() );
 	}
@@ -210,15 +264,11 @@ class Excel
 
 			foreach ($dataRow as $subKey => $dataCell) {
 				
-				if (is_array($this->head)) {
+				if (array_key_exists($subKey, $this->head)) {
 					
-					if (array_key_exists($subKey, $this->head)) {
-						
-						$index = array_search($subKey,array_keys($this->head));
+					$index = array_search($subKey,array_keys($this->head));
 
-						$arrData[$key][$index] = $dataCell;
-
-					}
+					$arrData[$key][$index] = $dataCell;
 
 				}
 
@@ -232,9 +282,90 @@ class Excel
 			$this->setRowNumber($rowNumber);
 
 			ksort($data);
-			$this->worksheet->fromArray( $data, NULL, 'A'.$this->rowNumber);
+			//var_dump($data);
+			$this->worksheet->fromArray( $data, '', 'A'.$this->rowNumber, true);
 		}
 
+	}
+
+	private function drawPie($xAxis, $series)
+	{
+		$cell = array_search($xAxis, $this->arrHead);
+		$xAxisTickValues1  = [];
+		$dataSeriesValues1 = [];
+		$dataseriesLabels1 = [];
+
+		if ($cell) {
+			$range = '$'.$cell.'$'.($this->rowHeaderNumber);
+			var_dump($range);
+			$dataseriesLabels1 = array(
+				new PHPExcel_Chart_DataSeriesValues('String', 'Worksheet!'.$range, NULL, 1),	//	2011
+			);
+
+			$range = '$'.$cell.'$'.($this->rowHeaderNumber + 1).':$'.$cell.'$'.($this->rowHeaderNumber + $this->total);
+
+			$xAxisTickValues1 = [
+				new PHPExcel_Chart_DataSeriesValues('String', 'Worksheet!'.$range, NULL, $this->total),	//	Q1 to Q4
+			];
+			foreach ($series as $key => $value) {
+				$cell = array_search($key, $this->arrHead);
+				if ($cell) {
+					$range = '$'.$key.'$'.($this->rowHeaderNumber + 1).':$'.$key.'$'.($this->rowHeaderNumber + $this->total);
+					$dataSeriesValues1 = [
+						new PHPExcel_Chart_DataSeriesValues('Number', 'Worksheet!'.$range, NULL, $this->total),
+					];
+				}
+			}
+			$series1 = new PHPExcel_Chart_DataSeries(
+				PHPExcel_Chart_DataSeries::TYPE_PIECHART,				// plotType
+				PHPExcel_Chart_DataSeries::GROUPING_STANDARD,			// plotGrouping
+				range(0, count($dataSeriesValues1)-1),					// plotOrder
+				$dataseriesLabels1,										// plotLabel
+				$xAxisTickValues1,										// plotCategory
+				$dataSeriesValues1										// plotValues
+			);
+
+			$layout1 = new PHPExcel_Chart_Layout();
+			$layout1->setShowVal(TRUE);
+			$layout1->setShowPercent(TRUE);
+
+			//	Set the series in the plot area
+			$plotarea1 = new PHPExcel_Chart_PlotArea($layout1, array($series1));
+			//	Set the chart legend
+			$legend1 = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_RIGHT, NULL, false);
+
+			$title1 = new PHPExcel_Chart_Title('Test Pie Chart');
+
+
+			//	Create the chart
+			$chart1 = new PHPExcel_Chart(
+				'chart1',		// name
+				$title1,		// title
+				$legend1,		// legend
+				$plotarea1,		// plotArea
+				true,			// plotVisibleOnly
+				0,				// displayBlanksAs
+				NULL,			// xAxisLabel
+				NULL			// yAxisLabel		- Pie charts don't have a Y-Axis
+			);
+
+			//	Set the position where the chart should appear in the worksheet
+			$chart1->setTopLeftPosition('A20');
+			$chart1->setBottomRightPosition('H40');
+
+			//	Add the chart to the worksheet
+			$this->objPHPExcel->getActiveSheet()->addChart($chart1);
+		}
+	}
+
+	private function drawCharts()
+	{
+		foreach ($this->arrChartData as $key => $data) {
+			if ($data !== false && !empty($data['xAxis'] && !empty($data['series']))) {
+				$method = 'draw' . Inflector::camel($key);
+				$this->$method($data['xAxis'], $data['series']);
+			}
+		}
 	}
 
 	private function save()
@@ -276,7 +407,8 @@ class Excel
 																	  ->setSheetIndex(0);
 			break;
 		}
-		$objWriter->setPreCalculateFormulas(false);
+		$objWriter->setIncludeCharts(TRUE);
+		//$objWriter->setPreCalculateFormulas(false);
 		$objWriter->save(PATH_REPORTS . $fileName);
 		return $fileName;
 	}
@@ -290,8 +422,14 @@ class Excel
 		$this->writeTitle();
 
 		$this->writeHeader();
+
+		$this->rowHeaderNumber = $this->rowNumber;
+		$this->setColumnFormat();
 		
 		$this->writeBody();
+
+		$this->drawCharts();
+
 
 		$fileName = $this->save();
 

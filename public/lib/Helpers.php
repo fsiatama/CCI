@@ -79,12 +79,13 @@ class Helpers
 	public static function jsonChart($arr_data, $eje_x, $series, $typeChart, $serie_adicional = false)
 	{
 
-		$arrCategories = array();
-		$rowData       = array();
+		$arrCategories = [];
+		$rowData       = [];
+		$arr_cols      = [];
+		$arr_chart     = [];
 
-		$arr_cols      = array();
-
-		$arr_chart          = [];
+		$arr_chart['xAxis'] = $eje_x;
+		$arr_chart['series'] = $series;
 
 		$arr_chart['chart'] = [
 			'decimalprecision'   =>'2'
