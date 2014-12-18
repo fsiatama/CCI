@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f0cfad5c48cf37d94499d31df839b909",
+    "hash": "5ef875c638098f867ddca0eb7ec73a5c",
     "packages": [
         {
             "name": "apfelbox/php-file-download",
@@ -146,7 +146,7 @@
         },
         {
             "name": "phpoffice/phpexcel",
-            "version": "1.8.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PHPExcel.git",
@@ -257,8 +257,11 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "phpoffice/phpexcel": 20
+    },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3"
     },

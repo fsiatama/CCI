@@ -291,38 +291,37 @@ class Excel
 	private function drawPie($xAxis, $series)
 	{
 		$cell = array_search($xAxis, $this->arrHead);
-		$xAxisTickValues1  = [];
-		$dataSeriesValues1 = [];
-		$dataseriesLabels1 = [];
+		$xAxisTickValues  = [];
+		$dataSeriesValues = [];
+		$dataseriesLabels = [];
 
 		if ($cell) {
 			$range = '$'.$cell.'$'.($this->rowHeaderNumber);
-			var_dump($range);
-			$dataseriesLabels1 = array(
+			$dataseriesLabels = [
 				new PHPExcel_Chart_DataSeriesValues('String', 'Worksheet!'.$range, NULL, 1),	//	2011
-			);
+			];
 
 			$range = '$'.$cell.'$'.($this->rowHeaderNumber + 1).':$'.$cell.'$'.($this->rowHeaderNumber + $this->total);
 
-			$xAxisTickValues1 = [
+			$xAxisTickValues = [
 				new PHPExcel_Chart_DataSeriesValues('String', 'Worksheet!'.$range, NULL, $this->total),	//	Q1 to Q4
 			];
 			foreach ($series as $key => $value) {
 				$cell = array_search($key, $this->arrHead);
 				if ($cell) {
-					$range = '$'.$key.'$'.($this->rowHeaderNumber + 1).':$'.$key.'$'.($this->rowHeaderNumber + $this->total);
-					$dataSeriesValues1 = [
-						new PHPExcel_Chart_DataSeriesValues('Number', 'Worksheet!'.$range, NULL, $this->total),
-					];
+					$range = '$'.$cell.'$'.($this->rowHeaderNumber + 1).':$'.$cell.'$'.($this->rowHeaderNumber + $this->total);
+					$dataSeriesValues[] = new PHPExcel_Chart_DataSeriesValues('Number', 'Worksheet!'.$range, NULL, $this->total);
 				}
 			}
-			$series1 = new PHPExcel_Chart_DataSeries(
+			//var_dump($dataseriesLabels, $xAxisTickValues, $dataSeriesValues);
+
+			$chartSeries = new PHPExcel_Chart_DataSeries(
 				PHPExcel_Chart_DataSeries::TYPE_PIECHART,				// plotType
 				PHPExcel_Chart_DataSeries::GROUPING_STANDARD,			// plotGrouping
-				range(0, count($dataSeriesValues1)-1),					// plotOrder
-				$dataseriesLabels1,										// plotLabel
-				$xAxisTickValues1,										// plotCategory
-				$dataSeriesValues1										// plotValues
+				range(0, count($dataSeriesValues)-1),					// plotOrder
+				$dataseriesLabels,										// plotLabel
+				$xAxisTickValues,										// plotCategory
+				$dataSeriesValues										// plotValues
 			);
 
 			$layout1 = new PHPExcel_Chart_Layout();
@@ -330,7 +329,7 @@ class Excel
 			$layout1->setShowPercent(TRUE);
 
 			//	Set the series in the plot area
-			$plotarea1 = new PHPExcel_Chart_PlotArea($layout1, array($series1));
+			$plotarea1 = new PHPExcel_Chart_PlotArea($layout1, [$chartSeries]);
 			//	Set the chart legend
 			$legend1 = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_RIGHT, NULL, false);
 
@@ -408,7 +407,7 @@ class Excel
 			break;
 		}
 		$objWriter->setIncludeCharts(TRUE);
-		//$objWriter->setPreCalculateFormulas(false);
+		$objWriter->setPreCalculateFormulas(true);
 		$objWriter->save(PATH_REPORTS . $fileName);
 		return $fileName;
 	}
