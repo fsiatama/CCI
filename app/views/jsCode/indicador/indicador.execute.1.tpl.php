@@ -172,6 +172,8 @@ $htmlDescription .= '</ol>';
 				text: Ext.ux.lang.buttons.generate
 				,iconCls: 'icon-refresh'
 				,handler: function () {
+					/*var html = Ext.getCmp(module + 'excuteIndicadorContainer').getEl().dom.innerHTML;
+					console.log(html);*/
 					storeBalanza.load();
 				}
 			}]

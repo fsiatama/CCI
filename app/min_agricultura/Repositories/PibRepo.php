@@ -1,30 +1,30 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Sector.php';
-require PATH_APP.'min_agricultura/Ado/SectorAdo.php';
+require PATH_APP.'min_agricultura/Entities/Pib.php';
+require PATH_APP.'min_agricultura/Ado/PibAdo.php';
 require_once ('BaseRepo.php');
 
-class SectorRepo extends BaseRepo {
+class PibRepo extends BaseRepo {
 
 	public function getModel()
 	{
-		return new Sector;
+		return new Pib;
 	}
 	
 	public function getModelAdo()
 	{
-		return new SectorAdo;
+		return new PibAdo;
 	}
 
 	public function getPrimaryKey()
 	{
-		return 'sector_id';
+		return 'pib_id';
 	}
 
 	public function validateModify($params)
 	{
 		extract($params);
-		$result = $this->findPrimaryKey($sector_id);
+		$result = $this->findPrimaryKey($pib_id);
 
 		if (!$result['success']) {
 			$result = [
@@ -58,16 +58,19 @@ class SectorRepo extends BaseRepo {
 					}
 				}
 			} else {
-				$this->model->setSector_id($query);
-				$this->model->setSector_nombre($query);
-				$this->model->setSector_productos($query);
+				$this->model->setPib_id($query);
+				$this->model->setPib_anio($query);
+				$this->model->setPib_periodo($query);
+				$this->model->setPib_valor($query);
 			}
 			
 		}
 		$this->modelAdo->setColumns([
-			'sector_id',
-			'sector_nombre',
-			'sector_productos'
+			'pib_id',
+			'pib_anio',
+			'pib_periodo',
+			'pib_periodo_title',
+			'pib_valor',
 		]);
 
 		$result = $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
@@ -80,7 +83,7 @@ class SectorRepo extends BaseRepo {
 		extract($params);
 
 		if ($action == 'modify') {
-			$result = $this->findPrimaryKey($sector_id);
+			$result = $this->findPrimaryKey($pib_id);
 
 			if (!$result['success']) {
 				$result = [
@@ -94,9 +97,9 @@ class SectorRepo extends BaseRepo {
 		}
 
 		if (
-			empty($sector_nombre) ||
-			empty($sector_productos) ||
-			!is_array($sector_productos)
+			empty($pib_anio) ||
+			empty($pib_periodo) ||
+			empty($pib_valor)
 		) {
 			$result = array(
 				'success' => false,
@@ -104,18 +107,19 @@ class SectorRepo extends BaseRepo {
 			);
 			return $result;
 		}
-			$this->model->setSector_id($sector_id);
-			$this->model->setSector_nombre($sector_nombre);
-			$this->model->setSector_productos(implode(',', $sector_productos));
-		
+
+		$this->model->setPib_id($pib_id);
+		$this->model->setPib_anio($pib_anio);
+		$this->model->setPib_periodo($pib_periodo);
+		$this->model->setPib_valor($pib_valor);
 
 		if ($action == 'create') {
-			$this->model->setSector_uinsert($_SESSION['user_id']);
-			$this->model->setSector_finsert(Helpers::getDateTimeNow());
+			$this->model->setPib_finsert(Helpers::getDateTimeNow());
+			$this->model->setPib_uinsert($_SESSION['user_id']);
 		}
 		elseif ($action == 'modify') {
-			$this->model->setSector_uupdate($_SESSION['user_id']);
-			$this->model->setSector_fupdate(Helpers::getDateTimeNow());
+			$this->model->setPib_fupdate(Helpers::getDateTimeNow());
+			$this->model->setPib_uupdate($_SESSION['user_id']);
 		}
 		$result = array('success' => true);
 		return $result;
