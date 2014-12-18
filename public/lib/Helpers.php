@@ -96,7 +96,7 @@ class Helpers
 			,'rotatevalues'      =>'1'
 			,'divlineisdashed'   =>'1'
 			,'placevaluesinside' =>'1'
-			,'exportenabled'     =>'0'
+			,'exportenabled'     =>'1'
 			,'areaovercolumns'   =>'0'
 			,'showaboutmenuitem' =>'0'
 			,'showlabels'        =>'1'

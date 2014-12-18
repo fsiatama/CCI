@@ -206,6 +206,9 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 						,icon: Ext.MessageBox.ERROR
 					});
 				}
+				delete(store.baseParams[this.paramNames.fields]);
+				delete(store.baseParams[this.paramNames.format]);
+				delete(store.baseParams[this.paramNames.limit]);
 			}
 		});
 		

@@ -294,6 +294,7 @@ class Excel
 		$xAxisTickValues  = [];
 		$dataSeriesValues = [];
 		$dataseriesLabels = [];
+		$rowNumber        = $this->rowNumber;
 
 		if ($cell) {
 			$range = '$'.$cell.'$'.($this->rowHeaderNumber);
@@ -324,24 +325,23 @@ class Excel
 				$dataSeriesValues										// plotValues
 			);
 
-			$layout1 = new PHPExcel_Chart_Layout();
-			$layout1->setShowVal(TRUE);
-			$layout1->setShowPercent(TRUE);
+			$layout = new PHPExcel_Chart_Layout();
+			$layout->setShowVal(TRUE);
+			$layout->setShowPercent(TRUE);
 
 			//	Set the series in the plot area
-			$plotarea1 = new PHPExcel_Chart_PlotArea($layout1, [$chartSeries]);
+			$plotarea = new PHPExcel_Chart_PlotArea(NULL, [$chartSeries]);
 			//	Set the chart legend
-			$legend1 = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_RIGHT, NULL, false);
-
-			$title1 = new PHPExcel_Chart_Title('Test Pie Chart');
+			$legend   = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_RIGHT, NULL, false);
+			$title    = new PHPExcel_Chart_Title('Test Pie Chart');
 
 
 			//	Create the chart
-			$chart1 = new PHPExcel_Chart(
-				'chart1',		// name
-				$title1,		// title
-				$legend1,		// legend
-				$plotarea1,		// plotArea
+			$chart = new PHPExcel_Chart(
+				'chartPie',		// name
+				$title,		// title
+				$legend,		// legend
+				$plotarea,		// plotArea
 				true,			// plotVisibleOnly
 				0,				// displayBlanksAs
 				NULL,			// xAxisLabel
@@ -349,11 +349,156 @@ class Excel
 			);
 
 			//	Set the position where the chart should appear in the worksheet
-			$chart1->setTopLeftPosition('A20');
-			$chart1->setBottomRightPosition('H40');
+			$chart->setTopLeftPosition('A'.$rowNumber);
+			$rowNumber += 20;
+			$this->setRowNumber($rowNumber);
+
+			$chart->setBottomRightPosition('H'.$rowNumber);
 
 			//	Add the chart to the worksheet
-			$this->objPHPExcel->getActiveSheet()->addChart($chart1);
+			$this->objPHPExcel->getActiveSheet()->addChart($chart);
+		}
+	}
+
+	private function drawArea($xAxis, $series)
+	{
+		$cell = array_search($xAxis, $this->arrHead);
+		$xAxisTickValues  = [];
+		$dataSeriesValues = [];
+		$dataseriesLabels = [];
+		$rowNumber        = $this->rowNumber;
+
+		if ($cell) {
+			$range = '$'.$cell.'$'.($this->rowHeaderNumber + 1).':$'.$cell.'$'.($this->rowHeaderNumber + $this->total);
+			$dataseriesLabels = [
+				new PHPExcel_Chart_DataSeriesValues('String', 'Worksheet!'.$range, NULL, 1)
+			];
+
+			$xAxisTickValues = array(
+				new PHPExcel_Chart_DataSeriesValues('String', 'Worksheet!'.$range, NULL, 1)
+			);
+
+			foreach ($series as $key => $value) {
+				$cell = array_search($key, $this->arrHead);
+				if ($cell) {
+					$range = '$'.$cell.'$'.($this->rowHeaderNumber + 1).':$'.$cell.'$'.($this->rowHeaderNumber + $this->total);
+					$dataSeriesValues[] = new PHPExcel_Chart_DataSeriesValues('Number', 'Worksheet!'.$range, NULL, $this->total);
+				}
+			}
+			//var_dump($dataseriesLabels, $xAxisTickValues, $dataSeriesValues);
+
+			$chartSeries = new PHPExcel_Chart_DataSeries(
+				PHPExcel_Chart_DataSeries::TYPE_AREACHART,				// plotType
+				PHPExcel_Chart_DataSeries::GROUPING_PERCENT_STACKED,	// plotGrouping
+				range(0, count($dataSeriesValues)-1),					// plotOrder
+				$dataseriesLabels,										// plotLabel
+				$xAxisTickValues,										// plotCategory
+				$dataSeriesValues										// plotValues
+			);
+
+			$plotarea = new PHPExcel_Chart_PlotArea(NULL, [$chartSeries]);
+			//	Set the chart legend
+			$legend = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_TOPRIGHT, NULL, false);
+
+			$title = new PHPExcel_Chart_Title('Test %age-Stacked Area Chart');
+			$yAxisLabel = new PHPExcel_Chart_Title('Value ($k)');
+
+
+			//	Create the chart
+			$chart = new PHPExcel_Chart(
+				'chartArea',		// name
+				$title,			// title
+				$legend,		// legend
+				$plotarea,		// plotArea
+				true,			// plotVisibleOnly
+				0,				// displayBlanksAs
+				NULL,			// xAxisLabel
+				$yAxisLabel		// yAxisLabel
+			);
+
+
+			//	Set the position where the chart should appear in the worksheet
+			$chart->setTopLeftPosition('A'.$rowNumber);
+			$rowNumber += 20;
+			$this->setRowNumber($rowNumber);
+
+			$chart->setBottomRightPosition('H'.$rowNumber);
+
+			//	Add the chart to the worksheet
+			$this->objPHPExcel->getActiveSheet()->addChart($chart);
+		}
+	}
+
+	private function drawColumns($xAxis, $series)
+	{
+		$cell = array_search($xAxis, $this->arrHead);
+		$xAxisTickValues  = [];
+		$dataSeriesValues = [];
+		$dataseriesLabels = [];
+		$rowNumber        = $this->rowNumber;
+
+		if ($cell) {
+			$range = '$'.$cell.'$'.($this->rowHeaderNumber + 1).':$'.$cell.'$'.($this->rowHeaderNumber + $this->total);
+			$dataseriesLabels = [
+				new PHPExcel_Chart_DataSeriesValues('String', 'Worksheet!'.$range, NULL, 1)
+			];
+
+			$xAxisTickValues = array(
+				new PHPExcel_Chart_DataSeriesValues('String', 'Worksheet!'.$range, NULL, 1)
+			);
+
+			foreach ($series as $key => $value) {
+				$cell = array_search($key, $this->arrHead);
+				if ($cell) {
+					$range = '$'.$cell.'$'.($this->rowHeaderNumber + 1).':$'.$cell.'$'.($this->rowHeaderNumber + $this->total);
+					$dataSeriesValues[] = new PHPExcel_Chart_DataSeriesValues('Number', 'Worksheet!'.$range, NULL, $this->total);
+				}
+			}
+			var_dump($dataseriesLabels, $xAxisTickValues, $dataSeriesValues);
+
+			$chartSeries = new PHPExcel_Chart_DataSeries(
+				PHPExcel_Chart_DataSeries::TYPE_BARCHART,		// plotType
+				PHPExcel_Chart_DataSeries::GROUPING_STANDARD,	// plotGrouping
+				range(0, count($dataSeriesValues)-1),			// plotOrder
+				$dataseriesLabels,								// plotLabel
+				$xAxisTickValues,								// plotCategory
+				$dataSeriesValues								// plotValues
+			);
+
+			$chartSeries->setPlotDirection(PHPExcel_Chart_DataSeries::DIRECTION_COL);
+
+			//	Set the series in the plot area
+			$plotarea = new PHPExcel_Chart_PlotArea(NULL, array($chartSeries));
+			//	Set the chart legend
+			$legend = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_RIGHT, NULL, false);
+
+			$title = new PHPExcel_Chart_Title('Test Column Chart');
+			$yAxisLabel = new PHPExcel_Chart_Title('Value ($k)');
+
+
+
+			//	Create the chart
+			$chart = new PHPExcel_Chart(
+				'chartColumn',		// name
+				$title,			// title
+				$legend,		// legend
+				$plotarea,		// plotArea
+				true,			// plotVisibleOnly
+				0,				// displayBlanksAs
+				NULL,			// xAxisLabel
+				$yAxisLabel		// yAxisLabel
+			);
+
+
+			//	Set the position where the chart should appear in the worksheet
+			$chart->setTopLeftPosition('A'.$rowNumber);
+			$rowNumber += 20;
+			$this->setRowNumber($rowNumber);
+
+			$chart->setBottomRightPosition('H'.$rowNumber);
+
+			//	Add the chart to the worksheet
+			$this->objPHPExcel->getActiveSheet()->addChart($chart);
 		}
 	}
 
@@ -427,7 +572,7 @@ class Excel
 		
 		$this->writeBody();
 
-		$this->drawCharts();
+		//$this->drawCharts();
 
 
 		$fileName = $this->save();
