@@ -21,7 +21,8 @@ class PibAdo extends BaseAdo {
 		$pib_id = $pib->getPib_id();
 		$pib_anio = $pib->getPib_anio();
 		$pib_periodo = $pib->getPib_periodo();
-		$pib_valor = $pib->getPib_valor();
+		$pib_agricultura = $pib->getPib_agricultura();
+		$pib_nacional = $pib->getPib_nacional();
 		$pib_finsert = $pib->getPib_finsert();
 		$pib_uinsert = $pib->getPib_uinsert();
 		$pib_fupdate = $pib->getPib_fupdate();
@@ -31,7 +32,8 @@ class PibAdo extends BaseAdo {
 			'pib_id',
 			'pib_anio',
 			'pib_periodo',
-			'pib_valor',
+			'pib_agricultura',
+			'pib_nacional',
 			'pib_finsert',
 			'pib_uinsert',
 			'pib_fupdate',
@@ -50,7 +52,8 @@ class PibAdo extends BaseAdo {
 				pib_id,
 				pib_anio,
 				pib_periodo,
-				pib_valor,
+				pib_agricultura,
+				pib_nacional,
 				pib_finsert,
 				pib_uinsert,
 				pib_fupdate,
@@ -60,7 +63,8 @@ class PibAdo extends BaseAdo {
 				"'.$this->data['pib_id'].'",
 				"'.$this->data['pib_anio'].'",
 				"'.$this->data['pib_periodo'].'",
-				"'.$this->data['pib_valor'].'",
+				"'.$this->data['pib_agricultura'].'",
+				"'.$this->data['pib_nacional'].'",
 				"'.$this->data['pib_finsert'].'",
 				"'.$this->data['pib_uinsert'].'",
 				"'.$this->data['pib_fupdate'].'",
@@ -97,7 +101,8 @@ class PibAdo extends BaseAdo {
 			 pib_id,
 			 pib_anio,
 			 pib_periodo,
-			 pib_valor,
+			 pib_agricultura,
+			 pib_nacional,
 			 pib_finsert,
 			 pib_uinsert,
 			 pib_fupdate,

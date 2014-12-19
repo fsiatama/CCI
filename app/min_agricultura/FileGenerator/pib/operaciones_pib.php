@@ -13,7 +13,8 @@ if(isset($accion)){
 			$pib->setPib_id($pib_id);
 			$pib->setPib_anio($pib_anio);
 			$pib->setPib_periodo($pib_periodo);
-			$pib->setPib_valor($pib_valor);
+			$pib->setPib_agricultura($pib_agricultura);
+			$pib->setPib_nacional($pib_nacional);
 			$pib->setPib_finsert($pib_finsert);
 			$pib->setPib_uinsert($pib_uinsert);
 			$pib->setPib_fupdate($pib_fupdate);
@@ -52,7 +53,8 @@ if(isset($accion)){
 			$pib->setPib_id($pib_id);
 			$pib->setPib_anio($pib_anio);
 			$pib->setPib_periodo($pib_periodo);
-			$pib->setPib_valor($pib_valor);
+			$pib->setPib_agricultura($pib_agricultura);
+			$pib->setPib_nacional($pib_nacional);
 			$pib->setPib_finsert($pib_finsert);
 			$pib->setPib_uinsert($pib_uinsert);
 			$pib->setPib_fupdate($pib_fupdate);
@@ -79,7 +81,8 @@ if(isset($accion)){
 			$pib->setPib_id($pib_id);
 			$pib->setPib_anio($pib_anio);
 			$pib->setPib_periodo($pib_periodo);
-			$pib->setPib_valor($pib_valor);
+			$pib->setPib_agricultura($pib_agricultura);
+			$pib->setPib_nacional($pib_nacional);
 			$pib->setPib_finsert($pib_finsert);
 			$pib->setPib_uinsert($pib_uinsert);
 			$pib->setPib_fupdate($pib_fupdate);

@@ -4,7 +4,8 @@ class Pib {
 	private $pib_id;
 	private $pib_anio;
 	private $pib_periodo;
-	private $pib_valor;
+	private $pib_agricultura;
+	private $pib_nacional;
 	private $pib_finsert;
 	private $pib_uinsert;
 	private $pib_fupdate;
@@ -34,12 +35,20 @@ class Pib {
 		return $this->pib_periodo;
 	}
 
-	public function setPib_valor($pib_valor){
-		$this->pib_valor = $pib_valor;
+	public function setPib_agricultura($pib_agricultura){
+		$this->pib_agricultura = $pib_agricultura;
 	}
 
-	public function getPib_valor(){
-		return $this->pib_valor;
+	public function getPib_agricultura(){
+		return $this->pib_agricultura;
+	}
+
+	public function setPib_nacional($pib_nacional){
+		$this->pib_nacional = $pib_nacional;
+	}
+
+	public function getPib_nacional(){
+		return $this->pib_nacional;
 	}
 
 	public function setPib_finsert($pib_finsert){

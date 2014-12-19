@@ -13,7 +13,8 @@ var storePib = new Ext.data.JsonStore({
 		{name:'pib_id', type:'float'},
 		{name:'pib_anio', type:'float'},
 		{name:'pib_periodo', type:'float'},
-		{name:'pib_valor', type:'string'},
+		{name:'pib_agricultura', type:'string'},
+		{name:'pib_nacional', type:'string'},
 		{name:'pib_finsert', type:'date', dateFormat:'Y-m-d H:i:s'},
 		{name:'pib_uinsert', type:'float'},
 		{name:'pib_fupdate', type:'date', dateFormat:'Y-m-d H:i:s'},
@@ -45,7 +46,8 @@ var cmPib = new Ext.grid.ColumnModel({
 		{xtype:'numbercolumn', header:'<?= Lang::get('pib.columns_title.pib_id'); ?>', align:'right', hidden:false, dataIndex:'pib_id'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('pib.columns_title.pib_anio'); ?>', align:'right', hidden:false, dataIndex:'pib_anio'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('pib.columns_title.pib_periodo'); ?>', align:'right', hidden:false, dataIndex:'pib_periodo'},
-		{header:'<?= Lang::get('pib.columns_title.pib_valor'); ?>', align:'left', hidden:false, dataIndex:'pib_valor'},
+		{header:'<?= Lang::get('pib.columns_title.pib_agricultura'); ?>', align:'left', hidden:false, dataIndex:'pib_agricultura'},
+		{header:'<?= Lang::get('pib.columns_title.pib_nacional'); ?>', align:'left', hidden:false, dataIndex:'pib_nacional'},
 		{xtype:'datecolumn', header:'<?= Lang::get('pib.columns_title.pib_finsert'); ?>', align:'left', hidden:false, dataIndex:'pib_finsert', format:'Y-m-d, g:i a'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('pib.columns_title.pib_uinsert'); ?>', align:'right', hidden:false, dataIndex:'pib_uinsert'},
 		{xtype:'datecolumn', header:'<?= Lang::get('pib.columns_title.pib_fupdate'); ?>', align:'left', hidden:false, dataIndex:'pib_fupdate', format:'Y-m-d, g:i a'},
@@ -91,7 +93,8 @@ var formPib = new Ext.FormPanel({
 			{name:'pib_id', mapping:'pib_id', type:'float'},
 			{name:'pib_anio', mapping:'pib_anio', type:'float'},
 			{name:'pib_periodo', mapping:'pib_periodo', type:'float'},
-			{name:'pib_valor', mapping:'pib_valor', type:'string'},
+			{name:'pib_agricultura', mapping:'pib_agricultura', type:'string'},
+			{name:'pib_nacional', mapping:'pib_nacional', type:'string'},
 			{name:'pib_finsert', mapping:'pib_finsert', type:'date'},
 			{name:'pib_uinsert', mapping:'pib_uinsert', type:'float'},
 			{name:'pib_fupdate', mapping:'pib_fupdate', type:'date'},
@@ -141,9 +144,18 @@ var formPib = new Ext.FormPanel({
 			defaults:{anchor:'100%'}
 			,items:[{
 				xtype:'numberfield'
-				,name:'pib_valor'
-				,fieldLabel:'<?= Lang::get('pib.columns_title.pib_valor'); ?>'
-				,id:module+'pib_valor'
+				,name:'pib_agricultura'
+				,fieldLabel:'<?= Lang::get('pib.columns_title.pib_agricultura'); ?>'
+				,id:module+'pib_agricultura'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'numberfield'
+				,name:'pib_nacional'
+				,fieldLabel:'<?= Lang::get('pib.columns_title.pib_nacional'); ?>'
+				,id:module+'pib_nacional'
 				,allowBlank:false
 			}]
 		},{

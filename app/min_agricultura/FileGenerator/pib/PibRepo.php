@@ -59,7 +59,8 @@ class PibRepo extends BaseRepo {
 			empty($pib_id) ||
 			empty($pib_anio) ||
 			empty($pib_periodo) ||
-			empty($pib_valor) ||
+			empty($pib_agricultura) ||
+			empty($pib_nacional) ||
 			empty($pib_finsert) ||
 			empty($pib_uinsert) ||
 			empty($pib_fupdate) ||
@@ -74,7 +75,8 @@ class PibRepo extends BaseRepo {
 			$this->model->setPib_id($pib_id);
 			$this->model->setPib_anio($pib_anio);
 			$this->model->setPib_periodo($pib_periodo);
-			$this->model->setPib_valor($pib_valor);
+			$this->model->setPib_agricultura($pib_agricultura);
+			$this->model->setPib_nacional($pib_nacional);
 			$this->model->setPib_finsert($pib_finsert);
 			$this->model->setPib_uinsert($pib_uinsert);
 			$this->model->setPib_fupdate($pib_fupdate);

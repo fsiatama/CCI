@@ -1602,16 +1602,17 @@ class DeclaracionesRepo extends BaseRepo {
 			
 			foreach ($result['data'] as $keyImpo => $rowImpo) {
 					
-				$rate     = ($rowImpo[$columnValue1] / $totalValue );
-				$weighing = $rowImpo[$columnValue1] * $rate;
+				$rate     = ((float)$rowImpo[$columnValue1] / $totalValue );
+				$weighing = (float)$rowImpo[$columnValue1] * $rate;
 				$average += $weighing;
 
 				$arrData[] = [
 					'id'             => $keyImpo,
 					'id_posicion'    => $rowImpo['id_posicion'],
 					'posicion'       => $rowImpo['posicion'],
-					'arancel_pagado' => $rowImpo[$columnValue2],
-					'valorarancel'   => $rowImpo[$columnValue1],
+					'pais'           => $rowImpo['pais'],
+					'arancel_pagado' => (float)$rowImpo[$columnValue2],
+					'valorarancel'   => (float)$rowImpo[$columnValue1],
 					'participacion'  => ( $rate * 100 )
 				];
 			}
@@ -1746,9 +1747,9 @@ class DeclaracionesRepo extends BaseRepo {
 
 
 			$yearLast                   = $rowTotal['periodo'];
-			$valueLastAgriculture       = ($rowProductsAgriculture   !== false) ? $rowProductsAgriculture[$columnValue]   : 0 ;
-			$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? $rowEnergeticMiningSector[$columnValue] : 0 ;
-			$valueLastTotal             = $rowTotal[$columnValue] - $totalEnergeticMiningSector;
+			$valueLastAgriculture       = ($rowProductsAgriculture   !== false) ? (float)$rowProductsAgriculture[$columnValue]   : 0 ;
+			$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? (float)$rowEnergeticMiningSector[$columnValue] : 0 ;
+			$valueLastTotal             = (float)$rowTotal[$columnValue] - $totalEnergeticMiningSector;
 			$valueLastTotal             = ($valueLastTotal == 0) ? 1 : $valueLastTotal ;
 
 			if ($rowTotal['periodo'] == $yearFirst) {

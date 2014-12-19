@@ -14,7 +14,8 @@
 			{name:'pib_id', type:'float'},
 			{name:'pib_anio', type:'string'},
 			{name:'pib_periodo_title', type:'string'},
-			{name:'pib_valor', type:'float'}
+			{name:'pib_agricultura', type:'float'},
+			{name:'pib_nacional', type:'float'},
 		]
 	});
 	
@@ -45,7 +46,8 @@
 		columns:[
 			{header:'<?= Lang::get('pib.columns_title.pib_anio'); ?>', align:'left', hidden:false, dataIndex:'pib_anio'},
 			{header:'<?= Lang::get('pib.columns_title.pib_periodo'); ?>', align:'left', hidden:false, dataIndex:'pib_periodo_title'},
-			{header:'<?= Lang::get('pib.columns_title.pib_valor'); ?>', align:'left', hidden:false, dataIndex:'pib_valor','renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('pib.columns_title.pib_agricultura'); ?>', align:'left', hidden:false, dataIndex:'pib_agricultura','renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('pib.columns_title.pib_nacional'); ?>', align:'left', hidden:false, dataIndex:'pib_nacional','renderer':numberFormat, align:'right'},
 			gridPibAction
 		]
 		,defaults:{

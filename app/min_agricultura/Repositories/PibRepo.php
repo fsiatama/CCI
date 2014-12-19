@@ -61,7 +61,8 @@ class PibRepo extends BaseRepo {
 				$this->model->setPib_id($query);
 				$this->model->setPib_anio($query);
 				$this->model->setPib_periodo($query);
-				$this->model->setPib_valor($query);
+				$this->model->setPib_agricultura($query);
+				$this->model->setPib_nacional($query);
 			}
 			
 		}
@@ -70,7 +71,8 @@ class PibRepo extends BaseRepo {
 			'pib_anio',
 			'pib_periodo',
 			'pib_periodo_title',
-			'pib_valor',
+			'pib_agricultura',
+			'pib_nacional',
 		]);
 
 		$result = $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
@@ -99,7 +101,8 @@ class PibRepo extends BaseRepo {
 		if (
 			empty($pib_anio) ||
 			empty($pib_periodo) ||
-			empty($pib_valor)
+			empty($pib_agricultura) ||
+			empty($pib_nacional)
 		) {
 			$result = array(
 				'success' => false,
@@ -111,7 +114,8 @@ class PibRepo extends BaseRepo {
 		$this->model->setPib_id($pib_id);
 		$this->model->setPib_anio($pib_anio);
 		$this->model->setPib_periodo($pib_periodo);
-		$this->model->setPib_valor($pib_valor);
+		$this->model->setPib_agricultura($pib_agricultura);
+		$this->model->setPib_nacional($pib_nacional);
 
 		if ($action == 'create') {
 			$this->model->setPib_finsert(Helpers::getDateTimeNow());

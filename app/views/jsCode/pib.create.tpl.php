@@ -44,8 +44,9 @@
 			,fields:[
 				{name:'pib_id', mapping:'pib_id', type:'float'},
 				{name:'pib_anio', mapping:'pib_anio', type:'float'},
-				{name:'pib_periodo', mapping:'pib_periodo', type:'float'},
-				{name:'pib_valor', mapping:'pib_valor', type:'string'}
+				{name:'pib_periodo', mapping:'pib_periodo', type:'string'},
+				{name:'pib_agricultura', mapping:'pib_agricultura', type:'float'},
+				{name:'pib_nacional', mapping:'pib_nacional', type:'float'},
 			]
 		})
 		,items:[{
@@ -71,9 +72,18 @@
 				defaults:{anchor:'100%'}
 				,items:[{
 					xtype:'numberfield'
-					,name:'pib_valor'
-					,fieldLabel:'<?= Lang::get('pib.columns_title.pib_valor'); ?>'
-					,id:module+'pib_valor'
+					,name:'pib_agricultura'
+					,fieldLabel:'<?= Lang::get('pib.columns_title.pib_agricultura'); ?>'
+					,id:module+'pib_agricultura'
+					,allowBlank:false
+				}]
+			},{
+				defaults:{anchor:'100%'}
+				,items:[{
+					xtype:'numberfield'
+					,name:'pib_nacional'
+					,fieldLabel:'<?= Lang::get('pib.columns_title.pib_nacional'); ?>'
+					,id:module+'pib_nacional'
 					,allowBlank:false
 				}]
 			},{

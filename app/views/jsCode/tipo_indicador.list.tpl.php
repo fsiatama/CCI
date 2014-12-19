@@ -49,6 +49,7 @@
 	var cmTipo_indicador = new Ext.grid.ColumnModel({
 		columns:[
 			gridTipo_indicadorExpander,
+			{header:'Id', align:'left', hidden:true, dataIndex:'tipo_indicador_id'},
 			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_nombre'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_nombre'},
 			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_abrev'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_abrev'},
 			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_activador_title'},
