@@ -4,24 +4,24 @@
 	var module = '<?= $module; ?>';
 	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
 	
-	var storePib = new Ext.data.JsonStore({
-		url:'pib/list'
+	var storeProduccion = new Ext.data.JsonStore({
+		url:'produccion/list'
 		,root:'data'
-		,sortInfo:{field:'pib_anio',direction:'ASC'}
+		,sortInfo:{field:'produccion_anio',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams:{id:'<?= $id; ?>'}
 		,fields:[
-			{name:'pib_id', type:'float'},
-			{name:'pib_anio', type:'string'},
-			{name:'pib_periodo_title', type:'string'},
-			{name:'pib_agricultura', type:'float'},
-			{name:'pib_nacional', type:'float'},
+			{name:'produccion_id', type:'float'},
+			{name:'produccion_sector_id', type:'float'},
+			{name:'sector_nombre', type:'string'},
+			{name:'produccion_anio', type:'string'},
+			{name:'produccion_peso_neto', type:'float'},
 		]
 	});
 	
-	storePib.load({params:{start:0, limit:numberRecords}});
+	storeProduccion.load({params:{start:0, limit:numberRecords}});
 	
-	gridPibAction = new Ext.ux.grid.RowActions({
+	gridProduccionAction = new Ext.ux.grid.RowActions({
 		header: Ext.ux.lang.grid.options
 		,keepSelection:true
 		,autoWidth:false
@@ -42,13 +42,12 @@
 		}
 	});
 	
-	var cmPib = new Ext.grid.ColumnModel({
+	var cmProduccion = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('pib.columns_title.pib_anio'); ?>', align:'left', hidden:false, dataIndex:'pib_anio'},
-			{header:'<?= Lang::get('pib.columns_title.pib_periodo'); ?>', align:'left', hidden:false, dataIndex:'pib_periodo_title'},
-			{header:'<?= Lang::get('pib.columns_title.pib_agricultura'); ?> (' + Ext.ux.lang.reports.billionsCop + ')' , align:'left', hidden:false, dataIndex:'pib_agricultura','renderer':numberFormat, align:'right'},
-			{header:'<?= Lang::get('pib.columns_title.pib_nacional'); ?> (' + Ext.ux.lang.reports.billionsCop + ')', align:'left', hidden:false, dataIndex:'pib_nacional','renderer':numberFormat, align:'right'},
-			gridPibAction
+			{header:'<?= Lang::get('produccion.columns_title.produccion_anio'); ?>', align:'left', hidden:false, dataIndex:'produccion_anio'},
+			{header:'<?= Lang::get('sector.columns_title.sector_nombre'); ?>', align:'left', hidden:false, dataIndex:'sector_nombre'},
+			{header:'<?= Lang::get('produccion.columns_title.produccion_peso_neto'); ?>' , align:'left', hidden:false, dataIndex:'produccion_peso_neto','renderer':numberFormat, align:'right'},
+			gridProduccionAction
 		]
 		,defaults:{
 			sortable:true
@@ -56,7 +55,7 @@
 		}
 	});
 		
-	var tbPib = new Ext.Toolbar({
+	var tbProduccion = new Ext.Toolbar({
 		items:[{
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
@@ -65,7 +64,7 @@
 					id:'add_' + module
 					,iconCls:'silk-add'
 					,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
-					,url:'pib/jscode/create'
+					,url:'produccion/jscode/create'
 					,params:{
 						id:'<?= $id; ?>'
 						,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.add
@@ -77,10 +76,10 @@
 			}
 		}]
 	});
-	var gridPib = new Ext.grid.GridPanel({
-		store:storePib
-		,id:module + 'gridPib'
-		,colModel:cmPib
+	var gridProduccion = new Ext.grid.GridPanel({
+		store:storeProduccion
+		,id:module + 'gridProduccion'
+		,colModel:cmProduccion
 		,viewConfig: {
 			forceFit: true
 			,scrollOffset:2
@@ -88,10 +87,10 @@
 		,sm: new Ext.grid.RowSelectionModel({
 			singleSelect: true
 		})
-		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storePib, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeProduccion, displayInfo:true})
 		,enableColumnMove:false
 		,enableColumnResize:false
-		,tbar:tbPib
+		,tbar:tbProduccion
 		,loadMask:true
 		,border:false
 		,frame: false
@@ -112,15 +111,15 @@
 				,position:top
 				,disableIndexes:[]
 			}) 
-			,gridPibAction
+			,gridProduccionAction
 		]
 	});
 	
-	return gridPib;	
+	return gridProduccion;	
 	/*********************************************** Start functions***********************************************/
 	
 	function fnEditItm(record){
-		var key = record.get('pib_id');
+		var key = record.get('produccion_id');
 		if(Ext.getCmp('tab-add_'+module)){
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
@@ -134,13 +133,13 @@
 				id:'edit_' + module
 				,iconCls:'silk-page-edit'
 				,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
-				,url:'pib/jscode/modify'
+				,url:'produccion/jscode/modify'
 				,params:{
 					id:'<?= $id; ?>'
 					,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
 					,module: 'edit_' + module
 					,parent: module
-					,pib_id: key
+					,produccion_id: key
 				}
 			};
 			Ext.getCmp('oeste').addTab(this,this,data);
@@ -152,21 +151,21 @@
 			,Ext.ux.lang.messages.question_delete
 			,function(btn){
 			if(btn == 'yes'){
-				var gridMask = new Ext.LoadMask(gridPib.getEl(), { msg: 'Erasing .....' });
+				var gridMask = new Ext.LoadMask(gridProduccion.getEl(), { msg: 'Erasing .....' });
 				gridMask.show();
-				var key = record.get('pib_id');
+				var key = record.get('produccion_id');
 
 				Ext.Ajax.request({
-					 url:'pib/delete'
+					 url:'produccion/delete'
 					,params: {
 						id: '<?= $id; ?>'
-						,pib_id: key
+						,produccion_id: key
 					}
 					,callback: function(options, success, response){
 						gridMask.hide();
 						var json = Ext.util.JSON.decode(response.responseText);
 						if (json.success){
-							gridPib.store.reload();
+							gridProduccion.store.reload();
 						}
 						else{
 							Ext.Msg.show({

@@ -11,6 +11,7 @@ foreach ($arrDescription as $value) {
 }
 
 $htmlDescription .= '</ol>';
+array_splice($periods, -1);//elimina el periodo mensual
 
 ?>
 
@@ -34,17 +35,19 @@ $htmlDescription .= '</ol>';
 		,fields:[
 			{name:'id', type:'float'},
 			{name:'periodo', type:'string'},
-			{name:'valor_expo_agricola', type:'float'},
-			{name:'valor_expo', type:'float'},
+			{name:'valor_expo_agricola_cop', type:'float'},
+			{name:'pib_nacional', type:'float'},
 			{name:'participacion', type:'float'}
 		]
 	});
 
 	storeIndicador.on('beforeload', function(){
+		var year   = Ext.getCmp(module + 'comboYear').getValue();
 		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		if (!period) {
+		if (!year || !period) {
 			return false;
 		};
+		this.setBaseParam('year', year);
 		this.setBaseParam('period', period);
 		Ext.ux.bodyMask.show();
 	});
@@ -65,8 +68,8 @@ $htmlDescription .= '</ol>';
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo_agricola'); ?>', dataIndex:'valor_expo_agricola' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo_agricola_cop'); ?>', dataIndex:'valor_expo_agricola_cop' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('pib.columns_title.pib_nacional'); ?>', dataIndex:'pib_nacional' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat},
 		]
 		,defaults: {
@@ -99,7 +102,10 @@ $htmlDescription .= '</ol>';
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
-
+	
+	var arrYears = <?= json_encode($yearsAvailable); ?>;
+	var defaultYear = <?= end($yearsAvailable); ?>;
+	
 	var arrPeriods = <?= json_encode($periods); ?>;
 
 	/******************************************************************************************************************************************************************************/
@@ -144,6 +150,27 @@ $htmlDescription .= '</ol>';
 				,triggerAction: 'all'
 				,selectOnFocus:true
 				,value: 12
+				,width: 100
+				,listeners:{
+					select: {
+						fn: function(combo,reg){
+							Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
+						}
+					}
+				}
+			},'-',{
+				xtype: 'label'
+				,text: Ext.ux.lang.reports.selectYear + ': '
+			},{
+				xtype: 'combo'
+				,store: arrYears
+				,id: module + 'comboYear'
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: defaultYear
+				,disabled: true
 				,width: 100
 			},'-',{
 				text: Ext.ux.lang.buttons.generate

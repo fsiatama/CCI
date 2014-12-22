@@ -4,6 +4,37 @@ require_once ('BaseAdo.php');
 
 class PibAdo extends BaseAdo {
 
+	protected $pivotRowFields        = '';
+	protected $pivotColumnFields     = '';
+	protected $pivotTotalFields      = [];
+	protected $pivotGroupingFunction = '';
+	protected $pivotSortColumn       = '';
+
+	public function setPivotRowFields($pivotRowFields)
+	{
+		$this->pivotRowFields = $pivotRowFields;
+	}
+
+	public function setPivotColumnFields($pivotColumnFields)
+	{
+		$this->pivotColumnFields = $pivotColumnFields;
+	}
+
+	public function setPivotTotalFields($pivotTotalFields)
+	{
+		$this->pivotTotalFields = (is_array($pivotTotalFields)) ? $pivotTotalFields : [$pivotTotalFields];
+	}
+
+	public function setPivotGroupingFunction($pivotGroupingFunction)
+	{
+		$this->pivotGroupingFunction = $pivotGroupingFunction;
+	}
+
+	public function setPivotSortColumn($pivotSortColumn)
+	{
+		$this->pivotSortColumn = $pivotSortColumn;
+	}
+
 	protected function setTable()
 	{
 		$this->table = 'pib';
@@ -77,7 +108,72 @@ class PibAdo extends BaseAdo {
 		return $result;
 	}
 
+	public function pivotSearch($model)
+	{
+		$this->setModel($model);
+		$this->setOperator('IN');
+		
+		$conn = $this->getConnection();
+		$this->setData();
+
+		$sql = $this->buildPivotSelect();
+
+		$resultSet = $conn->Execute($sql);
+		$result = $this->buildResult($resultSet);
+
+		return $result;
+	}
+
+	public function buildPivotSelect()
+	{
+		require_once PATH_APP.'adodb5/pivottable.inc.php';
+		
+		$conn  = $this->getConnection();
+		$table = $this->getTable();
+		
+		$where = $this->buildSelectWhere();
+
+		$sql = PivotTableSQL(
+		 	$conn,  										# adodb connection
+		 	$table,									  		# tables
+			$this->pivotRowFields,							# row fields
+			$this->pivotColumnFields,						# column fields
+			$where, 										# joins/where
+			$this->pivotTotalFields, 						# SUM fields
+			'',												# Function Label
+			$this->pivotGroupingFunction,					# Function (SUM, COUNT, AGV)
+			false
+		);
+
+		$sql .= ' ORDER BY ';
+		$sql .= (empty($this->pivotSortColumn)) ? $this->primaryKey : $this->pivotSortColumn ;
+
+		//echo '<pre>'.$sql.'</pre>';
+
+		return $sql;
+	}
+
 	public function buildSelect()
+	{
+
+		$sql = 'SELECT
+			 pib_id,
+			 pib_anio,
+			 pib_periodo,
+			 pib_agricultura,
+			 pib_nacional,
+			 pib_finsert,
+			 pib_uinsert,
+			 pib_fupdate,
+			 pib_uupdate
+			FROM pib
+		';
+		$sql .= $this->buildSelectWhere();
+
+		return $sql;
+	}
+
+	public function buildSelectWhere()
 	{
 		$filter = array();
 		$operator = $this->getOperator();
@@ -97,18 +193,8 @@ class PibAdo extends BaseAdo {
 			}
 		}
 
-		$sql = 'SELECT
-			 pib_id,
-			 pib_anio,
-			 pib_periodo,
-			 pib_agricultura,
-			 pib_nacional,
-			 pib_finsert,
-			 pib_uinsert,
-			 pib_fupdate,
-			 pib_uupdate
-			FROM pib
-		';
+		$sql = '';
+
 		if(!empty($filter)){
 			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
 		}

@@ -1815,8 +1815,12 @@ class DeclaracionesRepo extends BaseRepo {
 		$productsAgriculture = $result['data'];
 		
 		$this->model->setId_posicion($productsAgriculture);
+		if ($this->period != 12 && !empty($this->year)) {
+			$this->model->setAnio($this->year);
+			$row = 'periodo AS id';
+		}
 
-		$rowField = Helpers::getPeriodColumnSql(3, false); //tomar siempre trimestral, ya que asi viene el PIB
+		$rowField = Helpers::getPeriodColumnSql($this->period);
 		$row      = 'anio AS id, anio';
 		$arrRowField   = [$row, $rowField];
 
@@ -1824,7 +1828,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
-		//busca los datos del sector energetico
+		//busca los datos del sector agricola
 		$result = $this->modelAdo->pivotSearch($this->model);
 
 		if (!$result['success']) {
@@ -1837,13 +1841,14 @@ class DeclaracionesRepo extends BaseRepo {
 		$pibRepo = new PibRepo;
 
 		$arrData = [];
+		$period  = $this->period;
 
 		foreach ($arrDataProductsAgriculture as $row) {
 
 			$anio    = $row['anio'];
 			$periodo = $row['periodo'];
 
-			$result = $pibRepo->listPeriod(compact('anio', 'periodo'));
+			$result = $pibRepo->listPeriod(compact('anio', 'period'));
 
 			if (!$result['success']) {
 				return $result;
@@ -1852,87 +1857,151 @@ class DeclaracionesRepo extends BaseRepo {
 			if ($result['total'] == 0) {
 				return [
 					'success' => false,
-					'error'   => 'No existe configuración del PIB para el periodo: ' . $anio . ' - ' . $periodo
+					'error'   => 'No existe información del PIB para el periodo: ' . $periodo
 				];
 			}
 
-			$rowPib = array_shift($result['data']);//solo toma el primer registro
+			$rowPib = Helpers::findKeyInArrayMulti(
+				$result['data'],
+				'pib_periodo',
+				$periodo
+			);
+
+			//el pib vienen en miles de millones por eso hay que multiplicar por 1000000000
+			$pib_nacional = ($rowPib['pib_nacional'] == 0) ? 0 : ($rowPib['pib_nacional'] * 100000000);
+
+			$rate = ($pib_nacional == 0) ? 0 : ($row[$columnValue] / $pib_nacional) ;
 
 			$arrData[] = [
-				'id'                  => $row['id'],
-				'periodo'             => $row['periodo'],
-				'valor_expo_agricola' => $totalProductsAgriculture,
-				'valor_expo'          => $total,
-				'participacion'       => $rate
+				'id'                      => $row['id'],
+				'periodo'                 => $row['periodo'],
+				'valor_expo_agricola_cop' => $row[$columnValue],
+				'pib_nacional'            => $pib_nacional,
+				'participacion'           => ( $rate * 100 )
 			];
 
 		}
 
-		/*
+		$arrSeries = [
+			'valor_expo_agricola_cop' => Lang::get('indicador.columns_title.valor_expo_agricola_cop'),
+			'pib_nacional'        => Lang::get('pib.columns_title.pib_nacional'),
+		];
 
+		$columnChart = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			COLUMNAS
+		);
 
-			if ($result['success']) {
-				$arrDataProductsAgriculture = $result['data'];
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			'total'           => count($arrData),
+			'columnChartData' => $columnChart,
+			//'areaChartData'   => $areaChart,
+		];
 
-				//busca el total de las exportaciones 
-				$this->model->setId_posicion('');
-				$result  = $this->modelAdo->pivotSearch($this->model);
-				$arrData = [];
+		return $result;
+	}
 
-				if ($result['success']) {
-					$arrDataTotal = $result['data'];
+	public function executeParticipacionExpoSectorAgricolaPibAgricola()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
 
-					foreach ($arrDataTotal as $rowTotal) {
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+		$columnValue      = 'valor_pesos';
+		$this->setFiltersValues();
 
-						$rowProductsAgriculture = Helpers::findKeyInArrayMulti(
-							$arrDataProductsAgriculture,
-							'periodo',
-							$rowTotal['periodo']
-						);
-						$rowEnergeticMiningSector = Helpers::findKeyInArrayMulti(
-							$arrDataEnergeticMiningSector,
-							'periodo',
-							$rowTotal['periodo']
-						);
+		if ($this->period != 12 && !empty($this->year)) {
+			$this->model->setAnio($this->year);
+			$row = 'periodo AS id';
+		}
 
-						$totalProductsAgriculture   = ($rowProductsAgriculture   !== false) ? $rowProductsAgriculture[$columnValue]   : 0 ;
-						$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? $rowEnergeticMiningSector[$columnValue] : 0 ;
+		$rowField = Helpers::getPeriodColumnSql($this->period);
+		$row      = 'anio AS id, anio';
+		$arrRowField   = [$row, $rowField];
 
-						$total = $rowTotal[$columnValue] - $totalEnergeticMiningSector;
-						$total = ($total == 0) ? 1 : $total ;
-						$rate  = round( ($totalProductsAgriculture / $total ) * 100 , 2 );
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
 
-						$arrData[] = [
-							'id'                  => $rowTotal['id'],
-							'periodo'             => $rowTotal['periodo'],
-							'valor_expo_agricola' => $totalProductsAgriculture,
-							'valor_expo'          => $total,
-							'participacion'       => $rate
-						];
-					}
+		//busca los datos del producto agricola seleccionado
+		$result = $this->modelAdo->pivotSearch($this->model);
 
-					$arrSeries = [
-						'valor_expo_agricola' => Lang::get('indicador.columns_title.valor_expo_agricola'),
-						'valor_expo'          => Lang::get('indicador.columns_title.valor_expo'),
-					];
+		if (!$result['success']) {
+			return $result;
+		}
+		
+		$arrDataProductsAgriculture = $result['data'];
 
-					$columnChart = Helpers::jsonChart(
-						$arrData,
-						'periodo',
-						$arrSeries,
-						COLUMNAS
-					);
+		include PATH_MODELS.'Repositories/PibRepo.php';
+		$pibRepo = new PibRepo;
 
-					$result = [
-						'success'         => true,
-						'data'            => $arrData,
-						'total'           => $result['total'],
-						'columnChartData' => $columnChart,
-						//'areaChartData'   => $areaChart,
-					];
-				}
+		$arrData = [];
+		$period  = $this->period;
+
+		foreach ($arrDataProductsAgriculture as $row) {
+
+			$anio    = $row['anio'];
+			$periodo = $row['periodo'];
+
+			$result = $pibRepo->listPeriod(compact('anio', 'period'));
+
+			if (!$result['success']) {
+				return $result;
 			}
-		}*/
+
+			if ($result['total'] == 0) {
+				return [
+					'success' => false,
+					'error'   => 'No existe información del PIB para el periodo: ' . $periodo
+				];
+			}
+
+			$rowPib = Helpers::findKeyInArrayMulti(
+				$result['data'],
+				'pib_periodo',
+				$periodo
+			);
+
+			//el pib vienen en miles de millones por eso hay que multiplicar por 1000000000
+			$pib_agricultura = ($rowPib['pib_agricultura'] == 0) ? 0 : ($rowPib['pib_agricultura'] * 100000000);
+
+			$rate = ($pib_agricultura == 0) ? 0 : ($row[$columnValue] / $pib_agricultura) ;
+
+			$arrData[] = [
+				'id'                      => $row['id'],
+				'periodo'                 => $row['periodo'],
+				'valor_expo_agricola_cop' => $row[$columnValue],
+				'pib_agricultura'         => $pib_agricultura,
+				'participacion'           => ( $rate * 100 )
+			];
+
+		}
+
+		$arrSeries = [
+			'valor_expo_agricola_cop' => Lang::get('indicador.columns_title.valor_expo_agricola_cop'),
+			'pib_agricultura'         => Lang::get('pib.columns_title.pib_agricultura'),
+		];
+
+		$columnChart = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			COLUMNAS
+		);
+
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			'total'           => count($arrData),
+			'columnChartData' => $columnChart,
+			//'areaChartData'   => $areaChart,
+		];
 
 		return $result;
 	}

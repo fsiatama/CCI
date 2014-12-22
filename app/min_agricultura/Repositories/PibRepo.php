@@ -129,18 +129,71 @@ class PibRepo extends BaseRepo {
 		return $result;
 	}
 
+    /**
+     * listPeriod
+     * 
+     * @param array $params Contiene: anio de declaraciones, periodo(mes) de declaraciones, periodo(period) seleccionado por el usuario para el reporte.
+     *
+     * @access public
+     *
+     * @return array array con los valores del pib nacional y agricola trimenstral o acumulados por semestre o anual.
+     */
 	public function listPeriod($params)
 	{
 		extract($params);
-		if (empty($anio) || empty($periodo)) {
+		if (empty($anio) || empty($period)) {
 			return [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
 			];
 		}
+
 		$this->model->setPib_anio($anio);
-		$this->model->setPib_periodo($periodo);
-		return $this->modelAdo->exactSearch($this->model);
+		$rowField    = $this->getPibPeriodColumnSql($period);
+		$row         = 'pib_anio AS id';
+		$arrRowField = [$row, $rowField];
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields(['pib_agricultura', 'pib_nacional']);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		return $this->modelAdo->pivotSearch($this->model);
+	}
+
+	public function getPibPeriodColumnSql($period, $withPeriodName = true)
+	{
+		$fieldPeriodName = 'pib_periodo' ;
+		$column          = 'pib_anio AS ' . $fieldPeriodName;
+		$periodName      = '""';
+		switch ($period) {
+			case 6:
+				if ($withPeriodName) {
+					$periodName = 'pib_anio, " '.Lang::get('indicador.reports.semester').' "';
+				}
+				$column = '
+					(CASE
+					   WHEN 0 < ' . $fieldPeriodName . ' AND ' . $fieldPeriodName . ' <= 2 THEN CONCAT('.$periodName.', "1")
+					   WHEN 2 < ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "2")
+					 END
+					) AS ' . $fieldPeriodName . '
+				';
+			break;
+			case 3:
+				if ($withPeriodName) {
+					$periodName = 'pib_anio, " '.Lang::get('indicador.reports.quarter').' "';
+				}
+				$column = '
+					(CASE
+					   WHEN 1  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "1")
+					   WHEN 2  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "2")
+					   WHEN 3  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "3")
+					   WHEN 4  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "4")
+					 END
+					) AS ' . $fieldPeriodName . '
+				';
+			break;
+		}
+		return $column;
 	}
 
 }	

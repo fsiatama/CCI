@@ -261,10 +261,11 @@ class Helpers
 		return $arr_chart;
 	}
 
-	public static function getPeriodColumnSql($period, $withPeriodName = true)
+	public static function getPeriodColumnSql($period, $withPeriodName = true, $fieldPeriodName = '')
 	{
-		$column = 'anio AS periodo';
-		$periodName = '""';
+		$fieldPeriodName = (empty($fieldPeriodName)) ? 'periodo' : $fieldPeriodName ;
+		$column          = 'anio AS ' . $fieldPeriodName;
+		$periodName      = '""';
 		switch ($period) {
 			case 6:
 				if ($withPeriodName) {
@@ -272,10 +273,10 @@ class Helpers
 				}
 				$column = '
 					(CASE
-					   WHEN 0 < periodo AND periodo <= 6 THEN CONCAT('.$periodName.', "1")
-					   WHEN 6 < periodo THEN CONCAT('.$periodName.', "2")
+					   WHEN 0 < ' . $fieldPeriodName . ' AND ' . $fieldPeriodName . ' <= 6 THEN CONCAT('.$periodName.', "1")
+					   WHEN 6 < ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "2")
 					 END
-					) AS periodo
+					) AS ' . $fieldPeriodName . '
 				';
 			break;
 			case 3:
@@ -284,31 +285,34 @@ class Helpers
 				}
 				$column = '
 					(CASE
-					   WHEN 0 < periodo AND periodo <= 3 THEN CONCAT('.$periodName.', "1")
-					   WHEN 3 < periodo AND periodo <= 6 THEN CONCAT('.$periodName.', "2")
-					   WHEN 6 < periodo AND periodo <= 9 THEN CONCAT('.$periodName.', "3")
-					   WHEN 9 < periodo THEN CONCAT('.$periodName.', "4")
+					   WHEN 0 < ' . $fieldPeriodName . ' AND ' . $fieldPeriodName . ' <= 3 THEN CONCAT('.$periodName.', "1")
+					   WHEN 3 < ' . $fieldPeriodName . ' AND ' . $fieldPeriodName . ' <= 6 THEN CONCAT('.$periodName.', "2")
+					   WHEN 6 < ' . $fieldPeriodName . ' AND ' . $fieldPeriodName . ' <= 9 THEN CONCAT('.$periodName.', "3")
+					   WHEN 9 < ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "4")
 					 END
-					) AS periodo
+					) AS ' . $fieldPeriodName . '
 				';
 			break;
 			case 1:
+				if ($withPeriodName) {
+					$periodName = 'anio, " '.Lang::get('indicador.reports.months').' "';
+				}
 				$column = '
 					(CASE
-					   WHEN 1  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.1' ).'")
-					   WHEN 2  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.2' ).'")
-					   WHEN 3  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.3' ).'")
-					   WHEN 4  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.4' ).'")
-					   WHEN 5  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.5' ).'")
-					   WHEN 6  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.6' ).'")
-					   WHEN 7  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.7' ).'")
-					   WHEN 8  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.8' ).'")
-					   WHEN 9  = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.9' ).'")
-					   WHEN 10 = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.10').'")
-					   WHEN 11 = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.11').'")
-					   WHEN 12 = periodo THEN CONCAT(anio, " '.Lang::get('indicador.months.12').'")
+					   WHEN 1  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "1")
+					   WHEN 2  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "2")
+					   WHEN 3  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "3")
+					   WHEN 4  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "4")
+					   WHEN 5  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "5")
+					   WHEN 6  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "6")
+					   WHEN 7  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "7")
+					   WHEN 8  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "8")
+					   WHEN 9  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "9")
+					   WHEN 10 = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "10")
+					   WHEN 11 = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "11")
+					   WHEN 12 = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "12")
 					 END
-					) AS periodo
+					) AS ' . $fieldPeriodName . '
 				';
 			break;
 		}

@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "pib"; //$_GET["tabla"];
+$nombre_tabla = "produccion"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -121,7 +121,7 @@ class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {
 
 	public function buildSelect()
 	{
-		\$filter = array();
+		\$filter = [];
 		\$operator = \$this->getOperator();
 		\$joinOperator = ' AND ';
 		foreach(\$this->data as \$key => \$data){
@@ -227,10 +227,10 @@ class ".ucfirst($nombre_tabla)."Repo extends BaseRepo {
 		if (
 			empty(\$".implode(") ||\r\n			empty(\$", $result).")
 		) {
-			\$result = array(
+			\$result = [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
-			);
+			];
 			return \$result;
 		}
 ";
@@ -243,7 +243,7 @@ $contenido .= "
 		}
 		elseif (\$action == 'modify') {
 		}
-		\$result = array('success' => true);
+		\$result = ['success' => true];
 		return \$result;
 	}
 

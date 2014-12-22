@@ -4,7 +4,24 @@
 	var module = '<?= $module; ?>';
 
 	var arrYears   = <?= json_encode($yearsAvailable); ?>;
-	var arrPeriods = ['1', '2', '3', '4'];
+
+	var Combo = Ext.extend(Ext.ux.form.SuperBoxSelect, {
+		xtype:'superboxselect'
+		,resizable:false
+		,anchor:'88%'
+		,minChars:2
+		,forceSelection:true
+		,allowNewData:true
+		,extraItemCls:'x-tag'
+		,allowBlank:false
+		,extraItemStyle:'border-width:2px'
+		,stackItems:true
+		,mode:'remote'
+		,queryDelay:0
+		,triggerAction:'all'
+		,itemSelector:'.search-item'
+		,pageSize:10
+	});
 
 	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
 		typeAhead:false
@@ -16,21 +33,46 @@
 	});
 
 	var comboAnio = new simpleCombo({
-		hiddenName:'pib_anio'
+		hiddenName:'produccion_anio'
 		,id:module+'comboAnio'
 		,store:arrYears
-		,fieldLabel:'<?= Lang::get('pib.columns_title.pib_anio'); ?>'
-	});
-	var comboPeriodo = new simpleCombo({
-		hiddenName:'pib_periodo'
-		,id:module+'comboPeriodo'
-		,store:arrPeriods
-		,fieldLabel:'<?= Lang::get('pib.columns_title.pib_periodo'); ?>'
+		,fieldLabel:'<?= Lang::get('produccion.columns_title.produccion_anio'); ?>'
 	});
 
-	var formPib = new Ext.FormPanel({
+	var storeSector = new Ext.data.JsonStore({
+		url:'sector/list'
+		,id:module+'storeSector'
+		,root:'data'
+		,sortInfo:{field:'sector_id',direction:'ASC'}
+		,totalProperty:'total'
+		,baseParams:{id:'<?= $id; ?>'}
+		,fields:[
+			{name:'sector_id', type:'float'},
+			{name:'sector_nombre', type:'string'}
+		]
+	});
+	var resultTplSector = new Ext.XTemplate(
+		'<tpl for=".">' +
+			'<div class="search-item x-combo-list-item">' +
+				'<span>{sector_nombre}</span>' +
+			'</div>' +
+		'</tpl>'
+	);
+	var comboSector = new Combo({
+		id:module+'comboSector'
+		,singleMode:true
+		,fieldLabel:'<?= Lang::get('sector.columns_title.sector_nombre'); ?>'
+		,name:'produccion_sector_id[]'
+		,store:storeSector
+		,displayField:'sector_nombre'
+		,valueField:'sector_id'
+		,tpl: resultTplSector
+		,displayFieldTpl:'{sector_nombre}'
+	});
+	
+	var formProduccion = new Ext.FormPanel({
 		baseCls:'x-plain'
-		,id:module + 'formPib'
+		,id:module + 'formProduccion'
 		,method:'POST'
 		,autoWidth:true
 		,autoScroll:true
@@ -42,11 +84,10 @@
 			root:'data'
 			,totalProperty:'total'
 			,fields:[
-				{name:'pib_id', mapping:'pib_id', type:'float'},
-				{name:'pib_anio', mapping:'pib_anio', type:'float'},
-				{name:'pib_periodo', mapping:'pib_periodo', type:'string'},
-				{name:'pib_agricultura', mapping:'pib_agricultura', type:'float'},
-				{name:'pib_nacional', mapping:'pib_nacional', type:'float'},
+				{name:'produccion_id', mapping:'produccion_id', type:'float'},
+				{name:'produccion_sector_id', mapping:'produccion_sector_id', type:'float'},
+				{name:'produccion_anio', mapping:'produccion_anio', type:'float'},
+				{name:'produccion_peso_neto', mapping:'produccion_peso_neto', type:'float'},
 			]
 		})
 		,items:[{
@@ -63,37 +104,24 @@
 				,bodyStyle:'padding:0 18px 0 0'
 			}
 			,items:[{
-				defaults:{anchor:'88%'}
-				,columnWidth:0.33
+				defaults:{anchor:'100%'}
 				,items:[comboAnio]
 			},{
-				defaults:{anchor:'88%'}
-				,columnWidth:0.33
-				,items:[comboPeriodo]
+				defaults:{anchor:'100%'}
+				,items:[comboSector]
 			},{
 				defaults:{anchor:'100%'}
 				,items:[{
 					xtype:'numberfield'
-					,name:'pib_agricultura'
-					,fieldLabel:'<?= Lang::get('pib.columns_title.pib_agricultura'); ?>'
-					,id:module+'pib_agricultura'
+					,name:'produccion_peso_neto'
+					,fieldLabel:'<?= Lang::get('produccion.columns_title.produccion_peso_neto'); ?>'
+					,id:module+'produccion_peso_neto'
 					,allowBlank:false
-					,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.billionsCop)]
-				}]
-			},{
-				defaults:{anchor:'100%'}
-				,items:[{
-					xtype:'numberfield'
-					,name:'pib_nacional'
-					,fieldLabel:'<?= Lang::get('pib.columns_title.pib_nacional'); ?>'
-					,id:module+'pib_nacional'
-					,allowBlank:false
-					,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.billionsCop)]
 				}]
 			},{
 				xtype:'hidden'
-				,name:'pib_id'
-				,id:module+'pib_id'
+				,name:'produccion_id'
+				,id:module+'produccion_id'
 			}]
 		}]
 		,buttons: [{
@@ -117,24 +145,25 @@
 	if ($action == 'modify') {
 
 		echo "
-	formPib.on('show', function(){
-		formPib.form.load({
-			 url: 'pib/listId'
+	formProduccion.on('show', function(){
+		formProduccion.form.load({
+			 url: 'produccion/listId'
 			,params:{
-				 pib_id: '$pib_id'
+				 produccion_id: '$produccion_id'
 				,id: '$id'
 			}
 			,method: 'POST'
 			,waitTitle:'Loading......'
 			,waitMsg: 'Loading......'
 			,success: function(formulario, response) {
+				Ext.getCmp(module+'comboSector').setValue(response.result.data.produccion_sector_id);
 			}
 		});
 	});";
 	}
 	?>
 
-	return formPib;
+	return formProduccion;
 
 
 	/*********************************************** Start functions***********************************************/
@@ -145,18 +174,18 @@
 	}
 
 	function fnSave () {
-		if(formPib.form.isValid()){
+		if(formProduccion.form.isValid()){
 			params = {
 				id: '<?= $id; ?>'
 			};
-			formPib.getForm().submit({
+			formProduccion.getForm().submit({
 				waitMsg: 'Saving....'
 				,waitTitle:'Wait please...'
-				,url:'pib/<?= $action; ?>'
+				,url:'produccion/<?= $action; ?>'
 				,params: params
 				,success: function(form, action){
-					if(Ext.getCmp('<?= $parent; ?>gridPib')){
-						Ext.getCmp('<?= $parent; ?>gridPib').getStore().reload();
+					if(Ext.getCmp('<?= $parent; ?>gridProduccion')){
+						Ext.getCmp('<?= $parent; ?>gridProduccion').getStore().reload();
 					}
 					fnCloseTab();
 				}

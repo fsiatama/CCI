@@ -11,6 +11,7 @@ decl.id_posicion AS id_posicion,
 decl.id_ciiu AS id_ciiu,
 SUM(decl.valorfob) AS "valorfob", 
 SUM(decl.valorcif) AS "valorcif", 
+SUM(decl.valor_pesos) AS "valor_pesos", 
 SUM(decl.peso_neto) AS "peso_neto" 
 FROM acumulado_expo AS decl
 GROUP BY 

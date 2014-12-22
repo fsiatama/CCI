@@ -2,8 +2,8 @@
 return [
     'columns_title' => [
 		'pib_anio'        => 'Año',
-		'pib_periodo'     => 'Periodo',
-		'pib_agricultura' => 'Valor Agricultura',
-		'pib_nacional'    => 'Valor Nacional',
+		'pib_periodo'     => 'Trimestre',
+		'pib_agricultura' => 'PIB Agricultura',
+		'pib_nacional'    => 'PIB Nacional',
     ]
 ];

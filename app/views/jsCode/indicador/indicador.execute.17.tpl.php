@@ -11,6 +11,7 @@ foreach ($arrDescription as $value) {
 }
 
 $htmlDescription .= '</ol>';
+array_splice($periods, -1);//elimina el periodo mensual
 
 ?>
 
@@ -20,10 +21,11 @@ $htmlDescription .= '</ol>';
 	var module = '<?= $module.'_'.$indicador_id; ?>';
 	var panelHeight = Math.floor(Ext.getCmp('tabpanel').getInnerHeight() - 260);
 
-	var storeBalanza = new Ext.data.JsonStore({
+	var storeIndicador = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
-		,id:module+'storeBalanza'
+		,id:module+'storeIndicador'
+		,autoDestroy:true
 		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
@@ -33,13 +35,13 @@ $htmlDescription .= '</ol>';
 		,fields:[
 			{name:'id', type:'float'},
 			{name:'periodo', type:'string'},
-			{name:'valor_impo', type:'float'},
-			{name:'valor_expo', type:'float'},
-			{name:'valor_balanza', type:'float'}
+			{name:'valor_expo_agricola_cop', type:'float'},
+			{name:'pib_agricultura', type:'float'},
+			{name:'participacion', type:'float'}
 		]
 	});
 
-	storeBalanza.on('beforeload', function(){
+	storeIndicador.on('beforeload', function(){
 		var year   = Ext.getCmp(module + 'comboYear').getValue();
 		var period = Ext.getCmp(module + 'comboPeriod').getValue();
 		if (!year || !period) {
@@ -49,41 +51,38 @@ $htmlDescription .= '</ol>';
 		this.setBaseParam('period', period);
 		Ext.ux.bodyMask.show();
 	});
-	
-	storeBalanza.on('load', function(store){
+
+	storeIndicador.on('load', function(store){
+
 		FusionCharts.setCurrentRenderer('javascript');
 		
 		disposeCharts();
-		
+
 		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
 		chart.setJSONData(store.reader.jsonData.columnChartData);
 		chart.render(module + 'ColumnChart');
-
-		var chart = new FusionCharts('<?= AREA; ?>', module + 'AreaChartId', '100%', '100%', '0', '1');
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.areaChartData);
-		chart.render(module + 'AreaChart');
 		Ext.ux.bodyMask.hide();
+
 	});
-	var colModelBalanza = new Ext.grid.ColumnModel({
+	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_balanza'); ?>', dataIndex:'valor_balanza' ,'renderer':unsignedFormat}
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo_agricola_cop'); ?>', dataIndex:'valor_expo_agricola_cop' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('pib.columns_title.pib_agricultura'); ?>', dataIndex:'pib_agricultura' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat},
 		]
 		,defaults: {
 			sortable: true
 			,align: 'right'
 		}
 	});
-	
-	var gridBalanza = new Ext.grid.GridPanel({
+
+	var gridIndicador = new Ext.grid.GridPanel({
 		border:true
 		,monitorResize:true
-		,store:storeBalanza
-		,colModel:colModelBalanza
+		,store:storeIndicador
+		,colModel:colModelIndicador
 		,stateful:true
 		,columnLines:true
 		,stripeRows:true
@@ -91,9 +90,9 @@ $htmlDescription .= '</ol>';
 			forceFit:true
 		}
 		,enableColumnMove:false
-		,id:module+'gridBalanza'			
+		,id:module+'gridIndicador'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeIndicador, displayInfo:true})
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
@@ -102,7 +101,7 @@ $htmlDescription .= '</ol>';
 		,margins:'10 15 5 0'
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
-	Ext.state.Manager.clear(gridBalanza.getItemId());
+	Ext.state.Manager.clear(gridIndicador.getItemId());
 	
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 	var defaultYear = <?= end($yearsAvailable); ?>;
@@ -110,7 +109,7 @@ $htmlDescription .= '</ol>';
 	var arrPeriods = <?= json_encode($periods); ?>;
 
 	/******************************************************************************************************************************************************************************/
-	
+
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
 		,id:module + 'excuteIndicadorContainer'
@@ -177,7 +176,7 @@ $htmlDescription .= '</ol>';
 				text: Ext.ux.lang.buttons.generate
 				,iconCls: 'icon-refresh'
 				,handler: function () {
-					storeBalanza.load();
+					storeIndicador.load();
 				}
 			}]
 		},{
@@ -189,16 +188,8 @@ $htmlDescription .= '</ol>';
 				,plain:true
 			}]
 		},{
-			height:430
-			,html:'<div id="' + module + 'AreaChart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'AreaChart'
-				,plain:true
-			}]
-		},{
 			defaults:{anchor:'100%'}
-			,items:[gridBalanza]
+			,items:[gridIndicador]
 		}]
 		,listeners:{
 			beforedestroy: {
@@ -209,26 +200,23 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
-	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p){
+	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
 		disposeCharts();
-	});
+	}, this);
 
-	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
-		storeBalanza.load();
-	});
-	
-	storeBalanza.load();
+	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
+		storeIndicador.load();
+	}, this);
+
+	storeIndicador.load();
 
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-		if(FusionCharts(module + 'AreaChartId')){
-			FusionCharts(module + 'AreaChartId').dispose();
-		}
 		if(FusionCharts(module + 'ColumnChartId')){
 			FusionCharts(module + 'ColumnChartId').dispose();
-		}		
+		}
 	}
 
 	/*********************************************** End functions***********************************************/

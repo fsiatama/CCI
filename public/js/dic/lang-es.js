@@ -38,6 +38,7 @@ Ext.ux.lang.reports = {
 	,growthRateImpo: 'Indice de crecimiento Impo'
 	,growthRateAgriculture: 'Indice de crecimiento Sector Agro.'
 	,growthRate: 'Indice de crecimiento'
+	,billionsCop: 'Miles de millones de pesos'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');

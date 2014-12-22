@@ -15,7 +15,7 @@ SUM(decl.valorcif) AS "valorcif",
 SUM(decl.valorfob) AS "valorfob", 
 SUM(decl.peso_neto) AS "peso_neto",
 SUM(decl.ara_pagado) AS "valorarancel_pagado", 
-SUM(decl.valor_t_ar) AS "valorarancel" 
+SUM(decl.subtot_ara) AS "valorarancel" 
 FROM acumulado_impo AS decl
 GROUP BY 
 DATE_FORMAT(decl.fecha, '%Y'),
