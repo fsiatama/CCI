@@ -1795,5 +1795,146 @@ class DeclaracionesRepo extends BaseRepo {
 
 		return $result;
 	}
+
+	public function executeParticipacionExpoSectorAgricolaPib()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+		$columnValue      = 'valor_pesos';
+		$this->setFiltersValues();
+
+		//Trae los productos configurados como agricolas
+		$result = $this->findProductsBySector('sectorIdAgriculture');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsAgriculture = $result['data'];
+		
+		$this->model->setId_posicion($productsAgriculture);
+
+		$rowField = Helpers::getPeriodColumnSql(3, false); //tomar siempre trimestral, ya que asi viene el PIB
+		$row      = 'anio AS id, anio';
+		$arrRowField   = [$row, $rowField];
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		//busca los datos del sector energetico
+		$result = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$result['success']) {
+			return $result;
+		}
+		
+		$arrDataProductsAgriculture = $result['data'];
+
+		include PATH_MODELS.'Repositories/PibRepo.php';
+		$pibRepo = new PibRepo;
+
+		$arrData = [];
+
+		foreach ($arrDataProductsAgriculture as $row) {
+
+			$anio    = $row['anio'];
+			$periodo = $row['periodo'];
+
+			$result = $pibRepo->listPeriod(compact('anio', 'periodo'));
+
+			if (!$result['success']) {
+				return $result;
+			}
+
+			if ($result['total'] == 0) {
+				return [
+					'success' => false,
+					'error'   => 'No existe configuración del PIB para el periodo: ' . $anio . ' - ' . $periodo
+				];
+			}
+
+			$rowPib = array_shift($result['data']);//solo toma el primer registro
+
+			$arrData[] = [
+				'id'                  => $row['id'],
+				'periodo'             => $row['periodo'],
+				'valor_expo_agricola' => $totalProductsAgriculture,
+				'valor_expo'          => $total,
+				'participacion'       => $rate
+			];
+
+		}
+
+		/*
+
+
+			if ($result['success']) {
+				$arrDataProductsAgriculture = $result['data'];
+
+				//busca el total de las exportaciones 
+				$this->model->setId_posicion('');
+				$result  = $this->modelAdo->pivotSearch($this->model);
+				$arrData = [];
+
+				if ($result['success']) {
+					$arrDataTotal = $result['data'];
+
+					foreach ($arrDataTotal as $rowTotal) {
+
+						$rowProductsAgriculture = Helpers::findKeyInArrayMulti(
+							$arrDataProductsAgriculture,
+							'periodo',
+							$rowTotal['periodo']
+						);
+						$rowEnergeticMiningSector = Helpers::findKeyInArrayMulti(
+							$arrDataEnergeticMiningSector,
+							'periodo',
+							$rowTotal['periodo']
+						);
+
+						$totalProductsAgriculture   = ($rowProductsAgriculture   !== false) ? $rowProductsAgriculture[$columnValue]   : 0 ;
+						$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? $rowEnergeticMiningSector[$columnValue] : 0 ;
+
+						$total = $rowTotal[$columnValue] - $totalEnergeticMiningSector;
+						$total = ($total == 0) ? 1 : $total ;
+						$rate  = round( ($totalProductsAgriculture / $total ) * 100 , 2 );
+
+						$arrData[] = [
+							'id'                  => $rowTotal['id'],
+							'periodo'             => $rowTotal['periodo'],
+							'valor_expo_agricola' => $totalProductsAgriculture,
+							'valor_expo'          => $total,
+							'participacion'       => $rate
+						];
+					}
+
+					$arrSeries = [
+						'valor_expo_agricola' => Lang::get('indicador.columns_title.valor_expo_agricola'),
+						'valor_expo'          => Lang::get('indicador.columns_title.valor_expo'),
+					];
+
+					$columnChart = Helpers::jsonChart(
+						$arrData,
+						'periodo',
+						$arrSeries,
+						COLUMNAS
+					);
+
+					$result = [
+						'success'         => true,
+						'data'            => $arrData,
+						'total'           => $result['total'],
+						'columnChartData' => $columnChart,
+						//'areaChartData'   => $areaChart,
+					];
+				}
+			}
+		}*/
+
+		return $result;
+	}
 }	
 

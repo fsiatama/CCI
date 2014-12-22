@@ -104,10 +104,10 @@ class PibRepo extends BaseRepo {
 			empty($pib_agricultura) ||
 			empty($pib_nacional)
 		) {
-			$result = array(
+			$result = [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
-			);
+			];
 			return $result;
 		}
 
@@ -125,8 +125,22 @@ class PibRepo extends BaseRepo {
 			$this->model->setPib_fupdate(Helpers::getDateTimeNow());
 			$this->model->setPib_uupdate($_SESSION['user_id']);
 		}
-		$result = array('success' => true);
+		$result = ['success' => true];
 		return $result;
+	}
+
+	public function listPeriod($params)
+	{
+		extract($params);
+		if (empty($anio) || empty($periodo)) {
+			return [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+		}
+		$this->model->setPib_anio($anio);
+		$this->model->setPib_periodo($periodo);
+		return $this->modelAdo->exactSearch($this->model);
 	}
 
 }	

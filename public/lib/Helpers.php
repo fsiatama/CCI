@@ -261,26 +261,33 @@ class Helpers
 		return $arr_chart;
 	}
 
-	public static function getPeriodColumnSql($period)
+	public static function getPeriodColumnSql($period, $withPeriodName = true)
 	{
 		$column = 'anio AS periodo';
+		$periodName = '""';
 		switch ($period) {
 			case 6:
+				if ($withPeriodName) {
+					$periodName = 'anio, " '.Lang::get('indicador.reports.semester').' "';
+				}
 				$column = '
 					(CASE
-					   WHEN 0 < periodo AND periodo <= 6 THEN CONCAT(anio, " '.Lang::get('indicador.reports.semester').' 1")
-					   WHEN 6 < periodo THEN CONCAT(anio, " '.Lang::get('indicador.reports.semester').' 2")
+					   WHEN 0 < periodo AND periodo <= 6 THEN CONCAT('.$periodName.', "1")
+					   WHEN 6 < periodo THEN CONCAT('.$periodName.', "2")
 					 END
 					) AS periodo
 				';
 			break;
 			case 3:
+				if ($withPeriodName) {
+					$periodName = 'anio, " '.Lang::get('indicador.reports.quarter').' "';
+				}
 				$column = '
 					(CASE
-					   WHEN 0 < periodo AND periodo <= 3 THEN CONCAT(anio, " '.Lang::get('indicador.reports.quarter').' 1")
-					   WHEN 3 < periodo AND periodo <= 6 THEN CONCAT(anio, " '.Lang::get('indicador.reports.quarter').' 2")
-					   WHEN 6 < periodo AND periodo <= 9 THEN CONCAT(anio, " '.Lang::get('indicador.reports.quarter').' 3")
-					   WHEN 9 < periodo THEN CONCAT(anio, " '.Lang::get('indicador.reports.quarter').' 4")
+					   WHEN 0 < periodo AND periodo <= 3 THEN CONCAT('.$periodName.', "1")
+					   WHEN 3 < periodo AND periodo <= 6 THEN CONCAT('.$periodName.', "2")
+					   WHEN 6 < periodo AND periodo <= 9 THEN CONCAT('.$periodName.', "3")
+					   WHEN 9 < periodo THEN CONCAT('.$periodName.', "4")
 					 END
 					) AS periodo
 				';
