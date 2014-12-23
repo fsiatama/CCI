@@ -294,23 +294,32 @@ class Helpers
 				';
 			break;
 			case 1:
-				if ($withPeriodName) {
-					$periodName = 'anio, " '.Lang::get('indicador.reports.months').' "';
-				}
+				$periodName1  = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.1')  . '"' : '1' ;
+				$periodName2  = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.2')  . '"' : '2' ;
+				$periodName3  = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.3')  . '"' : '3' ;
+				$periodName4  = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.4')  . '"' : '4' ;
+				$periodName5  = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.5')  . '"' : '5' ;
+				$periodName6  = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.6')  . '"' : '6' ;
+				$periodName7  = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.7')  . '"' : '7' ;
+				$periodName8  = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.8')  . '"' : '8' ;
+				$periodName9  = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.9')  . '"' : '9' ;
+				$periodName10 = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.10') . '"' : '10' ;
+				$periodName11 = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.11') . '"' : '11' ;
+				$periodName12 = ($withPeriodName) ? 'anio, " ' . Lang::get('indicador.months.12') . '"' : '12' ;
 				$column = '
 					(CASE
-					   WHEN 1  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "1")
-					   WHEN 2  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "2")
-					   WHEN 3  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "3")
-					   WHEN 4  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "4")
-					   WHEN 5  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "5")
-					   WHEN 6  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "6")
-					   WHEN 7  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "7")
-					   WHEN 8  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "8")
-					   WHEN 9  = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "9")
-					   WHEN 10 = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "10")
-					   WHEN 11 = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "11")
-					   WHEN 12 = ' . $fieldPeriodName . ' THEN CONCAT('.$periodName.', "12")
+					   WHEN 1  = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName1 . ')
+					   WHEN 2  = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName2 . ')
+					   WHEN 3  = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName3 . ')
+					   WHEN 4  = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName4 . ')
+					   WHEN 5  = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName5 . ')
+					   WHEN 6  = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName6 . ')
+					   WHEN 7  = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName7 . ')
+					   WHEN 8  = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName8 . ')
+					   WHEN 9  = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName9 . ')
+					   WHEN 10 = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName10 . ')
+					   WHEN 11 = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName11 . ')
+					   WHEN 12 = ' . $fieldPeriodName . ' THEN CONCAT(' . $periodName12 . ')
 					 END
 					) AS ' . $fieldPeriodName . '
 				';

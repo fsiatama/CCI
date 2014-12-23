@@ -532,6 +532,27 @@ return [
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
 		],
+		'18' => [
+			[
+				'field'      => 'sector_id',
+				'field_expo' => 'sector_id',
+				'field_impo' => 'sector_id',
+				'required'   => true,
+				'multivalue' => true,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'yearRange'  => ['anio_fin'],
+			],[
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
+			]
+		],
 	],
 	'executeConfig' => [
 		'1'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaRelativa'],
@@ -551,6 +572,7 @@ return [
 		'15' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'RelacionCrecimientoExpoAgroExpoTot'],
 		'16' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ParticipacionExpoSectorAgricolaPib'],
 		'17' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ParticipacionExpoSectorAgricolaPibAgricola'],
+		'18' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'CoeficientePenetracionImpo'],
 	],
 	'yearsAvailable' => ['2010', '2011', '2012', '2013', '2014'],
 	'periods' => [

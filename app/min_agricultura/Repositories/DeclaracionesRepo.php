@@ -46,7 +46,7 @@ class DeclaracionesRepo extends BaseRepo {
 	{
 		return new Declaraimp;
 	}
-	
+
 	public function getModelImpoAdo()
 	{
 		return new DeclaraimpAdo;
@@ -56,7 +56,7 @@ class DeclaracionesRepo extends BaseRepo {
 	{
 		return new Declaraexp;
 	}
-	
+
 	public function getModelExpoAdo()
 	{
 		return new DeclaraexpAdo;
@@ -85,7 +85,7 @@ class DeclaracionesRepo extends BaseRepo {
 
     /**
      * setFiltersValues
-     * 
+     *
      * @param array  $arrFiltersValues Array con los filtros configurados por el usuario.
      * @param array  $filtersConfig    Configuracion de los filtros en app/lib/indicador.config.php
      * @param string $trade            impo o expo.
@@ -164,7 +164,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 	public function findProductsBySector($sector)
 	{
-		$sector_id  = Helpers::arrayGet($this->linesConfig, $sector);
+		$sector_id  = (is_numeric($sector)) ? $sector : Helpers::arrayGet($this->linesConfig, $sector);
 		$sectorRepo = new SectorRepo;
 		$result     = $sectorRepo->findPrimaryKey($sector_id);
 
@@ -191,7 +191,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->model      = $this->getModelImpo();
 		$this->modelAdo   = $this->getModelImpoAdo();
-		
+
 		$rowField = Helpers::getPeriodColumnSql($period);
 
 		//asigna los valores de filtro del indicador al modelo
@@ -225,7 +225,7 @@ class DeclaracionesRepo extends BaseRepo {
 		if (!$rsDeclaraimp['success']) {
 			return $rsDeclaraimp;
 		}
-		
+
 		$this->setTrade('expo');
 
 		$this->model      = $this->getModelExpo();
@@ -242,7 +242,7 @@ class DeclaracionesRepo extends BaseRepo {
 				$year = $this->arrFiltersValues['anio_'.$range];
 			}
 		}
-		
+
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
@@ -252,12 +252,12 @@ class DeclaracionesRepo extends BaseRepo {
 		if (!$rsDeclaraexp['success']) {
 			return $rsDeclaraexp;
 		}
-		
+
 		$arrData       = [];
 		$arrPeriods    = [];
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
-			
+
 			$valor_impo = 0;
 
 			foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
@@ -278,13 +278,13 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
-			
+
 			if(!in_array($rowImpo['periodo'], $arrPeriods)){
 				$arrData[] = [
 					'id'         => $rowImpo['id'],
 					'periodo'    => $rowImpo['periodo'],
 					'valor_expo' => 0,
-					'valor_impo' => $rowImpo['valorfob'],
+					'valor_impo' => $rowImpo[$this->columnValueImpo],
 				];
 			}
 
@@ -301,7 +301,7 @@ class DeclaracionesRepo extends BaseRepo {
 		//debe rrellenar con una fila en ceros
 		$numberPeriods = (12 / $period);
 		if (count($arrData) < $numberPeriods) {
-			
+
 			$arrFinal = [];
 			$rangePeriods  = Helpers::getPeriodRange($period);
 
@@ -326,7 +326,7 @@ class DeclaracionesRepo extends BaseRepo {
 						'valor_impo' => 0,
 					];
 				}
-				
+
 			}
 			$arrData = $arrFinal;
 		}
@@ -349,7 +349,7 @@ class DeclaracionesRepo extends BaseRepo {
 			foreach ($result['data'] as $key => $value) {
 
 				$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
-				
+
 				$arrData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
 
 			}
@@ -403,7 +403,7 @@ class DeclaracionesRepo extends BaseRepo {
 			foreach ($result['data'] as $key => $value) {
 
 				$valor_balanza = (( $value['valor_expo'] + $value['valor_impo'] ) == 0) ? 0 : ( $value['valor_expo'] - $value['valor_impo'] ) / ( $value['valor_expo'] + $value['valor_impo'] );
-				
+
 				$arrData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
 
 			}
@@ -451,16 +451,16 @@ class DeclaracionesRepo extends BaseRepo {
 
 				if ( in_array($value['id'], $arrRangeIni) ) {
 					$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
-					
+
 					$firstRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
 				}
 
 			}
 			$this->setRange('fin');
 			$result = $this->findBalanzaData();
-			
+
 			if ($result['success']) {
-				
+
 				//calcula el valor de la balanza simple para el segundo conjunto de resultados
 				$lastRangeData = [];
 				foreach ($result['data'] as $key => $value) {
@@ -468,7 +468,7 @@ class DeclaracionesRepo extends BaseRepo {
 					if ( in_array($value['id'], $arrRangeFin) ) {
 
 						$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
-						
+
 						$lastRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
 					}
 
@@ -619,7 +619,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$ConcentrationRate = Helpers::arrayGet($this->linesConfig, 'ConcentrationExportableSupply');
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
-				
+
 			$rate = round( ($rowExpo[$this->columnValueExpo] / $totalValue ) * 100 , 2 );
 			$cumulativeRate += $rate;
 			if ($cumulativeRate <= 80) {
@@ -812,7 +812,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->setTrade($trade);
 		$this->setRange('ini');
-		
+
 		if ($trade == 'impo') {
 			$this->model      = $this->getModelImpo();
 			$this->modelAdo   = $this->getModelImpoAdo();
@@ -976,14 +976,14 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->model->setId_posicion($productsAgriculture);
 
 		$arrRowField = ['id', 'decl.id_paisdestino', 'pais'];
-		
+
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 		$this->modelAdo->setPivotSortColumn($this->columnValueExpo . ' DESC');
-		
+
 		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
-		
+
 		if (!$rsDeclaraexp['success']) {
 			return $rsDeclaraexp;
 		}
@@ -993,17 +993,17 @@ class DeclaracionesRepo extends BaseRepo {
 				'error'   => Lang::get('error.no_records_found')
 			];
 		}
-		
+
 		$totalValue = 0;
-		
+
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
 			$totalValue += (float)$rowExpo[$this->columnValueExpo];
 		}
-		
+
 		$arrData           = [];
-		
+
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
-				
+
 			$rate = round( ($rowExpo[$this->columnValueExpo] / $totalValue ) * 100 , 2 );
 			$arrData[] = [
 				'id'            => $keyExpo,
@@ -1012,14 +1012,14 @@ class DeclaracionesRepo extends BaseRepo {
 				'participacion' => $rate
 			];
 		}
-		
+
 		$result = [
 			'success'         => true,
 			'data'            => $arrData,
 			'total'           => count($arrData)
 		];
 		return $result;
-		
+
 	}
 
 	public function executeIHH()
@@ -1029,7 +1029,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->setTrade($trade);
 		$this->setRange('ini');
-		
+
 		if ($trade == 'impo') {
 			$this->model      = $this->getModelImpo();
 			$this->modelAdo   = $this->getModelImpoAdo();
@@ -1188,7 +1188,7 @@ class DeclaracionesRepo extends BaseRepo {
 			if ($result['success']) {
 				$arrDataProductsAgriculture = $result['data'];
 
-				//busca el total de las exportaciones 
+				//busca el total de las exportaciones
 				$this->model->setId_posicion('');
 				$result  = $this->modelAdo->pivotSearch($this->model);
 				$arrData = [];
@@ -1310,7 +1310,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 					$totalProductsTraditional    = ($rowProductsTraditional !== false) ? $rowProductsTraditional[$columnValue] : 0 ;
 					$totalProductsNonTraditional = $rowTotal[$columnValue] - $totalProductsTraditional;
-					
+
 					$total = ($rowTotal[$columnValue] == 0) ? 1 : $rowTotal[$columnValue] ;
 					$rate  = round( ($totalProductsNonTraditional / $total ) * 100 , 2 );
 
@@ -1399,7 +1399,7 @@ class DeclaracionesRepo extends BaseRepo {
 					);
 
 					$totalProduct = ($rowProduct !== false) ? $rowProduct[$columnValue] : 0 ;
-					
+
 					$total = ($rowTotal[$columnValue] == 0) ? 1 : $rowTotal[$columnValue] ;
 					$rate  = round( ($totalProduct / $total ) * 100 , 2 );
 
@@ -1473,7 +1473,7 @@ class DeclaracionesRepo extends BaseRepo {
 		if ($result['success']) {
 
 			$firstRangeData = $result['data'];
-			
+
 			//busca los datos del segundo rango de fechas
 			$this->setRange('fin');
 			$this->setFiltersValues();
@@ -1599,9 +1599,9 @@ class DeclaracionesRepo extends BaseRepo {
 
 			$arrData = [];
 			$average = 0;
-			
+
 			foreach ($result['data'] as $keyImpo => $rowImpo) {
-					
+
 				$rate     = ((float)$rowImpo[$columnValue1] / $totalValue );
 				$weighing = (float)$rowImpo[$columnValue1] * $rate;
 				$average += $weighing;
@@ -1623,7 +1623,7 @@ class DeclaracionesRepo extends BaseRepo {
 				'total'           => count($arrData)
 			];
 		}
-		
+
 		return $result;
 	}
 
@@ -1665,7 +1665,7 @@ class DeclaracionesRepo extends BaseRepo {
 		];
 
 		return $result;
-		
+
 	}
 
 	public function executeRelacionCrecimientoExpoAgroExpoTot()
@@ -1720,7 +1720,7 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 		$arrDataEnergeticMiningSector = $result['data'];
 
-		//busca el total de las exportaciones 
+		//busca el total de las exportaciones
 		$this->model->setId_posicion('');
 		$result  = $this->modelAdo->pivotSearch($this->model);
 		if (!$result['success']) {
@@ -1744,7 +1744,6 @@ class DeclaracionesRepo extends BaseRepo {
 				'periodo',
 				$rowTotal['periodo']
 			);
-
 
 			$yearLast                   = $rowTotal['periodo'];
 			$valueLastAgriculture       = ($rowProductsAgriculture   !== false) ? (float)$rowProductsAgriculture[$columnValue]   : 0 ;
@@ -1813,7 +1812,7 @@ class DeclaracionesRepo extends BaseRepo {
 			return $result;
 		}
 		$productsAgriculture = $result['data'];
-		
+
 		$this->model->setId_posicion($productsAgriculture);
 		if ($this->period != 12 && !empty($this->year)) {
 			$this->model->setAnio($this->year);
@@ -1834,7 +1833,7 @@ class DeclaracionesRepo extends BaseRepo {
 		if (!$result['success']) {
 			return $result;
 		}
-		
+
 		$arrDataProductsAgriculture = $result['data'];
 
 		include PATH_MODELS.'Repositories/PibRepo.php';
@@ -1935,7 +1934,7 @@ class DeclaracionesRepo extends BaseRepo {
 		if (!$result['success']) {
 			return $result;
 		}
-		
+
 		$arrDataProductsAgriculture = $result['data'];
 
 		include PATH_MODELS.'Repositories/PibRepo.php';
@@ -2005,5 +2004,169 @@ class DeclaracionesRepo extends BaseRepo {
 
 		return $result;
 	}
-}	
+
+	public function executeCoeficientePenetracionImpo()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+
+		$this->setFiltersValues();
+		$rowField = Helpers::getPeriodColumnSql($this->period);
+		$row      = 'anio AS id';
+		$arrRowField   = [$row, $rowField];
+
+		//Trae los productos configurados en el sector seleccionado
+		$result = $this->findProductsBySector($arrFiltersValues['sector_id']);
+		if (!$result['success']) {
+			return $result;
+		}
+		$products = $result['data'];
+		$this->model->setId_posicion($products);
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		//busca los datos del producto agricola seleccionado
+		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraexp['success']) {
+			return $rsDeclaraexp;
+		}
+
+		$this->setTrade('impo');
+		$this->model      = $this->getModelImpo();
+		$this->modelAdo   = $this->getModelImpoAdo();
+		$this->setFiltersValues();
+		$this->model->setId_posicion($products);
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($this->columnValueImpo);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		//busca los datos del producto agricola seleccionado
+		$rsDeclaraimp = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraimp['success']) {
+			return $rsDeclaraimp;
+		}
+
+		$arrData    = [];
+		$arrPeriods = [];
+		$sector_id  = $arrFiltersValues['sector_id'];
+
+		include PATH_MODELS.'Repositories/ProduccionRepo.php';
+		$produccionRepo = new ProduccionRepo;
+
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+
+			$anio    = $rowExpo['periodo'];
+			$result = $produccionRepo->listPeriodSector(compact('anio', 'sector_id'));
+			if (!$result['success']) {
+				return $result;
+			}
+			if ($result['total'] == 0) {
+				return [
+					'success' => false,
+					'error'   => 'No existe información de Producción para el periodo: ' . $periodo
+				];
+			}
+			$rowProduccion = Helpers::findKeyInArrayMulti(
+				$result['data'],
+				'produccion_anio',
+				$anio
+			);
+
+			$rowImpo = Helpers::findKeyInArrayMulti(
+				$rsDeclaraimp['data'],
+				'periodo',
+				$rowExpo['periodo']
+			);
+			$valor_impo = 0;
+			if ($rowImpo !== false) {
+				$valor_impo   = $rowImpo[$this->columnValueImpo];
+				$arrPeriods[] = $rowImpo['periodo'];
+			}
+
+			//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
+			$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+
+			$divider = ($rowExpo[$this->columnValueExpo] + $valor_impo + $produccion_peso_neto);
+
+			$PI = ($divider == 0) ? 0 : ($valor_impo / $divider) ;
+
+			$arrData[] = [
+				'id'              => $rowExpo['id'],
+				'periodo'         => $rowExpo['periodo'],
+				'peso_expo'       => $rowExpo[$this->columnValueExpo],
+				'peso_impo'       => $valor_impo,
+				'produccion_peso' => $produccion_peso_neto,
+				'PI'              => $PI,
+			];
+		}
+
+		foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
+
+			if(!in_array($rowImpo['periodo'], $arrPeriods)){
+				$anio    = $rowExpo['periodo'];
+				$result = $produccionRepo->listPeriodSector(compact('anio', 'sector_id'));
+				if (!$result['success']) {
+					return $result;
+				}
+				if ($result['total'] == 0) {
+					return [
+						'success' => false,
+						'error'   => 'No existe información de Producción para el periodo: ' . $periodo
+					];
+				}
+				$rowProduccion = Helpers::findKeyInArrayMulti(
+					$result['data'],
+					'produccion_anio',
+					$anio
+				);
+				//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
+				$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+				$arrData[] = [
+					'id'              => $rowImpo['id'],
+					'periodo'         => $rowImpo['periodo'],
+					'peso_expo'       => 0,
+					'peso_impo'       => $rowImpo[$this->columnValueImpo],
+					'produccion_peso' => $produccion_peso_neto,
+					'PI'              => 0,
+				];
+			}
+
+		}
+
+		if (count($arrData) == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		$arrSeries = [
+			'PI' => Lang::get('indicador.columns_title.PI')
+		];
+
+		$columnChart = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			COLUMNAS
+		);
+
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			'total'           => count($arrData),
+			'columnChartData' => $columnChart,
+			//'areaChartData'   => $areaChart,
+		];
+
+		return $result;
+	}
+}
 

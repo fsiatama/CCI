@@ -130,5 +130,21 @@ class ProduccionRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function listPeriodSector($params)
+	{
+		extract($params);
+		if (empty($anio) || empty($sector_id)) {
+			return [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+		}
+
+		$this->model->setProduccion_sector_id($sector_id);
+		$this->model->setProduccion_anio($anio);
+		
+		return $this->modelAdo->exactSearch($this->model);
+	}
+
 }	
 
