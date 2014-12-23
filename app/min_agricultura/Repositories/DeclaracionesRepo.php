@@ -2070,7 +2070,7 @@ class DeclaracionesRepo extends BaseRepo {
 			if ($result['total'] == 0) {
 				return [
 					'success' => false,
-					'error'   => 'No existe información de Producción para el periodo: ' . $periodo
+					'error'   => 'No existe información de Producción para el periodo: ' . $anio
 				];
 			}
 			$rowProduccion = Helpers::findKeyInArrayMulti(
@@ -2093,7 +2093,7 @@ class DeclaracionesRepo extends BaseRepo {
 			//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
 			$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
 
-			$divider = ($rowExpo[$this->columnValueExpo] + $valor_impo + $produccion_peso_neto);
+			$divider = ($produccion_peso_neto + $valor_impo - $rowExpo[$this->columnValueExpo]);
 
 			$PI = ($divider == 0) ? 0 : ($valor_impo / $divider) ;
 
@@ -2118,7 +2118,7 @@ class DeclaracionesRepo extends BaseRepo {
 				if ($result['total'] == 0) {
 					return [
 						'success' => false,
-						'error'   => 'No existe información de Producción para el periodo: ' . $periodo
+						'error'   => 'No existe información de Producción para el periodo: ' . $anio
 					];
 				}
 				$rowProduccion = Helpers::findKeyInArrayMulti(
@@ -2149,6 +2149,169 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrSeries = [
 			'PI' => Lang::get('indicador.columns_title.PI')
+		];
+
+		$columnChart = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			COLUMNAS
+		);
+
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			'total'           => count($arrData),
+			'columnChartData' => $columnChart,
+			//'areaChartData'   => $areaChart,
+		];
+
+		return $result;
+	}
+
+	public function executeCoeficienteAperturaExpo()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+
+		$this->setFiltersValues();
+		$rowField = Helpers::getPeriodColumnSql($this->period);
+		$row      = 'anio AS id';
+		$arrRowField   = [$row, $rowField];
+
+		//Trae los productos configurados en el sector seleccionado
+		$result = $this->findProductsBySector($arrFiltersValues['sector_id']);
+		if (!$result['success']) {
+			return $result;
+		}
+		$products = $result['data'];
+		$this->model->setId_posicion($products);
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		//busca los datos del producto agricola seleccionado
+		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraexp['success']) {
+			return $rsDeclaraexp;
+		}
+
+		$this->setTrade('impo');
+		$this->model      = $this->getModelImpo();
+		$this->modelAdo   = $this->getModelImpoAdo();
+		$this->setFiltersValues();
+		$this->model->setId_posicion($products);
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($this->columnValueImpo);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		//busca los datos del producto agricola seleccionado
+		$rsDeclaraimp = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraimp['success']) {
+			return $rsDeclaraimp;
+		}
+
+		$arrData    = [];
+		$arrPeriods = [];
+		$sector_id  = $arrFiltersValues['sector_id'];
+
+		include PATH_MODELS.'Repositories/ProduccionRepo.php';
+		$produccionRepo = new ProduccionRepo;
+
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+
+			$anio    = $rowExpo['periodo'];
+			$result = $produccionRepo->listPeriodSector(compact('anio', 'sector_id'));
+			if (!$result['success']) {
+				return $result;
+			}
+			if ($result['total'] == 0) {
+				return [
+					'success' => false,
+					'error'   => 'No existe información de Producción para el periodo: ' . $anio
+				];
+			}
+			$rowProduccion = Helpers::findKeyInArrayMulti(
+				$result['data'],
+				'produccion_anio',
+				$anio
+			);
+
+			$rowImpo = Helpers::findKeyInArrayMulti(
+				$rsDeclaraimp['data'],
+				'periodo',
+				$rowExpo['periodo']
+			);
+			$valor_impo = 0;
+			if ($rowImpo !== false) {
+				$valor_impo   = $rowImpo[$this->columnValueImpo];
+				$arrPeriods[] = $rowImpo['periodo'];
+			}
+
+			//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
+			$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+
+			$divider = ($produccion_peso_neto + $valor_impo - $rowExpo[$this->columnValueExpo]);
+
+			$AE = ($divider == 0) ? 0 : ($rowExpo[$this->columnValueExpo] / $divider) ;
+
+			$arrData[] = [
+				'id'              => $rowExpo['id'],
+				'periodo'         => $rowExpo['periodo'],
+				'peso_expo'       => $rowExpo[$this->columnValueExpo],
+				'peso_impo'       => $valor_impo,
+				'produccion_peso' => $produccion_peso_neto,
+				'AE'              => $AE,
+			];
+		}
+
+		foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
+
+			if(!in_array($rowImpo['periodo'], $arrPeriods)){
+				$anio    = $rowExpo['periodo'];
+				$result = $produccionRepo->listPeriodSector(compact('anio', 'sector_id'));
+				if (!$result['success']) {
+					return $result;
+				}
+				if ($result['total'] == 0) {
+					return [
+						'success' => false,
+						'error'   => 'No existe información de Producción para el periodo: ' . $anio
+					];
+				}
+				$rowProduccion = Helpers::findKeyInArrayMulti(
+					$result['data'],
+					'produccion_anio',
+					$anio
+				);
+				//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
+				$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+				$arrData[] = [
+					'id'              => $rowImpo['id'],
+					'periodo'         => $rowImpo['periodo'],
+					'peso_expo'       => 0,
+					'peso_impo'       => $rowImpo[$this->columnValueImpo],
+					'produccion_peso' => $produccion_peso_neto,
+					'AE'              => 0,
+				];
+			}
+		}
+
+		if (count($arrData) == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		$arrSeries = [
+			'AE' => Lang::get('indicador.columns_title.AE')
 		];
 
 		$columnChart = Helpers::jsonChart(

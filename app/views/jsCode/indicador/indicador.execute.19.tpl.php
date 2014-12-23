@@ -37,7 +37,7 @@ $htmlDescription .= '</ol>';
 			{name:'peso_expo', type:'float'},
 			{name:'peso_impo', type:'float'},
 			{name:'produccion_peso', type:'float'},
-			{name:'PI', type:'float'},
+			{name:'AE', type:'float'},
 		]
 	});
 
@@ -64,7 +64,7 @@ $htmlDescription .= '</ol>';
 			{header:'<?= Lang::get('indicador.columns_title.peso_expo'); ?>', dataIndex:'peso_expo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.peso_impo'); ?>', dataIndex:'peso_impo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.produccion_peso'); ?>', dataIndex:'produccion_peso' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.PI'); ?>', dataIndex:'PI','renderer':unsigned4Format},
+			{header:'<?= Lang::get('indicador.columns_title.AE'); ?>', dataIndex:'AE','renderer':unsigned4Format},
 		]
 		,defaults: {
 			sortable: true

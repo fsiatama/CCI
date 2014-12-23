@@ -88,7 +88,7 @@ class Helpers
 		$arr_chart['series'] = $series;
 
 		$arr_chart['chart'] = [
-			'decimalprecision'   =>'2'
+			'decimalprecision'   =>'4'
 			,'palette'           =>'4'
 			,'formatnumberscale' =>'1'
 			,'numberscalevalue'  =>'1000000'

@@ -136,7 +136,7 @@ $htmlDescription .= '</ol>';
 						'<strong id="' + module + 'growthRateImpo">0</strong>' +
 					'</div>' +
 					'<div class="col-md-4">' +
-						'<label><?= Lang::get('indicador.reports.variation'); ?></label>' +
+						'<label><?= Lang::get('indicador.reports.growVariation'); ?></label>' +
 						'<strong id="' + module + 'rateVariation">0</strong>' +
 					'</div>' +
 				'</div>' +

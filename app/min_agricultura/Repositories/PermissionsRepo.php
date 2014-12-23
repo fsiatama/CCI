@@ -54,18 +54,20 @@ class PermissionsRepo extends BaseRepo {
 					$category        = Inflector::underscore($value['category_menu_name']);
 					$varMenuName     = $value['menu_name'];
 
-					$arrMenuItems[$category][] = array(
-						'id'       => Inflector::underscore($varMenuName).'_'.$value['menu_id'],
-						'title'    => $varMenuName,
-						'iconCls'  => Inflector::slug($varMenuName),
-						'titleTab' => $varMenuName,
-						'url'      => $value['menu_url'],
-						'params'   => array(
-							'id'     => $value['menu_id'],
-							'title'  => $varMenuName,
-							'module' => Inflector::underscore($varMenuName)
-						)
-					);
+					//if ($value['menu_hidden'] == '0') {
+						$arrMenuItems[$category][] = array(
+							'id'       => Inflector::underscore($varMenuName).'_'.$value['menu_id'],
+							'title'    => $varMenuName,
+							'iconCls'  => Inflector::slug($varMenuName),
+							'titleTab' => $varMenuName,
+							'url'      => $value['menu_url'],
+							'params'   => array(
+								'id'     => $value['menu_id'],
+								'title'  => $varMenuName,
+								'module' => Inflector::underscore($varMenuName)
+							)
+						);
+					//}
 				}
 
 				foreach ($result['data'] as $key => $value) {
