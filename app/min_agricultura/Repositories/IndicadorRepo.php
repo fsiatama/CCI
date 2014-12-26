@@ -44,13 +44,18 @@ class IndicadorRepo extends BaseRepo {
 			'indicador_nombre',
 			'indicador_filtros',
 			'indicador_tipo_indicador_id',
+			'indicador_leaf',
 		]);
 
 		$result = $this->validateModify($params);
 		if ($result['success']) {
 			$row = array_shift($result['data']);
+			$arrFiltersValues = [];
 
-			$arrFiltersValues = Helpers::filterValuesToArray($row['indicador_filtros']);
+			if (!empty($row['indicador_filtros'])) {
+				$arrFiltersValues = Helpers::filterValuesToArray($row['indicador_filtros']);
+			}
+
 			$result['data'][] = array_merge($row, $arrFiltersValues);
 		}
 
@@ -204,7 +209,58 @@ class IndicadorRepo extends BaseRepo {
 	{
 		extract($params);
 
+		$this->model->setIndicador_parent($parentId);
+		$this->model->setIndicador_uinsert($_SESSION['user_id']);
+		$this->model->setIndicador_tipo_indicador_id($tipo_indicador_id);
+
+		$this->modelAdo->setColumns([
+			'indicador_id',
+			'indicador_nombre',
+			'indicador_leaf',
+			'indicador_parent'
+		]);
+
+		$result = $this->modelAdo->exactSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		foreach ($result['data'] as $key => $row) {
+
+			$this->model = $this->getModel();
+
+			if ($row['indicador_leaf'] == '0') {
+				//si se trata de una carpeta debe borrar todos los hijos
+				$params = [
+					'id' => $id,
+					'module' => $module,
+					'parentId' => $row['indicador_id'],
+					'tipo_indicador_id' => $tipo_indicador_id,
+				];
+
+				$result = $this->removeNode($params);
+				if (!$result['success']) {
+					return $result;
+				}
+
+			} else {
+				$indicador_id = $row['indicador_id'];
+				$result = $this->validateModify(compact('indicador_id'));
+				if (!$result['success']) {
+					return $result;
+				}
+
+				$result = $this->modelAdo->delete($this->model);
+				
+				if (!$result['success']) {
+					return $result;
+				}
+			}
+
+		}
+
 		$indicador_id = $parentId;
+		$this->model = $this->getModel();
 
 		//verifica que exista el indicador
 		$result = $this->validateModify(compact('indicador_id'));
@@ -274,6 +330,7 @@ class IndicadorRepo extends BaseRepo {
 
 		$indicador_filtros = $this->getFiltersValue($params);
 
+
 		if (
 			empty($indicador_nombre) ||
 			empty($indicador_tipo_indicador_id) ||
@@ -306,7 +363,7 @@ class IndicadorRepo extends BaseRepo {
 	public function getDescriptionValue($description)
 	{
 		$arr = [];
-		$arrDescription = json_decode($description, true);
+		$arrDescription = json_decode(stripslashes($description), true);
 		if (!empty($arrDescription)) {
 			foreach ($arrDescription as $key => $value) {
 				$label = (empty($value['label'])) ? '' : Inflector::cleanInputString($value['label']) ;

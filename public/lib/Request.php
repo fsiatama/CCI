@@ -45,6 +45,22 @@ class Request {
 	{
 		$postParams  = $_POST;
 		$urlParams   = $segments;
+
+
+		array_walk($urlParams, function (&$item) {
+			if (!is_array($item)) {
+				$item = addslashes(strip_tags($item));
+			}
+		});
+
+		//var_dump($postParams);
+		array_walk($postParams, function (&$item) {
+			if (!is_array($item)) {
+				$item = addslashes(strip_tags($item));
+			}
+		});
+
+		//var_dump($postParams);
 		$this->params = compact('urlParams', 'postParams');
 	}
 

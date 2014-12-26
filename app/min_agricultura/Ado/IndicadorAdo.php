@@ -126,4 +126,21 @@ class IndicadorAdo extends BaseAdo {
 		return $sql;
 	}
 
+	public function delete($model)
+	{
+		$conn = $this->getConnection();
+		$primaryKey = $this->getPrimaryKey();
+		$table = $this->getTable();
+
+		$id = $this->data[$primaryKey];
+		$sql = '
+			DELETE FROM '.$table.' WHERE '.$primaryKey.' = "'.$id.'"
+		';
+		
+		$resultSet = $conn->Execute($sql);
+		$result = $this->buildResult($resultSet);
+
+		return $result;
+	}
+
 }
