@@ -7,8 +7,8 @@ class MainController {
 	public function indexAction()
 	{
 		$sessionRepo = new SessionRepo;
-		$result = false;
-		if ($sessionRepo->validSession()) {
+		$result = $sessionRepo->validSession();
+		if ($result['success']) {
 			$is_template = true;
 			return new View('app', compact('is_template'));
 		}

@@ -11,7 +11,7 @@ class PermissionsRepo extends BaseRepo {
 	{
 		return new Permissions;
 	}
-	
+
 	public function getModelAdo()
 	{
 		return new PermissionsAdo;
@@ -26,7 +26,7 @@ class PermissionsRepo extends BaseRepo {
 	{
 
 	}
-	
+
 	public function listProfileMenu($profile_id)
 	{
 		$permissionsAdo = $this->modelAdo;
@@ -43,8 +43,9 @@ class PermissionsRepo extends BaseRepo {
 		$result         = false;
 		$arrMenu        = array();
 		$arrMenuItems   = array();
+		$result         = $sessionRepo->validSession();
 
-		if ($sessionRepo->validSession()) {
+		if ($result['success']) {
 
 			$result = $this->listProfileMenu($_SESSION['session_profile']);
 
@@ -71,7 +72,7 @@ class PermissionsRepo extends BaseRepo {
 				}
 
 				foreach ($result['data'] as $key => $value) {
-					
+
 					$varCategoryName = $value['category_menu_name'];
 					$category = Inflector::underscore($varCategoryName);
 
@@ -92,5 +93,5 @@ class PermissionsRepo extends BaseRepo {
 		return $result;
 	}
 
-}	
+}
 

@@ -11,7 +11,8 @@ class Lang
 {
 	protected static function getPath()
 	{
-		return PATH_APP.'lang/'.$_SESSION['lang'].'/';
+		$lang = (empty($_SESSION['lang'])) ? 'es' : $_SESSION['lang'] ;
+		return PATH_APP.'lang/'.$lang.'/';
 	}
 
 	public static function get($group)

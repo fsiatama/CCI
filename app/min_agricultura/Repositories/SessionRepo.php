@@ -9,7 +9,7 @@ class SessionRepo extends BaseRepo {
 	{
 		return new Session;
 	}
-	
+
 	public function getModelAdo()
 	{
 		return new SessionAdo;
@@ -29,10 +29,10 @@ class SessionRepo extends BaseRepo {
 	{
 		$session    = $this->model;
 		$sessionAdo = $this->modelAdo;
-		
+
 		$session->setSession_user_id($data["user_id"]);
 		$result = $sessionAdo->exactSearch($session);
-		
+
 		if ($result['success']) {
 			$session->setSession_php_id(session_id());
 			$session->setSession_date(Helpers::getDateTimeNow());
@@ -53,8 +53,8 @@ class SessionRepo extends BaseRepo {
 	{
 		/*header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
 		exit();*/
-		$result['success'] = false;
-		if ($this->validSession()) {
+		$result = $this->validSession();
+		if ($result['success']) {
 			$session    = $this->model;
 			$sessionAdo = $this->modelAdo;
 
@@ -83,7 +83,10 @@ class SessionRepo extends BaseRepo {
 			$session->setSession_active('1');
 			$result = $sessionAdo->exactSearch($session);
 			if ($result['success'] && $result['total'] > 0) {
-				return true;
+				$result = [
+					'success' => true,
+				];
+				return $result;
 			}
 		}
 
@@ -95,5 +98,5 @@ class SessionRepo extends BaseRepo {
 		return $result;
 	}
 
-}	
+}
 

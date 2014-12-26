@@ -116,8 +116,8 @@ class UserRepo extends BaseRepo {
 	public function headerMenu()
 	{
 		$sessionRepo = new SessionRepo;
-		$result = false;
-		if ($sessionRepo->validSession()) {
+		$result = $sessionRepo->validSession();
+		if ($result['success']) {
 			$result = [
 				'name' => $_SESSION['session_name'],
 				'email' => $_SESSION['session_email']
@@ -131,8 +131,8 @@ class UserRepo extends BaseRepo {
 		extract($params);
 		
 		$sessionRepo = new SessionRepo;
-		$result['success'] = false;
-		if ($sessionRepo->validSession()) {
+		$result = $sessionRepo->validSession();
+		if ($result['success']) {
 			if (empty($_SESSION['session_menu'][$id])) {
 				$result = [
 					'success'  => false,
