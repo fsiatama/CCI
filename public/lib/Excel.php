@@ -505,7 +505,7 @@ class Excel
 	private function drawCharts()
 	{
 		foreach ($this->arrChartData as $key => $data) {
-			if ($data !== false && !empty($data['xAxis'] && !empty($data['series']))) {
+			if ($data !== false && !empty($data['xAxis']) && !empty($data['series'])) {
 				$method = 'draw' . Inflector::camel($key);
 				$this->$method($data['xAxis'], $data['series']);
 			}

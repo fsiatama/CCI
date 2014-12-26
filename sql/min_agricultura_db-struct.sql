@@ -52,6 +52,25 @@ CREATE TABLE `acuerdo_det` (
   PRIMARY KEY (`acuerdo_det_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+/*Table structure for table `arancel` */
+
+DROP TABLE IF EXISTS `arancel`;
+
+CREATE TABLE `arancel` (
+  `id_seccion` int(2) NOT NULL DEFAULT '0',
+  `cod_capitulo` int(2) unsigned zerofill NOT NULL DEFAULT '00',
+  `cod_partida` int(2) unsigned zerofill DEFAULT NULL,
+  `cod_subpartida` int(2) unsigned zerofill DEFAULT NULL,
+  `cod_posicion` int(4) unsigned zerofill DEFAULT NULL,
+  `descripcion` varchar(200) NOT NULL DEFAULT '',
+  `gravamen` varchar(5) DEFAULT NULL,
+  `iva` varchar(5) DEFAULT NULL,
+  `ciiu` int(5) DEFAULT NULL,
+  `cuode` int(5) DEFAULT NULL,
+  `notas` longtext,
+  KEY `idx_posicion` (`cod_capitulo`,`cod_partida`,`cod_subpartida`,`cod_posicion`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 /*Table structure for table `category_menu` */
 
 DROP TABLE IF EXISTS `category_menu`;
@@ -92,15 +111,108 @@ CREATE TABLE `correlativa` (
   PRIMARY KEY (`correlativa_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
+/*Table structure for table `declaraexp` */
+
+DROP TABLE IF EXISTS `declaraexp`;
+
+CREATE TABLE `declaraexp` (
+  `id` int(10) unsigned NOT NULL,
+  `anio` smallint(4) unsigned NOT NULL,
+  `periodo` smallint(2) unsigned NOT NULL,
+  `id_empresa` varchar(20) NOT NULL,
+  `id_paisdestino` smallint(3) unsigned NOT NULL,
+  `id_deptorigen` smallint(4) unsigned NOT NULL,
+  `id_capitulo` char(2) NOT NULL,
+  `id_partida` char(4) NOT NULL,
+  `id_subpartida` char(6) NOT NULL,
+  `id_posicion` char(10) NOT NULL,
+  `id_ciiu` smallint(3) unsigned NOT NULL,
+  `valorfob` float(13,2) unsigned NOT NULL,
+  `valorcif` float(13,2) unsigned NOT NULL,
+  `valor_pesos` float(15,2) unsigned NOT NULL,
+  `peso_neto` float(13,2) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_empresa` (`id_empresa`),
+  KEY `id_paisdestino` (`id_paisdestino`),
+  KEY `id_posicion` (`id_posicion`),
+  KEY `anio` (`anio`),
+  KEY `id_deptorigen` (`id_deptorigen`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+/*Table structure for table `declaraimp` */
+
+DROP TABLE IF EXISTS `declaraimp`;
+
+CREATE TABLE `declaraimp` (
+  `id` int(10) unsigned NOT NULL,
+  `anio` smallint(4) unsigned NOT NULL,
+  `periodo` smallint(2) unsigned NOT NULL,
+  `id_empresa` varchar(20) NOT NULL,
+  `id_paisorigen` smallint(3) unsigned NOT NULL,
+  `id_paiscompra` smallint(3) unsigned NOT NULL,
+  `id_paisprocedencia` smallint(3) unsigned NOT NULL,
+  `id_deptorigen` smallint(4) unsigned NOT NULL,
+  `id_capitulo` char(2) NOT NULL,
+  `id_partida` char(4) NOT NULL,
+  `id_subpartida` char(6) NOT NULL,
+  `id_posicion` char(10) NOT NULL,
+  `id_ciiu` smallint(3) unsigned NOT NULL,
+  `valorcif` float(13,2) NOT NULL,
+  `valorfob` float(13,2) NOT NULL,
+  `peso_neto` float(13,2) NOT NULL,
+  `arancel_pagado` float(13,2) NOT NULL,
+  `valorarancel` float(13,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `anio` (`anio`),
+  KEY `id_empresa` (`id_empresa`),
+  KEY `id_paisprocedencia` (`id_paisprocedencia`),
+  KEY `id_posicion` (`id_posicion`),
+  KEY `id_ciiu` (`id_ciiu`),
+  KEY `id_deptorigen` (`id_deptorigen`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 /*Table structure for table `departamento` */
 
 DROP TABLE IF EXISTS `departamento`;
 
 CREATE TABLE `departamento` (
   `id_departamento` smallint(4) unsigned NOT NULL DEFAULT '0',
-  `departamento` varchar(30) CHARACTER SET latin1 NOT NULL,
+  `departamento` varchar(35) CHARACTER SET latin1 NOT NULL,
   `id_region` smallint(2) unsigned NOT NULL,
   PRIMARY KEY (`id_departamento`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+/*Table structure for table `empresa` */
+
+DROP TABLE IF EXISTS `empresa`;
+
+CREATE TABLE `empresa` (
+  `id_empresa` varchar(20) NOT NULL DEFAULT '0',
+  `digito_cheq` varchar(1) NOT NULL DEFAULT '0',
+  `empresa` varchar(60) NOT NULL,
+  `representante` varchar(50) NOT NULL DEFAULT '',
+  `id_departamentos` smallint(2) DEFAULT NULL,
+  `departamentos` varchar(21) NOT NULL,
+  `id_ciudad` smallint(5) DEFAULT NULL,
+  `ciudad` varchar(30) NOT NULL DEFAULT '',
+  `direccion` varchar(60) DEFAULT NULL,
+  `telefono` varchar(10) DEFAULT NULL,
+  `telefono2` varchar(10) DEFAULT NULL,
+  `telefono3` varchar(10) DEFAULT NULL,
+  `fax` varchar(10) DEFAULT NULL,
+  `fax2` varchar(10) DEFAULT NULL,
+  `fax3` varchar(10) DEFAULT NULL,
+  `email` varchar(60) DEFAULT NULL,
+  `clase` varchar(1) DEFAULT '0',
+  `uap` char(2) NOT NULL DEFAULT '',
+  `altex` char(2) NOT NULL DEFAULT '',
+  `web` varchar(60) DEFAULT '',
+  `contacto1` varchar(100) DEFAULT '',
+  `id_tipo_empresa` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id_empresa`),
+  KEY `id_departamentos` (`id_departamentos`),
+  KEY `id_ciudad` (`id_ciudad`),
+  KEY `id_tipo_empresa` (`id_tipo_empresa`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `indicador` */
@@ -119,7 +231,7 @@ CREATE TABLE `indicador` (
   `indicador_finsert` datetime NOT NULL,
   `indicador_fupdate` datetime NOT NULL,
   PRIMARY KEY (`indicador_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=81 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `menu` */
 
@@ -133,7 +245,7 @@ CREATE TABLE `menu` (
   `menu_order` int(11) NOT NULL DEFAULT '1',
   `menu_hidden` enum('0','1') NOT NULL,
   PRIMARY KEY (`menu_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `pais` */
 
@@ -160,7 +272,7 @@ CREATE TABLE `permissions` (
   `permissions_export` enum('0','1') NOT NULL,
   PRIMARY KEY (`permissions_id`),
   UNIQUE KEY `permissions_profile_id` (`permissions_profile_id`,`permissions_menu_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `pib` */
 
@@ -170,13 +282,14 @@ CREATE TABLE `pib` (
   `pib_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `pib_anio` smallint(4) unsigned NOT NULL,
   `pib_periodo` smallint(2) unsigned NOT NULL,
-  `pib_valor` float(13,2) NOT NULL,
+  `pib_agricultura` float(13,2) unsigned NOT NULL,
+  `pib_nacional` float(13,2) unsigned NOT NULL,
   `pib_finsert` datetime NOT NULL,
   `pib_uinsert` int(10) unsigned NOT NULL,
   `pib_fupdate` datetime NOT NULL,
   `pib_uupdate` int(10) unsigned NOT NULL,
   PRIMARY KEY (`pib_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `posicion` */
 
@@ -199,12 +312,16 @@ CREATE TABLE `posicion` (
 DROP TABLE IF EXISTS `produccion`;
 
 CREATE TABLE `produccion` (
-  `id_produccion` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_posicion` varchar(100) NOT NULL,
-  `anio` smallint(4) unsigned NOT NULL,
-  `peso_neto` float(13,2) NOT NULL,
-  PRIMARY KEY (`id_produccion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `produccion_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `produccion_sector_id` int(10) unsigned NOT NULL,
+  `produccion_anio` smallint(4) unsigned NOT NULL,
+  `produccion_peso_neto` float(13,2) unsigned NOT NULL,
+  `produccion_finsert` datetime NOT NULL,
+  `produccion_uinsert` int(10) unsigned NOT NULL,
+  `produccion_fupdate` datetime NOT NULL,
+  `produccion_uupdate` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`produccion_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `profile` */
 
@@ -233,13 +350,13 @@ DROP TABLE IF EXISTS `sector`;
 CREATE TABLE `sector` (
   `sector_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `sector_nombre` varchar(100) NOT NULL,
-  `sector_productos` varchar(200) NOT NULL,
+  `sector_productos` text NOT NULL,
   `sector_uinsert` int(10) unsigned NOT NULL,
   `sector_finsert` datetime NOT NULL,
   `sector_uupdate` int(10) unsigned NOT NULL,
   `sector_fupdate` datetime NOT NULL,
   PRIMARY KEY (`sector_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `session` */
 
@@ -278,7 +395,7 @@ CREATE TABLE `tipo_indicador` (
   `tipo_indicador_calculo` text NOT NULL,
   `tipo_indicador_definicion` text NOT NULL,
   PRIMARY KEY (`tipo_indicador_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `user` */
 

@@ -86,9 +86,13 @@ class SessionRepo extends BaseRepo {
 				return true;
 			}
 		}
-		
-		header('Location: ' . URL_RAIZ);
-		exit();
+
+		$result = [
+			'success' => false,
+			'error'   => Lang::get('error.session_expired')
+		];
+
+		return $result;
 	}
 
 }	
