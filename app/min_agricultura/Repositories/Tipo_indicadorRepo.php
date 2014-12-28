@@ -96,7 +96,7 @@ class Tipo_indicadorRepo extends BaseRepo {
 		if (!empty($query)) {
 			if (!empty($fullTextFields)) {
 				
-				$fullTextFields = json_decode($fullTextFields);
+				$fullTextFields = json_decode(stripslashes($fullTextFields));
 				
 				foreach ($fullTextFields as $value) {
 					$methodName = $this->getColumnMethodName('set', $value);

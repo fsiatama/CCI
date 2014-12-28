@@ -52,6 +52,8 @@ $htmlDescription .= '</ol>';
 		var average = numberFormat(store.reader.jsonData.average);
 
 		el.update(average);
+		var height = (store.reader.jsonData.total * 33) + 50;
+		Ext.getCmp(module+'gridIndicador').setHeight(height);
 		Ext.ux.bodyMask.hide();
 
 	});

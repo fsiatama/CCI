@@ -45,6 +45,9 @@ $htmlDescription .= '</ol>';
 
 	storeIndicador.on('load', function(store){
 
+		var height = (store.reader.jsonData.total * 33) + 50;
+		Ext.getCmp(module+'gridIndicador').setHeight(height);
+
 		var el         = Ext.Element.get(module + 'growthRateExpo');
 		var growthRate = rateFormat(store.reader.jsonData.growthRateExpo);
 		el.update(growthRate);
@@ -58,7 +61,7 @@ $htmlDescription .= '</ol>';
 		el.update(growthRate);
 
 		FusionCharts.setCurrentRenderer('javascript');
-		
+
 		disposeCharts();
 
 		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
@@ -141,7 +144,7 @@ $htmlDescription .= '</ol>';
 						'<strong id="' + module + 'growthRateExpo">0</strong>' +
 					'</div>' +
 					'<div class="col-md-4">' +
-						'<label><?= Lang::get('indicador.reports.variation'); ?></label>' +
+						'<label><?= Lang::get('indicador.reports.growVariation'); ?></label>' +
 						'<strong id="' + module + 'rateVariation">0</strong>' +
 					'</div>' +
 				'</div>' +

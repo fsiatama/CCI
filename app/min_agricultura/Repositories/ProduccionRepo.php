@@ -10,7 +10,7 @@ class ProduccionRepo extends BaseRepo {
 	{
 		return new Produccion;
 	}
-	
+
 	public function getModelAdo()
 	{
 		return new ProduccionAdo;
@@ -47,12 +47,12 @@ class ProduccionRepo extends BaseRepo {
 
 		if (!empty($query)) {
 			if (!empty($fullTextFields)) {
-				
-				$fullTextFields = json_decode($fullTextFields);
-				
+
+				$fullTextFields = json_decode(stripslashes($fullTextFields));
+
 				foreach ($fullTextFields as $value) {
 					$methodName = $this->getColumnMethodName('set', $value);
-					
+
 					//utiliza el metodo id para ralizar la busqueda textual en la tabla auxiliar
 					if ($methodName == 'setSector_nombre') {
 						$methodName = 'setProduccion_sector_id';
@@ -68,7 +68,7 @@ class ProduccionRepo extends BaseRepo {
 				$this->model->setProduccion_anio($query);
 				$this->model->setProduccion_peso_neto($query);
 			}
-			
+
 		}
 		$this->modelAdo->setColumns([
 			'produccion_id',
@@ -142,9 +142,9 @@ class ProduccionRepo extends BaseRepo {
 
 		$this->model->setProduccion_sector_id($sector_id);
 		$this->model->setProduccion_anio($anio);
-		
+
 		return $this->modelAdo->exactSearch($this->model);
 	}
 
-}	
+}
 

@@ -70,18 +70,16 @@ class MercadoRepo extends BaseRepo {
 			];
 			return $result;
 		}
-			$this->model->setMercado_id($mercado_id);
-			$this->model->setMercado_nombre($mercado_nombre);
-			$this->model->setMercado_paises($mercado_paises);
-			$this->model->setMercado_uinsert($mercado_uinsert);
-			$this->model->setMercado_finsert($mercado_finsert);
-			$this->model->setMercado_uupdate($mercado_uupdate);
-			$this->model->setMercado_fupdate($mercado_fupdate);
-		
+		$this->model->setMercado_id($mercado_id);
+		$this->model->setMercado_nombre($mercado_nombre);
+		$this->model->setMercado_paises($mercado_paises);
 
 		if ($action == 'create') {
-		}
-		elseif ($action == 'modify') {
+			$this->model->setMercado_uinsert($_SESSION['user_id']);
+			$this->model->setMercado_finsert(Helpers::getDateTimeNow());
+		} elseif ($action == 'modify') {
+			$this->model->setMercado_uupdate($_SESSION['user_id']);
+			$this->model->setMercado_fupdate(Helpers::getDateTimeNow());
 		}
 		$result = ['success' => true];
 		return $result;

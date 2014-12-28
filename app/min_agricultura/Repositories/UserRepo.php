@@ -12,7 +12,7 @@ class UserRepo extends BaseRepo {
 	{
 		return new User;
 	}
-	
+
 	public function getModelAdo()
 	{
 		return new UserAdo;
@@ -58,11 +58,11 @@ class UserRepo extends BaseRepo {
 		$user->setUser_active('1');
 
 		$result = $userAdo->exactSearch($user);
-		
+
 		if ($result['success']) {
-			
+
 			if ($result['total'] > 0) {
-			
+
 				$row = array_shift($result['data']);
 				$permissionsRepo = new PermissionsRepo;
 				$result = $permissionsRepo->listProfileMenu($row['user_profile_id']);
@@ -78,19 +78,19 @@ class UserRepo extends BaseRepo {
 					$_SESSION['user_token']      = uniqid();
 
 					foreach ($result['data'] as $key => $value) {
-						
+
 						$_SESSION['session_menu'][$value['menu_id']]['list']   = $value['permissions_list'];
 						$_SESSION['session_menu'][$value['menu_id']]['modify'] = $value['permissions_modify'];
 						$_SESSION['session_menu'][$value['menu_id']]['create'] = $value['permissions_create'];
 						$_SESSION['session_menu'][$value['menu_id']]['delete'] = $value['permissions_delete'];
 						$_SESSION['session_menu'][$value['menu_id']]['export'] = $value['permissions_export'];
-						
+
 					}
 
 					//crea o actualiza el registro de session
 					$sessionRepo = new SessionRepo;
 					$result = $sessionRepo->login($row);
-					
+
 					if ($result['success']) {
 						$result['url'] = URL_INGRESO;
 					}
@@ -129,7 +129,7 @@ class UserRepo extends BaseRepo {
 	public function validateMenu($action, $params)
 	{
 		extract($params);
-		
+
 		$sessionRepo = new SessionRepo;
 		$result = $sessionRepo->validSession();
 		if ($result['success']) {
@@ -177,7 +177,7 @@ class UserRepo extends BaseRepo {
 		extract($params);
 		$user    = $this->model;
 		$userAdo = $this->modelAdo;
-		
+
 		/**/
 		$start = ( isset($start) ) ? $start : 0;
 		$limit = ( isset($limit) ) ? $limit : 30;
@@ -185,12 +185,12 @@ class UserRepo extends BaseRepo {
 
 		if (!empty($query)) {
 			if (!empty($fullTextFields)) {
-				
-				$fullTextFields = json_decode($fullTextFields);
-				
+
+				$fullTextFields = json_decode(stripslashes($fullTextFields));
+
 				foreach ($fullTextFields as $value) {
 					$methodName = $this->getColumnMethodName('set', $value);
-					
+
 					if (method_exists($user, $methodName)) {
 						call_user_func_array([$user, $methodName], compact('query'));
 					}
@@ -199,7 +199,7 @@ class UserRepo extends BaseRepo {
 				$user->setUser_email($query);
 				$user->setUser_full_name($query);
 			}
-			
+
 		}
 
 		$userAdo->setColumns([
@@ -220,7 +220,7 @@ class UserRepo extends BaseRepo {
 	public function setData($params, $action)
 	{
 		extract($params);
-		
+
 		if ($action == 'modify') {
 			$result = $this->findPrimaryKey($user_id);
 
@@ -244,8 +244,8 @@ class UserRepo extends BaseRepo {
 		}
 
 		if (
-			empty($user_full_name) || 
-			empty($user_email) || 
+			empty($user_full_name) ||
+			empty($user_email) ||
 			empty($user_password) ||
 			empty($user_profile_id)
 		) {
@@ -282,7 +282,7 @@ class UserRepo extends BaseRepo {
 	public function validateUniqueEmail()
 	{
 		$result = $this->modelAdo->findUniqueEmail($this->model);
-		
+
 		if ($result['success']) {
 			if ($result['total'] == 0) {
 				$result = ['success' => true];
@@ -293,7 +293,7 @@ class UserRepo extends BaseRepo {
 				];
 			}
 		}
-		
+
 		return $result;
 	}
 

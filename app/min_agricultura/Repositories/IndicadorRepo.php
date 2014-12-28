@@ -10,7 +10,7 @@ class IndicadorRepo extends BaseRepo {
 	{
 		return new Indicador;
 	}
-	
+
 	public function getModelAdo()
 	{
 		return new IndicadorAdo;
@@ -65,7 +65,7 @@ class IndicadorRepo extends BaseRepo {
 	public function listUserId($params)
 	{
 		extract($params);
-		
+
 		$indicador_parent = ($node == $module . 'root') ? '0' : $node ;
 
 		if (empty($tipo_indicador_id)) {
@@ -93,7 +93,7 @@ class IndicadorRepo extends BaseRepo {
 				$qtip = '';
 				if($data["indicador_leaf"] == '1'){
 					/*if($data["indicador_detalle"] == ""){
-						$filtros  = $data["reportes_filtros"];			
+						$filtros  = $data["reportes_filtros"];
 						$_filtros = convierteArreglo($filtros);
 						$html_tip = array();
 						$html_tip[] = _INTERCAMBIO . " : " . ($data["reportes_intercambio"]==0?_IMPORTACION:_EXPORTACION);
@@ -111,14 +111,14 @@ class IndicadorRepo extends BaseRepo {
 					}*/
 				}
 				//$arr_filas = ($data["reportes_filas"] == "")?false:explode("||",$data["reportes_filas"]);
-				
+
 				if($data["indicador_leaf"] == '0'){
 					$css = "silk-folder";
 				}
 				else{
 					$css = "silk-report-magnify";
 				}
-										
+
 				$arr[] = [
 					'id'        => $data['indicador_id'],
 					'nodeID'    => $data['indicador_id'],
@@ -153,7 +153,7 @@ class IndicadorRepo extends BaseRepo {
 		}
 
 		$indicador_parent = ($parentId == $module . 'root') ? 0 : $parentId ;
-		
+
 		$this->model->setIndicador_nombre($text);
 		$this->model->setIndicador_tipo_indicador_id($tipo_indicador_id);
 		$this->model->setIndicador_leaf('0');
@@ -171,7 +171,7 @@ class IndicadorRepo extends BaseRepo {
 
 		return $result;
 	}
-	
+
 	public function moveNode($params)
 	{
 		extract($params);
@@ -195,7 +195,7 @@ class IndicadorRepo extends BaseRepo {
 		}
 
 		$this->model->setIndicador_parent($target);
-		
+
 		$result = $this->modelAdo->update($this->model);
 
 		if ($result['success']) {
@@ -251,7 +251,7 @@ class IndicadorRepo extends BaseRepo {
 				}
 
 				$result = $this->modelAdo->delete($this->model);
-				
+
 				if (!$result['success']) {
 					return $result;
 				}
@@ -297,7 +297,7 @@ class IndicadorRepo extends BaseRepo {
 		}
 
 		$this->model->setIndicador_nombre($newText);
-		
+
 		$result = $this->modelAdo->update($this->model);
 
 		if ($result['success']) {
@@ -349,7 +349,7 @@ class IndicadorRepo extends BaseRepo {
 		$this->model->setIndicador_filtros($indicador_filtros);
 		$this->model->setIndicador_leaf('1');
 		$this->model->setIndicador_parent($indicador_parent);
-		
+
 		if ($action == 'create') {
 			$this->model->setIndicador_uinsert($_SESSION['user_id']);
 			$this->model->setIndicador_finsert(Helpers::getDateTimeNow());
@@ -377,7 +377,7 @@ class IndicadorRepo extends BaseRepo {
 
     /**
      * getFiltersValue
-     * 
+     *
      * @param array $params Recibe los parametros que son enviados desde el formulario.
      *        de crear o modificar el indicador
      * @access public
@@ -408,7 +408,7 @@ class IndicadorRepo extends BaseRepo {
 					}
 
 					$values = (is_array($params[$fieldName])) ? implode(',', $params[$fieldName]) : $params[$fieldName] ;
-					
+
 					//var_dump($fieldName, $params[$fieldName], $values);
 
 					if (!empty($values)) {
@@ -440,7 +440,7 @@ class IndicadorRepo extends BaseRepo {
 		$year   = (empty($year)) ? '' : $year ;
 		$period = (empty($period)) ? 12 : $period ;
 		$format = (empty($format)) ? false : $format ;
-		$fields = (empty($fields)) ? [] : json_decode($fields, true) ;
+		$fields = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
 		if (empty($indicador_id)) {
 			return [
 				'success' => false,
@@ -503,10 +503,10 @@ class IndicadorRepo extends BaseRepo {
 					'success' => false,
 					'error'   => 'unavailable method '. $repoMethodName
 				];
-			}			
+			}
 		}
 		return $result;
 	}
 
-}	
+}
 

@@ -10,7 +10,7 @@ class PibRepo extends BaseRepo {
 	{
 		return new Pib;
 	}
-	
+
 	public function getModelAdo()
 	{
 		return new PibAdo;
@@ -47,12 +47,12 @@ class PibRepo extends BaseRepo {
 
 		if (!empty($query)) {
 			if (!empty($fullTextFields)) {
-				
-				$fullTextFields = json_decode($fullTextFields);
-				
+
+				$fullTextFields = json_decode(stripslashes($fullTextFields));
+
 				foreach ($fullTextFields as $value) {
 					$methodName = $this->getColumnMethodName('set', $value);
-					
+
 					if (method_exists($this->model, $methodName)) {
 						call_user_func_array([$this->model, $methodName], compact('query'));
 					}
@@ -64,7 +64,7 @@ class PibRepo extends BaseRepo {
 				$this->model->setPib_agricultura($query);
 				$this->model->setPib_nacional($query);
 			}
-			
+
 		}
 		$this->modelAdo->setColumns([
 			'pib_id',
@@ -131,7 +131,7 @@ class PibRepo extends BaseRepo {
 
     /**
      * listPeriod
-     * 
+     *
      * @param array $params Contiene: anio de declaraciones, periodo(mes) de declaraciones, periodo(period) seleccionado por el usuario para el reporte.
      *
      * @access public
@@ -196,5 +196,5 @@ class PibRepo extends BaseRepo {
 		return $column;
 	}
 
-}	
+}
 

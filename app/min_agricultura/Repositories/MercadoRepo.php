@@ -1,30 +1,30 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Sector.php';
-require PATH_APP.'min_agricultura/Ado/SectorAdo.php';
+require PATH_APP.'min_agricultura/Entities/Mercado.php';
+require PATH_APP.'min_agricultura/Ado/MercadoAdo.php';
 require_once ('BaseRepo.php');
 
-class SectorRepo extends BaseRepo {
+class MercadoRepo extends BaseRepo {
 
 	public function getModel()
 	{
-		return new Sector;
+		return new Mercado;
 	}
-
+	
 	public function getModelAdo()
 	{
-		return new SectorAdo;
+		return new MercadoAdo;
 	}
 
 	public function getPrimaryKey()
 	{
-		return 'sector_id';
+		return 'mercado_id';
 	}
 
 	public function validateModify($params)
 	{
 		extract($params);
-		$result = $this->findPrimaryKey($sector_id);
+		$result = $this->findPrimaryKey($mercado_id);
 
 		if (!$result['success']) {
 			$result = [
@@ -58,16 +58,16 @@ class SectorRepo extends BaseRepo {
 					}
 				}
 			} else {
-				$this->model->setSector_id($query);
-				$this->model->setSector_nombre($query);
-				$this->model->setSector_productos($query);
+				$this->model->setMercado_id($query);
+				$this->model->setMercado_nombre($query);
+				$this->model->setMercado_paises($query);
 			}
 
 		}
 		$this->modelAdo->setColumns([
-			'sector_id',
-			'sector_nombre',
-			'sector_productos'
+			'mercado_id',
+			'mercado_nombre',
+			'mercado_paises'
 		]);
 
 		$result = $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
@@ -80,7 +80,7 @@ class SectorRepo extends BaseRepo {
 		extract($params);
 
 		if ($action == 'modify') {
-			$result = $this->findPrimaryKey($sector_id);
+			$result = $this->findPrimaryKey($mercado_id);
 
 			if (!$result['success']) {
 				$result = [
@@ -94,30 +94,31 @@ class SectorRepo extends BaseRepo {
 		}
 
 		if (
-			empty($sector_nombre) ||
-			empty($sector_productos) ||
-			!is_array($sector_productos)
+			empty($mercado_nombre) ||
+			empty($mercado_paises) ||
+			!is_array($mercado_paises)
 		) {
-			$result = array(
+			$result = [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
-			);
+			];
 			return $result;
 		}
-		$this->model->setSector_id($sector_id);
-		$this->model->setSector_nombre($sector_nombre);
-		$this->model->setSector_productos(implode(',', $sector_productos));
-
+		
+		$this->model->setMercado_id($mercado_id);
+		$this->model->setMercado_nombre($mercado_nombre);
+		$this->model->setMercado_paises(implode(',', $mercado_paises));
+		
 		if ($action == 'create') {
-			$this->model->setSector_uinsert($_SESSION['user_id']);
-			$this->model->setSector_finsert(Helpers::getDateTimeNow());
+			$this->model->setMercado_uinsert($_SESSION['user_id']);
+			$this->model->setMercado_finsert(Helpers::getDateTimeNow());
 		} elseif ($action == 'modify') {
-			$this->model->setSector_uupdate($_SESSION['user_id']);
-			$this->model->setSector_fupdate(Helpers::getDateTimeNow());
+			$this->model->setMercado_uupdate($_SESSION['user_id']);
+			$this->model->setMercado_fupdate(Helpers::getDateTimeNow());
 		}
-		$result = array('success' => true);
+		$result = ['success' => true];
 		return $result;
 	}
 
-}
+}	
 

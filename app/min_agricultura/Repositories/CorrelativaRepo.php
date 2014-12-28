@@ -10,7 +10,7 @@ class CorrelativaRepo extends BaseRepo {
 	{
 		return new Correlativa;
 	}
-	
+
 	public function getModelAdo()
 	{
 		return new CorrelativaAdo;
@@ -36,13 +36,13 @@ class CorrelativaRepo extends BaseRepo {
 		}
 		return $result;
 	}
-	
+
 	public function grid($params)
 	{
 		extract($params);
 		$correlativa    = $this->model;
 		$correlativaAdo = $this->modelAdo;
-		
+
 		/**/
 		$start = ( isset($start) ) ? $start : 0;
 		$limit = ( isset($limit) ) ? $limit : 30;
@@ -50,12 +50,12 @@ class CorrelativaRepo extends BaseRepo {
 
 		if (!empty($query)) {
 			if (!empty($fullTextFields)) {
-				
-				$fullTextFields = json_decode($fullTextFields);
-				
+
+				$fullTextFields = json_decode(stripslashes($fullTextFields));
+
 				foreach ($fullTextFields as $value) {
 					$methodName = $this->getColumnMethodName('set', $value);
-					
+
 					if (method_exists($correlativa, $methodName)) {
 						call_user_func_array([$correlativa, $methodName], compact('query'));
 					}
@@ -67,7 +67,7 @@ class CorrelativaRepo extends BaseRepo {
 				$correlativa->setCorrelativa_origen($query);
 				$correlativa->setCorrelativa_destino($query);
 			}
-			
+
 		}
 
 		$correlativaAdo->setColumns([
@@ -103,12 +103,12 @@ class CorrelativaRepo extends BaseRepo {
 		}
 
 		if (
-			empty($correlativa_fvigente) || 
-			empty($correlativa_decreto) || 
+			empty($correlativa_fvigente) ||
+			empty($correlativa_decreto) ||
 			empty($correlativa_observacion) ||
-			empty($correlativa_origen) || 
+			empty($correlativa_origen) ||
 			!is_array($correlativa_origen) ||
-			empty($correlativa_destino) || 
+			empty($correlativa_destino) ||
 			!is_array($correlativa_destino)
 		) {
 			$result = array(
@@ -135,5 +135,5 @@ class CorrelativaRepo extends BaseRepo {
 		return $result;
 	}
 
-}	
+}
 

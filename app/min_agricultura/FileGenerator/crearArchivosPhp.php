@@ -234,15 +234,26 @@ class ".ucfirst($nombre_tabla)."Repo extends BaseRepo {
 			return \$result;
 		}
 ";
+$contenido_update = "";
+$contenido_insert = "";
 foreach($result as $key => $campos){
-	$contenido .= "			\$this->model->set".ucfirst($campos)."(\$" . $campos . ");\r\n";
+	$str = substr($campos, -7);
+	if ($str == 'uinsert') {
+		$contenido_insert .= "			\$this->model->set".ucfirst($campos)."(\$_SESSION['user_id']);\r\n";
+	} elseif ($str == 'finsert') {
+		$contenido_insert .= "			\$this->model->set".ucfirst($campos)."(Helpers::getDateTimeNow());\r\n";
+	} elseif ($str == 'uupdate') {
+		$contenido_update .= "			\$this->model->set".ucfirst($campos)."(\$_SESSION['user_id']);\r\n";
+	} elseif ($str == 'fupdate') {
+		$contenido_update .= "			\$this->model->set".ucfirst($campos)."(Helpers::getDateTimeNow());\r\n";
+	} else {
+		$contenido .= "		\$this->model->set".ucfirst($campos)."(\$" . $campos . ");\r\n";
+	}
 }
-$contenido .= "		
-
+$contenido .= "
 		if (\$action == 'create') {
-		}
-		elseif (\$action == 'modify') {
-		}
+".$contenido_insert."		} elseif (\$action == 'modify') {
+".$contenido_update."		}
 		\$result = ['success' => true];
 		return \$result;
 	}

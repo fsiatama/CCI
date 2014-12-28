@@ -1,16 +1,16 @@
 <?php
 
-require PATH_APP.'min_agricultura/Repositories/SectorRepo.php';
+require PATH_APP.'min_agricultura/Repositories/MercadoRepo.php';
 require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
-class SectorController {
+class MercadoController {
 	
-	protected $sectorRepo;
+	protected $mercadoRepo;
 
 	public function __construct()
 	{
-		$this->sectorRepo = new SectorRepo;
-		$this->userRepo   = new UserRepo;
+		$this->mercadoRepo = new MercadoRepo;
+		$this->userRepo    = new UserRepo;
 	}
 	
 	public function listAction($urlParams, $postParams)
@@ -18,14 +18,14 @@ class SectorController {
 		$result = $this->userRepo->validateMenu('list', $postParams);
 
 		if ($result['success']) {
-			$result = $this->sectorRepo->grid($postParams);
+			$result = $this->mercadoRepo->grid($postParams);
 		}
 		return $result;
 	}
 
 	public function listIdAction($urlParams, $postParams)
 	{
-		return $this->sectorRepo->validateModify($postParams);
+		return $this->mercadoRepo->validateModify($postParams);
 	}
 
 	public function createAction($urlParams, $postParams)
@@ -33,7 +33,7 @@ class SectorController {
 		$result = $this->userRepo->validateMenu('create', $postParams);
 
 		if ($result['success']) {
-			$result = $this->sectorRepo->create($postParams);
+			$result = $this->mercadoRepo->create($postParams);
 		}
 		return $result;
 	}
@@ -43,7 +43,7 @@ class SectorController {
 		$result = $this->userRepo->validateMenu('modify', $postParams);
 
 		if ($result['success']) {
-			$result = $this->sectorRepo->modify($postParams);
+			$result = $this->mercadoRepo->modify($postParams);
 		}
 		return $result;
 	}
@@ -53,7 +53,7 @@ class SectorController {
 		$result = $this->userRepo->validateMenu('delete', $postParams);
 
 		if ($result['success']) {
-			$result = $this->sectorRepo->delete($postParams);
+			$result = $this->mercadoRepo->delete($postParams);
 		}
 		return $result;
 	}
@@ -66,7 +66,7 @@ class SectorController {
 
 		if ($result['success']) {
 			if ($action == 'modify') {
-				$result = $this->sectorRepo->validateModify($postParams);
+				$result = $this->mercadoRepo->validateModify($postParams);
 				if (!$result['success']) {
 					return $result;
 				}
@@ -77,7 +77,7 @@ class SectorController {
 			//el template de adicionar y editar son los mismos
 			$action = ($action == 'modify') ? 'create' : $action;
 
-			return new View('jsCode/sector.'.$action, $params);
+			return new View('jsCode/mercado.'.$action, $params);
 		}
 		
 		return $result;

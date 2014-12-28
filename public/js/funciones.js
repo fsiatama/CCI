@@ -10,7 +10,24 @@ Ext.onReady(function(){
 	document.oncontextmenu = function(){return false;}
 	
 	Ext.apply(Ext.form.VTypes, {
-		daterange:function(val, field) {
+		togetherField:function(val, field) {
+			var cnt1 = field.getValue().length;
+			var cnt2 = 0;
+			var field2 = 0;
+			if (field.startField) {
+				field2 = Ext.getCmp(field.startField);
+				cnt2   = field2.getValue().length
+			} else if (field.endField) {
+				field2 = Ext.getCmp(field.endField);
+				cnt2   = field2.getValue().length
+			}
+			//console.log(cnt1, cnt2, field)
+			if (cnt1 == 0 && cnt2 == 0) {
+				return false;
+			};
+			return true;
+		}
+		,daterange:function(val, field) {
 			var date = field.parseDate(val);
 			if(!date){
 				return true;
@@ -327,3 +344,18 @@ function integerFormat (value) {
 		return value;
 	}
 }
+//valida en conjunto que exista un pais o un mercado seleccionado
+function isValidCountry (fieldId1, fieldId2) {
+	var field1 = Ext.getCmp(fieldId1);
+	var field2 = Ext.getCmp(fieldId2);
+	if (!field1 || !field2) {
+		return false;
+	}
+	var cnt1 = field1.getValue().length;
+	var cnt2 = field2.getValue().length;
+	if (cnt1 == 0 && cnt2 == 0) {
+		return false;
+	}
+	return true;
+}
+

@@ -45,6 +45,9 @@ $htmlDescription .= '</ol>';
 
 	storeIndicador.on('load', function(store){
 
+		var height = (store.reader.jsonData.total * 33) + 50;
+		Ext.getCmp(module+'gridIndicador').setHeight(height);
+
 		var el         = Ext.Element.get(module + 'growthRateExpo');
 		var growthRate = rateFormat(store.reader.jsonData.growthRateExpo);
 		el.update(growthRate);
@@ -160,7 +163,7 @@ $htmlDescription .= '</ol>';
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-		
+
 	}
 
 	/*********************************************** End functions***********************************************/

@@ -47,9 +47,9 @@ $htmlDescription .= '</ol>';
 
 	storeBalanza.on('load', function(store){
 
-		var height = (store.reader.jsonData.total * 30);
+		var height = (store.reader.jsonData.total * 33) + 50;
 
-		gridBalanza.setHeight(height);
+		Ext.getCmp(module+'gridBalanza').setHeight(height);
 		FusionCharts.setCurrentRenderer('javascript');
 
 		disposeCharts();
