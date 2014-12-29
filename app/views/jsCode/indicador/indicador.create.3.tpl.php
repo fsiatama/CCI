@@ -32,7 +32,7 @@
 		,forceSelection:true
 		,allowNewData:true
 		,extraItemCls:'x-tag'
-		,allowBlank:false
+		,allowBlank:true
 		,extraItemStyle:'border-width:2px'
 		,stackItems:true
 		,mode:'remote'
@@ -51,6 +51,7 @@
 		,valueField:'id_posicion'
 		,tpl: resultTplPosicion
 		,displayFieldTpl:'({id_posicion}) - {posicion}'
+		,allowBlank:false
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {
@@ -82,7 +83,7 @@
 	);
 	var comboPais = new Combo({
 		id:module+'comboPais'
-		,singleMode:true
+		//,singleMode:true
 		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
 		,name:'id_pais[]'
 		,store:storePais
@@ -90,6 +91,37 @@
 		,valueField:'id_pais'
 		,tpl: resultTplPais
 		,displayFieldTpl:'({id_pais}) - {pais}'
+	});
+
+	var storeMercado = new Ext.data.JsonStore({
+		url:'mercado/list'
+		,id:module+'storeMercado'
+		,root:'data'
+		,sortInfo:{field:'mercado_id',direction:'ASC'}
+		,totalProperty:'total'
+		,baseParams:{id:'<?= $id; ?>'}
+		,fields:[
+			{name:'mercado_id', type:'float'},
+			{name:'mercado_nombre', type:'string'}
+		]
+	});
+	var resultTplMercado = new Ext.XTemplate(
+		'<tpl for=".">' +
+			'<div class="search-item x-combo-list-item">' +
+				'<span>{mercado_nombre}</span>' +
+			'</div>' +
+		'</tpl>'
+	);
+	var comboMercado = new Combo({
+		id:module+'comboMercado'
+		,singleMode:true
+		,fieldLabel:'<?= Lang::get('mercado.columns_title.mercado_nombre'); ?>'
+		,name:'mercado_id[]'
+		,store:storeMercado
+		,displayField:'mercado_nombre'
+		,valueField:'mercado_id'
+		,tpl: resultTplMercado
+		,displayFieldTpl:'{mercado_nombre}'
 	});
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
@@ -174,6 +206,7 @@
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
 				{name:'id_posicion', mapping:'id_posicion', type:'string'},
 				{name:'id_pais', mapping:'id_pais', type:'string'},
+				{name:'mercado_id', mapping:'mercado_id', type:'string'},
 				{name:'anio_ini', mapping:'anio_ini', type:'float'},
 				{name:'anio_fin', mapping:'anio_fin', type:'float'},
 				{name:'desde_ini', mapping:'desde_ini', type:'float'},
@@ -270,6 +303,9 @@
 				,items:[comboPais]
 			},{
 				defaults:{anchor:'100%'}
+				,items:[comboMercado]
+			},{
+				defaults:{anchor:'100%'}
 				,columnWidth:1
 				,items:[comboPosicion]
 			},{
@@ -318,6 +354,7 @@
 			,success: function(formulario, response) {
 				Ext.getCmp(module+'comboPosicion').setValue(response.result.data.id_posicion);
 				Ext.getCmp(module+'comboPais').setValue(response.result.data.id_pais);
+				Ext.getCmp(module+'comboMercado').setValue(response.result.data.mercado_id);
 			}
 		});
 	});";
@@ -339,10 +376,26 @@
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('pais'));
 		});
-		arrDescription.push({
-			label: label
-			,values: arrValues
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
+
+		arrValues      = [];
+		selection      = Ext.getCmp(module+'comboMercado').getSelectedRecords();
+		label          = Ext.getCmp(module+'comboMercado').fieldLabel;
+		
+		Ext.each(selection,function(row){
+			arrValues.push(row.get('mercado_nombre'));
 		});
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
 
 		arrValues      = [];
 		selection      = Ext.getCmp(module+'comboPosicion').getSelectedRecords();
@@ -388,6 +441,16 @@
 	}
 
 	function fnSave () {
+		if (!isValidCountry(module+'comboPais', module+'comboMercado')) {
+			Ext.Msg.show({
+				title: Ext.ux.lang.messages.warning
+				,msg: Ext.ux.lang.error.empty_country
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+			return false;
+		}
+
 		if(formIndicador.form.isValid()){
 			var description = getDescription();
 			params = {

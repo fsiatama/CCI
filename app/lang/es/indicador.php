@@ -44,6 +44,9 @@ return [
 		'growVariation' => 'Variación de Crecimiento',
 		'relation'      => 'Relación',
 		'diferencia'    => 'Diferencia',
+		'national'      => 'Nacional',
+		'regional'      => 'Regional',
+		'departmental'  => 'Departamental',
     ],
     'months' => [
 		'1'  => 'Enero',

@@ -11,8 +11,7 @@ class MainController {
 		if ($result['success']) {
 			$is_template = true;
 			return new View('app', compact('is_template'));
-		}
-		else {
+		} else {
 			$is_template = false;
 			return new View('home', compact('is_template'));
 		}

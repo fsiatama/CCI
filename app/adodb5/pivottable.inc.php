@@ -93,7 +93,7 @@
 				if ($aggfield) {
 					foreach($aggfield as $field){
 						if ($hidecnt) {
-							$label = $v . " " .$field;
+							$label = $v . " " . $field;
 						} else {
 							$label = "{$v}_".$field;
 						}

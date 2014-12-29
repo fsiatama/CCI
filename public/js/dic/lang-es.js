@@ -22,6 +22,7 @@ Ext.ux.lang.reports = {
 	,excel97: 'Libro Excel 97-2003 (*.xls)'
 	,maxRows: 65000
 	,filters: 'Filtros'
+	,selectScope: 'Seleccione el Ambito'
 	,selectYear: 'Seleccione el Año'
 	,selectYearFrom: 'Año desde'
 	,selectYearTo: 'Año Hasta'

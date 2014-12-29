@@ -22,13 +22,15 @@ class DeclaracionesRepo extends BaseRepo {
 	protected $trade;
 	protected $tipo_indicador_activador;
 	protected $linesConfig;
+	protected $scope;
 
-	public function __construct($rowIndicador, $filtersConfig, $year, $period)
+	public function __construct($rowIndicador, $filtersConfig, $year, $period, $scope)
 	{
 		$this->rowIndicador  = $rowIndicador;
 		$this->filtersConfig = $filtersConfig;
 		$this->year          = $year;
 		$this->period        = $period;
+		$this->scope         = $scope;
 
 		extract($rowIndicador);
 
@@ -158,7 +160,10 @@ class DeclaracionesRepo extends BaseRepo {
 						if (!$result['success']) {
 							return $result;
 						}
-						$arr = array_merge(explode(',', $filterValue), explode(',', $result['data']));
+						$arr = explode(',', $result['data']);
+						if (!empty($filterValue)) {
+							$arr = array_merge(explode(',', $filterValue), $arr);
+						}
 						$filterValue = implode(',', $arr);
 					}
 
@@ -614,7 +619,6 @@ class DeclaracionesRepo extends BaseRepo {
 		$productsAgriculture = $result['data'];
 
 		$this->model->setId_posicion($productsAgriculture);
-
 
 		$arrRowField = ['id', 'decl.id_posicion', 'posicion'];
 
@@ -1088,7 +1092,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotColumnFields('anio');
-		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotTotalFields([$columnValue]);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
 
@@ -1130,12 +1134,15 @@ class DeclaracionesRepo extends BaseRepo {
 
 					//var_dump($key, $value, $arrTotals[$key], ( $value / $arrTotals[$key] ),  (( $value / $arrTotals[$key] ) * ( $value / $arrTotals[$key] )) );
 
+					//en este caso el indice es el año, debe suprimir el nombre de la column de totales que le pone por defecto la clase pivottable
+					$index = str_replace(' '.$columnValue, '', $key);
+
 					$IHH = ( $value / $arrTotals[$key] );
 					$IHH = pow($IHH, 2);
-					if (empty($arrIHH[$key])) {
-						$arrIHH[$key] = 0;
+					if (empty($arrIHH[$index])) {
+						$arrIHH[$index] = 0;
 					}
-					$arrIHH[$key] += $IHH;
+					$arrIHH[$index] += $IHH;
 				}
 			}
 		}

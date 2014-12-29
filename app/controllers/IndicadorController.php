@@ -124,8 +124,9 @@ class IndicadorController {
 			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
 			$periods = Helpers::arrayGet($lines, 'periods');
+			$scopes = Helpers::arrayGet($lines, 'scopes');
 
-			$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action', 'yearsAvailable', 'periods'));
+			$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action', 'yearsAvailable', 'periods', 'scopes'));
 
 			//var_dump($params);
 

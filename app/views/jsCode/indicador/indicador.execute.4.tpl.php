@@ -42,7 +42,12 @@ $htmlDescription .= '</ol>';
 
 
 	storeBalanza.on('beforeload', function(){
-		Ext.ux.bodyMask.show();
+		/*var scope = Ext.getCmp(module + 'comboScope').getValue();
+		if (!scope) {
+			return false;
+		};
+		this.setBaseParam('scope', scope);
+		Ext.ux.bodyMask.show();*/
 	});
 
 	storeBalanza.on('load', function(store){
@@ -99,6 +104,7 @@ $htmlDescription .= '</ol>';
 	Ext.state.Manager.clear(gridBalanza.getItemId());
 
 	var arrPeriods = <?= json_encode($periods); ?>;
+	var arrScopes  = <?= json_encode($scopes); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -132,16 +138,16 @@ $htmlDescription .= '</ol>';
 			,html: ''
 			,tbar:[{
 				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
+				,text: Ext.ux.lang.reports.selectScope + ': '
 			},{
 				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
+				,store: arrScopes
+				,id: module + 'comboScope'
 				,typeAhead: true
 				,forceSelection: true
 				,triggerAction: 'all'
 				,selectOnFocus:true
-				,value: 12
+				,value: 1
 				,width: 100
 			},'-',{
 				text: Ext.ux.lang.buttons.generate

@@ -3,7 +3,6 @@
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module.'_'.$indicador_id; ?>';
 
-
 	var Combo = Ext.extend(Ext.ux.form.SuperBoxSelect, {
 		xtype:'superboxselect'
 		,resizable:false
@@ -12,7 +11,7 @@
 		,forceSelection:true
 		,allowNewData:true
 		,extraItemCls:'x-tag'
-		,allowBlank:false
+		,allowBlank:true
 		,extraItemStyle:'border-width:2px'
 		,stackItems:true
 		,mode:'remote'
@@ -21,7 +20,6 @@
 		,itemSelector:'.search-item'
 		,pageSize:10
 	});
-
 	var storePais = new Ext.data.JsonStore({
 		url:'pais/list'
 		,id:module+'storePais'
@@ -43,7 +41,7 @@
 	);
 	var comboPais = new Combo({
 		id:module+'comboPais'
-		,singleMode:true
+		//,singleMode:true
 		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
 		,name:'id_pais[]'
 		,store:storePais
@@ -51,6 +49,37 @@
 		,valueField:'id_pais'
 		,tpl: resultTplPais
 		,displayFieldTpl:'({id_pais}) - {pais}'
+	});
+
+	var storeMercado = new Ext.data.JsonStore({
+		url:'mercado/list'
+		,id:module+'storeMercado'
+		,root:'data'
+		,sortInfo:{field:'mercado_id',direction:'ASC'}
+		,totalProperty:'total'
+		,baseParams:{id:'<?= $id; ?>'}
+		,fields:[
+			{name:'mercado_id', type:'float'},
+			{name:'mercado_nombre', type:'string'}
+		]
+	});
+	var resultTplMercado = new Ext.XTemplate(
+		'<tpl for=".">' +
+			'<div class="search-item x-combo-list-item">' +
+				'<span>{mercado_nombre}</span>' +
+			'</div>' +
+		'</tpl>'
+	);
+	var comboMercado = new Combo({
+		id:module+'comboMercado'
+		,singleMode:true
+		,fieldLabel:'<?= Lang::get('mercado.columns_title.mercado_nombre'); ?>'
+		,name:'mercado_id[]'
+		,store:storeMercado
+		,displayField:'mercado_nombre'
+		,valueField:'mercado_id'
+		,tpl: resultTplMercado
+		,displayFieldTpl:'{mercado_nombre}'
 	});
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
@@ -134,6 +163,7 @@
 				{name:'indicador_tipo_indicador_id', mapping:'indicador_tipo_indicador_id', type:'float'},
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
 				{name:'id_pais', mapping:'id_pais', type:'string'},
+				{name:'mercado_id', mapping:'mercado_id', type:'string'},
 				{name:'anio_ini', mapping:'anio_ini', type:'float'},
 				{name:'anio_fin', mapping:'anio_fin', type:'float'},
 				{name:'desde_ini', mapping:'desde_ini', type:'float'},
@@ -229,6 +259,10 @@
 				defaults:{anchor:'100%'}
 				,items:[comboPais]
 			},{
+				defaults:{anchor:'100%'}
+				,columnWidth:1
+				,items:[comboMercado]
+			},{
 				xtype:'hidden'
 				,name:'indicador_tipo_indicador_id'
 				,id:module+'indicador_tipo_indicador_id'
@@ -273,6 +307,7 @@
 			,waitMsg: 'Loading......'
 			,success: function(formulario, response) {
 				Ext.getCmp(module+'comboPais').setValue(response.result.data.id_pais);
+				Ext.getCmp(module+'comboMercado').setValue(response.result.data.mercado_id);
 			}
 		});
 	});";
@@ -286,7 +321,6 @@
 
 	function getDescription () {
 		var arrDescription = [];
-		
 		var arrValues      = [];
 		var selection      = Ext.getCmp(module+'comboPais').getSelectedRecords();
 		var label          = Ext.getCmp(module+'comboPais').fieldLabel;
@@ -294,10 +328,26 @@
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('pais'));
 		});
-		arrDescription.push({
-			label: label
-			,values: arrValues
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
+
+		arrValues      = [];
+		selection      = Ext.getCmp(module+'comboMercado').getSelectedRecords();
+		label          = Ext.getCmp(module+'comboMercado').fieldLabel;
+		
+		Ext.each(selection,function(row){
+			arrValues.push(row.get('mercado_nombre'));
 		});
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
 
 		var year      = Ext.getCmp(module+'comboAnio_ini').getValue();
 		var perIni    = Ext.getCmp(module+'comboDesde_ini').getRawValue();
@@ -331,6 +381,16 @@
 	}
 
 	function fnSave () {
+		if (!isValidCountry(module+'comboPais', module+'comboMercado')) {
+			Ext.Msg.show({
+				title: Ext.ux.lang.messages.warning
+				,msg: Ext.ux.lang.error.empty_country
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+			return false;
+		}
+
 		if(formIndicador.form.isValid()){
 			var description = getDescription();
 			params = {

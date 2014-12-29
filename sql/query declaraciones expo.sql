@@ -14,6 +14,7 @@ SUM(decl.valorcif) AS "valorcif",
 SUM(decl.valor_pesos) AS "valor_pesos", 
 SUM(decl.peso_neto) AS "peso_neto" 
 FROM acumulado_expo AS decl
+WHERE DATE_FORMAT(decl.fecha, '%Y') IN (2010,2011)
 GROUP BY 
 DATE_FORMAT(decl.fecha, '%Y'),
 decl.periodo,

@@ -37,11 +37,18 @@ return [
 		],
 		'2' => [
 			[
-				'field'      => 'id_pais',
-				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
-				'required'   => true,
-				'multivalue' => true,
+				'field'              => 'id_pais',
+				'field_expo'         => 'id_paisdestino',
+				'field_impo'         => 'id_paisprocedencia',
+				'required'   		 => false,
+				'requiredComplement' => true,
+				'complement'         => ['mercado_id'],
+			],[
+				'field'         => 'mercado_id',
+				'field_expo'    => 'mercado_id',
+				'field_impo'    => 'mercado_id',
+				'required'      => false,
+				'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',
@@ -64,11 +71,18 @@ return [
 		],
 		'3' => [
 			[
-				'field'      => 'id_pais',
-				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
-				'required'   => true,
-				'multivalue' => true,
+				'field'              => 'id_pais',
+				'field_expo'         => 'id_paisdestino',
+				'field_impo'         => 'id_paisprocedencia',
+				'required'   		 => false,
+				'requiredComplement' => true,
+				'complement'         => ['mercado_id'],
+			],[
+				'field'         => 'mercado_id',
+				'field_expo'    => 'mercado_id',
+				'field_impo'    => 'mercado_id',
+				'required'      => false,
+				'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',
@@ -115,11 +129,18 @@ return [
 		],
 		'4' => [
 			[
-				'field'      => 'id_pais',
-				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
-				'required'   => true,
-				'multivalue' => true,
+				'field'              => 'id_pais',
+				'field_expo'         => 'id_paisdestino',
+				'field_impo'         => 'id_paisprocedencia',
+				'required'   		 => false,
+				'requiredComplement' => true,
+				'complement'         => ['mercado_id'],
+			],[
+				'field'         => 'mercado_id',
+				'field_expo'    => 'mercado_id',
+				'field_impo'    => 'mercado_id',
+				'required'      => false,
+				'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
@@ -142,11 +163,18 @@ return [
 		],
 		'5' => [
 			[
-				'field'      => 'id_pais',
-				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
-				'required'   => true,
-				'multivalue' => true,
+				'field'              => 'id_pais',
+				'field_expo'         => 'id_paisdestino',
+				'field_impo'         => 'id_paisprocedencia',
+				'required'   		 => false,
+				'requiredComplement' => true,
+				'complement'         => ['mercado_id'],
+			],[
+				'field'         => 'mercado_id',
+				'field_expo'    => 'mercado_id',
+				'field_impo'    => 'mercado_id',
+				'required'      => false,
+				'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
@@ -193,11 +221,18 @@ return [
 				'required'   => true,
 				'multivalue' => false,
 			],[
-				'field'      => 'id_pais',
-				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
-				'required'   => true,
-				'multivalue' => true,
+				'field'              => 'id_pais',
+				'field_expo'         => 'id_paisdestino',
+				'field_impo'         => 'id_paisprocedencia',
+				'required'   		 => false,
+				'requiredComplement' => true,
+				'complement'         => ['mercado_id'],
+			],[
+				'field'         => 'mercado_id',
+				'field_expo'    => 'mercado_id',
+				'field_impo'    => 'mercado_id',
+				'required'      => false,
+				'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
@@ -265,11 +300,18 @@ return [
 				'required'   => true,
 				'multivalue' => false,
 			],[
-				'field'      => 'id_pais',
-				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
-				'required'   => true,
-				'multivalue' => true,
+				'field'              => 'id_pais',
+				'field_expo'         => 'id_paisdestino',
+				'field_impo'         => 'id_paisprocedencia',
+				'required'   		 => false,
+				'requiredComplement' => true,
+				'complement'         => ['mercado_id'],
+			],[
+				'field'         => 'mercado_id',
+				'field_expo'    => 'mercado_id',
+				'field_impo'    => 'mercado_id',
+				'required'      => false,
+				'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
@@ -613,6 +655,11 @@ return [
 	'trade' => [
 		['impo', Lang::get('indicador.reports.imports')],
 		['expo', Lang::get('indicador.reports.exports')]
+	],
+	'scopes' => [
+		['1', Lang::get('indicador.reports.national')],
+		['2', Lang::get('indicador.reports.regional')],
+		['3', Lang::get('indicador.reports.departmental')],
 	],
 	'sectorIdAgriculture'  => 2,
 	'sectorIdTraditional'  => 3,

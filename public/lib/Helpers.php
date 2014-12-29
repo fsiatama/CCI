@@ -88,19 +88,19 @@ class Helpers
 		$arr_chart['series'] = $series;
 
 		$arr_chart['chart'] = [
-			'decimalprecision'   =>'4'
-			,'palette'           =>'4'
-			,'formatnumberscale' =>'1'
-			,'numberscalevalue'  =>'1000000'
-			,'numberscaleunit'   =>'M'
-			,'rotatevalues'      =>'1'
-			,'divlineisdashed'   =>'1'
-			,'placevaluesinside' =>'1'
-			,'exportenabled'     =>'1'
-			,'areaovercolumns'   =>'0'
-			,'showaboutmenuitem' =>'0'
-			,'showlabels'        =>'1'
-			,'showBorder'        =>'0'
+			'decimalprecision'   => '4'
+			,'palette'           => '4'
+			/*,'formatnumberscale' => '0'
+			,'numberscalevalue'  => '1000000'
+			,'numberscaleunit'   => 'M'*/
+			,'rotatevalues'      => '1'
+			,'divlineisdashed'   => '1'
+			,'placevaluesinside' => '1'
+			,'exportenabled'     => '1'
+			,'areaovercolumns'   => '0'
+			,'showaboutmenuitem' => '0'
+			,'showlabels'        => '1'
+			,'showBorder'        => '0'
 			,'palettecolors'     => '#008ee4,#6baa01,#f8bd19,#e44a00,#33bdda,#d35400,#bdc3c7,#95a5a6,#34495e,#1abc9c'
 		];
 

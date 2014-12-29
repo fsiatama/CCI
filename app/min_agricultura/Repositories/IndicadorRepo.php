@@ -462,6 +462,7 @@ class IndicadorRepo extends BaseRepo {
 		$period = (empty($period)) ? 12 : $period ;
 		$format = (empty($format)) ? false : $format ;
 		$fields = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
+		$scope  = (empty($scope)) ? 1 : $scope ;
 		if (empty($indicador_id)) {
 			return [
 				'success' => false,
@@ -495,7 +496,8 @@ class IndicadorRepo extends BaseRepo {
 				$row,
 				$arrFiltersName,
 				$year,
-				$period
+				$period,
+				$scope
 			);
 			if (method_exists($repo, $repoMethodName)) {
 				$result = call_user_func_array([$repo, $repoMethodName], []);
