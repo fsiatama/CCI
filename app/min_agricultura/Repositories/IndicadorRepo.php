@@ -399,6 +399,8 @@ class IndicadorRepo extends BaseRepo {
 			foreach ($arrFiltersName as $filter) {
 				$fieldName = $filter['field'];
 
+				$values = (is_array($params[$fieldName])) ? implode(',', $params[$fieldName]) : $params[$fieldName] ;
+				
 				if ($filter['required']) {
 
 					if (!array_key_exists($fieldName, $params)) {
@@ -406,10 +408,6 @@ class IndicadorRepo extends BaseRepo {
 						//retorna vacio para que genere error
 						return '';
 					}
-
-					$values = (is_array($params[$fieldName])) ? implode(',', $params[$fieldName]) : $params[$fieldName] ;
-
-					//var_dump($fieldName, $params[$fieldName], $values);
 
 					if (!empty($values)) {
 						$arrFiltersValue[] = $fieldName . ':' .$values;
@@ -419,10 +417,33 @@ class IndicadorRepo extends BaseRepo {
 						return '';
 					}
 
+				} elseif (!empty($filter['requiredComplement'])) {
+					//si el filtro es requerido en complemento con otros campos, 
+					//quiere decir que alguno de los campos debe ser diferente de blanco
+					$complement = false;
+					if (empty($values)) {
+						foreach ($filter['complement'] as $field) {
+							$fieldName2 = $field;
+							$values2    = '';
+
+							if (array_key_exists($fieldName2, $params)) {
+								$values2 = (is_array($params[$fieldName2])) ? implode(',', $params[$fieldName2]) : $params[$fieldName2] ;
+							}
+
+							if (!empty($values2)) {
+								$complement = true;
+							}
+						}
+					}
+					
+					if (empty($values) && !$complement) {
+						//por lo tanto si el primer campo y todos los demas complementos vienen vacios
+						//retorna vacio para que genere error
+						return '';
+					}
+					$arrFiltersValue[] = $fieldName . ':' .$values;
+
 				} elseif (array_key_exists($fieldName, $params)) {
-
-					$values = (is_array($params[$fieldName])) ? implode(',', $params[$fieldName]) : $params[$fieldName] ;
-
 					if (!empty($values)) {
 						//si el campo es opcional y el valor no viene vacio, lo agraga a la configuracion
 						$arrFiltersValue[] = $fieldName . ':' .$values;

@@ -5,6 +5,7 @@ require PATH_MODELS.'Ado/DeclaraimpAdo.php';
 require PATH_MODELS.'Entities/Declaraexp.php';
 require PATH_MODELS.'Ado/DeclaraexpAdo.php';
 require PATH_MODELS.'Repositories/SectorRepo.php';
+require PATH_MODELS.'Repositories/MercadoRepo.php';
 
 require_once ('BaseRepo.php');
 
@@ -113,8 +114,8 @@ class DeclaracionesRepo extends BaseRepo {
 
 				$setFilterValue = true;
 
-				//si el filtro es un rango de fechas, debe unir los periodos que componen el rango
 				if (!empty($filter['dateRange'])) {
+					//si el filtro es un rango de fechas, debe unir los periodos que componen el rango
 
 					$setFilterValue = false;
 
@@ -149,6 +150,18 @@ class DeclaracionesRepo extends BaseRepo {
 
 					call_user_func_array([$this->model, $methodName], compact('filterValue'));
 
+				} elseif ($filter['field'] == 'id_pais') {
+					//si el filtro es el pais puede venir como parametro un pais o un mercado (grupo de paises)
+					//Trae los paises configurados en el mercado seleccionado
+					if (!empty($arrFiltersValues['mercado_id'])) {
+						$result = $this->findCountriesByMarket($arrFiltersValues['mercado_id']);
+						if (!$result['success']) {
+							return $result;
+						}
+						$arr = array_merge(explode(',', $filterValue), explode(',', $result['data']));
+						$filterValue = implode(',', $arr);
+					}
+
 				} elseif (!empty($filter['itComplements'])) {
 					//si el filtro es complemento de otro no lo debe tener en cuenta
 					$setFilterValue = false;
@@ -178,6 +191,24 @@ class DeclaracionesRepo extends BaseRepo {
 		return [
 			'success' => true,
 			'data'    => $row['sector_productos']
+		];
+	}
+
+	public function findCountriesByMarket($mercado_id)
+	{
+		$mercadoRepo = new MercadoRepo;
+		$result     = $mercadoRepo->findPrimaryKey($mercado_id);
+
+		if (!$result['success']) {
+			return [
+				'success' => false,
+				'error'   => 'No existe configuración para el mercado ' . $mercado_id
+			];
+		}
+		$row = array_shift($result['data']);
+		return [
+			'success' => true,
+			'data'    => $row['mercado_paises']
 		];
 	}
 

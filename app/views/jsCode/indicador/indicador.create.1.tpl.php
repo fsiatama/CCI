@@ -168,6 +168,7 @@
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
 				{name:'id_posicion', mapping:'id_posicion', type:'string'},
 				{name:'id_pais', mapping:'id_pais', type:'string'},
+				{name:'mercado_id', mapping:'mercado_id', type:'string'},
 				{name:'anio_ini', mapping:'anio_ini', type:'float'},
 				{name:'anio_fin', mapping:'anio_fin', type:'float'}
 			]
@@ -188,14 +189,12 @@
 			}
 			,items:[{
 				defaults:{anchor:'100%'}
-				,columnWidth:1
 				,items:[{
 					xtype:'textfield'
 					,name:'indicador_nombre'
 					,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_nombre'); ?>'
 					,id:module+'indicador_nombre'
 					,allowBlank:false
-					,autoWidth:true
 				}]
 			}]
 		},{
@@ -234,11 +233,9 @@
 			}
 			,items:[{
 				defaults:{anchor:'100%'}
-				,columnWidth:.5
 				,items:[comboPais]
 			},{
 				defaults:{anchor:'100%'}
-				,columnWidth:.5
 				,items:[comboMercado]
 			},{
 				defaults:{anchor:'100%'}
@@ -290,6 +287,7 @@
 			,success: function(formulario, response) {
 				Ext.getCmp(module+'comboPosicion').setValue(response.result.data.id_posicion);
 				Ext.getCmp(module+'comboPais').setValue(response.result.data.id_pais);
+				Ext.getCmp(module+'comboMercado').setValue(response.result.data.mercado_id);
 			}
 		});
 	});";
@@ -311,10 +309,26 @@
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('pais'));
 		});
-		arrDescription.push({
-			label: label
-			,values: arrValues
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
+
+		arrValues      = [];
+		selection      = Ext.getCmp(module+'comboMercado').getSelectedRecords();
+		label          = Ext.getCmp(module+'comboMercado').fieldLabel;
+		
+		Ext.each(selection,function(row){
+			arrValues.push(row.get('mercado_nombre'));
 		});
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
 
 		arrValues      = [];
 		selection      = Ext.getCmp(module+'comboPosicion').getSelectedRecords();
@@ -323,10 +337,12 @@
 		Ext.each(selection,function(row){
 			arrValues.push('['+row.get('id_posicion')+'] ' + row.get('posicion'));
 		});
-		arrDescription.push({
-			label: label
-			,values: arrValues
-		});
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
 
 		var yearIni      = Ext.getCmp(module+'comboAnio_ini').getValue();
 		var yearFin      = Ext.getCmp(module+'comboAnio_fin').getValue();
