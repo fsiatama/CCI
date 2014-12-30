@@ -1186,7 +1186,20 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
 		$columnValue      = $this->columnValueExpo;
+
 		$this->setFiltersValues();
+
+		if (!empty($arrFiltersValues['mercado_id'])) {
+			$result = $this->findCountriesByMarket($arrFiltersValues['mercado_id']);
+			if (!$result['success']) {
+				return $result;
+			}
+			$arr = explode(',', $result['data']);
+			if (!empty($arrFiltersValues['pais_id'])) {
+				$arr = array_merge(explode(',', $arrFiltersValues['pais_id']), $arr);
+			}
+			$this->model->setId_paisdestino(implode(',', $arr));
+		}
 
 		//Trae los productos configurados como agricolas
 		$result = $this->findProductsBySector('sectorIdAgriculture');
@@ -1299,6 +1312,18 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo   = $this->getModelExpoAdo();
 		$columnValue      = $this->columnValueExpo;
 		$this->setFiltersValues();
+
+		if (!empty($arrFiltersValues['mercado_id'])) {
+			$result = $this->findCountriesByMarket($arrFiltersValues['mercado_id']);
+			if (!$result['success']) {
+				return $result;
+			}
+			$arr = explode(',', $result['data']);
+			if (!empty($arrFiltersValues['pais_id'])) {
+				$arr = array_merge(explode(',', $arrFiltersValues['pais_id']), $arr);
+			}
+			$this->model->setId_paisdestino(implode(',', $arr));
+		}
 
 		$result = $this->findProductsBySector('sectorIdAgriculture');
 		if (!$result['success']) {

@@ -334,6 +334,11 @@ return [
 				'required'   => false,
 				'multivalue' => true,
 			],[
+				'field'      => 'mercado_id',
+				'field_expo' => 'mercado_id',
+				'field_impo' => 'mercado_id',
+				'required'   => false,
+			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
 				'field_impo' => 'anio',
@@ -360,6 +365,11 @@ return [
 				'field_impo' => 'id_paisprocedencia',
 				'required'   => false,
 				'multivalue' => true,
+			],[
+				'field'      => 'mercado_id',
+				'field_expo' => 'mercado_id',
+				'field_impo' => 'mercado_id',
+				'required'   => false,
 			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
