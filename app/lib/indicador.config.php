@@ -392,11 +392,18 @@ return [
 		],
 		'11' => [
 			[
-				'field'      => 'id_pais',
-				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
-				'required'   => true,
-				'multivalue' => true,
+				'field'              => 'id_pais',
+				'field_expo'         => 'id_paisdestino',
+				'field_impo'         => 'id_paisprocedencia',
+				'required'   		 => false,
+				'requiredComplement' => true,
+				'complement'         => ['mercado_id'],
+			],[
+				'field'         => 'mercado_id',
+				'field_expo'    => 'mercado_id',
+				'field_impo'    => 'mercado_id',
+				'required'      => false,
+				'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',
@@ -425,11 +432,18 @@ return [
 		],
 		'12' => [
 			[
-				'field'      => 'id_pais',
-				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
-				'required'   => true,
-				'multivalue' => true,
+				'field'              => 'id_pais',
+				'field_expo'         => 'id_paisdestino',
+				'field_impo'         => 'id_paisprocedencia',
+				'required'   		 => false,
+				'requiredComplement' => true,
+				'complement'         => ['mercado_id'],
+			],[
+				'field'         => 'mercado_id',
+				'field_expo'    => 'mercado_id',
+				'field_impo'    => 'mercado_id',
+				'required'      => false,
+				'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',
@@ -503,11 +517,18 @@ return [
 		],
 		'14' => [
 			[
-				'field'      => 'id_pais',
-				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
-				'required'   => true,
-				'multivalue' => true,
+				'field'              => 'id_pais',
+				'field_expo'         => 'id_paisdestino',
+				'field_impo'         => 'id_paisprocedencia',
+				'required'   		 => false,
+				'requiredComplement' => true,
+				'complement'         => ['mercado_id'],
+			],[
+				'field'         => 'mercado_id',
+				'field_expo'    => 'mercado_id',
+				'field_impo'    => 'mercado_id',
+				'required'      => false,
+				'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',
@@ -535,6 +556,43 @@ return [
 				'field_impo' => 'id_paisprocedencia',
 				'required'   => false,
 				'multivalue' => true,
+			],[
+				'field'      => 'mercado_id',
+				'field_expo' => 'mercado_id',
+				'field_impo' => 'mercado_id',
+				'required'   => false,
+			],[
+				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'yearRange'  => ['anio_fin'],
+			],[
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
+			]
+		],
+		'15' => [
+			[
+				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'mercado_id',
+				'field_expo' => 'mercado_id',
+				'field_impo' => 'mercado_id',
+				'required'   => false,
 			],[
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',
@@ -633,6 +691,80 @@ return [
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
 		],
+		'20' => [
+			[
+				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'mercado_id',
+				'field_expo' => 'mercado_id',
+				'field_impo' => 'mercado_id',
+				'required'   => false,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'yearRange'  => ['anio_fin'],
+			],[
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
+			]
+		],
+		'21' => [
+			[
+				'field'      => 'sector_id',
+				'field_expo' => 'sector_id',
+				'field_impo' => 'sector_id',
+				'required'   => true,
+				'multivalue' => true,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'yearRange'  => ['anio_fin'],
+			],[
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
+			]
+		],
+		'22' => [
+			[
+				'field'      => 'id_subpartida',
+				'field_expo' => 'id_subpartida',
+				'field_impo' => 'id_subpartida',
+				'required'   => true,
+				'multivalue' => true,
+			],[
+				'field'      => 'country_id',
+				'field_expo' => 'country_id',
+				'field_impo' => 'country_id',
+				'required'   => true,
+				'multivalue' => true,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'yearRange'  => ['anio_fin'],
+			],[
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
+			]
+		],
 	],
 	'executeConfig' => [
 		'1'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaRelativa'],
@@ -654,8 +786,10 @@ return [
 		'17' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ParticipacionExpoSectorAgricolaPibAgricola'],
 		'18' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'CoeficientePenetracionImpo'],
 		'19' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'CoeficienteAperturaExpo'],
+		'20' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'RelacionCrecimientoExpoAgroNoTradicionalExpoAgro'],
+		'21' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ConsumoAparente'],
 	],
-	'yearsAvailable' => ['2010', '2011', '2012', '2013', '2014'],
+	'yearsAvailable' => ['2005','2006','2007','2008','2009','2010', '2011', '2012', '2013', '2014'],
 	'periods' => [
 		[12, Lang::get('indicador.reports.annual')],
 		[6,  Lang::get('indicador.reports.semester')],
@@ -675,4 +809,5 @@ return [
 	'sectorIdTraditional'  => 3,
 	'sectorIdMiningSector' => 1,
 	'ConcentrationExportableSupply' => 80,
+	'urlApiComtrade' => 'http://comtrade.un.org/api/get?',
 ];

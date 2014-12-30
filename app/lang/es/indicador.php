@@ -25,6 +25,8 @@ return [
 		'IHH'                     => 'IHH',
 		'PI'                      => 'Coeficiente penetración Impo',
 		'AE'                      => 'Coeficiente apertura Expo',
+		'CA'                      => 'Consumo Aparente',
+		'CAA'                     => 'Coeficiente de Autosuficiencia Alimentaria',
 		'numero_empresas'         => 'Número Empresas',
 		'numero_productos_expo'   => 'Número Productos Exportados',
 		'numero_productos_impo'   => 'Número Productos Importados',

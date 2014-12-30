@@ -41,14 +41,19 @@ class DeclaraimpAdo extends BaseAdo {
 
 	protected function setTable()
 	{
-		$this->table = 'declaraimp AS decl, posicion, pais';
+		$table = 'declaraimp AS decl';
+		$this->setJoins();
+		foreach ($this->arrJoins as $tbl => $join) {
+			$table .= ' LEFT JOIN ' . $tbl . ' ON ' . $join;
+		}
+		$this->table = $table;
 	}
 
 	protected function setJoins()
 	{
 		$this->arrJoins = [
-			'decl.id_posicion = posicion.id_posicion',
-			'decl.id_paisprocedencia = pais.id_pais',
+			'posicion' => 'decl.id_posicion = posicion.id_posicion',
+			'pais'     => 'decl.id_paisprocedencia = pais.id_pais',
 		];
 	}
 
@@ -166,9 +171,6 @@ class DeclaraimpAdo extends BaseAdo {
 		
 		$conn  = $this->getConnection();
 		$table = $this->getTable();
-		
-		$this->setJoins();
-		
 		$where = $this->buildSelectWhere();
 
 		$sql = PivotTableSQL(
@@ -248,10 +250,10 @@ class DeclaraimpAdo extends BaseAdo {
 		$sql             = '';
 		$whereAssignment = false;
 
-		if (!empty($this->arrJoins)) {
+		/*if (!empty($this->arrJoins)) {
 			$sql            .= ' WHERE ('. implode( ' AND ', $this->arrJoins ).')';
 			$whereAssignment = true;
-		}
+		}*/
 
 		if(!empty($filter)){
 			$sql 			.= ($whereAssignment) ? ' AND ' : ' WHERE ' ;

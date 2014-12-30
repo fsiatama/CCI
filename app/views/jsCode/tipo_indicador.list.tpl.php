@@ -3,6 +3,12 @@
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module; ?>';
 	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
+
+	Ext.getCmp('tab-'+module+'_<?= $id; ?>').on('beforeclose', function(){
+		/*elimiar cualquier estado de la grilla guardado con anterioridad */
+		Ext.state.Manager.clear(gridTipo_indicador.getItemId());
+	});
+
 	
 	var storeTipo_indicador = new Ext.data.JsonStore({
 		url:'tipo_indicador/list'
@@ -49,10 +55,12 @@
 	var cmTipo_indicador = new Ext.grid.ColumnModel({
 		columns:[
 			gridTipo_indicadorExpander,
-			{header:'Id', align:'left', hidden:true, dataIndex:'tipo_indicador_id'},
+			{header:'Id', align:'left', hidden:true, dataIndex:'tipo_indicador_id' ,width:20},
 			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_nombre'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_nombre'},
 			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_abrev'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_abrev'},
-			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_activador_title'},
+			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador'); ?>', align:'left', hidden:true, dataIndex:'tipo_indicador_activador_title',hideable: false},
+			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_calculo'); ?>', align:'left', hidden:true, dataIndex:'tipo_indicador_calculo',hideable: false},
+			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_definicion'); ?>', align:'left', hidden:true, dataIndex:'tipo_indicador_definicion',hideable: false},
 			gridTipo_indicadorAction
 		]
 		,defaults:{

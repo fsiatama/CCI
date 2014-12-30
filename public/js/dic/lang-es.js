@@ -39,6 +39,7 @@ Ext.ux.lang.reports = {
 	,growthRateExpo: 'Indice de crecimiento Expo'
 	,growthRateImpo: 'Indice de crecimiento Impo'
 	,growthRateAgriculture: 'Indice de crecimiento Agro.'
+	,growthRateAgricultureNonTraditional: 'Indice de crecimiento Agro. No Tradi'
 	,growthRate: 'Indice de crecimiento'
 	,billionsCop: 'Miles de millones de pesos'
 }

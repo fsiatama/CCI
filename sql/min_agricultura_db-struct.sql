@@ -71,6 +71,21 @@ CREATE TABLE `arancel` (
   KEY `idx_posicion` (`cod_capitulo`,`cod_partida`,`cod_subpartida`,`cod_posicion`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+/*Table structure for table `audit` */
+
+DROP TABLE IF EXISTS `audit`;
+
+CREATE TABLE `audit` (
+  `audit_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `audit_table` varchar(30) CHARACTER SET latin1 NOT NULL,
+  `audit_script` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `audit_method` varchar(30) CHARACTER SET latin1 NOT NULL,
+  `audit_parameters` text CHARACTER SET latin1 NOT NULL,
+  `audit_uinsert` int(10) unsigned NOT NULL,
+  `audit_finsert` datetime NOT NULL,
+  PRIMARY KEY (`audit_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=192 DEFAULT CHARSET=utf8;
+
 /*Table structure for table `category_menu` */
 
 DROP TABLE IF EXISTS `category_menu`;
@@ -144,7 +159,7 @@ CREATE TABLE `declaraexp` (
 DROP TABLE IF EXISTS `declaraimp`;
 
 CREATE TABLE `declaraimp` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `anio` smallint(4) unsigned NOT NULL,
   `periodo` smallint(2) unsigned NOT NULL,
   `id_empresa` varchar(20) NOT NULL,
@@ -169,7 +184,7 @@ CREATE TABLE `declaraimp` (
   KEY `id_posicion` (`id_posicion`),
   KEY `id_ciiu` (`id_ciiu`),
   KEY `id_deptorigen` (`id_deptorigen`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=12733341 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `departamento` */
 
@@ -231,7 +246,7 @@ CREATE TABLE `indicador` (
   `indicador_finsert` datetime NOT NULL,
   `indicador_fupdate` datetime NOT NULL,
   PRIMARY KEY (`indicador_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=81 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=87 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `menu` */
 
@@ -245,7 +260,22 @@ CREATE TABLE `menu` (
   `menu_order` int(11) NOT NULL DEFAULT '1',
   `menu_hidden` enum('0','1') NOT NULL,
   PRIMARY KEY (`menu_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
+/*Table structure for table `mercado` */
+
+DROP TABLE IF EXISTS `mercado`;
+
+CREATE TABLE `mercado` (
+  `mercado_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mercado_nombre` varchar(100) NOT NULL,
+  `mercado_paises` text NOT NULL,
+  `mercado_uinsert` int(10) unsigned NOT NULL,
+  `mercado_finsert` datetime NOT NULL,
+  `mercado_uupdate` int(10) unsigned NOT NULL,
+  `mercado_fupdate` datetime NOT NULL,
+  PRIMARY KEY (`mercado_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `pais` */
 
@@ -272,7 +302,7 @@ CREATE TABLE `permissions` (
   `permissions_export` enum('0','1') NOT NULL,
   PRIMARY KEY (`permissions_id`),
   UNIQUE KEY `permissions_profile_id` (`permissions_profile_id`,`permissions_menu_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `pib` */
 
@@ -296,7 +326,7 @@ CREATE TABLE `pib` (
 DROP TABLE IF EXISTS `posicion`;
 
 CREATE TABLE `posicion` (
-  `id_posicion` varchar(10) NOT NULL,
+  `id_posicion` char(10) NOT NULL,
   `posicion` varchar(250) NOT NULL,
   `id_capitulo` char(2) NOT NULL,
   `id_partida` char(4) NOT NULL,

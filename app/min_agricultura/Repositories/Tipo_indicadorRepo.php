@@ -106,8 +106,11 @@ class Tipo_indicadorRepo extends BaseRepo {
 					}
 				}
 			} else {
-				$this->model->setUser_email($query);
-				$this->model->setUser_full_name($query);
+				$this->model->setTipo_indicador_nombre($query);
+				$this->model->setTipo_indicador_abrev($query);
+				$this->model->setTipo_indicador_activador_title($query);
+				$this->model->setTipo_indicador_calculo($query);
+				$this->model->setTipo_indicador_definicion($query);
 			}
 			
 		}

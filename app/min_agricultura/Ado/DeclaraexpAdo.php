@@ -38,14 +38,19 @@ class DeclaraexpAdo extends BaseAdo {
 
 	protected function setTable()
 	{
-		$this->table = 'declaraexp AS decl, posicion, pais';
+		$table = 'declaraexp AS decl';
+		$this->setJoins();
+		foreach ($this->arrJoins as $tbl => $join) {
+			$table .= ' LEFT JOIN ' . $tbl . ' ON ' . $join;
+		}
+		$this->table = $table;
 	}
 
 	protected function setJoins()
 	{
 		$this->arrJoins = [
-			'decl.id_posicion = posicion.id_posicion',
-			'decl.id_paisdestino = pais.id_pais',
+			'posicion' => 'decl.id_posicion = posicion.id_posicion',
+			'pais'     => 'decl.id_paisdestino = pais.id_pais',
 		];
 	}
 
@@ -235,10 +240,10 @@ class DeclaraexpAdo extends BaseAdo {
 		$sql             = '';
 		$whereAssignment = false;
 
-		if (!empty($this->arrJoins)) {
+		/*if (!empty($this->arrJoins)) {
 			$sql            .= ' WHERE ('. implode( ' AND ', $this->arrJoins ).')';
 			$whereAssignment = true;
-		}
+		}*/
 
 		if(!empty($filter)){
 			$sql 			.= ($whereAssignment) ? ' AND ' : ' WHERE ' ;

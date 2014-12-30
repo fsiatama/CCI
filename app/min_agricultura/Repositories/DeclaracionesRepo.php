@@ -1742,6 +1742,18 @@ class DeclaracionesRepo extends BaseRepo {
 		$columnValue      = $this->columnValueExpo;
 		$this->setFiltersValues();
 
+		if (!empty($arrFiltersValues['mercado_id'])) {
+			$result = $this->findCountriesByMarket($arrFiltersValues['mercado_id']);
+			if (!$result['success']) {
+				return $result;
+			}
+			$arr = explode(',', $result['data']);
+			if (!empty($arrFiltersValues['pais_id'])) {
+				$arr = array_merge(explode(',', $arrFiltersValues['pais_id']), $arr);
+			}
+			$this->model->setId_paisdestino(implode(',', $arr));
+		}
+
 		$rowField = Helpers::getPeriodColumnSql($this->period);
 		$row = 'anio AS id';
 
@@ -1853,6 +1865,130 @@ class DeclaracionesRepo extends BaseRepo {
 			'rateVariation'         => ($growthRateAgriculture / $growthRateExpo),
 			'columnChartData'       => $columnChart,
 			'total'                 => count($arrData)
+		];
+
+		return $result;
+	}
+
+	public function executeRelacionCrecimientoExpoAgroNoTradicionalExpoAgro()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+		$columnValue      = $this->columnValueExpo;
+		$this->setFiltersValues();
+
+		if (!empty($arrFiltersValues['mercado_id'])) {
+			$result = $this->findCountriesByMarket($arrFiltersValues['mercado_id']);
+			if (!$result['success']) {
+				return $result;
+			}
+			$arr = explode(',', $result['data']);
+			if (!empty($arrFiltersValues['pais_id'])) {
+				$arr = array_merge(explode(',', $arrFiltersValues['pais_id']), $arr);
+			}
+			$this->model->setId_paisdestino(implode(',', $arr));
+		}
+
+		$rowField = Helpers::getPeriodColumnSql($this->period);
+		$row = 'anio AS id';
+
+		$arrRowField   = [$row, $rowField];
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		//Trae los productos configurados como productos tradicionales del sector agricola
+		$result = $this->findProductsBySector('sectorIdTraditional');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsTraditional = $result['data'];
+
+		$this->model->setId_posicion($productsTraditional);
+		$result = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$result['success']) {
+			return $result;
+		}
+		$arrDataProductsTraditional = $result['data'];
+
+		//Trae los productos configurados como sector agricola
+		$result = $this->findProductsBySector('sectorIdAgriculture');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsAgriculture = $result['data'];
+
+		//busca los datos del sector energetico
+		$this->model->setId_posicion($productsAgriculture);
+		$result = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$result['success']) {
+			return $result;
+		}
+		$arrDataProductsAgriculture = $result['data'];
+
+		$arrData   = [];
+		$yearFirst = $arrFiltersValues['anio_ini'];
+
+		foreach ($arrDataProductsAgriculture as $rowTotal) {
+
+			$rowProductsTraditional = Helpers::findKeyInArrayMulti(
+				$arrDataProductsTraditional,
+				'periodo',
+				$rowTotal['periodo']
+			);
+
+			$yearLast                     = $rowTotal['periodo'];
+			$valueLastTotal               = (float)$rowTotal[$columnValue];
+			$valueLastTotal               = ($valueLastTotal == 0) ? 1 : $valueLastTotal ;
+			$valueLastProductsTraditional = ($rowProductsTraditional !== false) ? (float)$rowProductsTraditional[$columnValue] : 0 ;
+			$valueLastNonTraditional      = $valueLastTotal - $valueLastProductsTraditional;
+
+			if ($rowTotal['periodo'] == $yearFirst) {
+				$valueFirstNonTraditional = $valueLastNonTraditional;
+				$valueFirstTotal          = $valueLastTotal;
+			}
+
+			$arrData[] = [
+				'id'                  => $rowTotal['id'],
+				'periodo'             => $rowTotal['periodo'],
+				'valor_expo_no_tradi' => $valueLastNonTraditional,
+				'valor_expo_agricola' => $valueLastTotal
+			];
+		}
+
+		$rangeYear     = range($yearFirst, $yearLast);
+		$numberPeriods = count($rangeYear);
+
+		$growthRateAgricultureNonTraditional = ( pow(($valueLastNonTraditional / $valueFirstNonTraditional), (1 / $numberPeriods)) - 1);
+		$growthRateAgriculture               = ( pow(($valueLastTotal / $valueFirstTotal), (1 / $numberPeriods)) - 1);
+
+		$arrSeries = [
+			'valor_expo_no_tradi' => Lang::get('indicador.columns_title.valor_expo_no_tradi'),
+			'valor_expo_agricola' => Lang::get('indicador.columns_title.valor_expo_agricola'),
+		];
+
+		$columnChart = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			COLUMNAS
+		);
+
+		$result = [
+			'success'                             => true,
+			'data'                                => $arrData,
+			'growthRateAgricultureNonTraditional' => ($growthRateAgricultureNonTraditional * 100),
+			'growthRateAgriculture'               => ($growthRateAgriculture * 100),
+			'rateVariation'                       => ($growthRateAgricultureNonTraditional / $growthRateAgriculture),
+			'columnChartData'                     => $columnChart,
+			'total'                               => count($arrData)
 		];
 
 		return $result;
@@ -2375,6 +2511,175 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrSeries = [
 			'AE' => Lang::get('indicador.columns_title.AE')
+		];
+
+		$columnChart = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			COLUMNAS
+		);
+
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			'total'           => count($arrData),
+			'columnChartData' => $columnChart,
+			//'areaChartData'   => $areaChart,
+		];
+
+		return $result;
+	}
+
+	public function executeConsumoAparente()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+		$this->setRange('ini');
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+
+		$this->setFiltersValues();
+		$rowField = Helpers::getPeriodColumnSql($this->period);
+		$row      = 'anio AS id';
+		$arrRowField   = [$row, $rowField];
+
+		//Trae los productos configurados en el sector seleccionado
+		$result = $this->findProductsBySector($arrFiltersValues['sector_id']);
+		if (!$result['success']) {
+			return $result;
+		}
+		$products = $result['data'];
+		$this->model->setId_posicion($products);
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		//busca los datos del producto agricola seleccionado
+		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraexp['success']) {
+			return $rsDeclaraexp;
+		}
+
+		$this->setTrade('impo');
+		$this->model      = $this->getModelImpo();
+		$this->modelAdo   = $this->getModelImpoAdo();
+		$this->setFiltersValues();
+		$this->model->setId_posicion($products);
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($this->columnValueImpo);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		//busca los datos del producto agricola seleccionado
+		$rsDeclaraimp = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraimp['success']) {
+			return $rsDeclaraimp;
+		}
+
+		$arrData    = [];
+		$arrPeriods = [];
+		$sector_id  = $arrFiltersValues['sector_id'];
+
+		include PATH_MODELS.'Repositories/ProduccionRepo.php';
+		$produccionRepo = new ProduccionRepo;
+
+		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+
+			$anio    = $rowExpo['periodo'];
+			$result = $produccionRepo->listPeriodSector(compact('anio', 'sector_id'));
+			if (!$result['success']) {
+				return $result;
+			}
+			if ($result['total'] == 0) {
+				return [
+					'success' => false,
+					'error'   => 'No existe información de Producción para el periodo: ' . $anio
+				];
+			}
+			$rowProduccion = Helpers::findKeyInArrayMulti(
+				$result['data'],
+				'produccion_anio',
+				$anio
+			);
+
+			$rowImpo = Helpers::findKeyInArrayMulti(
+				$rsDeclaraimp['data'],
+				'periodo',
+				$rowExpo['periodo']
+			);
+			$valor_impo = 0;
+			if ($rowImpo !== false) {
+				$valor_impo   = $rowImpo[$this->columnValueImpo];
+				$arrPeriods[] = $rowImpo['periodo'];
+			}
+
+			//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
+			$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+
+			$CA  = ($produccion_peso_neto + $valor_impo - $rowExpo[$this->columnValueExpo]);
+			$CAA = ($produccion_peso_neto / $CA);
+
+			$arrData[] = [
+				'id'              => $rowExpo['id'],
+				'periodo'         => $rowExpo['periodo'],
+				'peso_expo'       => $rowExpo[$this->columnValueExpo],
+				'peso_impo'       => $valor_impo,
+				'produccion_peso' => $produccion_peso_neto,
+				'CA'              => $CA,
+				'CAA'             => $CAA,
+			];
+		}
+
+		foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
+
+			if(!in_array($rowImpo['periodo'], $arrPeriods)){
+				$anio    = $rowExpo['periodo'];
+				$result = $produccionRepo->listPeriodSector(compact('anio', 'sector_id'));
+				if (!$result['success']) {
+					return $result;
+				}
+				if ($result['total'] == 0) {
+					return [
+						'success' => false,
+						'error'   => 'No existe información de Producción para el periodo: ' . $anio
+					];
+				}
+				$rowProduccion = Helpers::findKeyInArrayMulti(
+					$result['data'],
+					'produccion_anio',
+					$anio
+				);
+				//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
+				$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+
+				$CA  = ($produccion_peso_neto + $rowImpo[$this->columnValueImpo]);
+				$CAA = ($produccion_peso_neto / $CA);
+
+				$arrData[] = [
+					'id'              => $rowImpo['id'],
+					'periodo'         => $rowImpo['periodo'],
+					'peso_expo'       => 0,
+					'peso_impo'       => $rowImpo[$this->columnValueImpo],
+					'produccion_peso' => $produccion_peso_neto,
+					'CA'              => $CA,
+					'CAA'             => $CAA,
+				];
+			}
+
+		}
+
+		if (count($arrData) == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		$arrSeries = [
+			'CA' => Lang::get('indicador.columns_title.CA')
 		];
 
 		$columnChart = Helpers::jsonChart(
