@@ -73,7 +73,6 @@
 		]
 	}
 	var storePaisOrigen  = new Ext.data.JsonStore(configStorePais);
-	var storePaisDestino = new Ext.data.JsonStore(configStorePais);
 
 	var resultTplPais = new Ext.XTemplate(
 		'<tpl for=".">' +
@@ -95,43 +94,6 @@
 		,displayFieldTpl:'{country}'
 	});
 
-	var comboPaisDestino = new Combo({
-		id:module+'comboPaisDestino'
-		,singleMode:true
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>'
-		,name:'id_pais_destino[]'
-		,store:storePaisDestino
-		,displayField:'country'
-		,valueField:'id_country'
-		,tpl: resultTplPais
-		,displayFieldTpl:'{country}'
-	});
-
-	var arrYears = <?= json_encode($yearsAvailable); ?>;
-
-	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
-		typeAhead:false
-		,forceSelection:true
-		,selectOnFocus:true
-		,allowBlank:false
-		,triggerAction:'all'
-		,flex:true
-	});
-
-	var comboAnio_ini = new simpleCombo({
-		hiddenName:'anio_ini'
-		,id:module+'comboAnio_ini'
-		,store:arrYears
-		,fieldLabel:Ext.ux.lang.reports.selectYearFrom
-	});
-
-	var comboAnio_fin = new simpleCombo({
-		hiddenName:'anio_fin'
-		,id:module+'comboAnio_fin'
-		,store:arrYears
-		,fieldLabel:Ext.ux.lang.reports.selectYearTo
-	});
-	
 	var formIndicador = new Ext.FormPanel({
 		baseCls:'x-plain'
 		,id:module + 'formIndicador'
@@ -151,9 +113,6 @@
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
 				{name:'id_subpartida', mapping:'id_subpartida', type:'string'},
 				{name:'id_pais_origen', mapping:'id_pais_origen', type:'string'},
-				{name:'id_pais_destino', mapping:'id_pais_destino', type:'string'},
-				{name:'anio_ini', mapping:'anio_ini', type:'float'},
-				{name:'anio_fin', mapping:'anio_fin', type:'float'}
 			]
 		})
 		,defaults: {anchor:'97%'}
@@ -182,27 +141,6 @@
 			}]
 		},{
 			xtype:'fieldset'
-			,title:Ext.ux.lang.reports.range
-			,layout:'column'
-			,defaults:{
-				columnWidth:.4
-				,layout:'form'
-				,labelAlign:'top'
-				,border:false
-				,xtype:'panel'
-				,bodyStyle:'padding:0 18px 0 0'
-			}
-			,items:[{
-				defaults:{anchor:'100%'}
-				,columnWidth:.2
-				,items:[comboAnio_ini]
-			},{
-				defaults:{anchor:'100%'}
-				,columnWidth:.2
-				,items:[comboAnio_fin]
-			}]
-		},{
-			xtype:'fieldset'
 			,title: Ext.ux.lang.reports.filters
 			,layout:'column'
 			,flex: 1
@@ -218,10 +156,6 @@
 				defaults:{anchor:'100%'}
 				,items:[comboPaisOrigen]
 				,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.countryOriginHelp)]
-			},{
-				defaults:{anchor:'100%'}
-				,items:[comboPaisDestino]
-				,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.countryPartnerHelp)]
 			},{
 				defaults:{anchor:'100%'}
 				,columnWidth:1
@@ -273,7 +207,6 @@
 			,success: function(formulario, response) {
 				Ext.getCmp(module+'comboSubpartida').setValue(response.result.data.id_subpartida);
 				Ext.getCmp(module+'comboPaisOrigen').setValue(response.result.data.id_pais_origen);
-				Ext.getCmp(module+'comboPaisDestino').setValue(response.result.data.id_pais_destino);
 			}
 		});
 	});";
@@ -303,20 +236,6 @@
 		};
 
 		arrValues      = [];
-		selection      = Ext.getCmp(module+'comboPaisDestino').getSelectedRecords();
-		label          = Ext.getCmp(module+'comboPaisDestino').fieldLabel;
-		
-		Ext.each(selection,function(row){
-			arrValues.push(row.get('country'));
-		});
-		if (arrValues.length > 0) {
-			arrDescription.push({
-				label: label
-				,values: arrValues
-			});
-		};
-
-		arrValues      = [];
 		selection      = Ext.getCmp(module+'comboSubpartida').getSelectedRecords();
 		label          = Ext.getCmp(module+'comboSubpartida').fieldLabel;
 		
@@ -330,16 +249,6 @@
 			});
 		};
 
-		var yearIni      = Ext.getCmp(module+'comboAnio_ini').getValue();
-		var yearFin      = Ext.getCmp(module+'comboAnio_fin').getValue();
-		arrValues     = [];
-
-		arrValues.push(yearIni + ' - ' + yearFin);
-		
-		arrDescription.push({
-			label: Ext.ux.lang.reports.period
-			,values: arrValues
-		});
 		return arrDescription;
 	}
 	function fnCloseTab(){

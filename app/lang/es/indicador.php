@@ -1,5 +1,8 @@
 <?php
 return [
+	'comtrade_columns_title' => [
+		'TradeValue' => 'Valor (US$)'
+	],
 	'columns_title' => [
 		'indicador_nombre'        => 'Nombre',
 		'capitulo'                => 'Capitulo arancelario',
@@ -28,6 +31,7 @@ return [
 		'AE'                      => 'Coeficiente apertura Expo',
 		'CA'                      => 'Consumo Aparente',
 		'CAA'                     => 'Coeficiente de Autosuficiencia Alimentaria',
+		'IEI'                     => 'Coeficiente de Penetración de Mercado',
 		'numero_empresas'         => 'Número Empresas',
 		'numero_productos_expo'   => 'Número Productos Exportados',
 		'numero_productos_impo'   => 'Número Productos Importados',

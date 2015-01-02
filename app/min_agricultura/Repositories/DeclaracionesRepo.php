@@ -2181,6 +2181,8 @@ class DeclaracionesRepo extends BaseRepo {
 
 		}
 
+		usort($arrData, Helpers::arraySortByValue('periodo'));
+		
 		$arrSeries = [
 			'valor_expo_agricola_cop' => Lang::get('indicador.columns_title.valor_expo_agricola_cop'),
 			'pib_agricultura'         => Lang::get('pib.columns_title.pib_agricultura'),
@@ -2302,7 +2304,7 @@ class DeclaracionesRepo extends BaseRepo {
 				'peso_expo'       => $rowExpo[$this->columnValueExpo],
 				'peso_impo'       => $valor_impo,
 				'produccion_peso' => $produccion_peso_neto,
-				'PI'              => $PI,
+				'PI'              => ($PI * 100),
 			];
 		}
 
@@ -2345,6 +2347,8 @@ class DeclaracionesRepo extends BaseRepo {
 				'error'   => Lang::get('error.no_records_found')
 			];
 		}
+
+		usort($arrData, Helpers::arraySortByValue('periodo'));
 
 		$arrSeries = [
 			'PI' => Lang::get('indicador.columns_title.PI')
@@ -2466,7 +2470,7 @@ class DeclaracionesRepo extends BaseRepo {
 				'peso_expo'       => $rowExpo[$this->columnValueExpo],
 				'peso_impo'       => $valor_impo,
 				'produccion_peso' => $produccion_peso_neto,
-				'AE'              => $AE,
+				'AE'              => ($AE * 100),
 			];
 		}
 
@@ -2508,6 +2512,8 @@ class DeclaracionesRepo extends BaseRepo {
 				'error'   => Lang::get('error.no_records_found')
 			];
 		}
+
+		usort($arrData, Helpers::arraySortByValue('periodo'));
 
 		$arrSeries = [
 			'AE' => Lang::get('indicador.columns_title.AE')
@@ -2629,7 +2635,7 @@ class DeclaracionesRepo extends BaseRepo {
 				'peso_impo'       => $valor_impo,
 				'produccion_peso' => $produccion_peso_neto,
 				'CA'              => $CA,
-				'CAA'             => $CAA,
+				'CAA'             => ($CAA * 100),
 			];
 		}
 
@@ -2665,7 +2671,7 @@ class DeclaracionesRepo extends BaseRepo {
 					'peso_impo'       => $rowImpo[$this->columnValueImpo],
 					'produccion_peso' => $produccion_peso_neto,
 					'CA'              => $CA,
-					'CAA'             => $CAA,
+					'CAA'             => ($CAA * 100),
 				];
 			}
 
@@ -2678,8 +2684,352 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 
+		usort($arrData, Helpers::arraySortByValue('periodo'));
+
 		$arrSeries = [
 			'CA' => Lang::get('indicador.columns_title.CA')
+		];
+
+		$columnChart = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			COLUMNAS
+		);
+
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			'total'           => count($arrData),
+			'columnChartData' => $columnChart,
+			//'areaChartData'   => $areaChart,
+		];
+
+		return $result;
+	}
+
+	public function executeComtradePenetracionMercado()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setRange('ini');
+		$yearFirst = $arrFiltersValues['anio_ini'];
+		$yearLast  = $arrFiltersValues['anio_fin'];
+		$rangeYear = range($yearFirst, $yearLast);
+
+		$id_pais_origen  = $arrFiltersValues['id_pais_origen'];
+		$id_pais_destino = empty($arrFiltersValues['id_pais_destino']) ? 0 : $arrFiltersValues['id_pais_destino'];
+		$id_subpartida   = $arrFiltersValues['id_subpartida'];
+
+		if (
+			empty($yearFirst) ||
+			empty($yearLast) ||
+			empty($id_pais_origen) ||
+			empty($id_subpartida)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+		
+		$baseUrl = Helpers::arrayGet($this->linesConfig, 'urlApiComtrade');
+		$colombiaIdComtrade = Helpers::arrayGet($this->linesConfig, 'colombiaIdComtrade');
+
+		//curl 'http://comtrade.un.org/api/get?max=500&type=C&freq=A&px=HS&ps=2013%2C2010%2C2011%2C2012&r=170%2C218&p=0&rg=1%2C2&cc=01&token=56233621927079056ea4d1e49ecf8f11' -H 'Host: comtrade.un.org' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:34.0) Gecko/20100101 Firefox/34.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: es-MX,es-ES;q=0.8,es-AR;q=0.7,es;q=0.5,en-US;q=0.3,en;q=0.2' -H 'Accept-Encoding: gzip, deflate' -H 'X-Requested-With: XMLHttpRequest' -H 'Referer: http://comtrade.un.org/data/' -H 'Cookie: _ga=GA1.2.2137246786.1419954195; ASPSESSIONIDAACRDDSB=HGLJBMEDNOAGEKOAKDFCLCBC; _gat=1; _gali=preview'
+
+		$parameters = [
+			'max'  => 5000,
+			'type' => 'C',
+			'freq' => 'A', //frecuancia anual
+			'px'   => 'HS',
+			'rg'   => '1,2', //impo y expo
+			'ps'   => implode(',', $rangeYear),
+			'r'    => $id_pais_origen . ',' . $colombiaIdComtrade,
+			'p'    => $id_pais_destino,
+			'cc'   => $id_subpartida,
+		];
+
+		$url = $baseUrl . '?' . http_build_query($parameters);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		$result = json_decode(curl_exec($ch), true);
+
+		if (empty($result['dataset'])) {
+			$result = [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found_comtrade')
+			];
+			return $result;
+		}
+
+		$arrDataColImp = [];
+		$arrDataColExp = [];
+		$arrDataImp    = [];
+		$arrDataExp    = [];
+		$arrData       = [];
+		$columnValue   = 'TradeValue';
+
+		foreach ($result['dataset'] as $key => $row) {
+			//var_dump($row['rgCode'], $row['rtCode'], $colombiaIdComtrade);
+			if ($row['rgCode'] == 1) {
+				
+				if ($row['rtCode'] == $colombiaIdComtrade) {
+					$arrDataColImp[] = [
+						'id'         => $row['yr'],
+						'periodo'    => $row['period'],
+						'valor_impo' => $row[$columnValue],
+					];
+				} else {
+					$arrDataImp[] = [
+						'id'         => $row['yr'],
+						'periodo'    => $row['period'],
+						'valor_impo' => $row[$columnValue],
+					];
+				}
+				
+			} elseif ($row['rgCode'] == 2) {
+				
+				if ($row['rtCode'] == $colombiaIdComtrade) {
+					$arrDataColExp[] = [
+						'id'         => $row['yr'],
+						'periodo'    => $row['period'],
+						'valor_expo' => $row[$columnValue],
+					];
+				} else {
+					$arrDataExp[] = [
+						'id'         => $row['yr'],
+						'periodo'    => $row['period'],
+						'valor_expo' => $row[$columnValue],
+					];
+				}
+			}
+		}
+
+		foreach ($arrDataImp as $key => $rowImpo) {
+			$rowExpo = Helpers::findKeyInArrayMulti(
+				$arrDataExp,
+				'periodo',
+				$rowImpo['periodo']
+			);
+			$rowImpoCol = Helpers::findKeyInArrayMulti(
+				$arrDataColImp,
+				'periodo',
+				$rowImpo['periodo']
+			);
+			$rowExpoCol = Helpers::findKeyInArrayMulti(
+				$arrDataColExp,
+				'periodo',
+				$rowImpo['periodo']
+			);
+
+			$totalExpo    = ($rowExpo    !== false) ? $rowExpo['valor_expo']    : 0 ;
+			$totalImpoCol = ($rowImpoCol !== false) ? $rowImpoCol['valor_impo'] : 0 ;
+			$totalExpoCol = ($rowExpoCol !== false) ? $rowExpoCol['valor_expo'] : 0 ;
+
+			$rate = ($totalExpoCol == 0) ? 0 : (($totalExpo - $rowImpo['valor_impo']) / $totalExpoCol) ;
+
+			$arrData[] = [
+				'id'             => $rowImpo['id'],
+				'periodo'        => $rowImpo['periodo'],
+				'valor_impo'     => $rowImpo['valor_impo'],
+				'valor_expo'     => $totalExpo,
+				'valor_expo_col' => $totalExpoCol,
+				'valor_impo_col' => $totalImpoCol,
+				'IEI'  => ($rate * 100)
+			];
+
+		}
+
+		if (count($arrData) == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		usort($arrData, Helpers::arraySortByValue('periodo'));
+
+		$arrSeries = [
+			'IEI' => Lang::get('indicador.columns_title.IEI')
+		];
+
+		$columnChart = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			COLUMNAS
+		);
+
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			'total'           => count($arrData),
+			'columnChartData' => $columnChart,
+			//'areaChartData'   => $areaChart,
+		];
+
+		return $result;
+	}
+
+	public function executeComtradePuestoColombiaProveedor()
+	{
+		$year   = $this->year;
+		$period = $this->period;
+		$arrFiltersValues = $this->arrFiltersValues;
+		
+		$id_pais_origen  = $arrFiltersValues['id_pais_origen'];
+		$id_subpartida   = $arrFiltersValues['id_subpartida'];
+
+		if ($period != 12) {
+			$freq = 'M';
+		} else {
+			$freq = 'A';
+		}
+
+		if (
+			empty($year) ||
+			empty($period) ||
+			empty($id_pais_origen) ||
+			empty($id_subpartida)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+		
+		$baseUrl = Helpers::arrayGet($this->linesConfig, 'urlApiComtrade');
+		$colombiaIdComtrade = Helpers::arrayGet($this->linesConfig, 'colombiaIdComtrade');
+
+		$parameters = [
+			'max'  => 5000,
+			'type' => 'C',
+			'freq' => 'A', //frecuancia anual
+			'px'   => 'HS',
+			'rg'   => '1', //impo
+			'ps'   => $year,
+			'r'    => $id_pais_origen,
+			'p'    => 'all',
+			'cc'   => $id_subpartida,
+		];
+
+		$url = $baseUrl . '?' . http_build_query($parameters);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		$result = json_decode(curl_exec($ch), true);
+
+		if (empty($result['dataset'])) {
+			$result = [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found_comtrade')
+			];
+			return $result;
+		}
+
+		$rangePeriods   = Helpers::getPeriodRange($period);
+		$arrDataExp     = [];
+		$arrData        = [];
+		$columnValue    = 'TradeValue';
+		$totalExpo      = [];
+		$oldPeriod      = '';
+		$countCountries = 0;
+		$totalReg       = count($result['dataset']);
+		
+		foreach ($result['dataset'] as $key => $row) {
+			$period    = $row['period'];
+			$oldPeriod = (empty($oldPeriod)) ? $period : $oldPeriod ;
+			if ($row['ptCode'] == 0) {//datos acumulados de todo el mundo
+				$totalExpo[$period]['value'] = $row[$columnValue];
+			} else {
+				
+				if ($oldPeriod != $period || $key == ($totalReg - 1) ) {
+					$totalExpo[$oldPeriod]['count'] = $countCountries;
+					//$arrDataExp[$period]            = [];
+					$countCountries                 = 0;
+					$oldPeriod                      = $period;
+				}
+				$countCountries += 1;
+				$arrDataExp[$period][] = [
+					'id'         => $row['yr'],
+					'periodo'    => $row['period'],
+					'pais'       => $row['ptTitle'],
+					'valor_expo' => $row[$columnValue],
+				];
+			}
+			
+		}
+
+		var_dump($totalExpo, $arrDataExp);
+		exit();
+
+		foreach ($arrDataExp as $period => $rowExpo) {
+			$period = $rowExpo['periodo'];
+			if (!empty($totalExpo[$period])) {
+				$rate = $rowExpo['valor_expo'] / $totalExpo[$period];
+
+				$arrData[] = [
+					'id'             => $rowExpo['id'],
+					'periodo'        => $rowExpo['periodo'],
+					'valor_impo'     => $rowExpo['valor_expo'],
+					'participacion'  => ($rate * 100)
+				];
+				
+			}
+			$rowExpo = Helpers::findKeyInArrayMulti(
+				$arrDataExp,
+				'periodo',
+				$rowImpo['periodo']
+			);
+			$rowImpoCol = Helpers::findKeyInArrayMulti(
+				$arrDataColImp,
+				'periodo',
+				$rowImpo['periodo']
+			);
+			$rowExpoCol = Helpers::findKeyInArrayMulti(
+				$arrDataColExp,
+				'periodo',
+				$rowImpo['periodo']
+			);
+
+			$totalExpo    = ($rowExpo    !== false) ? $rowExpo['valor_expo']    : 0 ;
+			$totalImpoCol = ($rowImpoCol !== false) ? $rowImpoCol['valor_impo'] : 0 ;
+			$totalExpoCol = ($rowExpoCol !== false) ? $rowExpoCol['valor_expo'] : 0 ;
+
+			$rate = ($totalExpoCol == 0) ? 0 : (($totalExpo - $rowImpo['valor_impo']) / $totalExpoCol) ;
+
+			$arrData[] = [
+				'id'             => $rowImpo['id'],
+				'periodo'        => $rowImpo['periodo'],
+				'valor_impo'     => $rowImpo['valor_impo'],
+				'valor_expo'     => $totalExpo,
+				'valor_expo_col' => $totalExpoCol,
+				'valor_impo_col' => $totalImpoCol,
+				'IEI'  => ($rate * 100)
+			];
+
+		}
+
+		if (count($arrData) == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		usort($arrData, Helpers::arraySortByValue('periodo'));
+
+		$arrSeries = [
+			'IEI' => Lang::get('indicador.columns_title.IEI')
 		];
 
 		$columnChart = Helpers::jsonChart(

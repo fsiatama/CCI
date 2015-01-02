@@ -479,6 +479,13 @@ class IndicadorRepo extends BaseRepo {
 			$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.'.$row['indicador_tipo_indicador_id']);
 			$arrFiltersName   = Helpers::arrayGet($lines, 'filters.'.$row['indicador_tipo_indicador_id']);
 
+			if (empty($arrExecuteConfig)) {
+				return [
+					'success' => false,
+					'error'   => 'There is no configuration for this method'
+				];
+			}
+
 			$repoFileName   = PATH_MODELS.'Repositories/'.$arrExecuteConfig['repoClassName'].'.php';
 			$repoClassName  = $arrExecuteConfig['repoClassName'];
 			$repoMethodName = 'execute' . $arrExecuteConfig['methodName'];

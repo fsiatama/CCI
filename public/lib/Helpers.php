@@ -20,6 +20,13 @@ class Helpers
 		return date('Y-m-d');
 	}
 
+	public static function arraySortByValue($key)
+	{
+		return function ($a, $b) use ($key) {
+			return strnatcmp($a[$key], $b[$key]);
+		};
+	}
+
 	public static function arrayGet($array, $key)
 	{
 		if (is_null($key)) return $array;
@@ -349,6 +356,11 @@ class Helpers
 	{
 		$periodRange = [];
 		switch ($period) {
+			case 12:
+				$periodRange = [
+					1 => ['1']
+				];
+			break;
 			case 6:
 				$periodRange = [
 					1 => ['1','2','3','4','5','6'],

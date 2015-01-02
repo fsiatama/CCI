@@ -746,11 +746,17 @@ return [
 				'required'   => true,
 				'multivalue' => true,
 			],[
-				'field'      => 'country_id',
-				'field_expo' => 'country_id',
-				'field_impo' => 'country_id',
+				'field'      => 'id_pais_origen',
+				'field_expo' => 'id_pais_origen',
+				'field_impo' => 'id_pais_origen',
 				'required'   => true,
-				'multivalue' => true,
+				'multivalue' => false,
+			],[
+				'field'      => 'id_pais_destino',
+				'field_expo' => 'id_pais_destino',
+				'field_impo' => 'id_pais_destino',
+				'required'   => false,
+				'multivalue' => false,
 			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
@@ -763,6 +769,21 @@ return [
 				'field_impo'    => 'anio',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
+			]
+		],
+		'23' => [
+			[
+				'field'      => 'id_subpartida',
+				'field_expo' => 'id_subpartida',
+				'field_impo' => 'id_subpartida',
+				'required'   => true,
+				'multivalue' => true,
+			],[
+				'field'      => 'id_pais_origen',
+				'field_expo' => 'id_pais_origen',
+				'field_impo' => 'id_pais_origen',
+				'required'   => true,
+				'multivalue' => false,
 			]
 		],
 	],
@@ -788,6 +809,8 @@ return [
 		'19' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'CoeficienteAperturaExpo'],
 		'20' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'RelacionCrecimientoExpoAgroNoTradicionalExpoAgro'],
 		'21' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ConsumoAparente'],
+		'22' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ComtradePenetracionMercado'],
+		'23' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ComtradePuestoColombiaProveedor'],
 	],
 	'yearsAvailable' => ['2005','2006','2007','2008','2009','2010', '2011', '2012', '2013', '2014'],
 	'periods' => [
@@ -810,4 +833,5 @@ return [
 	'sectorIdMiningSector' => 1,
 	'ConcentrationExportableSupply' => 80,
 	'urlApiComtrade' => 'http://comtrade.un.org/api/get?',
+	'colombiaIdComtrade' => 170,
 ];

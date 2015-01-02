@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "subpartida"; //$_GET["tabla"];
+$nombre_tabla = "comtrade_country"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -258,8 +258,34 @@ $contenido .= "
 		return \$result;
 	}
 
-}	
+	public function listAll(\$params)
+	{
+		extract(\$params);
+		\$start = ( isset(\$start) ) ? \$start : 0;
+		\$limit = ( isset(\$limit) ) ? \$limit : MAXREGEXCEL;
+		\$page  = ( \$start==0 ) ? 1 : ( \$start/\$limit )+1;
 
+		if (!empty(\$valuesqry) && \$valuesqry) {
+			\$query = explode('|',\$query);
+";
+foreach($result as $key => $campos){
+	$contenido .= "			\$this->model->set".ucfirst($campos)."(implode('\", \"', \$query));\r\n";
+}
+$contenido .= "
+			return \$this->modelAdo->inSearch(\$this->model);
+		}
+		else {
+";
+foreach($result as $key => $campos){
+	$contenido .= "			\$this->model->set".ucfirst($campos)."(\$query);\r\n";
+}
+$contenido .= "
+			return \$this->modelAdo->paginate(\$this->model, 'LIKE', \$limit, \$page);
+		}
+
+	}
+
+}
 ";
 
 $archivo = $nombre_tabla . "/" .ucfirst($nombre_tabla)."Repo.php";
