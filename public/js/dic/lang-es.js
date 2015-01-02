@@ -42,6 +42,9 @@ Ext.ux.lang.reports = {
 	,growthRateAgricultureNonTraditional: 'Indice de crecimiento Agro. No Tradi'
 	,growthRate: 'Indice de crecimiento'
 	,billionsCop: 'Miles de millones de pesos'
+	,countryOriginHelp: 'País que reporta el intercambio (importaciones o exportaciones)'
+	,countryPartnerHelp: 'País socio comercial'
+	,hsCode: 'Clasificación mundial de la mercancía a 6 dígitos'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');

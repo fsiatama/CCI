@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "mercado"; //$_GET["tabla"];
+$nombre_tabla = "subpartida"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -490,7 +490,7 @@ foreach($result2 as $key => $campos){
 	$column_xtype = "";
 	$column_format = "";
 	
-	if($campos["DATA_TYPE"] == "varchar"  || $campos["DATA_TYPE"] == "text"){
+	if($campos["DATA_TYPE"] == "varchar"  || $campos["DATA_TYPE"] == "text" || $campos["DATA_TYPE"] == "chart"){
 		$tipo = "string";
 		$alinear = "left";
 		$xtype   = "textfield";
