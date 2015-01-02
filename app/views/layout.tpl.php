@@ -11,8 +11,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="google" content="notranslate" />
 
-		<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-		<link rel="stylesheet" href="/css/main.css">
+		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/main.css">
 		<script src="<?= URL_RAIZ; ?>js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 	</head>
     <body>
