@@ -61,9 +61,9 @@ $htmlDescription .= '</ol>';
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo_col'); ?>', dataIndex:'valor_expo_col' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.comtrade_columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.comtrade_columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.comtrade_columns_title.valor_expo_col'); ?>', dataIndex:'valor_expo_col' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.IEI'); ?>', dataIndex:'IEI','renderer':rateFormat},
 		]
 		,defaults: {

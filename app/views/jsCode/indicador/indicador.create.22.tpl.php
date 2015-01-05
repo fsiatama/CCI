@@ -85,7 +85,7 @@
 	var comboPaisOrigen = new Combo({
 		id:module+'comboPaisOrigen'
 		,singleMode:true
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
+		,fieldLabel:'<?= Lang::get('indicador.comtrade_columns_title.pais_origen'); ?>'
 		,name:'id_pais_origen[]'
 		,store:storePaisOrigen
 		,displayField:'country'
@@ -98,7 +98,7 @@
 	var comboPaisDestino = new Combo({
 		id:module+'comboPaisDestino'
 		,singleMode:true
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>'
+		,fieldLabel:'<?= Lang::get('indicador.comtrade_columns_title.pais_destino'); ?>'
 		,name:'id_pais_destino[]'
 		,store:storePaisDestino
 		,displayField:'country'

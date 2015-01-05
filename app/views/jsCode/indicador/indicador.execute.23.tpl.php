@@ -67,7 +67,7 @@ $htmlDescription .= '</ol>';
 		columns:[
 			{header:'<?= Lang::get('indicador.reports.position'); ?>', dataIndex:'position', align:'left'},
 			{header:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>', dataIndex:'pais', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.comtrade_columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat, align:'right'},
 			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat, align:'right'},
 		]
 		,defaults: {

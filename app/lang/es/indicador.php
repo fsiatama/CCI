@@ -1,7 +1,12 @@
 <?php
 return [
 	'comtrade_columns_title' => [
-		'TradeValue' => 'Valor (US$)'
+		'TradeValue'     => 'Valor (US$)',
+		'valor_impo'     => 'Valor Impo (US$)',
+		'valor_expo'     => 'Valor Expo (US$)',
+		'valor_expo_col' => 'Valor Expo Colombia (US$)',
+		'pais_origen'    => 'País Origen Comtrade',
+		'pais_destino'   => 'País Destino Comtrade',
 	],
 	'columns_title' => [
 		'indicador_nombre'        => 'Nombre',
