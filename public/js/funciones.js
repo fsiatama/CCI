@@ -8,6 +8,7 @@ Ext.onReady(function(){
 	Ext.ux.bodyMask = new Ext.LoadMask(Ext.getBody(), {msg: Ext.ux.lang.messages.please_wait});
 	
 	document.oncontextmenu = function(){return false;}
+	Ext.Ajax.timeout = 120000;
 	
 	Ext.apply(Ext.form.VTypes, {
 		togetherField:function(val, field) {
