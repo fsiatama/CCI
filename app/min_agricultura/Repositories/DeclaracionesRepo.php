@@ -2959,64 +2959,43 @@ class DeclaracionesRepo extends BaseRepo {
 					$oldPeriod                      = $period;
 				}
 				$countCountries += 1;
-				$arrDataExp[$period][] = [
+				$arrDataExp/*[$period]*/[] = [
 					'id'         => $row['yr'],
 					'periodo'    => $row['period'],
 					'pais'       => $row['ptTitle'],
+					'id_pais'    => $row['ptCode'],
 					'valor_expo' => $row[$columnValue],
 				];
 			}
 			
 		}
 
-		var_dump($totalExpo, $arrDataExp);
-		exit();
+		usort($arrDataExp, Helpers::arraySortByValue('valor_expo', true));
+		$arrChartData = [];
+		$othersValue  = 0;
 
-		foreach ($arrDataExp as $period => $rowExpo) {
-			$period = $rowExpo['periodo'];
-			if (!empty($totalExpo[$period])) {
-				$rate = $rowExpo['valor_expo'] / $totalExpo[$period];
+		foreach ($arrDataExp as $key => $rowExpo) {
+			$period = $row['period'];
+			//foreach ($arrExpo as $key => $rowExpo) {
+				if (!empty($totalExpo[$period])) {
+					if ($colombiaIdComtrade == $rowExpo['id_pais']) {
+						$arrChartData[] = [
+							'pais' => $rowExpo['pais'],
+							'valor_expo' => $rowExpo['valor_expo']
+						];
+					} else {
+						$othersValue += $rowExpo['valor_expo'];
+					}
+					$rate = $rowExpo['valor_expo'] / $totalExpo[$period]['value'];
 
-				$arrData[] = [
-					'id'             => $rowExpo['id'],
-					'periodo'        => $rowExpo['periodo'],
-					'valor_impo'     => $rowExpo['valor_expo'],
-					'participacion'  => ($rate * 100)
-				];
-				
-			}
-			$rowExpo = Helpers::findKeyInArrayMulti(
-				$arrDataExp,
-				'periodo',
-				$rowImpo['periodo']
-			);
-			$rowImpoCol = Helpers::findKeyInArrayMulti(
-				$arrDataColImp,
-				'periodo',
-				$rowImpo['periodo']
-			);
-			$rowExpoCol = Helpers::findKeyInArrayMulti(
-				$arrDataColExp,
-				'periodo',
-				$rowImpo['periodo']
-			);
-
-			$totalExpo    = ($rowExpo    !== false) ? $rowExpo['valor_expo']    : 0 ;
-			$totalImpoCol = ($rowImpoCol !== false) ? $rowImpoCol['valor_impo'] : 0 ;
-			$totalExpoCol = ($rowExpoCol !== false) ? $rowExpoCol['valor_expo'] : 0 ;
-
-			$rate = ($totalExpoCol == 0) ? 0 : (($totalExpo - $rowImpo['valor_impo']) / $totalExpoCol) ;
-
-			$arrData[] = [
-				'id'             => $rowImpo['id'],
-				'periodo'        => $rowImpo['periodo'],
-				'valor_impo'     => $rowImpo['valor_impo'],
-				'valor_expo'     => $totalExpo,
-				'valor_expo_col' => $totalExpoCol,
-				'valor_impo_col' => $totalImpoCol,
-				'IEI'  => ($rate * 100)
-			];
-
+					$arrData[] = array_merge(
+						$rowExpo, [
+						'position' => ($key + 1) . ' de ' . ($totalExpo[$period]['count'] + 1),
+						'participacion' => ($rate * 100)
+						]
+					);
+				}
+			//}
 		}
 
 		if (count($arrData) == 0) {
@@ -3026,25 +3005,35 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 
-		usort($arrData, Helpers::arraySortByValue('periodo'));
-
-		$arrSeries = [
-			'IEI' => Lang::get('indicador.columns_title.IEI')
+		$arrChartData[] = [
+			'pais'   => Lang::get('indicador.reports.others'),
+			'valor_expo' => $othersValue
 		];
 
-		$columnChart = Helpers::jsonChart(
-			$arrData,
-			'periodo',
+		$arrSeries = [
+			'valor_expo' => Lang::get('indicador.comtrade_columns_title.TradeValue')
+		];
+
+		$pieChart = Helpers::jsonChart(
+			$arrChartData,
+			'pais',
 			$arrSeries,
-			COLUMNAS
+			PIE
 		);
 
+		/*$columnChart = Helpers::jsonChart(
+			$arrChartData,
+			'pais',
+			$arrSeries,
+			COLUMNAS
+		);*/
+
 		$result = [
-			'success'         => true,
-			'data'            => $arrData,
-			'total'           => count($arrData),
-			'columnChartData' => $columnChart,
-			//'areaChartData'   => $areaChart,
+			'success'           => true,
+			'data'              => $arrData,
+			'total'             => count($arrData),
+			//'columnChartData' => $columnChart,
+			'pieChartData'      => $pieChart,
 		];
 
 		return $result;

@@ -61,27 +61,27 @@ class Tipo_indicadorRepo extends BaseRepo {
 			empty($tipo_indicador_abrev) ||
 			empty($tipo_indicador_activador) ||
 			empty($tipo_indicador_calculo) ||
-			empty($tipo_indicador_definicion)
+			empty($tipo_indicador_definicion) ||
+			empty($tipo_indicador_html)
 		) {
-			$result = array(
+			$result = [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
-			);
+			];
 			return $result;
 		}
-			$this->model->setTipo_indicador_id($tipo_indicador_id);
-			$this->model->setTipo_indicador_nombre($tipo_indicador_nombre);
-			$this->model->setTipo_indicador_abrev($tipo_indicador_abrev);
-			$this->model->setTipo_indicador_activador($tipo_indicador_activador);
-			$this->model->setTipo_indicador_calculo($tipo_indicador_calculo);
-			$this->model->setTipo_indicador_definicion($tipo_indicador_definicion);
-		
+		$this->model->setTipo_indicador_id($tipo_indicador_id);
+		$this->model->setTipo_indicador_nombre($tipo_indicador_nombre);
+		$this->model->setTipo_indicador_abrev($tipo_indicador_abrev);
+		$this->model->setTipo_indicador_activador($tipo_indicador_activador);
+		$this->model->setTipo_indicador_calculo($tipo_indicador_calculo);
+		$this->model->setTipo_indicador_definicion($tipo_indicador_definicion);
+		$this->model->setTipo_indicador_html($tipo_indicador_html);
 
 		if ($action == 'create') {
+		} elseif ($action == 'modify') {
 		}
-		elseif ($action == 'modify') {
-		}
-		$result = array('success' => true);
+		$result = ['success' => true];
 		return $result;
 	}
 

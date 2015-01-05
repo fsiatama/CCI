@@ -54,6 +54,7 @@ return [
 		'national'      => 'Nacional',
 		'regional'      => 'Regional',
 		'departmental'  => 'Departamental',
+		'position'      => 'Posición', //sinonimo de puesto o lugar
     ],
     'months' => [
 		'1'  => 'Enero',

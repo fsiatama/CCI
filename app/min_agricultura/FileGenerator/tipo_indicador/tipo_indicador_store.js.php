@@ -15,13 +15,14 @@ var storeTipo_indicador = new Ext.data.JsonStore({
 		{name:'tipo_indicador_abrev', type:'string'},
 		{name:'tipo_indicador_activador', type:'string'},
 		{name:'tipo_indicador_calculo', type:'string'},
-		{name:'tipo_indicador_definicion', type:'string'}
+		{name:'tipo_indicador_definicion', type:'string'},
+		{name:'tipo_indicador_html', type:'string'}
 	]
 });
 var comboTipo_indicador = new Ext.form.ComboBox({
 	hiddenName:'tipo_indicador'
 	,id:module+'comboTipo_indicador'
-	,fieldLabel:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_definicion'); ?>'
+	,fieldLabel:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_html'); ?>'
 	,store:storeTipo_indicador
 	,valueField:'tipo_indicador_id'
 	,displayField:'tipo_indicador_name'
@@ -29,6 +30,7 @@ var comboTipo_indicador = new Ext.form.ComboBox({
 	,forceSelection:true
 	,triggerAction:'all'
 	,selectOnFocus:true
+	,allowBlank:false
 	,listeners:{
 		select: {
 			fn: function(combo,reg){
@@ -44,7 +46,8 @@ var cmTipo_indicador = new Ext.grid.ColumnModel({
 		{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_abrev'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_abrev'},
 		{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_activador'},
 		{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_calculo'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_calculo'},
-		{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_definicion'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_definicion'}
+		{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_definicion'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_definicion'},
+		{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_html'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_html'}
 	]
 	,defaults:{
 		sortable:true
@@ -88,7 +91,8 @@ var formTipo_indicador = new Ext.FormPanel({
 			{name:'tipo_indicador_abrev', mapping:'tipo_indicador_abrev', type:'string'},
 			{name:'tipo_indicador_activador', mapping:'tipo_indicador_activador', type:'string'},
 			{name:'tipo_indicador_calculo', mapping:'tipo_indicador_calculo', type:'string'},
-			{name:'tipo_indicador_definicion', mapping:'tipo_indicador_definicion', type:'string'}
+			{name:'tipo_indicador_definicion', mapping:'tipo_indicador_definicion', type:'string'},
+			{name:'tipo_indicador_html', mapping:'tipo_indicador_html', type:'string'}
 		]
 	})
 	,items:[{
@@ -155,6 +159,15 @@ var formTipo_indicador = new Ext.FormPanel({
 				,name:'tipo_indicador_definicion'
 				,fieldLabel:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_definicion'); ?>'
 				,id:module+'tipo_indicador_definicion'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'tipo_indicador_html'
+				,fieldLabel:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_html'); ?>'
+				,id:module+'tipo_indicador_html'
 				,allowBlank:false
 			}]
 		}]

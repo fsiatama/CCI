@@ -7,6 +7,7 @@ class Tipo_indicador {
 	private $tipo_indicador_activador;
 	private $tipo_indicador_calculo;
 	private $tipo_indicador_definicion;
+	private $tipo_indicador_html;
 
 	public function setTipo_indicador_id($tipo_indicador_id){
 		$this->tipo_indicador_id = $tipo_indicador_id;
@@ -59,6 +60,14 @@ class Tipo_indicador {
 
 	public function getTipo_indicador_definicion(){
 		return $this->tipo_indicador_definicion;
+	}
+
+	public function setTipo_indicador_html($tipo_indicador_html){
+		$this->tipo_indicador_html = $tipo_indicador_html;
+	}
+
+	public function getTipo_indicador_html(){
+		return $this->tipo_indicador_html;
 	}
 
 }

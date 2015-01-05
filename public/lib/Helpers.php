@@ -20,10 +20,11 @@ class Helpers
 		return date('Y-m-d');
 	}
 
-	public static function arraySortByValue($key)
+	public static function arraySortByValue($key, $desc = false)
 	{
-		return function ($a, $b) use ($key) {
-			return strnatcmp($a[$key], $b[$key]);
+		return function ($a, $b) use ($key, $desc) {
+			$operator = ($desc) ? -1 : 1 ;
+			return $operator * strnatcmp($a[$key], $b[$key]);
 		};
 	}
 

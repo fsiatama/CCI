@@ -25,7 +25,7 @@ $htmlDescription .= '</ol>';
 		,root:'data'
 		,id:module+'storeIndicador'
 		,autoDestroy:true
-		,sortInfo:{field:'id',direction:'ASC'}
+		,sortInfo:{field:'valor_expo',direction:'DESC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
@@ -33,11 +33,10 @@ $htmlDescription .= '</ol>';
 		}
 		,fields:[
 			{name:'id', type:'float'},
-			{name:'periodo', type:'string'},
-			{name:'valor_impo', type:'float'},
+			{name:'pais', type:'string'},
+			{name:'position', type:'string'},
 			{name:'valor_expo', type:'float'},
-			{name:'valor_expo_col', type:'float'},
-			{name:'IEI', type:'float'},
+			{name:'participacion', type:'float'},
 		]
 	});
 
@@ -56,24 +55,24 @@ $htmlDescription .= '</ol>';
 		
 		disposeCharts();
 
-		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
+		//var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
+		var chart = new FusionCharts('<?= PIE; ?>', module + 'PieChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.columnChartData);
+		chart.setJSONData(store.reader.jsonData.pieChartData);
 		chart.render(module + 'ColumnChart');
 		Ext.ux.bodyMask.hide();
 
 	});
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo_col'); ?>', dataIndex:'valor_expo_col' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.IEI'); ?>', dataIndex:'IEI','renderer':rateFormat},
+			{header:'<?= Lang::get('indicador.reports.position'); ?>', dataIndex:'position', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>', dataIndex:'pais', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat, align:'right'},
 		]
 		,defaults: {
 			sortable: true
-			,align: 'right'
+			//align: 'right'
 		}
 	});
 
@@ -103,7 +102,7 @@ $htmlDescription .= '</ol>';
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
-	var defaultYear = <?= end($yearsAvailable); ?>;
+	var defaultYear = <?= end($yearsAvailable); ?> - 1;
 	
 	/******************************************************************************************************************************************************************************/
 
@@ -211,8 +210,8 @@ $htmlDescription .= '</ol>';
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-		if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
+		if(FusionCharts(module + 'PieChartId')){
+			FusionCharts(module + 'PieChartId').dispose();
 		}
 	}
 

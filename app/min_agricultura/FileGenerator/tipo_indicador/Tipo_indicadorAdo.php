@@ -24,6 +24,7 @@ class Tipo_indicadorAdo extends BaseAdo {
 		$tipo_indicador_activador = $tipo_indicador->getTipo_indicador_activador();
 		$tipo_indicador_calculo = $tipo_indicador->getTipo_indicador_calculo();
 		$tipo_indicador_definicion = $tipo_indicador->getTipo_indicador_definicion();
+		$tipo_indicador_html = $tipo_indicador->getTipo_indicador_html();
 
 		$this->data = compact(
 			'tipo_indicador_id',
@@ -31,7 +32,8 @@ class Tipo_indicadorAdo extends BaseAdo {
 			'tipo_indicador_abrev',
 			'tipo_indicador_activador',
 			'tipo_indicador_calculo',
-			'tipo_indicador_definicion'
+			'tipo_indicador_definicion',
+			'tipo_indicador_html'
 		);
 	}
 
@@ -48,7 +50,8 @@ class Tipo_indicadorAdo extends BaseAdo {
 				tipo_indicador_abrev,
 				tipo_indicador_activador,
 				tipo_indicador_calculo,
-				tipo_indicador_definicion
+				tipo_indicador_definicion,
+				tipo_indicador_html
 			)
 			VALUES (
 				"'.$this->data['tipo_indicador_id'].'",
@@ -56,7 +59,8 @@ class Tipo_indicadorAdo extends BaseAdo {
 				"'.$this->data['tipo_indicador_abrev'].'",
 				"'.$this->data['tipo_indicador_activador'].'",
 				"'.$this->data['tipo_indicador_calculo'].'",
-				"'.$this->data['tipo_indicador_definicion'].'"
+				"'.$this->data['tipo_indicador_definicion'].'",
+				"'.$this->data['tipo_indicador_html'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -67,7 +71,7 @@ class Tipo_indicadorAdo extends BaseAdo {
 
 	public function buildSelect()
 	{
-		$filter = array();
+		$filter = [];
 		$operator = $this->getOperator();
 		$joinOperator = ' AND ';
 		foreach($this->data as $key => $data){
@@ -91,7 +95,8 @@ class Tipo_indicadorAdo extends BaseAdo {
 			 tipo_indicador_abrev,
 			 tipo_indicador_activador,
 			 tipo_indicador_calculo,
-			 tipo_indicador_definicion
+			 tipo_indicador_definicion,
+			 tipo_indicador_html
 			FROM tipo_indicador
 		';
 		if(!empty($filter)){

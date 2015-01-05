@@ -155,4 +155,12 @@ class Inflector {
 	    return $string;
 	}
 
+	public static function compress($string)
+	{
+		$string = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $string);
+		/* remove tabs, spaces, newlines, etc. */
+		$string = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $string);
+		return $string;
+	}
+
 }

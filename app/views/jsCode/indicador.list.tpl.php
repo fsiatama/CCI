@@ -17,6 +17,7 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
   'tipo_indicador_definicion' => string 'Se define como indicador para establecer el crecimiento o decrecimiento del la balanza comercial antes y después de la firma de un TLC o en cualquier periodo de tiempo.' (length=169)
   'action' => string 'list' (length=4)
 */
+$tipo_indicador_html = Inflector::compress($tipo_indicador_html);
 ?>
 /*<script>*/
 (function(){
@@ -273,7 +274,24 @@ Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mi
 				xtype:'panel'
 				,id:module+'initialPanel'
 				,border:false
-				,items:[]
+				,autoScroll: false
+				,layout: 'fit'
+				,items:[{
+					border:false
+					,xtype:'panel'
+					,autoWidth:true
+					,autoScroll:true
+					,border: false
+					,baseCls:'bootstrap-styles'
+					,layout:'column'
+					,items: [{
+						style:{padding:'0px'}
+						,columnWidth:1
+						,border: false
+						//,layout:'fit'
+						,html: '<?= $tipo_indicador_html; ?>'
+					}]
+				}]
 			}
 			Ext.getCmp(module+'lpIndicador').add(initialPanel);
 			Ext.getCmp(module+'lpIndicador').doLayout();

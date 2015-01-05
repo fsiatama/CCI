@@ -16,6 +16,7 @@ if(isset($accion)){
 			$tipo_indicador->setTipo_indicador_activador($tipo_indicador_activador);
 			$tipo_indicador->setTipo_indicador_calculo($tipo_indicador_calculo);
 			$tipo_indicador->setTipo_indicador_definicion($tipo_indicador_definicion);
+			$tipo_indicador->setTipo_indicador_html($tipo_indicador_html);
 			$rs_tipo_indicador = $tipo_indicadorAdo->actualizar($tipo_indicador);
 			if($rs_tipo_indicador !== true){
 				$success = false;
@@ -53,6 +54,7 @@ if(isset($accion)){
 			$tipo_indicador->setTipo_indicador_activador($tipo_indicador_activador);
 			$tipo_indicador->setTipo_indicador_calculo($tipo_indicador_calculo);
 			$tipo_indicador->setTipo_indicador_definicion($tipo_indicador_definicion);
+			$tipo_indicador->setTipo_indicador_html($tipo_indicador_html);
 			$rs_tipo_indicador = $tipo_indicadorAdo->insertar($tipo_indicador);
 			if($rs_tipo_indicador["success"] !== true){
 				$respuesta = array(
@@ -78,6 +80,7 @@ if(isset($accion)){
 			$tipo_indicador->setTipo_indicador_activador($tipo_indicador_activador);
 			$tipo_indicador->setTipo_indicador_calculo($tipo_indicador_calculo);
 			$tipo_indicador->setTipo_indicador_definicion($tipo_indicador_definicion);
+			$tipo_indicador->setTipo_indicador_html($tipo_indicador_html);
 			$rs_tipo_indicador = $tipo_indicadorAdo->lista($tipo_indicador);
 			if(!is_array($rs_tipo_indicador)){
 				$respuesta = array(
