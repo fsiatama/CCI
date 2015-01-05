@@ -19,7 +19,7 @@
 		<!--[if lt IE 7]>
 			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 		<![endif]-->
-    	<nav class="navbar navbar-default navbar-static-top">
+    	<!-- <nav class="navbar navbar-default navbar-static-top">
           <div class="container">
             <div class="navbar-header">
               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -53,9 +53,9 @@
                 <li class="active"><a href="./">Static top <span class="sr-only">(current)</span></a></li>
                 <li><a href="../navbar-fixed-top/">Fixed top</a></li>
               </ul>
-            </div><!--/.nav-collapse -->
+            </div>
           </div>
-        </nav>
+        </nav> -->
 
 		<div class="container">
 			<?= $tpl_content; ?>
