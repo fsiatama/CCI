@@ -84,7 +84,7 @@ CREATE TABLE `audit` (
   `audit_uinsert` int(10) unsigned NOT NULL,
   `audit_finsert` datetime NOT NULL,
   PRIMARY KEY (`audit_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=192 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `category_menu` */
 
@@ -106,6 +106,16 @@ CREATE TABLE `ciiu` (
   `ciiu` varchar(100) CHARACTER SET latin1 NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_ciiu`),
   UNIQUE KEY `ciiu` (`ciiu`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+/*Table structure for table `comtrade_country` */
+
+DROP TABLE IF EXISTS `comtrade_country`;
+
+CREATE TABLE `comtrade_country` (
+  `id_country` int(10) unsigned NOT NULL,
+  `country` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_country`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `correlativa` */
@@ -246,7 +256,7 @@ CREATE TABLE `indicador` (
   `indicador_finsert` datetime NOT NULL,
   `indicador_fupdate` datetime NOT NULL,
   PRIMARY KEY (`indicador_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=87 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `menu` */
 
@@ -302,7 +312,7 @@ CREATE TABLE `permissions` (
   `permissions_export` enum('0','1') NOT NULL,
   PRIMARY KEY (`permissions_id`),
   UNIQUE KEY `permissions_profile_id` (`permissions_profile_id`,`permissions_menu_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `pib` */
 
@@ -400,6 +410,20 @@ CREATE TABLE `session` (
   PRIMARY KEY (`session_user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+/*Table structure for table `subpartida` */
+
+DROP TABLE IF EXISTS `subpartida`;
+
+CREATE TABLE `subpartida` (
+  `id_subpartida` char(6) CHARACTER SET latin1 NOT NULL,
+  `subpartida` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `id_capitulo` char(2) NOT NULL,
+  `id_partida` char(4) NOT NULL,
+  PRIMARY KEY (`id_subpartida`),
+  KEY `id_capitulo` (`id_capitulo`),
+  KEY `id_partida` (`id_partida`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 /*Table structure for table `tipo_contingente` */
 
 DROP TABLE IF EXISTS `tipo_contingente`;
@@ -424,8 +448,9 @@ CREATE TABLE `tipo_indicador` (
   `tipo_indicador_activador` enum('precio','volumen') NOT NULL,
   `tipo_indicador_calculo` text NOT NULL,
   `tipo_indicador_definicion` text NOT NULL,
+  `tipo_indicador_html` text NOT NULL,
   PRIMARY KEY (`tipo_indicador_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `user` */
 
@@ -443,7 +468,7 @@ CREATE TABLE `user` (
   `user_uupdate` int(10) unsigned NOT NULL,
   `user_fupdate` datetime NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
