@@ -13,7 +13,8 @@
 		,fields:[
 			{name:'acuerdo_id', type:'float'},
 			{name:'acuerdo_nombre', type:'string'},
-			{name:'acuerdo_descripcion', type:'string'}
+			{name:'acuerdo_descripcion', type:'string'},
+			{name:'acuerdo_fvigente', type:'string'}
 		]
 	});
 	
@@ -44,6 +45,7 @@
 		columns:[
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_nombre'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_nombre'},
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_descripcion'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_descripcion'},
+			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_fvigente'},
 			gridAcuerdoAction
 		]
 		,defaults:{

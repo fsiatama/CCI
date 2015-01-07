@@ -19,6 +19,11 @@ class View extends Response {
 		return $this->template;
 	}
 
+	public function getTemplateFileName()
+	{
+		return PATH_APP.'views/' . $this->getTemplate() . '.tpl.php';
+	}
+
 	/**
 	 * @return array
 	 */
@@ -29,15 +34,25 @@ class View extends Response {
 
 	public function execute()
 	{
-		$template = $this->getTemplate();
-		$vars = $this->getVars();
+		$template         = $this->getTemplate();
+		$templateFileName = $this->getTemplateFileName();
+		$vars             = $this->getVars();
 
-		call_user_func(function () use ($template, $vars) {
+		if ( ! file_exists($templateFileName))
+		{
+			$return = [
+				'success' => false,
+				'error'   => 'Vista no existe '. $template
+			];
+			exit(json_encode($return));
+		}
+
+		call_user_func(function () use ($templateFileName, $vars) {
 			extract($vars);
 
 			ob_start();
 
-			require PATH_APP."views/$template.tpl.php";
+			require $templateFileName;
 
 			if (!$is_template) {
 				$tpl_content = ob_get_clean();
