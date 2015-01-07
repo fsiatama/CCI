@@ -11,11 +11,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="google" content="notranslate" />
 
-        <link rel="stylesheet" href="css/bootstrap.css">
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="/css/normalize.css" type="text/css"/>
+        <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
+        <link rel="stylesheet" href="/css/bootstrap-theme.min.css" type="text/css">
 
-        <link rel="stylesheet" href="css/main.css">
-        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <link rel="stylesheet" href="/css/main.css">
+        <script src="/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -31,7 +32,7 @@
 
         <!-- Fixed navbar -->
         <div class="navbar navbar-default navbar-fixed-top">
-            <div class="container-fluid">
+            <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                         <span class="sr-only">Toggle navigation</span>
@@ -128,9 +129,9 @@
             </div>
         </div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
-        <script src="js/vendor/bootstrap.min.js"></script>
-        <script src="js/plugins.js"></script>
-        <script src="js/main.js"></script>		
+        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+        <script src="/js/vendor/bootstrap.min.js"></script>
+        <script src="/js/plugins.js"></script>
+        <script src="/js/main.js"></script>		
     </body>
 </html>
