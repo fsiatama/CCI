@@ -26,10 +26,10 @@
 		,autoWidth:false
 		,actions:[{
 			iconCls:'silk-delete'
-			,tooltip: Ext.ux.lang.buttons.delete_tt
+			,qtip: Ext.ux.lang.buttons.delete_tt
 		},{
 			 iconCls: 'silk-page-edit'
-			,tooltip: Ext.ux.lang.buttons.modify_tt
+			,qtip: Ext.ux.lang.buttons.modify_tt
 		}]
 		,callbacks:{
 			'silk-delete':function(grid, record, action, row, col) {
@@ -58,7 +58,7 @@
 		items:[{
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
-			,handler: function(){				
+			,handler: function(){
 				var data = {
 					id:'add_' + module
 					,iconCls:'silk-add'

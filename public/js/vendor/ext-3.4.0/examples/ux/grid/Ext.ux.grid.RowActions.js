@@ -413,6 +413,7 @@ Ext.extend(Ext.ux.grid.RowActions, Ext.util.Observable, {
 				,style:a.style ? a.style : ''
 			};
 			acts.push(o);
+			//console.log(o);
 
 		}, this); // eo actions loop
 

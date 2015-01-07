@@ -35,7 +35,8 @@
 		,autoWidth:false
 		,actions:[{
 			iconCls:'silk-chart-bar-link'
-			,tooltip: Ext.ux.lang.buttons.generate_tt
+			,qtip: Ext.ux.lang.buttons.generate_tt
+			,align:'left'
 		}]
 		,callbacks:{
 			'silk-chart-bar-link':function(grid, record, action, row, col) {

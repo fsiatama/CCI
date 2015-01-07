@@ -23,6 +23,36 @@ class AcuerdoController {
 		return $result;
     }
 
+    public function createAction($urlParams, $postParams)
+    {
+        $result = $this->userRepo->validateMenu('create', $postParams);
+
+        if ($result['success']) {
+            $result = $this->acuerdoRepo->create($postParams);
+        }
+        return $result;
+    }
+
+    public function modifyAction($urlParams, $postParams)
+    {
+        $result = $this->userRepo->validateMenu('modify', $postParams);
+
+        if ($result['success']) {
+            $result = $this->acuerdoRepo->modify($postParams);
+        }
+        return $result;
+    }
+
+    public function deleteAction($urlParams, $postParams)
+    {
+        $result = $this->userRepo->validateMenu('delete', $postParams);
+
+        if ($result['success']) {
+            $result = $this->acuerdoRepo->delete($postParams);
+        }
+        return $result;
+    }
+
     public function jscodeAction($urlParams, $postParams)
     {
     	$action = array_shift($urlParams);

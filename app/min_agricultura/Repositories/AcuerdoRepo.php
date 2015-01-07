@@ -55,18 +55,14 @@ class AcuerdoRepo extends BaseRepo {
 			}
 		}
 
+		$acuerdo_mercado_id = (empty($acuerdo_mercado_id) || !is_array($acuerdo_mercado_id)) ? [] : $acuerdo_mercado_id ;
+		$acuerdo_id_pais    = (empty($acuerdo_id_pais) || !is_array($acuerdo_id_pais)) ? [] : $acuerdo_id_pais ;
+
 		if (
-			empty($acuerdo_id) ||
 			empty($acuerdo_nombre) ||
 			empty($acuerdo_descripcion) ||
-			empty($acuerdo_intercambio) ||
 			empty($acuerdo_fvigente) ||
-			empty($acuerdo_uinsert) ||
-			empty($acuerdo_finsert) ||
-			empty($acuerdo_uupdate) ||
-			empty($acuerdo_fupdate) ||
-			empty($acuerdo_mercado_id) ||
-			empty($acuerdo_id_pais)
+			(empty($acuerdo_mercado_id) && empty($acuerdo_id_pais))
 		) {
 			$result = [
 				'success' => false,
@@ -74,13 +70,14 @@ class AcuerdoRepo extends BaseRepo {
 			];
 			return $result;
 		}
+
 		$this->model->setAcuerdo_id($acuerdo_id);
 		$this->model->setAcuerdo_nombre($acuerdo_nombre);
 		$this->model->setAcuerdo_descripcion($acuerdo_descripcion);
-		$this->model->setAcuerdo_intercambio($acuerdo_intercambio);
+		$this->model->setAcuerdo_intercambio('impo');
 		$this->model->setAcuerdo_fvigente($acuerdo_fvigente);
-		$this->model->setAcuerdo_mercado_id($acuerdo_mercado_id);
-		$this->model->setAcuerdo_id_pais($acuerdo_id_pais);
+		$this->model->setAcuerdo_mercado_id(implode(',', $acuerdo_mercado_id));
+		$this->model->setAcuerdo_id_pais(implode(',', $acuerdo_id_pais));
 
 		if ($action == 'create') {
 			$this->model->setAcuerdo_uinsert($_SESSION['user_id']);

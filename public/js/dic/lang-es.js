@@ -45,6 +45,7 @@ Ext.ux.lang.reports = {
 	,countryOriginHelp: 'País que reporta el intercambio importaciones o exportaciones (Nombre de paises en Ingles)'
 	,countryPartnerHelp: 'País socio comercial (Nombre de paises en Ingles)'
 	,hsCode: 'Clasificación mundial de la mercancía a 6 dígitos'
+	,detail: 'Detalle'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');
@@ -104,6 +105,11 @@ Ext.ux.lang.folder = {
 	,rename: 'Cambiar nombre'
 	,really_want: 'Realmente desea'
 	,filter: 'Filtrar'
+}
+
+Ext.ns('Ext.ux', 'Ext.ux.lang.form');
+Ext.ux.lang.form = {
+	dateFieldHelp: 'Formato de fecha AAAA-mm-dd'
 }
 
 /*
