@@ -56,20 +56,30 @@
 		items:[{
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
-			,handler: function(){				
-				var data = {
-					id:'add_' + module
-					,iconCls:'silk-add'
-					,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
-					,url:'mercado/jscode/create'
-					,params:{
-						id:'<?= $id; ?>'
-						,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.add
-						,module: 'add_' + module
-						,parent: module
-					}
-				};
-				Ext.getCmp('oeste').addTab(this,this,data);
+			,handler: function(){
+				if(Ext.getCmp('tab-edit_'+module)){
+					Ext.Msg.show({
+						 title:Ext.ux.lang.messages.warning
+						,msg:Ext.ux.lang.error.close_tab
+						,buttons: Ext.Msg.OK
+						,icon: Ext.Msg.WARNING
+					});
+				}
+				else{
+					var data = {
+						id:'add_' + module
+						,iconCls:'silk-add'
+						,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
+						,url:'mercado/jscode/create'
+						,params:{
+							id:'<?= $id; ?>'
+							,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.add
+							,module: 'add_' + module
+							,parent: module
+						}
+					};
+					Ext.getCmp('oeste').addTab(this,this,data);
+				}
 			}
 		}]
 	});
@@ -112,6 +122,9 @@
 		]
 	});
 	
+	/*elimiar cualquier estado de la grilla guardado con anterioridad */
+	Ext.state.Manager.clear(gridMercado.getItemId());
+
 	return gridMercado;	
 	/*********************************************** Start functions***********************************************/
 	

@@ -22,7 +22,7 @@ class Acuerdo {
 	}
 
 	public function setAcuerdo_nombre($acuerdo_nombre){
-		$this->acuerdo_nombre = $acuerdo_nombre;
+		$this->acuerdo_nombre = Inflector::cleanInputString($acuerdo_nombre);
 	}
 
 	public function getAcuerdo_nombre(){
@@ -30,7 +30,7 @@ class Acuerdo {
 	}
 
 	public function setAcuerdo_descripcion($acuerdo_descripcion){
-		$this->acuerdo_descripcion = $acuerdo_descripcion;
+		$this->acuerdo_descripcion = Inflector::cleanInputString($acuerdo_descripcion);
 	}
 
 	public function getAcuerdo_descripcion(){

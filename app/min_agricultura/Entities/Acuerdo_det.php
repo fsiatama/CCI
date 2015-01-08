@@ -35,7 +35,7 @@ class Acuerdo_det {
 	}
 
 	public function setAcuerdo_det_productos_desc($acuerdo_det_productos_desc){
-		$this->acuerdo_det_productos_desc = $acuerdo_det_productos_desc;
+		$this->acuerdo_det_productos_desc = Inflector::cleanInputString($acuerdo_det_productos_desc);
 	}
 
 	public function getAcuerdo_det_productos_desc(){
@@ -43,7 +43,7 @@ class Acuerdo_det {
 	}
 
 	public function setAcuerdo_det_administracion($acuerdo_det_administracion){
-		$this->acuerdo_det_administracion = $acuerdo_det_administracion;
+		$this->acuerdo_det_administracion = Inflector::cleanInputString($acuerdo_det_administracion);
 	}
 
 	public function getAcuerdo_det_administracion(){
@@ -51,7 +51,7 @@ class Acuerdo_det {
 	}
 
 	public function setAcuerdo_det_administrador($acuerdo_det_administrador){
-		$this->acuerdo_det_administrador = $acuerdo_det_administrador;
+		$this->acuerdo_det_administrador = Inflector::cleanInputString($acuerdo_det_administrador);
 	}
 
 	public function getAcuerdo_det_administrador(){

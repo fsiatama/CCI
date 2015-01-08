@@ -11,8 +11,8 @@
  * is referenced (event argument, callback argument), the iconCls of clicked icon is used.
  * In other words, action identifier === iconCls.
  *
- * @author    Ing. Jozef Sakáloš
- * @copyright (c) 2008, by Ing. Jozef Sakáloš
+ * @author    Ing. Jozef SakÃ¡loÅ¡
+ * @copyright (c) 2008, by Ing. Jozef SakÃ¡loÅ¡
  * @date      22. March 2008
  * @version   1.0
  * @revision  $Id: Ext.ux.grid.RowActions.js 747 2009-09-03 23:30:52Z jozo $
@@ -255,23 +255,23 @@ Ext.extend(Ext.ux.grid.RowActions, Ext.util.Observable, {
 	 * @private
 	 */
 	,tplGroup:
-		 '<tpl for="actions">'
-		+'<div class="ux-grow-action-item<tpl if="\'right\'===align"> ux-action-right</tpl> '
-		+'{cls}" style="{style}" qtip="{qtip}">{text}</div>'
-		+'</tpl>'
-
+         '<tpl for="actions">'
+        +'<div class="ux-grow-action-item<tpl if="\'right\'===align"> ux-action-right</tpl> '
+        +'{cls}" style="{style}" ext:qtip="{qtip}">{text}</div>'
+        +'</tpl>'
 	/**
 	 * @cfg {String} tplRow Template for row actions
 	 * @private
 	 */
-	,tplRow:
-		 '<div class="ux-row-action">'
-		+'<tpl for="actions">'
-		+'<div class="ux-row-action-item {cls} <tpl if="text">'
-		+'ux-row-action-text</tpl>" style="{hide}{style}" qtip="{qtip}">'
-		+'<tpl if="text"><span qtip="{qtip}">{text}</span></tpl></div>'
-		+'</tpl>'
-		+'</div>'
+
+    ,tplRow:
+         '<div class="ux-row-action">'
+        +'<tpl for="actions">'
+        +'<div class="ux-row-action-item {cls} <tpl if="text">'
+        +'ux-row-action-text</tpl>" style="{hide}{style}" ext:qtip="{qtip}">'
+        +'<tpl if="text"><span ext:qtip="{qtip}">{text}</span></tpl></div>'
+        +'</tpl>'
+        +'</div>'
 
 	/**
 	 * @cfg {String} hideMode How to hide hidden icons. Valid values are: 'visibility' and 'display' 
@@ -413,7 +413,6 @@ Ext.extend(Ext.ux.grid.RowActions, Ext.util.Observable, {
 				,style:a.style ? a.style : ''
 			};
 			acts.push(o);
-			//console.log(o);
 
 		}, this); // eo actions loop
 

@@ -101,8 +101,10 @@ class Acuerdo_detAdo extends BaseAdo {
 			 acuerdo_det_administracion,
 			 acuerdo_det_administrador,
 			 acuerdo_det_nperiodos,
-			 acuerdo_det_acuerdo_id
+			 acuerdo_det_acuerdo_id,
+			 acuerdo_nombre
 			FROM acuerdo_det
+			LEFT JOIN acuerdo ON acuerdo_det_acuerdo_id = acuerdo_id
 		';
 		if(!empty($filter)){
 			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';

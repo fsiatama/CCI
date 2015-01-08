@@ -1,7 +1,10 @@
+<?php
+$acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
+?>
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
-	var module = '<?= $module; ?>';
+	var module = '<?= $module."_".$acuerdo_id; ?>';
 	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
 	
 	var storeAcuerdo_det = new Ext.data.JsonStore({
@@ -25,6 +28,8 @@
 		]
 	});
 
+	storeAcuerdo_det.load({params:{start:0, limit:numberRecords}});
+
 	gridAcuerdo_detAction = new Ext.ux.grid.RowActions({
 		header: Ext.ux.lang.grid.options
 		,keepSelection:true
@@ -45,14 +50,19 @@
 			}
 		}
 	});
+	gridAcuerdo_detExpander = new Ext.grid.RowExpander({
+		tpl: new Ext.Template(
+			 '<br><p style="margin:0 0 4px 8px"><b><?= Lang::get('acuerdo_det.columns_title.acuerdo_det_administracion'); ?>:</b> {acuerdo_det_administracion}</p>'
+			 ,'<p style="margin:0 0 4px 8px"><b><?= Lang::get('acuerdo_det.columns_title.acuerdo_det_administrador'); ?>:</b> {acuerdo_det_administrador}</p>'
+		)
+	});
 	var cmAcuerdo_det = new Ext.grid.ColumnModel({
 		columns:[
-			{xtype:'numbercolumn', header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_arancel_base'); ?>', align:'right', hidden:false, dataIndex:'acuerdo_det_arancel_base'},
+			gridAcuerdo_detExpander,
+			{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_arancel_base'); ?>', align:'right', hidden:false, dataIndex:'acuerdo_det_arancel_base','renderer':rateFormat},
 			{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_productos'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_det_productos'},
 			{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_productos_desc'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_det_productos_desc'},
-			{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_administracion'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_det_administracion'},
-			{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_administrador'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_det_administrador'},
-			{xtype:'numbercolumn', header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_nperiodos'); ?>', align:'right', hidden:false, dataIndex:'acuerdo_det_nperiodos'},
+			{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_nperiodos'); ?>', align:'right', hidden:false, dataIndex:'acuerdo_det_nperiodos'},
 			gridAcuerdo_detAction
 		]
 		,defaults:{
@@ -66,19 +76,30 @@
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
 			,handler: function(){
-				var data = {
-					id:'add_' + module
-					,iconCls:'silk-add'
-					,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
-					,url:'acuerdo_det/jscode/create'
-					,params:{
-						id:'<?= $id; ?>'
-						,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.add
-						,module: 'add_' + module
-						,parent: module
-					}
-				};
-				Ext.getCmp('oeste').addTab(this,this,data);
+				if(Ext.getCmp('tab-edit_'+module)){
+					Ext.Msg.show({
+						 title:Ext.ux.lang.messages.warning
+						,msg:Ext.ux.lang.error.close_tab
+						,buttons: Ext.Msg.OK
+						,icon: Ext.Msg.WARNING
+					});
+				}
+				else{
+					var data = {
+						id:'add_' + module
+						,iconCls:'silk-add'
+						,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
+						,url:'acuerdo_det/jscode/create'
+						,params:{
+							id:'<?= $id; ?>'
+							,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.add
+							,module: 'add_' + module
+							,parent: module
+							,acuerdo_det_acuerdo_id:'<?= $acuerdo_id; ?>'
+						}
+					};
+					Ext.getCmp('oeste').addTab(this,this,data);
+				}
 			}
 		}]
 	});
@@ -94,7 +115,7 @@
 		,sm: new Ext.grid.RowSelectionModel({
 			singleSelect: true
 		})
-		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeAcuerdo_det, displayInfo:true})
+		//,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeAcuerdo_det, displayInfo:true})
 		,enableColumnMove:false
 		,enableColumnResize:false
 		,tbar:tbAcuerdo_det
@@ -105,6 +126,8 @@
 		,buttonAlign:'center'
 		,title:''
 		,iconCls:'icon-grid'
+		,autoHeight:true
+		,autoWidth:true
 		,plugins:[
 			new Ext.ux.grid.Search({
 				iconCls:'silk-zoom'
@@ -119,14 +142,50 @@
 				,disableIndexes:[]
 			}) 
 			,gridAcuerdo_detAction
+			,gridAcuerdo_detExpander
 		]
 	});
+
+	/*elimiar cualquier estado de la grilla guardado con anterioridad */
+	Ext.state.Manager.clear(gridAcuerdo_det.getItemId());
+
+	var panelAcuerdo_det = new Ext.Panel({
+		xtype:'panel'
+		,id:module+'panelAcuerdo_det'
+		,layout:'border'
+		,border:false
+		,bodyCssClass:'x-plain'
+		,bodyStyle:	'padding:15px;position:relative;'
+		,autoWidth:true
+		,autoScroll:true
+		,items:[{
+			region:'north'
+			,border:false
+			,bodyStyle:'padding:15px;'
+			,html: '<div class="bootstrap-styles">' +
+				'<div class="page-head">' +
+					'<h4 class="nopadding"><i class="styleColor fa fa-area-chart"></i> <?= $acuerdo_nombre; ?></h4>' +
+					'<div class="clearfix"></div><p><?= $acuerdo_descripcion; ?></p>' +
+				'</div>' +
+			'</div>'
+		},{
+			layout:'column'
+			,region:'center'
+			,border:false
+			,defaults:{columnWidth:1}
+			,bodyStyle:'padding:10px;'
+			,items:[
+				gridAcuerdo_det
+			]
+		}]
+	});
 	
-	return gridAcuerdo_det;	
+	return panelAcuerdo_det;	
 	/*********************************************** Start functions***********************************************/
 	
 	function fnEditItm(record){
-		var key = record.get('acuerdo_id');
+		var key = record.get('acuerdo_det_id');
+		var pkey = record.get('acuerdo_det_acuerdo_id');
 		if(Ext.getCmp('tab-add_'+module)){
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
@@ -146,7 +205,8 @@
 					,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
 					,module: 'edit_' + module
 					,parent: module
-					,acuerdo_id: key
+					,acuerdo_det_id: key
+					,acuerdo_det_acuerdo_id: pkey
 				}
 			};
 			Ext.getCmp('oeste').addTab(this,this,data);

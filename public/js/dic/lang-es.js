@@ -83,6 +83,8 @@ Ext.ux.lang.buttons = {
 	,edit: 'Editar'
 	,modify: 'Modificar'
 	,modify_tt: 'Modificar este registro'
+	,detail: 'Detalle'
+	,detail_tt: 'Ver el Detalle de este registro'
 	,new_btn: 'Nuevo'
 	,download: 'Descargar'
 	,set: 'Configurar'

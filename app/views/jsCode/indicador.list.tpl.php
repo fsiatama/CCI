@@ -258,6 +258,9 @@ $tipo_indicador_html = Inflector::compress($tipo_indicador_html);
 		}]
 	});
 
+	/*elimiar cualquier estado del Tree guardado con anterioridad */
+	Ext.state.Manager.clear(IndicadorTree.getItemId());
+
 	return indicadorLayout;
 	/*********************************************** Start functions***********************************************/
 

@@ -30,6 +30,9 @@
 		},{
 			 iconCls: 'silk-page-edit'
 			,qtip: Ext.ux.lang.buttons.modify_tt
+		},{
+			 iconCls: 'silk-application-view-detail'
+			,qtip: Ext.ux.lang.buttons.detail_tt
 		}]
 		,callbacks:{
 			'silk-delete':function(grid, record, action, row, col) {
@@ -38,11 +41,20 @@
 			,'silk-page-edit':function(grid, record, action, row, col) {
 				fnEditItm(record);
 			}
+			,'silk-application-view-detail':function(grid, record, action, row, col) {
+				fnOpenDetail(record);
+			}
 		}
+	});
+	gridAcuerdoExpander = new Ext.grid.RowExpander({
+		tpl: new Ext.Template(
+			 '<br><p style="margin:0 0 4px 8px"><b><?= Lang::get('acuerdo.columns_title.acuerdo_descripcion'); ?>:</b> {acuerdo_descripcion}</p>'
+		)
 	});
 	
 	var cmAcuerdo = new Ext.grid.ColumnModel({
 		columns:[
+			gridAcuerdoExpander,
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_nombre'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_nombre'},
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_descripcion'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_descripcion'},
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_fvigente'},
@@ -59,19 +71,29 @@
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
 			,handler: function(){
-				var data = {
-					id:'add_' + module
-					,iconCls:'silk-add'
-					,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
-					,url:'acuerdo/jscode/create'
-					,params:{
-						id:'<?= $id; ?>'
-						,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.add
-						,module: 'add_' + module
-						,parent: module
-					}
-				};
-				Ext.getCmp('oeste').addTab(this,this,data);
+				if(Ext.getCmp('tab-edit_'+module)){
+					Ext.Msg.show({
+						title:Ext.ux.lang.messages.warning
+						,msg:Ext.ux.lang.error.close_tab
+						,buttons: Ext.Msg.OK
+						,icon: Ext.Msg.WARNING
+					});
+				}
+				else{
+					var data = {
+						id:'add_' + module
+						,iconCls:'silk-add'
+						,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.add
+						,url:'acuerdo/jscode/create'
+						,params:{
+							id:'<?= $id; ?>'
+							,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.add
+							,module: 'add_' + module
+							,parent: module
+						}
+					};
+					Ext.getCmp('oeste').addTab(this,this,data);
+				}
 			}
 		}]
 	});
@@ -111,8 +133,12 @@
 				,disableIndexes:[]
 			}) 
 			,gridAcuerdoAction
+			,gridAcuerdoExpander
 		]
 	});
+
+	/*elimiar cualquier estado de la grilla guardado con anterioridad */
+	Ext.state.Manager.clear(gridAcuerdo.getItemId());
 	
 	return gridAcuerdo;	
 	/*********************************************** Start functions***********************************************/
@@ -179,6 +205,33 @@
 				});
 			};
 		});
+	}
+	function fnOpenDetail (record) {
+		var key = record.get('acuerdo_id');
+		if(Ext.getCmp('tab-detail_'+module)){
+			Ext.Msg.show({
+				 title:Ext.ux.lang.messages.warning
+				,msg:Ext.ux.lang.error.close_tab
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+		}
+		else{
+			var data = {
+				id:'detail_' + module
+				,iconCls:'silk-application-view-detail'
+				,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.detail
+				,url:'acuerdo_det/jscode'
+				,params:{
+					id:'<?= $id; ?>'
+					,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.detail
+					,module: 'detail_' + module
+					,parent: module
+					,acuerdo_id: key
+				}
+			};
+			Ext.getCmp('oeste').addTab(this,this,data);
+		}
 	}
 
 	/*********************************************** End functions***********************************************/

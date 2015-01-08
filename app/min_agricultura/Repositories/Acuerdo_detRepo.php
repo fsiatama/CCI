@@ -24,7 +24,7 @@ class Acuerdo_detRepo extends BaseRepo {
 	public function validateModify($params)
 	{
 		extract($params);
-		$result = $this->findPrimaryKey($acuerdo_det_acuerdo_id);
+		$result = $this->findPrimaryKey($acuerdo_det_id);
 
 		if (!$result['success']) {
 			$result = [
@@ -42,7 +42,7 @@ class Acuerdo_detRepo extends BaseRepo {
 		extract($params);
 
 		if ($action == 'modify') {
-			$result = $this->findPrimaryKey($acuerdo_det_acuerdo_id);
+			$result = $this->findPrimaryKey($acuerdo_det_id);
 
 			if (!$result['success']) {
 				$result = [
@@ -55,9 +55,9 @@ class Acuerdo_detRepo extends BaseRepo {
 			}
 		}
 
+		$acuerdo_det_productos = (empty($acuerdo_det_productos) || !is_array($acuerdo_det_productos)) ? [] : $acuerdo_det_productos ;
+
 		if (
-			empty($acuerdo_det_id) ||
-			empty($acuerdo_det_arancel_base) ||
 			empty($acuerdo_det_productos) ||
 			empty($acuerdo_det_productos_desc) ||
 			empty($acuerdo_det_administracion) ||
@@ -73,7 +73,7 @@ class Acuerdo_detRepo extends BaseRepo {
 		}
 		$this->model->setAcuerdo_det_id($acuerdo_det_id);
 		$this->model->setAcuerdo_det_arancel_base($acuerdo_det_arancel_base);
-		$this->model->setAcuerdo_det_productos($acuerdo_det_productos);
+		$this->model->setAcuerdo_det_productos(implode(',', $acuerdo_det_productos));
 		$this->model->setAcuerdo_det_productos_desc($acuerdo_det_productos_desc);
 		$this->model->setAcuerdo_det_administracion($acuerdo_det_administracion);
 		$this->model->setAcuerdo_det_administrador($acuerdo_det_administrador);
@@ -120,6 +120,64 @@ class Acuerdo_detRepo extends BaseRepo {
 			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 		}
 
+	}
+
+	public function grid($params)
+	{
+		extract($params);
+		/**/
+		$start = ( isset($start) ) ? $start : 0;
+		$limit = ( isset($limit) ) ? $limit : 30;
+		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
+
+		if (empty($acuerdo_det_acuerdo_id)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+		$this->model->setAcuerdo_det_acuerdo_id($acuerdo_det_acuerdo_id);
+
+		if (!empty($query)) {
+			if (!empty($fullTextFields)) {
+				
+				$fullTextFields = json_decode(stripslashes($fullTextFields));
+				
+				foreach ($fullTextFields as $value) {
+					$methodName = $this->getColumnMethodName('set', $value);
+					
+					if (method_exists($this->model, $methodName)) {
+						call_user_func_array([$this->model, $methodName], compact('query'));
+					}
+				}
+			} else {
+				$this->model->setAcuerdo_det_id($query);
+				$this->model->setAcuerdo_det_arancel_base($query);
+				$this->model->setAcuerdo_det_productos($query);
+				$this->model->setAcuerdo_det_productos_desc($query);
+				$this->model->setAcuerdo_det_administracion($query);
+				$this->model->setAcuerdo_det_administrador($query);
+				$this->model->setAcuerdo_det_nperiodos($query);
+			}
+			
+		}
+
+		$this->modelAdo->setColumns([
+			'acuerdo_det_id',
+			'acuerdo_det_arancel_base',
+			'acuerdo_det_productos',
+			'acuerdo_det_productos_desc',
+			'acuerdo_det_administracion',
+			'acuerdo_det_administrador',
+			'acuerdo_det_nperiodos',
+			'acuerdo_det_acuerdo_id',
+			'acuerdo_nombre'
+		]);
+
+		$result = $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
+
+		return $result;
 	}
 
 }

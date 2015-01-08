@@ -36,7 +36,6 @@
 		,actions:[{
 			iconCls:'silk-chart-bar-link'
 			,qtip: Ext.ux.lang.buttons.generate_tt
-			,align:'left'
 		}]
 		,callbacks:{
 			'silk-chart-bar-link':function(grid, record, action, row, col) {
@@ -109,6 +108,9 @@
 			,gridTipo_indicadorExpander
 		]
 	});
+
+	/*elimiar cualquier estado de la grilla guardado con anterioridad */
+	Ext.state.Manager.clear(gridTipo_indicador.getItemId());
 	
 	return gridTipo_indicador;	
 	/*********************************************** Start functions***********************************************/
