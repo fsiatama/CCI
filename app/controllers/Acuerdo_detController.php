@@ -65,18 +65,19 @@ class Acuerdo_detController {
 		$action = array_shift($urlParams);
 		$action = (empty($action)) ? 'list' : $action;
 
-		$acuerdo_id = (!isset($acuerdo_id)) ? $acuerdo_det_acuerdo_id : $acuerdo_id ;
+		$acuerdo_id = (!isset($postParams['acuerdo_id'])) ? $postParams['acuerdo_det_acuerdo_id'] : $postParams['acuerdo_id'] ;
 
 		$result = $this->userRepo->validateMenu($action, $postParams);
 
 		if ($result['success']) {
 			
-			//verifica que exista el acuerdo y trae los datos
-			$result = $this->acuerdoRepo->validateModify(compact('acuerdo_id'));
-			if (!$result['success']) {
-				return $result;
+			//verifica que exista el acuerdo y trae los datos incluido un array con los datos de los paises del acuerdo
+			$rs = $this->acuerdoRepo->listId(compact('acuerdo_id'));
+			if (!$rs['success']) {
+				return $rs;
 			}
-			$rowAcuerdo = array_shift($result['data']);
+			$rowAcuerdo   = array_shift($rs['data']);
+			$country_data = $rs['country_data'];
 
 			if ($action == 'modify') {
 				$result = $this->acuerdo_detRepo->validateModify($postParams);
@@ -86,7 +87,7 @@ class Acuerdo_detController {
 			}
 
 			$postParams['is_template'] = true;
-			$params = array_merge($postParams, $result, $rowAcuerdo, compact('action'));
+			$params = array_merge($postParams, $result, compact('country_data'), $rowAcuerdo, compact('action'));
 
 			//el template de adicionar y editar son los mismos
 			$action = ($action == 'modify') ? 'create' : $action;

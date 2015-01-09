@@ -41,7 +41,7 @@ var comboContingente = new Ext.form.ComboBox({
 });
 var cmContingente = new Ext.grid.ColumnModel({
 	columns:[
-		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_id'); ?>', align:'right', hidden:false, dataIndex:'contingente_id'},
+		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_id'); ?>', align:'right', hidden:false, dataIndex:'pais'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_id_pais'); ?>', align:'right', hidden:false, dataIndex:'contingente_id_pais'},
 		{header:'<?= Lang::get('contingente.columns_title.contingente_acumulado_pais'); ?>', align:'left', hidden:false, dataIndex:'contingente_acumulado_pais'},
 		{header:'<?= Lang::get('contingente.columns_title.contingente_mcontingente'); ?>', align:'left', hidden:false, dataIndex:'contingente_mcontingente'},

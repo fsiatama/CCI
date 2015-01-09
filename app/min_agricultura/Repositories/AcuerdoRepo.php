@@ -1,7 +1,10 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Acuerdo.php';
-require PATH_APP.'min_agricultura/Ado/AcuerdoAdo.php';
+require PATH_MODELS.'Entities/Acuerdo.php';
+require PATH_MODELS.'Ado/AcuerdoAdo.php';
+require PATH_MODELS.'Repositories/PaisRepo.php';
+require PATH_MODELS.'Repositories/MercadoRepo.php';
+
 require_once ('BaseRepo.php');
 
 class AcuerdoRepo extends BaseRepo {
@@ -172,6 +175,52 @@ class AcuerdoRepo extends BaseRepo {
 		]);
 
 		$result = $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
+
+		return $result;
+	}
+
+	public function listId($params)
+	{
+		extract($params);
+
+		$result = $this->findPrimaryKey($acuerdo_id);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$row = array_shift($result['data']);
+
+		$paisRepo = new PaisRepo;
+		$params   = [
+		 'valuesqry' => true
+		];
+
+		if (empty($row['acuerdo_mercado_id'])) {
+			$params['query'] = $row['acuerdo_id_pais'];
+			
+		} else {
+			$mercadoRepo = new MercadoRepo;
+			$result      = $mercadoRepo->findPrimaryKey($row['acuerdo_mercado_id']);
+
+			if (!$result['success']) {
+				return $result;
+			}
+			$rowMercado      = array_shift($result['data']);
+			$params['query'] = str_replace(',', '|', $rowMercado['mercado_paises']);
+		}
+		
+		$result = $paisRepo->listAll($params);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$result = [
+			'success'      => true,
+			'country_data' => $result['data'],
+			'data'         => [$row]
+		];
 
 		return $result;
 	}

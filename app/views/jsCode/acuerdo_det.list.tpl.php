@@ -180,7 +180,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 		}]
 	});
 	
-	return panelAcuerdo_det;	
+	return panelAcuerdo_det;
 	/*********************************************** Start functions***********************************************/
 	
 	function fnEditItm(record){

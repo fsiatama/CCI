@@ -354,7 +354,7 @@ function isValidCountry (fieldId1, fieldId2) {
 	}
 	var cnt1 = field1.getValue().length;
 	var cnt2 = field2.getValue().length;
-	if (cnt1 == 0 && cnt2 == 0) {
+	if ((cnt1 == 0 && cnt2 == 0) || (cnt1 > 0 && cnt2 > 0)) {
 		return false;
 	}
 	return true;

@@ -169,8 +169,8 @@ else {
 
 $contenido = "<?php
 
-require PATH_APP.'".$base."/Entities/".ucfirst($nombre_tabla).".php';
-require PATH_APP.'".$base."/Ado/".ucfirst($nombre_tabla)."Ado.php';
+require PATH_MODELS.'Entities/".ucfirst($nombre_tabla).".php';
+require PATH_MODELS.'Ado/".ucfirst($nombre_tabla)."Ado.php';
 require_once ('BaseRepo.php');
 
 class ".ucfirst($nombre_tabla)."Repo extends BaseRepo {
@@ -304,8 +304,8 @@ else {
 
 $contenido = "<?php
 
-require PATH_APP.'min_agricultura/Repositories/".ucfirst($nombre_tabla)."Repo.php';
-require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
+require PATH_MODELS.'Repositories/".ucfirst($nombre_tabla)."Repo.php';
+require PATH_MODELS.'Repositories/UserRepo.php';
 
 class ".ucfirst($nombre_tabla)."Controller {
 	
