@@ -14,7 +14,7 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 */
 class AuthController {
 	
-	protected $userRepo;
+	private $userRepo;
 
 	public function __construct()
 	{

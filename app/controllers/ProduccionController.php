@@ -5,7 +5,8 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class ProduccionController {
 	
-	protected $produccionRepo;
+	private $produccionRepo;
+	private $userRepo;
 
 	public function __construct()
 	{

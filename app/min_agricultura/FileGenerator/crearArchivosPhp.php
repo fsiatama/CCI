@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "salvaguardia_det"; //$_GET["tabla"];
+$nombre_tabla = "contingente"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -310,6 +310,7 @@ require PATH_MODELS.'Repositories/UserRepo.php';
 class ".ucfirst($nombre_tabla)."Controller {
 	
 	protected \$".($nombre_tabla)."Repo;
+	protected \$userRepo;
 
 	public function __construct()
 	{

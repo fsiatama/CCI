@@ -28,6 +28,8 @@
 .silk-arrow-redo { background-image: url(fam/arrow_redo.png) !important; background-repeat: no-repeat; }
 .silk-arrow-right-medium { background-image: url(fam/other/iconRightMedium.gif) !important; background-repeat: no-repeat; }
 .silk-asterisk-orange { background-image: url(fam/asterisk_orange.png) !important; background-repeat: no-repeat; }
+.silk-basket { background-image: url(fam/basket.png) !important; background-repeat: no-repeat; }
+.silk-basket_go { background-image: url(fam/basket_go.png) !important; background-repeat: no-repeat; }
 .silk-bell { background-image: url(fam/bell.png) !important; background-repeat: no-repeat; }
 .silk-book { background-image: url(fam/book.png) !important; background-repeat: no-repeat; }
 .silk-book-open { background-image: url(fam/book_open.png) !important; background-repeat: no-repeat; }
@@ -75,6 +77,7 @@
 .silk-calendar-week { background-image: url(fam/calendar_view_week.png) !important; background-repeat: no-repeat; }
 .silk-calendar-month { background-image: url(fam/calendar_view_month.png) !important; background-repeat: no-repeat; }
 .silk-calendar-edit { background-image: url(fam/calendar_edit.png) !important; background-repeat: no-repeat; }
+.silk-cart { background-image: url(fam/cart.png) !important; background-repeat: no-repeat; }
 .silk-clock-red { background-image: url(fam/clock_red.png) !important; background-repeat: no-repeat; }
 .silk-chart-line{ background-image: url(fam/chart_line.png) !important; background-repeat: no-repeat; }
 .silk-chart-pie-link{ background-image: url(fam/chart_pie_link.png) !important; background-repeat: no-repeat; }

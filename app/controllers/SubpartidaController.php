@@ -4,7 +4,7 @@ require PATH_APP.'min_agricultura/Repositories/SubpartidaRepo.php';
 
 class SubpartidaController {
 	
-	protected $subpartidaRepo;
+	private $subpartidaRepo;
 
 	public function __construct()
 	{

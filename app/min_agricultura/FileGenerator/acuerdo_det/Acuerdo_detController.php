@@ -1,7 +1,7 @@
 <?php
 
-require PATH_APP.'min_agricultura/Repositories/Acuerdo_detRepo.php';
-require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
+require PATH_MODELS.'Repositories/Acuerdo_detRepo.php';
+require PATH_MODELS.'Repositories/UserRepo.php';
 
 class Acuerdo_detController {
 	

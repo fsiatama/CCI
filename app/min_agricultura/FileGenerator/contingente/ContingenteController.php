@@ -1,7 +1,7 @@
 <?php
 
-require PATH_APP.'min_agricultura/Repositories/ContingenteRepo.php';
-require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
+require PATH_MODELS.'Repositories/ContingenteRepo.php';
+require PATH_MODELS.'Repositories/UserRepo.php';
 
 class ContingenteController {
 	

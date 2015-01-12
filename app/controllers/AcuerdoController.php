@@ -5,12 +5,12 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class AcuerdoController {
 	
-	protected $acuerdoRepo;
+	private $acuerdoRepo;
 
 	public function __construct()
 	{
 		$this->acuerdoRepo = new AcuerdoRepo;
-		$this->userRepo        = new UserRepo;
+		$this->userRepo    = new UserRepo;
 	}
 
 	public function listAction($urlParams, $postParams)

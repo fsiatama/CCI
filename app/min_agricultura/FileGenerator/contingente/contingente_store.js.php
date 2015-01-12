@@ -12,7 +12,6 @@ var storeContingente = new Ext.data.JsonStore({
 	,fields:[
 		{name:'contingente_id', type:'float'},
 		{name:'contingente_id_pais', type:'float'},
-		{name:'contingente_acumulado_pais', type:'string'},
 		{name:'contingente_mcontingente', type:'string'},
 		{name:'contingente_desc', type:'string'},
 		{name:'contingente_acuerdo_det_id', type:'float'},
@@ -41,9 +40,8 @@ var comboContingente = new Ext.form.ComboBox({
 });
 var cmContingente = new Ext.grid.ColumnModel({
 	columns:[
-		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_id'); ?>', align:'right', hidden:false, dataIndex:'pais'},
+		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_id'); ?>', align:'right', hidden:false, dataIndex:'contingente_id'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_id_pais'); ?>', align:'right', hidden:false, dataIndex:'contingente_id_pais'},
-		{header:'<?= Lang::get('contingente.columns_title.contingente_acumulado_pais'); ?>', align:'left', hidden:false, dataIndex:'contingente_acumulado_pais'},
 		{header:'<?= Lang::get('contingente.columns_title.contingente_mcontingente'); ?>', align:'left', hidden:false, dataIndex:'contingente_mcontingente'},
 		{header:'<?= Lang::get('contingente.columns_title.contingente_desc'); ?>', align:'left', hidden:false, dataIndex:'contingente_desc'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_acuerdo_det_id'); ?>', align:'right', hidden:false, dataIndex:'contingente_acuerdo_det_id'},
@@ -88,7 +86,6 @@ var formContingente = new Ext.FormPanel({
 		,fields:[
 			{name:'contingente_id', mapping:'contingente_id', type:'float'},
 			{name:'contingente_id_pais', mapping:'contingente_id_pais', type:'float'},
-			{name:'contingente_acumulado_pais', mapping:'contingente_acumulado_pais', type:'string'},
 			{name:'contingente_mcontingente', mapping:'contingente_mcontingente', type:'string'},
 			{name:'contingente_desc', mapping:'contingente_desc', type:'string'},
 			{name:'contingente_acuerdo_det_id', mapping:'contingente_acuerdo_det_id', type:'float'},
@@ -123,15 +120,6 @@ var formContingente = new Ext.FormPanel({
 				,name:'contingente_id_pais'
 				,fieldLabel:'<?= Lang::get('contingente.columns_title.contingente_id_pais'); ?>'
 				,id:module+'contingente_id_pais'
-				,allowBlank:false
-			}]
-		},{
-			defaults:{anchor:'100%'}
-			,items:[{
-				xtype:'numberfield'
-				,name:'contingente_acumulado_pais'
-				,fieldLabel:'<?= Lang::get('contingente.columns_title.contingente_acumulado_pais'); ?>'
-				,id:module+'contingente_acumulado_pais'
 				,allowBlank:false
 			}]
 		},{

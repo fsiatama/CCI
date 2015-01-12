@@ -6,7 +6,9 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class Acuerdo_detController {
 	
-	protected $acuerdo_detRepo;
+	private $acuerdo_detRepo;
+	private $acuerdoRepo;
+	private $userRepo;
 
 	public function __construct()
 	{
@@ -88,6 +90,7 @@ class Acuerdo_detController {
 
 			$postParams['is_template'] = true;
 			$params = array_merge($postParams, $result, compact('country_data'), $rowAcuerdo, compact('action'));
+			//var_dump($params);
 
 			//el template de adicionar y editar son los mismos
 			$action = ($action == 'modify') ? 'create' : $action;

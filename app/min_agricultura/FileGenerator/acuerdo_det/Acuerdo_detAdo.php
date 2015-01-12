@@ -26,6 +26,7 @@ class Acuerdo_detAdo extends BaseAdo {
 		$acuerdo_det_administrador = $acuerdo_det->getAcuerdo_det_administrador();
 		$acuerdo_det_nperiodos = $acuerdo_det->getAcuerdo_det_nperiodos();
 		$acuerdo_det_acuerdo_id = $acuerdo_det->getAcuerdo_det_acuerdo_id();
+		$acuerdo_det_contingente_acumulado_pais = $acuerdo_det->getAcuerdo_det_contingente_acumulado_pais();
 
 		$this->data = compact(
 			'acuerdo_det_id',
@@ -35,7 +36,8 @@ class Acuerdo_detAdo extends BaseAdo {
 			'acuerdo_det_administracion',
 			'acuerdo_det_administrador',
 			'acuerdo_det_nperiodos',
-			'acuerdo_det_acuerdo_id'
+			'acuerdo_det_acuerdo_id',
+			'acuerdo_det_contingente_acumulado_pais'
 		);
 	}
 
@@ -54,7 +56,8 @@ class Acuerdo_detAdo extends BaseAdo {
 				acuerdo_det_administracion,
 				acuerdo_det_administrador,
 				acuerdo_det_nperiodos,
-				acuerdo_det_acuerdo_id
+				acuerdo_det_acuerdo_id,
+				acuerdo_det_contingente_acumulado_pais
 			)
 			VALUES (
 				"'.$this->data['acuerdo_det_id'].'",
@@ -64,7 +67,8 @@ class Acuerdo_detAdo extends BaseAdo {
 				"'.$this->data['acuerdo_det_administracion'].'",
 				"'.$this->data['acuerdo_det_administrador'].'",
 				"'.$this->data['acuerdo_det_nperiodos'].'",
-				"'.$this->data['acuerdo_det_acuerdo_id'].'"
+				"'.$this->data['acuerdo_det_acuerdo_id'].'",
+				"'.$this->data['acuerdo_det_contingente_acumulado_pais'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -101,7 +105,8 @@ class Acuerdo_detAdo extends BaseAdo {
 			 acuerdo_det_administracion,
 			 acuerdo_det_administrador,
 			 acuerdo_det_nperiodos,
-			 acuerdo_det_acuerdo_id
+			 acuerdo_det_acuerdo_id,
+			 acuerdo_det_contingente_acumulado_pais
 			FROM acuerdo_det
 		';
 		if(!empty($filter)){

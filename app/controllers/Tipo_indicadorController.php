@@ -5,7 +5,7 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class Tipo_indicadorController {
 	
-	protected $tipo_indicadorRepo;
+	private $tipo_indicadorRepo;
 
 	public function __construct()
 	{

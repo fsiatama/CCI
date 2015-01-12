@@ -5,7 +5,8 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class PibController {
 	
-	protected $pibRepo;
+	private $pibRepo;
+	private $userRepo;
 
 	public function __construct()
 	{

@@ -12,7 +12,6 @@ if(isset($accion)){
 		case "act":
 			$contingente->setContingente_id($contingente_id);
 			$contingente->setContingente_id_pais($contingente_id_pais);
-			$contingente->setContingente_acumulado_pais($contingente_acumulado_pais);
 			$contingente->setContingente_mcontingente($contingente_mcontingente);
 			$contingente->setContingente_desc($contingente_desc);
 			$contingente->setContingente_acuerdo_det_id($contingente_acuerdo_det_id);
@@ -50,7 +49,6 @@ if(isset($accion)){
 		case "crea":
 			$contingente->setContingente_id($contingente_id);
 			$contingente->setContingente_id_pais($contingente_id_pais);
-			$contingente->setContingente_acumulado_pais($contingente_acumulado_pais);
 			$contingente->setContingente_mcontingente($contingente_mcontingente);
 			$contingente->setContingente_desc($contingente_desc);
 			$contingente->setContingente_acuerdo_det_id($contingente_acuerdo_det_id);
@@ -76,7 +74,6 @@ if(isset($accion)){
 			$arr = array();
 			$contingente->setContingente_id($contingente_id);
 			$contingente->setContingente_id_pais($contingente_id_pais);
-			$contingente->setContingente_acumulado_pais($contingente_acumulado_pais);
 			$contingente->setContingente_mcontingente($contingente_mcontingente);
 			$contingente->setContingente_desc($contingente_desc);
 			$contingente->setContingente_acuerdo_det_id($contingente_acuerdo_det_id);

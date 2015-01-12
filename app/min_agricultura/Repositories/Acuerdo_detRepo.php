@@ -1,7 +1,8 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Acuerdo_det.php';
-require PATH_APP.'min_agricultura/Ado/Acuerdo_detAdo.php';
+require PATH_MODELS.'Entities/Acuerdo_det.php';
+require PATH_MODELS.'Ado/Acuerdo_detAdo.php';
+require PATH_MODELS.'Repositories/ContingenteRepo.php';
 require_once ('BaseRepo.php');
 
 class Acuerdo_detRepo extends BaseRepo {
@@ -18,7 +19,7 @@ class Acuerdo_detRepo extends BaseRepo {
 
 	public function getPrimaryKey()
 	{
-		return 'acuerdo_det_acuerdo_id';
+		return 'acuerdo_det_id';
 	}
 
 	public function validateModify($params)
@@ -41,6 +42,12 @@ class Acuerdo_detRepo extends BaseRepo {
 	{
 		extract($params);
 
+		$acuerdo_det_productos = (empty($acuerdo_det_productos) || !is_array($acuerdo_det_productos)) ? [] : $acuerdo_det_productos ;
+		$acuerdo_det_contingente_acumulado_pais = (isset($acuerdo_det_contingente_acumulado_pais)) ? $acuerdo_det_contingente_acumulado_pais : '0' ;
+		$acuerdo_det_contingente_acumulado_pais = ($acuerdo_det_contingente_acumulado_pais === '1') ? '1' : '0' ;
+
+		$createQuota = true;
+
 		if ($action == 'modify') {
 			$result = $this->findPrimaryKey($acuerdo_det_id);
 
@@ -53,9 +60,21 @@ class Acuerdo_detRepo extends BaseRepo {
 				];
 				return $result;
 			}
+
+			$row = array_shift($result['data']);
+
+			//si acuerdo_det_contingente_acumulado_pais es diferente debe borrar los contingentes y volverlos a crear
+			if ($acuerdo_det_contingente_acumulado_pais != $row['acuerdo_det_contingente_acumulado_pais']) {
+				$result = $this->deleteQuota();
+				$createQuota = true;
+			} else {
+				$createQuota = false;
+			}
 		}
 
-		$acuerdo_det_productos = (empty($acuerdo_det_productos) || !is_array($acuerdo_det_productos)) ? [] : $acuerdo_det_productos ;
+		//buscar el acuerdo y generar un
+
+
 
 		if (
 			empty($acuerdo_det_productos) ||
@@ -79,6 +98,7 @@ class Acuerdo_detRepo extends BaseRepo {
 		$this->model->setAcuerdo_det_administrador($acuerdo_det_administrador);
 		$this->model->setAcuerdo_det_nperiodos($acuerdo_det_nperiodos);
 		$this->model->setAcuerdo_det_acuerdo_id($acuerdo_det_acuerdo_id);
+		$this->model->setAcuerdo_det_contingente_acumulado_pais($acuerdo_det_contingente_acumulado_pais);
 
 		if ($action == 'create') {
 		} elseif ($action == 'modify') {
@@ -104,6 +124,7 @@ class Acuerdo_detRepo extends BaseRepo {
 			$this->model->setAcuerdo_det_administrador(implode('", "', $query));
 			$this->model->setAcuerdo_det_nperiodos(implode('", "', $query));
 			$this->model->setAcuerdo_det_acuerdo_id(implode('", "', $query));
+			$this->model->setAcuerdo_det_contingente_acumulado_pais(implode('", "', $query));
 
 			return $this->modelAdo->inSearch($this->model);
 		}
@@ -116,6 +137,7 @@ class Acuerdo_detRepo extends BaseRepo {
 			$this->model->setAcuerdo_det_administrador($query);
 			$this->model->setAcuerdo_det_nperiodos($query);
 			$this->model->setAcuerdo_det_acuerdo_id($query);
+			$this->model->setAcuerdo_det_contingente_acumulado_pais($query);
 
 			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 		}
@@ -159,6 +181,7 @@ class Acuerdo_detRepo extends BaseRepo {
 				$this->model->setAcuerdo_det_administracion($query);
 				$this->model->setAcuerdo_det_administrador($query);
 				$this->model->setAcuerdo_det_nperiodos($query);
+				$this->model->setAcuerdo_det_contingente_acumulado_pais($query);
 			}
 			
 		}

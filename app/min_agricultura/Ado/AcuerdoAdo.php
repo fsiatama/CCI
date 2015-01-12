@@ -116,8 +116,12 @@ class AcuerdoAdo extends BaseAdo {
 			 acuerdo_uupdate,
 			 acuerdo_fupdate,
 			 acuerdo_mercado_id,
-			 acuerdo_id_pais
-			FROM acuerdo
+			 acuerdo_id_pais,
+			 mercado_nombre,
+			 pais
+			FROM acuerdo 
+			LEFT JOIN mercado ON acuerdo_mercado_id = mercado_id
+			LEFT JOIN pais ON acuerdo_id_pais = id_pais
 		';
 		if(!empty($filter)){
 			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';

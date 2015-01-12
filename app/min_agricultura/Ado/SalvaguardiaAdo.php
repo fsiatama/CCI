@@ -11,7 +11,7 @@ class SalvaguardiaAdo extends BaseAdo {
 
 	protected function setPrimaryKey()
 	{
-		$this->primaryKey = 'salvaguardia_contingente_acuerdo_det_acuerdo_id';
+		$this->primaryKey = 'salvaguardia_id';
 	}
 
 	protected function setData()

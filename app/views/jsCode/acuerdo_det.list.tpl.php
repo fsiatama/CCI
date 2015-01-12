@@ -38,8 +38,11 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 			iconCls:'silk-delete'
 			,tooltip: Ext.ux.lang.buttons.delete_tt
 		},{
-			 iconCls: 'silk-page-edit'
+			iconCls: 'silk-page-edit'
 			,tooltip: Ext.ux.lang.buttons.modify_tt
+		},{
+			iconCls: 'silk-basket'
+			,tooltip: '<?= Lang::get('contingente.table_name'); ?>'
 		}]
 		,callbacks:{
 			'silk-delete':function(grid, record, action, row, col) {
@@ -47,6 +50,9 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 			}
 			,'silk-page-edit':function(grid, record, action, row, col) {
 				fnEditItm(record);
+			}
+			,'silk-basket':function(grid, record, action, row, col) {
+				fnOpenQuote(record);
 			}
 		}
 	});
@@ -172,9 +178,12 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 			layout:'column'
 			,region:'center'
 			,border:false
-			,defaults:{columnWidth:1}
+			,defaults:{columnWidth:1,border:false}
 			,bodyStyle:'padding:10px;'
 			,items:[
+			{
+				html:'<div class="bootstrap-styles"><h4 class="text-center"><?= Lang::get('acuerdo_det.table_name'); ?></h4></div>'
+			},
 				gridAcuerdo_det
 			]
 		}]
@@ -226,13 +235,13 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 					 url:'acuerdo_det/delete'
 					,params: {
 						id: '<?= $id; ?>'
-						,acuerdo_id: key
+						,acuerdo_det_id: key
 					}
 					,callback: function(options, success, response){
 						gridMask.hide();
 						var json = Ext.util.JSON.decode(response.responseText);
 						if (json.success){
-							gridAcuerdo.store.reload();
+							gridAcuerdo_det.store.reload();
 						}
 						else{
 							Ext.Msg.show({
@@ -247,6 +256,35 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 				});
 			};
 		});
+	}
+	function fnOpenQuote (record) {
+		var key = record.get('acuerdo_det_id');
+		var pkey = record.get('acuerdo_det_acuerdo_id');
+		if(Ext.getCmp('tab-quote_'+module)){
+			Ext.Msg.show({
+				 title:Ext.ux.lang.messages.warning
+				,msg:Ext.ux.lang.error.close_tab
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+		}
+		else{
+			var data = {
+				id:'quote_' + module
+				,iconCls:'silk-basket'
+				,titleTab:'<?= Lang::get('contingente.table_name'); ?>'
+				,url:'contingente/jscode'
+				,params:{
+					id:'<?= $id; ?>'
+					,title: '<?= Lang::get('contingente.table_name'); ?>'
+					,module: 'quote_' + module
+					,parent: module
+					,acuerdo_det_id: key
+					,acuerdo_det_acuerdo_id: pkey
+				}
+			};
+			Ext.getCmp('oeste').addTab(this,this,data);
+		}
 	}
 
 	/*********************************************** End functions***********************************************/

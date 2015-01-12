@@ -5,8 +5,8 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class CorrelativaController {
 	
-	protected $correlativaRepo;
-	protected $userRepo;
+	private $correlativaRepo;
+	private $userRepo;
 
 	public function __construct()
 	{

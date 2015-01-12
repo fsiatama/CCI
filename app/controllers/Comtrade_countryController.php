@@ -5,12 +5,13 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class Comtrade_countryController {
 	
-	protected $comtrade_countryRepo;
+	private $comtrade_countryRepo;
+	private $userRepo;
 
 	public function __construct()
 	{
 		$this->comtrade_countryRepo = new Comtrade_countryRepo;
-		$this->userRepo        = new UserRepo;
+		$this->userRepo             = new UserRepo;
 	}
 	
 	public function listAction($urlParams, $postParams)

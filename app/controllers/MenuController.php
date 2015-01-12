@@ -14,7 +14,7 @@ require PATH_APP.'min_agricultura/Repositories/PermissionsRepo.php';
 */
 class MenuController {
 	
-	protected $menuRepo;
+	private $menuRepo;
 
 	public function __construct()
 	{

@@ -6,69 +6,6 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module; ?>';
-	/*********************************************** contingente ***********************************************/
-	var arrCountries = <?= json_encode($country_data); ?>;
-
-	var storeContingente = new Ext.data.JsonStore({
-		/*url:'contingente/list'
-		,root:'data'
-		,sortInfo:{field:'contingente_id',direction:'ASC'}
-		,totalProperty:'total'
-		,baseParams:{
-			id:'<?= $id; ?>'
-			,contingente_acuerdo_det_id:'<?= $acuerdo_id; ?>'
-			,contingente_acuerdo_det_acuerdo_id:'<?= $acuerdo_det_acuerdo_id; ?>'
-		}*/
-		data:arrCountries
-		,fields:[
-			{name:'contingente_id', type:'float'},
-			{name:'contingente_id_pais', type:'float'},
-			{name:'contingente_acumulado_pais', type:'string'},
-			{name:'contingente_mcontingente', type:'string'},
-			{name:'contingente_desc', type:'string'},
-			{name:'contingente_acuerdo_det_id', type:'float'},
-			{name:'contingente_acuerdo_det_acuerdo_id', type:'float'},
-			{name:'id_pais', type:'float'},
-			{name:'pais', type:'string'},
-
-		]
-	});
-
-	var cmContingente = new Ext.grid.ColumnModel({
-		columns:[
-			{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_id_pais'); ?>', align:'right', hidden:false, dataIndex:'pais'},
-			{header:'<?= Lang::get('contingente.columns_title.contingente_acumulado_pais'); ?>', align:'left', hidden:false, dataIndex:'contingente_acumulado_pais'},
-			{header:'<?= Lang::get('contingente.columns_title.contingente_mcontingente'); ?>', align:'left', hidden:false, dataIndex:'contingente_mcontingente'},
-			{header:'<?= Lang::get('contingente.columns_title.contingente_desc'); ?>', align:'left', hidden:false, dataIndex:'contingente_desc'},
-			{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_acuerdo_det_id'); ?>', align:'right', hidden:false, dataIndex:'contingente_acuerdo_det_id'},
-			{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_acuerdo_det_acuerdo_id'); ?>', align:'right', hidden:false, dataIndex:'contingente_acuerdo_det_acuerdo_id'}
-		]
-		,defaults:{
-			sortable:true
-			,width:100
-		}
-	});
-	var tbContingente = new Ext.Toolbar();
-
-	var gridContingente = new Ext.grid.GridPanel({
-		store:storeContingente
-		,id:module+'gridContingente'
-		,colModel:cmContingente
-		,viewConfig: {
-			forceFit: true
-			,scrollOffset:2
-		}
-		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar:new Ext.PagingToolbar({pageSize:10, store:storeContingente, displayInfo:true})
-		,tbar:tbContingente
-		,loadMask:true
-		,border:false
-		,title:''
-		,iconCls:'icon-grid'
-		,plugins:[new Ext.ux.grid.Excel()]
-	});
-
-
 
 	/*********************************************** acuerdo_det Form ***********************************************/
 	var Combo = Ext.extend(Ext.ux.form.SuperBoxSelect, {
@@ -151,7 +88,8 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 				{name:'acuerdo_det_administracion', mapping:'acuerdo_det_administracion', type:'string'},
 				{name:'acuerdo_det_administrador', mapping:'acuerdo_det_administrador', type:'string'},
 				{name:'acuerdo_det_nperiodos', mapping:'acuerdo_det_nperiodos', type:'float'},
-				{name:'acuerdo_det_acuerdo_id', mapping:'acuerdo_det_acuerdo_id', type:'float'}
+				{name:'acuerdo_det_acuerdo_id', mapping:'acuerdo_det_acuerdo_id', type:'float'},
+				{name:'acuerdo_det_contingente_acumulado_pais', mapping:'acuerdo_det_contingente_acumulado_pais', type:'float'}
 			]
 		})
 		,items:[{
@@ -261,35 +199,15 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 				defaults:{anchor:'88%'}
 				,items:[{
 					xtype:'radiogroup'
-					,fieldLabel:'<?= Lang::get('contingente.columns_title.contingente_acumulado_pais'); ?>'
-					,id:module+'contingente_acumulado_pais'
+					,fieldLabel:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_contingente_acumulado_pais'); ?>'
+					,id:module+'acuerdo_det_contingente_acumulado_pais'
 					,disabled:<?= $disable_acumulado_pais; ?>
 					,allowBlank:false
 					,items: [
-						{boxLabel:'Yes', checked:true, inputValue:1, name:'contingente_acumulado_pais'},
-						{boxLabel:'No', inputValue:0, name:'contingente_acumulado_pais'}
+						{boxLabel:'Yes', inputValue:1, name:'acuerdo_det_contingente_acumulado_pais'},
+						{boxLabel:'No', checked:true, inputValue:0, name:'acuerdo_det_contingente_acumulado_pais'}
 					]
-					,listeners:{
-						'change': {
-							fn: function(radio, checked){
-								if(checked){
-									/*if(Ext.getCmp(prefijoId+'presentEmployer').getValue()){
-										var logica = (checked.inputValue == '1')?false:true;
-										Ext.getCmp(prefijoId+'trabajo_autoriza_porque').setDisabled(!logica);
-										if(!logica){
-											Ext.getCmp(prefijoId+'trabajo_autoriza_porque').setValue('');
-										}
-									}*/
-								}
-							}
-						}
-					}
-
 				}]
-			},{
-				defaults:{anchor:'88%'}
-				,columnWidth:1
-				,items:[gridContingente]
 			}]
 		}]
 		,buttons: [{

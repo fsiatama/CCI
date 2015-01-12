@@ -147,7 +147,7 @@ abstract class BaseAdo extends Connection {
 			WHERE '.$primaryKey.' = "'.$id.'"
 		';
 
-		//var_dump($sql);
+		//echo '<pre>'.$sql.'</pre>';
 		
 		$resultSet = $conn->Execute($sql);
 		$result = $this->buildResult($resultSet);

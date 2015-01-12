@@ -31,8 +31,8 @@
 			 iconCls: 'silk-page-edit'
 			,qtip: Ext.ux.lang.buttons.modify_tt
 		},{
-			 iconCls: 'silk-application-view-detail'
-			,qtip: Ext.ux.lang.buttons.detail_tt
+			 iconCls: 'silk-cart'
+			,qtip: '<?= Lang::get('acuerdo_det.table_name'); ?>'
 		}]
 		,callbacks:{
 			'silk-delete':function(grid, record, action, row, col) {
@@ -41,7 +41,7 @@
 			,'silk-page-edit':function(grid, record, action, row, col) {
 				fnEditItm(record);
 			}
-			,'silk-application-view-detail':function(grid, record, action, row, col) {
+			,'silk-cart':function(grid, record, action, row, col) {
 				fnOpenDetail(record);
 			}
 		}
@@ -219,7 +219,7 @@
 		else{
 			var data = {
 				id:'detail_' + module
-				,iconCls:'silk-application-view-detail'
+				,iconCls:'silk-cart'
 				,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.detail
 				,url:'acuerdo_det/jscode'
 				,params:{

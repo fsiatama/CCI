@@ -20,7 +20,6 @@ class ContingenteAdo extends BaseAdo {
 
 		$contingente_id = $contingente->getContingente_id();
 		$contingente_id_pais = $contingente->getContingente_id_pais();
-		$contingente_acumulado_pais = $contingente->getContingente_acumulado_pais();
 		$contingente_mcontingente = $contingente->getContingente_mcontingente();
 		$contingente_desc = $contingente->getContingente_desc();
 		$contingente_acuerdo_det_id = $contingente->getContingente_acuerdo_det_id();
@@ -29,7 +28,6 @@ class ContingenteAdo extends BaseAdo {
 		$this->data = compact(
 			'contingente_id',
 			'contingente_id_pais',
-			'contingente_acumulado_pais',
 			'contingente_mcontingente',
 			'contingente_desc',
 			'contingente_acuerdo_det_id',
@@ -47,7 +45,6 @@ class ContingenteAdo extends BaseAdo {
 			INSERT INTO contingente (
 				contingente_id,
 				contingente_id_pais,
-				contingente_acumulado_pais,
 				contingente_mcontingente,
 				contingente_desc,
 				contingente_acuerdo_det_id,
@@ -56,7 +53,6 @@ class ContingenteAdo extends BaseAdo {
 			VALUES (
 				"'.$this->data['contingente_id'].'",
 				"'.$this->data['contingente_id_pais'].'",
-				"'.$this->data['contingente_acumulado_pais'].'",
 				"'.$this->data['contingente_mcontingente'].'",
 				"'.$this->data['contingente_desc'].'",
 				"'.$this->data['contingente_acuerdo_det_id'].'",
@@ -92,7 +88,6 @@ class ContingenteAdo extends BaseAdo {
 		$sql = 'SELECT
 			 contingente_id,
 			 contingente_id_pais,
-			 contingente_acumulado_pais,
 			 contingente_mcontingente,
 			 contingente_desc,
 			 contingente_acuerdo_det_id,

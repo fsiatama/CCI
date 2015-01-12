@@ -4,7 +4,7 @@ require PATH_APP.'min_agricultura/Repositories/PosicionRepo.php';
 
 class PosicionController {
 	
-	protected $posicionRepo;
+	private $posicionRepo;
 
 	public function __construct()
 	{

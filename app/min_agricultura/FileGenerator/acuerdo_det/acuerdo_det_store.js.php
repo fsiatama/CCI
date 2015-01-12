@@ -17,13 +17,14 @@ var storeAcuerdo_det = new Ext.data.JsonStore({
 		{name:'acuerdo_det_administracion', type:'string'},
 		{name:'acuerdo_det_administrador', type:'string'},
 		{name:'acuerdo_det_nperiodos', type:'float'},
-		{name:'acuerdo_det_acuerdo_id', type:'float'}
+		{name:'acuerdo_det_acuerdo_id', type:'float'},
+		{name:'acuerdo_det_contingente_acumulado_pais', type:'string'}
 	]
 });
 var comboAcuerdo_det = new Ext.form.ComboBox({
 	hiddenName:'acuerdo_det'
 	,id:module+'comboAcuerdo_det'
-	,fieldLabel:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_acuerdo_id'); ?>'
+	,fieldLabel:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_contingente_acumulado_pais'); ?>'
 	,store:storeAcuerdo_det
 	,valueField:'acuerdo_det_acuerdo_id'
 	,displayField:'acuerdo_det_name'
@@ -49,7 +50,8 @@ var cmAcuerdo_det = new Ext.grid.ColumnModel({
 		{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_administracion'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_det_administracion'},
 		{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_administrador'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_det_administrador'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_nperiodos'); ?>', align:'right', hidden:false, dataIndex:'acuerdo_det_nperiodos'},
-		{xtype:'numbercolumn', header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_acuerdo_id'); ?>', align:'right', hidden:false, dataIndex:'acuerdo_det_acuerdo_id'}
+		{xtype:'numbercolumn', header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_acuerdo_id'); ?>', align:'right', hidden:false, dataIndex:'acuerdo_det_acuerdo_id'},
+		{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_contingente_acumulado_pais'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_det_contingente_acumulado_pais'}
 	]
 	,defaults:{
 		sortable:true
@@ -95,7 +97,8 @@ var formAcuerdo_det = new Ext.FormPanel({
 			{name:'acuerdo_det_administracion', mapping:'acuerdo_det_administracion', type:'string'},
 			{name:'acuerdo_det_administrador', mapping:'acuerdo_det_administrador', type:'string'},
 			{name:'acuerdo_det_nperiodos', mapping:'acuerdo_det_nperiodos', type:'float'},
-			{name:'acuerdo_det_acuerdo_id', mapping:'acuerdo_det_acuerdo_id', type:'float'}
+			{name:'acuerdo_det_acuerdo_id', mapping:'acuerdo_det_acuerdo_id', type:'float'},
+			{name:'acuerdo_det_contingente_acumulado_pais', mapping:'acuerdo_det_contingente_acumulado_pais', type:'string'}
 		]
 	})
 	,items:[{
@@ -180,6 +183,15 @@ var formAcuerdo_det = new Ext.FormPanel({
 				,name:'acuerdo_det_acuerdo_id'
 				,fieldLabel:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_acuerdo_id'); ?>'
 				,id:module+'acuerdo_det_acuerdo_id'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'numberfield'
+				,name:'acuerdo_det_contingente_acumulado_pais'
+				,fieldLabel:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_contingente_acumulado_pais'); ?>'
+				,id:module+'acuerdo_det_contingente_acumulado_pais'
 				,allowBlank:false
 			}]
 		}]

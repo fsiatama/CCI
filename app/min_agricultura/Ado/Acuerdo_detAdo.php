@@ -11,7 +11,7 @@ class Acuerdo_detAdo extends BaseAdo {
 
 	protected function setPrimaryKey()
 	{
-		$this->primaryKey = 'acuerdo_det_acuerdo_id';
+		$this->primaryKey = 'acuerdo_det_id';
 	}
 
 	protected function setData()
@@ -26,6 +26,7 @@ class Acuerdo_detAdo extends BaseAdo {
 		$acuerdo_det_administrador = $acuerdo_det->getAcuerdo_det_administrador();
 		$acuerdo_det_nperiodos = $acuerdo_det->getAcuerdo_det_nperiodos();
 		$acuerdo_det_acuerdo_id = $acuerdo_det->getAcuerdo_det_acuerdo_id();
+		$acuerdo_det_contingente_acumulado_pais = $acuerdo_det->getAcuerdo_det_contingente_acumulado_pais();
 
 		$this->data = compact(
 			'acuerdo_det_id',
@@ -35,7 +36,8 @@ class Acuerdo_detAdo extends BaseAdo {
 			'acuerdo_det_administracion',
 			'acuerdo_det_administrador',
 			'acuerdo_det_nperiodos',
-			'acuerdo_det_acuerdo_id'
+			'acuerdo_det_acuerdo_id',
+			'acuerdo_det_contingente_acumulado_pais'
 		);
 	}
 
@@ -54,7 +56,8 @@ class Acuerdo_detAdo extends BaseAdo {
 				acuerdo_det_administracion,
 				acuerdo_det_administrador,
 				acuerdo_det_nperiodos,
-				acuerdo_det_acuerdo_id
+				acuerdo_det_acuerdo_id,
+				acuerdo_det_contingente_acumulado_pais
 			)
 			VALUES (
 				"'.$this->data['acuerdo_det_id'].'",
@@ -64,7 +67,8 @@ class Acuerdo_detAdo extends BaseAdo {
 				"'.$this->data['acuerdo_det_administracion'].'",
 				"'.$this->data['acuerdo_det_administrador'].'",
 				"'.$this->data['acuerdo_det_nperiodos'].'",
-				"'.$this->data['acuerdo_det_acuerdo_id'].'"
+				"'.$this->data['acuerdo_det_acuerdo_id'].'",
+				"'.$this->data['acuerdo_det_contingente_acumulado_pais'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -75,20 +79,25 @@ class Acuerdo_detAdo extends BaseAdo {
 
 	public function buildSelect()
 	{
-		$filter = [];
-		$operator = $this->getOperator();
-		$joinOperator = ' AND ';
+		$filter        = [];
+		$primaryFilter = [];
+		$operator      = $this->getOperator();
+		$joinOperator  = ' AND ';
 		foreach($this->data as $key => $data){
 			if ($data <> ''){
-				if ($operator == '=') {
-					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
-				}
-				elseif ($operator == 'IN') {
-					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
-				}
-				else {
-					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
-					$joinOperator = ' OR ';
+				if ($key == 'acuerdo_det_acuerdo_id' || $key == 'acuerdo_det_id') {
+					$primaryFilter[] = $key . ' = "' . $data . '"';
+				} else {
+					if ($operator == '=') {
+						$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
+					}
+					elseif ($operator == 'IN') {
+						$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+					}
+					else {
+						$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+						$joinOperator = ' OR ';
+					}
 				}
 			}
 		}
@@ -102,13 +111,24 @@ class Acuerdo_detAdo extends BaseAdo {
 			 acuerdo_det_administrador,
 			 acuerdo_det_nperiodos,
 			 acuerdo_det_acuerdo_id,
+			 acuerdo_det_contingente_acumulado_pais,
 			 acuerdo_nombre
 			FROM acuerdo_det
 			LEFT JOIN acuerdo ON acuerdo_det_acuerdo_id = acuerdo_id
 		';
-		if(!empty($filter)){
-			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+
+		$whereAssignment = false;
+
+		if(!empty($primaryFilter)){
+			$sql            .= ' WHERE ('. implode( ' AND ', $primaryFilter ).')';
+			$whereAssignment = true;
 		}
+		if(!empty($filter)){
+			$sql .= ($whereAssignment) ? ' AND ' : ' WHERE ' ;
+			$sql .= '  ('. implode( $joinOperator, $filter ).')';
+		}
+
+		//echo '<pre>'.$sql.'</pre>';
 
 		return $sql;
 	}

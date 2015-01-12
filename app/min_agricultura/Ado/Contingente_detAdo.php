@@ -11,7 +11,7 @@ class Contingente_detAdo extends BaseAdo {
 
 	protected function setPrimaryKey()
 	{
-		$this->primaryKey = 'contingente_det_contingente_acuerdo_det_acuerdo_id';
+		$this->primaryKey = 'contingente_det_id';
 	}
 
 	protected function setData()

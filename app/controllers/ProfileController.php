@@ -4,7 +4,7 @@ require PATH_APP.'min_agricultura/Repositories/ProfileRepo.php';
 
 class ProfileController {
 	
-	protected $profileRepo;
+	private $profileRepo;
 
 	public function __construct()
 	{

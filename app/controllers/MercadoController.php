@@ -5,7 +5,8 @@ require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
 
 class MercadoController {
 	
-	protected $mercadoRepo;
+	private $mercadoRepo;
+	private $userRepo;
 
 	public function __construct()
 	{

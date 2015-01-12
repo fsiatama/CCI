@@ -3,7 +3,6 @@ class Contingente {
 
 	private $contingente_id;
 	private $contingente_id_pais;
-	private $contingente_acumulado_pais;
 	private $contingente_mcontingente;
 	private $contingente_desc;
 	private $contingente_acuerdo_det_id;
@@ -23,14 +22,6 @@ class Contingente {
 
 	public function getContingente_id_pais(){
 		return $this->contingente_id_pais;
-	}
-
-	public function setContingente_acumulado_pais($contingente_acumulado_pais){
-		$this->contingente_acumulado_pais = $contingente_acumulado_pais;
-	}
-
-	public function getContingente_acumulado_pais(){
-		return $this->contingente_acumulado_pais;
 	}
 
 	public function setContingente_mcontingente($contingente_mcontingente){

@@ -9,6 +9,7 @@ class Acuerdo_det {
 	private $acuerdo_det_administrador;
 	private $acuerdo_det_nperiodos;
 	private $acuerdo_det_acuerdo_id;
+	private $acuerdo_det_contingente_acumulado_pais;
 
 	public function setAcuerdo_det_id($acuerdo_det_id){
 		$this->acuerdo_det_id = $acuerdo_det_id;
@@ -72,6 +73,14 @@ class Acuerdo_det {
 
 	public function getAcuerdo_det_acuerdo_id(){
 		return $this->acuerdo_det_acuerdo_id;
+	}
+
+	public function setAcuerdo_det_contingente_acumulado_pais($acuerdo_det_contingente_acumulado_pais){
+		$this->acuerdo_det_contingente_acumulado_pais = $acuerdo_det_contingente_acumulado_pais;
+	}
+
+	public function getAcuerdo_det_contingente_acumulado_pais(){
+		return $this->acuerdo_det_contingente_acumulado_pais;
 	}
 
 }
