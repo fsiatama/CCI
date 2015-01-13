@@ -13,17 +13,19 @@
 | que maneje la aplicacion
 |
 */
-$connections = array(
+$connections = [
 	
 	'default' => 'min_agricultura',
 
-	'min_agricultura' => array(
+	'min_agricultura' => [
 		'driver'   => 'mysqli',
 		'host'     => '127.0.0.1',
 		'database' => 'min_agricultura',
 		'username' => 'root',
 		'password' => ''
-	)
+	]
 	
-);
+];
+
+
 

@@ -191,6 +191,9 @@ class ContingenteRepo extends BaseRepo {
 			];
 			return $result;
 		}
+		$contingente_msalvaguardia          = (empty($contingente_msalvaguardia)) ? '0' : $contingente_msalvaguardia ;
+		$contingente_salvaguardia_sobretasa = (empty($contingente_salvaguardia_sobretasa)) ? '0' : $contingente_salvaguardia_sobretasa ;
+
 		$this->model->setContingente_id_pais($contingente_id_pais);
 		$this->model->setContingente_mcontingente($contingente_mcontingente);
 		$this->model->setContingente_desc($contingente_desc);
@@ -247,7 +250,7 @@ class ContingenteRepo extends BaseRepo {
 		/**/
 		$start = ( isset($start) ) ? $start : 0;
 		$limit = ( isset($limit) ) ? $limit : 30;
-		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
+		$page  = ( $start==0 ) ? 1 : ( $start / $limit ) + 1;
 
 		if (empty($contingente_acuerdo_det_id) || empty($contingente_acuerdo_det_acuerdo_id)) {
 			$result = [

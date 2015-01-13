@@ -1,5 +1,9 @@
 <?php
 $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
+$yearIni = (int)date('Y', strtotime($acuerdo_fvigente));
+$yearFin = $yearIni + (int)$acuerdo_det_nperiodos - 1;
+$rangeYear = range($yearIni, $yearFin);
+$availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 ?>
 /*<script>*/
 (function(){
@@ -8,6 +12,109 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
 	Ext.getCmp('tab-<?= $module; ?>').on('beforeclose', function(){
 		dialogoContingente.destroy();
+		dialogoContingente_det.destroy();
+	});
+
+	/*********************************************** contingente_det grid ***********************************************/
+	var storeContingente_det = new Ext.data.JsonStore({
+		url:'contingente_det/list'
+		,pruneModifiedRecords:true
+		,root:'data'
+		,sortInfo:{field:'contingente_det_anio_ini',direction:'ASC'}
+		,totalProperty:'total'
+		,baseParams:{
+			id:'<?= $id; ?>'
+			,contingente_det_contingente_acuerdo_det_id:'<?= $acuerdo_det_id; ?>'
+			,contingente_det_contingente_acuerdo_det_acuerdo_id:'<?= $acuerdo_det_acuerdo_id; ?>'
+		}
+		,fields:[
+			{name:'contingente_det_id', type:'float'},
+			{name:'contingente_det_anio_ini', type:'string'},
+			{name:'contingente_det_anio_fin', type:'string'},
+			{name:'contingente_det_anio_fin_title', type:'string'},
+			{name:'contingente_det_peso_neto', type:'float'},
+			{name:'contingente_det_contingente_id', type:'float'},
+			{name:'contingente_det_contingente_acuerdo_det_id', type:'float'},
+			{name:'contingente_det_contingente_acuerdo_det_acuerdo_id', type:'float'}
+		]
+	});
+
+	var cmContingente_det = new Ext.grid.ColumnModel({
+		columns:[
+			new Ext.grid.RowNumberer({width:25}),
+		{
+			xtype:'numbercolumn'
+			,format: '0'
+			,header:'<?= Lang::get('contingente_det.columns_title.contingente_det_anio_ini'); ?>'
+			,dataIndex:'contingente_det_anio_ini'
+		},{
+			header:'<?= Lang::get('contingente_det.columns_title.contingente_det_anio_fin'); ?>'
+			,dataIndex:'contingente_det_anio_fin_title'
+		},{
+			xtype:'numbercolumn'
+			,header:'<?= Lang::get('contingente_det.columns_title.contingente_det_peso_neto'); ?>'
+			,dataIndex:'contingente_det_peso_neto'
+			,editor:new Ext.form.NumberField({
+				allowBlank:false
+				,minValue:1
+			}) 
+		}]
+		,defaults:{
+			sortable:false
+			,align:'right'
+			,width:100
+		}
+	});
+	var tbContingente_det = new Ext.Toolbar();
+
+	var gridContingente_det = new Ext.grid.EditorGridPanel({
+		store:storeContingente_det
+		,id:module+'gridContingente_det'
+		,colModel:cmContingente_det
+		,viewConfig: {
+			forceFit: true
+			,scrollOffset:2
+		}
+		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
+		//,bbar:new Ext.PagingToolbar({pageSize:10, store:storeContingente_det, displayInfo:true})
+		,tbar:tbContingente_det
+		,loadMask:true
+		,border:false
+		,title:''
+		,autoWidth:true
+		,height:350
+		,autoScroll:true
+		,enableColumnHide:false
+		,enableColumnMove:false
+		,enableColumnResize:false
+		,iconCls:'icon-grid'
+		,stripeRows: true
+		,buttonAlign:'center'
+		,buttons: [{
+			text:Ext.ux.lang.buttons.cancel
+			,iconCls: 'silk-cancel'
+			,handler: function(){
+				dialogoContingente_det.hide();
+			}
+		},{
+			text:Ext.ux.lang.buttons.save
+			,iconCls: 'icon-save'
+			,handler:fnSaveDetail
+		}]
+	});
+
+	var dialogoContingente_det = new Ext.Window({
+		border:true
+		,plain:true
+		,closeAction:'hide'
+		,id:module+'dialogoContingente_det'
+		,width:550
+		,layout:'fit'
+		,autoHeight:true
+		,modal:true
+		,resizable:false
+		,draggable:false
+		,items:[gridContingente_det]
 	});
 
 	/*********************************************** contingente Form ***********************************************/
@@ -64,6 +171,20 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 						,inputValue:0
 						,name:'contingente_mcontingente'
 					}]
+					,listeners:{
+						'change': {
+							fn: function(radio, checked){
+								if(checked){
+									var disable = (checked.inputValue == '1')?false:true;
+									var radio = Ext.getCmp(module+'contingente_msalvaguardia');
+									radio.setDisabled(disable);
+									if(disable){
+										radio.setValue([0]).fireEvent('change', radio, radio.getValue() );
+									}
+								}
+							}
+						}
+					}
 				},{
 					html:'<div class="bootstrap-styles"><p class="text-danger"><?= Lang::get('contingente.alerts.contingente_mcontingente'); ?></p></div>'
 				}]
@@ -201,14 +322,14 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 			iconCls: 'silk-page-edit'
 			,qtip: Ext.ux.lang.buttons.modify_tt
 		},{
-			 iconCls: 'silk-cart'
-			,qtip: '<?= Lang::get('acuerdo_det.table_name'); ?>'
+			 iconCls: 'fuel'
+			,qtip: '<?= Lang::get('contingente_det.table_name'); ?>'
 		}]
 		,callbacks:{
 			'silk-page-edit':function(grid, record, action, row, col) {
 				fnEditItm(record);
 			}
-			,'silk-cart':function(grid, record, action, row, col) {
+			,'fuel':function(grid, record, action, row, col) {
 				fnOpenDetail(record);
 			}
 		}
@@ -326,6 +447,7 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 				,params: params
 				,success: function(form, action){
 					storeContingente.load();
+					formContingente.getForm().reset();
 					dialogoContingente.hide();
 				}
 				,failure:function(form, action){
@@ -348,11 +470,60 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 			});
 		}
 	}
-	function fnEditItm(record){
+	function fnEditItm (record) {
 		formContingente.form.reset();
 		formContingente.form.loadRecord(record);
-		Ext.getCmp(module+'contingente_mcontingente').setValue(record.get('contingente_mcontingente'));
 		dialogoContingente.show();
+		var radio = Ext.getCmp(module+'contingente_mcontingente');
+		var value = record.get('contingente_mcontingente');
+		radio.setValue([value]).fireEvent('change', radio, radio.getValue() );
+
+		radio = Ext.getCmp(module+'contingente_msalvaguardia');
+		value = record.get('contingente_msalvaguardia');
+		radio.setValue([value]).fireEvent('change', radio, radio.getValue() );
+	}
+	function fnOpenDetail (record) {
+
+		storeContingente_det.baseParams['contingente_det_contingente_id'] = record.get('contingente_id');
+
+		storeContingente_det.load();
+
+		dialogoContingente_det.show();
+
+	}
+	function fnSaveDetail () {
+		Ext.ux.bodyMask.show();
+		var records = storeContingente_det.getModifiedRecords();
+		var data = [];
+		Ext.each(records, function(r, i) {
+			data.push(r.data);
+		});
+		Ext.Ajax.request({
+			 url:'contingente_det/saveGrid'
+			,method:'POST'
+			,scope:this
+			,timeout:100000
+			,params:{
+				data:Ext.util.JSON.encode(data)
+				,id: '<?= $id; ?>'
+			}
+			,callback:function(options, success, response){
+				Ext.ux.bodyMask.hide();
+				var json = Ext.util.JSON.decode(response.responseText);
+				if (json.success) {
+					storeContingente_det.commitChanges();
+					dialogoContingente_det.hide();
+				} else {
+					Ext.Msg.show({
+						title:Ext.ux.lang.messages.error,
+						buttons: Ext.Msg.OK,
+						msg:json.error,
+						animEl: 'elId',
+						icon: Ext.MessageBox.ERROR
+					});
+				}
+			}
+		});
 	}
 	
 	/*********************************************** End functions***********************************************/

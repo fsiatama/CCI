@@ -38,6 +38,66 @@ class Contingente_detRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function updateByAgreementDet($params)
+	{
+		extract($params);
+		$arrData = json_decode(stripslashes($data), true);
+		//extrae los campos de la llave del primer registro
+		$row            = current($arrData);
+		$contingente_id = (empty($row['contingente_det_contingente_id'])) ? '' : $row['contingente_det_contingente_id'] ;
+		$acuerdo_det_id = (empty($row['contingente_det_contingente_acuerdo_det_id'])) ? '' : $row['contingente_det_contingente_acuerdo_det_id'] ;
+		$acuerdo_id     = (empty($row['contingente_det_contingente_acuerdo_det_acuerdo_id'])) ? '' : $row['contingente_det_contingente_acuerdo_det_acuerdo_id'] ;
+
+		if (
+			empty($contingente_id) ||
+			empty($acuerdo_det_id) ||
+			empty($acuerdo_id)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+
+		//busca todos los registros en contingente_det por la llave de contingente
+		$this->model->setContingente_det_contingente_id($contingente_id);
+		$this->model->setContingente_det_contingente_acuerdo_det_id($acuerdo_det_id);
+		$this->model->setContingente_det_contingente_acuerdo_det_acuerdo_id($acuerdo_id);
+
+		$result = $this->modelAdo->exactSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		foreach ($result['data'] as $key => $row) {
+
+			$rowModified = Helpers::findKeyInArrayMulti(
+				$arrData,
+				'contingente_det_id',
+				$row['contingente_det_id']
+			);
+			if ($rowModified !== false) {
+				$params = [
+					'contingente_det_id'                                 => $row['contingente_det_id'],
+					'contingente_det_anio_ini'                           => $row['contingente_det_anio_ini'],
+					'contingente_det_anio_fin'                           => $row['contingente_det_anio_fin'],
+					'contingente_det_peso_neto'                          => $rowModified['contingente_det_peso_neto'],
+					'contingente_det_contingente_id'                     => $row['contingente_det_contingente_id'],
+					'contingente_det_contingente_acuerdo_det_id'         => $row['contingente_det_contingente_acuerdo_det_id'],
+					'contingente_det_contingente_acuerdo_det_acuerdo_id' => $row['contingente_det_contingente_acuerdo_det_acuerdo_id'],
+				];
+				$result = $this->modify($params);
+				if (!$result['success']) {
+					return $result;
+				}
+
+			}
+		}
+
+		return $result;
+	}
+
 	public function createByAgreementDet($params)
 	{
 		extract($params);
@@ -51,15 +111,20 @@ class Contingente_detRepo extends BaseRepo {
 		$rowAcuerdo_det = array_shift($result['data']);
 		$acuerdo_fvigente = strtotime($rowAcuerdo_det['acuerdo_fvigente']);
 
-		$yearIni = (int)date('Y', $acuerdo_fvigente);
-		$yearFin = $yearIni + (int)$rowAcuerdo_det['acuerdo_det_nperiodos'] - 1;
-		$rangeYear = range($yearIni, $yearFin);
+		$yearFirst = (int)date('Y', $acuerdo_fvigente);
+		$yearLast  = $yearFirst + (int)$rowAcuerdo_det['acuerdo_det_nperiodos'] - 1;
+		$rangeYear = range($yearFirst, $yearLast);
+		$endYear   = end($rangeYear);
+		reset($rangeYear);
 
 		foreach ($rangeYear as $year) {
+
+			$yearLast = ($year == $endYear) ? _UNDEFINEDYEAR : $year ;
+
 			$params = [
 				'contingente_det_id'                                 => '',
 				'contingente_det_anio_ini'                           => $year,
-				'contingente_det_anio_fin'                           => $year,
+				'contingente_det_anio_fin'                           => $yearLast,
 				'contingente_det_peso_neto'                          => 0,
 				'contingente_det_contingente_id'                     => $contingente_id,
 				'contingente_det_contingente_acuerdo_det_id'         => $contingente_acuerdo_det_id,
@@ -178,6 +243,65 @@ class Contingente_detRepo extends BaseRepo {
 			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 		}
 
+	}
+
+	public function grid($params)
+	{
+		extract($params);
+		/**/
+		$start = ( isset($start) ) ? $start : 0;
+		$limit = ( isset($limit) ) ? $limit : 30;
+		$page  = ( $start==0 ) ? 1 : ( $start / $limit ) + 1;
+
+		if (empty($contingente_det_contingente_id) || empty($contingente_det_contingente_acuerdo_det_id) || empty($contingente_det_contingente_acuerdo_det_acuerdo_id)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+		$this->model->setContingente_det_contingente_id($contingente_det_contingente_id);
+		$this->model->setContingente_det_contingente_acuerdo_det_id($contingente_det_contingente_acuerdo_det_id);
+		$this->model->setContingente_det_contingente_acuerdo_det_acuerdo_id($contingente_det_contingente_acuerdo_det_acuerdo_id);
+
+		if (!empty($query)) {
+			if (!empty($fullTextFields)) {
+				
+				$fullTextFields = json_decode(stripslashes($fullTextFields));
+				
+				foreach ($fullTextFields as $value) {
+					$methodName = $this->getColumnMethodName('set', $value);
+					
+					if (method_exists($this->model, $methodName)) {
+						call_user_func_array([$this->model, $methodName], compact('query'));
+					}
+				}
+			} else {
+				$this->model->setContingente_det_id($query);
+				$this->model->setContingente_det_anio_ini($query);
+				$this->model->setContingente_det_anio_fin($query);
+				$this->model->setContingente_det_peso_neto($query);
+				$this->model->setContingente_det_contingente_id($query);
+				$this->model->setContingente_det_contingente_acuerdo_det_id($query);
+				$this->model->setContingente_det_contingente_acuerdo_det_acuerdo_id($query);
+			}
+			
+		}
+
+		$this->modelAdo->setColumns([
+			'contingente_det_id',
+			'contingente_det_anio_ini',
+			'contingente_det_anio_fin',
+			'contingente_det_anio_fin_title',
+			'contingente_det_peso_neto',
+			'contingente_det_contingente_id',
+			'contingente_det_contingente_acuerdo_det_id',
+			'contingente_det_contingente_acuerdo_det_acuerdo_id'
+		]);
+
+		$result = $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
+
+		return $result;
 	}
 
 }

@@ -240,6 +240,7 @@ abstract class BaseAdo extends Connection {
 			foreach ($columns as $column) {
 
 				$methodName = 'get' . Inflector::underCamel($column) . 'Attribute';
+				//var_dump($methodName);
 				if (array_key_exists($column, $row)) {
 					$newRow[$column] = $row[$column];
 				}

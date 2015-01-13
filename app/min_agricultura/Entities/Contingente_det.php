@@ -29,6 +29,12 @@ class Contingente_det {
 		$this->contingente_det_anio_fin = $contingente_det_anio_fin;
 	}
 
+	public function getContingenteDetAnioFinTitleAttribute($key)
+	{
+		$value = ($key == _UNDEFINEDYEAR) ? Lang::get('contingente_det.undefined_year') : $key ;
+		return $value;
+	}
+
 	public function getContingente_det_anio_fin(){
 		return $this->contingente_det_anio_fin;
 	}

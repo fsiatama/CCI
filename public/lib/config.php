@@ -29,3 +29,7 @@ define("BARRAS", "MSBar3D.swf");     //GRAFICA DE BARRAS
 define("PIE", "Pie3D.swf");        //GRAFICA DE PIE
 define("LINEAL", "MSLine.swf");      //GRAFICA LINEAL
 define("AREA", "StackedArea2D.swf");      //GRAFICA LINEAL
+
+
+define("_UNDEFINEDYEAR", 65535); //anio indefinido ( maximo numero soportado por SMALLINT(4) )
+define("_ENDLESSTONS", 9999999999999999999999); //toneladas infinitas
