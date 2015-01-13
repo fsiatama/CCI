@@ -28,10 +28,10 @@
 			iconCls:'silk-delete'
 			,qtip: Ext.ux.lang.buttons.delete_tt
 		},{
-			 iconCls: 'silk-page-edit'
+			iconCls: 'silk-page-edit'
 			,qtip: Ext.ux.lang.buttons.modify_tt
 		},{
-			 iconCls: 'silk-cart'
+			iconCls: 'silk-cart'
 			,qtip: '<?= Lang::get('acuerdo_det.table_name'); ?>'
 		}]
 		,callbacks:{
@@ -171,40 +171,50 @@
 		}
 	}
 	function fnDeleteItem(record){
-		Ext.Msg.confirm(
-			Ext.ux.lang.messages.confirmation
-			,Ext.ux.lang.messages.question_delete
-			,function(btn){
-			if(btn == 'yes'){
-				var gridMask = new Ext.LoadMask(gridAcuerdo.getEl(), { msg: 'Erasing .....' });
-				gridMask.show();
-				var key = record.get('acuerdo_id');
+		if(Ext.getCmp('tab-detail_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
+			Ext.Msg.show({
+				 title:Ext.ux.lang.messages.warning
+				,msg:Ext.ux.lang.error.close_tab
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+		} else {
+			Ext.Msg.confirm(
+				Ext.ux.lang.messages.confirmation
+				,Ext.ux.lang.messages.question_delete
+				,function(btn){
+				if(btn == 'yes'){
+					var gridMask = new Ext.LoadMask(gridAcuerdo.getEl(), { msg: 'Erasing .....' });
+					gridMask.show();
+					var key = record.get('acuerdo_id');
 
-				Ext.Ajax.request({
-					 url:'acuerdo/delete'
-					,params: {
-						id: '<?= $id; ?>'
-						,acuerdo_id: key
-					}
-					,callback: function(options, success, response){
-						gridMask.hide();
-						var json = Ext.util.JSON.decode(response.responseText);
-						if (json.success){
-							gridAcuerdo.store.reload();
+					Ext.Ajax.request({
+						 url:'acuerdo/delete'
+						,params: {
+							id: '<?= $id; ?>'
+							,acuerdo_id: key
 						}
-						else{
-							Ext.Msg.show({
-							   title:Ext.ux.lang.messages.error,
-							   buttons: Ext.Msg.OK,
-							   msg:json.error,
-							   animEl: 'elId',
-							   icon: Ext.MessageBox.ERROR
-							});
+						,callback: function(options, success, response){
+							gridMask.hide();
+							var json = Ext.util.JSON.decode(response.responseText);
+							if (json.success){
+								gridAcuerdo.store.reload();
+							}
+							else{
+								Ext.Msg.show({
+								   title:Ext.ux.lang.messages.error,
+								   buttons: Ext.Msg.OK,
+								   msg:json.error,
+								   animEl: 'elId',
+								   icon: Ext.MessageBox.ERROR
+								});
+							}
 						}
-					}
-				});
-			};
-		});
+					});
+				};
+			});
+		}
+		
 	}
 	function fnOpenDetail (record) {
 		var key = record.get('acuerdo_id');

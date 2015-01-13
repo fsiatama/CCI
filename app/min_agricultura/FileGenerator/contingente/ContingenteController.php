@@ -6,6 +6,7 @@ require PATH_MODELS.'Repositories/UserRepo.php';
 class ContingenteController {
 	
 	protected $contingenteRepo;
+	protected $userRepo;
 
 	public function __construct()
 	{

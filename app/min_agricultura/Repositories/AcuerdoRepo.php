@@ -193,7 +193,7 @@ class AcuerdoRepo extends BaseRepo {
 
 		$paisRepo = new PaisRepo;
 		$params   = [
-		 'valuesqry' => true
+			'valuesqry' => true
 		];
 
 		if (empty($row['acuerdo_mercado_id'])) {

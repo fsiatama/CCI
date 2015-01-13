@@ -22,6 +22,8 @@ class ContingenteAdo extends BaseAdo {
 		$contingente_id_pais = $contingente->getContingente_id_pais();
 		$contingente_mcontingente = $contingente->getContingente_mcontingente();
 		$contingente_desc = $contingente->getContingente_desc();
+		$contingente_msalvaguardia = $contingente->getContingente_msalvaguardia();
+		$contingente_salvaguardia_sobretasa = $contingente->getContingente_salvaguardia_sobretasa();
 		$contingente_acuerdo_det_id = $contingente->getContingente_acuerdo_det_id();
 		$contingente_acuerdo_det_acuerdo_id = $contingente->getContingente_acuerdo_det_acuerdo_id();
 
@@ -30,6 +32,8 @@ class ContingenteAdo extends BaseAdo {
 			'contingente_id_pais',
 			'contingente_mcontingente',
 			'contingente_desc',
+			'contingente_msalvaguardia',
+			'contingente_salvaguardia_sobretasa',
 			'contingente_acuerdo_det_id',
 			'contingente_acuerdo_det_acuerdo_id'
 		);
@@ -47,6 +51,8 @@ class ContingenteAdo extends BaseAdo {
 				contingente_id_pais,
 				contingente_mcontingente,
 				contingente_desc,
+				contingente_msalvaguardia,
+				contingente_salvaguardia_sobretasa,
 				contingente_acuerdo_det_id,
 				contingente_acuerdo_det_acuerdo_id
 			)
@@ -55,6 +61,8 @@ class ContingenteAdo extends BaseAdo {
 				"'.$this->data['contingente_id_pais'].'",
 				"'.$this->data['contingente_mcontingente'].'",
 				"'.$this->data['contingente_desc'].'",
+				"'.$this->data['contingente_msalvaguardia'].'",
+				"'.$this->data['contingente_salvaguardia_sobretasa'].'",
 				"'.$this->data['contingente_acuerdo_det_id'].'",
 				"'.$this->data['contingente_acuerdo_det_acuerdo_id'].'"
 			)
@@ -67,20 +75,25 @@ class ContingenteAdo extends BaseAdo {
 
 	public function buildSelect()
 	{
-		$filter = [];
-		$operator = $this->getOperator();
-		$joinOperator = ' AND ';
+		$filter        = [];
+		$primaryFilter = [];
+		$operator      = $this->getOperator();
+		$joinOperator  = ' AND ';
 		foreach($this->data as $key => $data){
 			if ($data <> ''){
-				if ($operator == '=') {
-					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
-				}
-				elseif ($operator == 'IN') {
-					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
-				}
-				else {
-					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
-					$joinOperator = ' OR ';
+				if ($key == 'contingente_acuerdo_det_id' || $key == 'contingente_acuerdo_det_acuerdo_id') {
+					$primaryFilter[] = $key . ' = "' . $data . '"';
+				} else {
+					if ($operator == '=') {
+						$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
+					}
+					elseif ($operator == 'IN') {
+						$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+					}
+					else {
+						$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+						$joinOperator = ' OR ';
+					}
 				}
 			}
 		}
@@ -90,13 +103,32 @@ class ContingenteAdo extends BaseAdo {
 			 contingente_id_pais,
 			 contingente_mcontingente,
 			 contingente_desc,
+			 contingente_msalvaguardia,
+			 contingente_salvaguardia_sobretasa,
 			 contingente_acuerdo_det_id,
-			 contingente_acuerdo_det_acuerdo_id
+			 contingente_acuerdo_det_acuerdo_id,
+			 acuerdo_mercado_id,
+			 mercado_nombre,
+			 acuerdo_id_pais,
+			 pais
 			FROM contingente
+			LEFT JOIN acuerdo ON contingente_acuerdo_det_acuerdo_id = acuerdo_id
+			LEFT JOIN mercado ON acuerdo_mercado_id = mercado_id
+			LEFT JOIN pais ON acuerdo_id_pais = id_pais
 		';
-		if(!empty($filter)){
-			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+
+		$whereAssignment = false;
+
+		if(!empty($primaryFilter)){
+			$sql            .= ' WHERE ('. implode( ' AND ', $primaryFilter ).')';
+			$whereAssignment = true;
 		}
+		if(!empty($filter)){
+			$sql .= ($whereAssignment) ? ' AND ' : ' WHERE ' ;
+			$sql .= '  ('. implode( $joinOperator, $filter ).')';
+		}
+
+		//echo "<pre>$sql</pre>";
 
 		return $sql;
 	}

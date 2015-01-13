@@ -8,6 +8,6 @@ return [
 		'acuerdo_det_administracion'             => 'Mecanismo De Administración',
 		'acuerdo_det_administrador'              => 'Administrador',
 		'acuerdo_det_nperiodos'                  => 'Vigencia (Valor en Años)',
-		'acuerdo_det_contingente_acumulado_pais' => 'Contingente es igual para todo el mercado?',
+		'acuerdo_det_contingente_acumulado_pais' => 'Contingente es acumulado para todo el mercado?',
     ]
 ];

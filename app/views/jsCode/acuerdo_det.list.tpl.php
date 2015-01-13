@@ -170,7 +170,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 			,bodyStyle:'padding:15px;'
 			,html: '<div class="bootstrap-styles">' +
 				'<div class="page-head">' +
-					'<h4 class="nopadding"><i class="styleColor fa fa-area-chart"></i> <?= $acuerdo_nombre; ?></h4>' +
+					'<h4 class="nopadding"><i class="styleColor fa fa-cubes"></i> <?= $acuerdo_nombre; ?></h4>' +
 					'<div class="clearfix"></div><p><?= $acuerdo_descripcion; ?></p>' +
 				'</div>' +
 			'</div>'
@@ -222,40 +222,49 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 		}
 	}
 	function fnDeleteItem(record){
-		Ext.Msg.confirm(
-			Ext.ux.lang.messages.confirmation
-			,Ext.ux.lang.messages.question_delete
-			,function(btn){
-			if(btn == 'yes'){
-				var gridMask = new Ext.LoadMask(gridAcuerdo_det.getEl(), { msg: 'Erasing .....' });
-				gridMask.show();
-				var key = record.get('acuerdo_det_id');
+		if(Ext.getCmp('tab-quote_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
+			Ext.Msg.show({
+				 title:Ext.ux.lang.messages.warning
+				,msg:Ext.ux.lang.error.close_tab
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+		} else {
+			Ext.Msg.confirm(
+				Ext.ux.lang.messages.confirmation
+				,Ext.ux.lang.messages.question_delete
+				,function(btn){
+				if(btn == 'yes'){
+					var gridMask = new Ext.LoadMask(gridAcuerdo_det.getEl(), { msg: 'Erasing .....' });
+					gridMask.show();
+					var key = record.get('acuerdo_det_id');
 
-				Ext.Ajax.request({
-					 url:'acuerdo_det/delete'
-					,params: {
-						id: '<?= $id; ?>'
-						,acuerdo_det_id: key
-					}
-					,callback: function(options, success, response){
-						gridMask.hide();
-						var json = Ext.util.JSON.decode(response.responseText);
-						if (json.success){
-							gridAcuerdo_det.store.reload();
+					Ext.Ajax.request({
+						 url:'acuerdo_det/delete'
+						,params: {
+							id: '<?= $id; ?>'
+							,acuerdo_det_id: key
 						}
-						else{
-							Ext.Msg.show({
-							   title:Ext.ux.lang.messages.error,
-							   buttons: Ext.Msg.OK,
-							   msg:json.error,
-							   animEl: 'elId',
-							   icon: Ext.MessageBox.ERROR
-							});
+						,callback: function(options, success, response){
+							gridMask.hide();
+							var json = Ext.util.JSON.decode(response.responseText);
+							if (json.success){
+								gridAcuerdo_det.store.reload();
+							}
+							else{
+								Ext.Msg.show({
+								   title:Ext.ux.lang.messages.error,
+								   buttons: Ext.Msg.OK,
+								   msg:json.error,
+								   animEl: 'elId',
+								   icon: Ext.MessageBox.ERROR
+								});
+							}
 						}
-					}
-				});
-			};
-		});
+					});
+				};
+			});
+		}
 	}
 	function fnOpenQuote (record) {
 		var key = record.get('acuerdo_det_id');

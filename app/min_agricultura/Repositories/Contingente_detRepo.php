@@ -2,6 +2,7 @@
 
 require PATH_APP.'min_agricultura/Entities/Contingente_det.php';
 require PATH_APP.'min_agricultura/Ado/Contingente_detAdo.php';
+require_once PATH_MODELS.'Repositories/Acuerdo_detRepo.php';
 require_once ('BaseRepo.php');
 
 class Contingente_detRepo extends BaseRepo {
@@ -18,13 +19,13 @@ class Contingente_detRepo extends BaseRepo {
 
 	public function getPrimaryKey()
 	{
-		return 'contingente_det_contingente_acuerdo_det_acuerdo_id';
+		return 'contingente_det_id';
 	}
 
 	public function validateModify($params)
 	{
 		extract($params);
-		$result = $this->findPrimaryKey($contingente_det_contingente_acuerdo_det_acuerdo_id);
+		$result = $this->findPrimaryKey($contingente_det_id);
 
 		if (!$result['success']) {
 			$result = [
@@ -37,12 +38,75 @@ class Contingente_detRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function createByAgreementDet($params)
+	{
+		extract($params);
+		$acuerdo_detRepo = new Acuerdo_detRepo;
+		$acuerdo_det_id  = $contingente_acuerdo_det_id;
+		//verifica que exista el acuerdo_det y trae los datos
+		$result = $acuerdo_detRepo->listId(compact('acuerdo_det_id'));
+		if (!$result['success']) {
+			return $result;
+		}
+		$rowAcuerdo_det = array_shift($result['data']);
+		$acuerdo_fvigente = strtotime($rowAcuerdo_det['acuerdo_fvigente']);
+
+		$yearIni = (int)date('Y', $acuerdo_fvigente);
+		$yearFin = $yearIni + (int)$rowAcuerdo_det['acuerdo_det_nperiodos'] - 1;
+		$rangeYear = range($yearIni, $yearFin);
+
+		foreach ($rangeYear as $year) {
+			$params = [
+				'contingente_det_id'                                 => '',
+				'contingente_det_anio_ini'                           => $year,
+				'contingente_det_anio_fin'                           => $year,
+				'contingente_det_peso_neto'                          => 0,
+				'contingente_det_contingente_id'                     => $contingente_id,
+				'contingente_det_contingente_acuerdo_det_id'         => $contingente_acuerdo_det_id,
+				'contingente_det_contingente_acuerdo_det_acuerdo_id' => $contingente_acuerdo_det_acuerdo_id,
+			];
+			$result = $this->create($params);
+			if (!$result['success']) {
+				return $result;
+			}
+		}
+
+		return $result;
+	}
+
+	public function deleteByParent($params)
+	{
+		extract($params);
+		//busca todos los registros en contingente_det por la llave de contingente
+		$this->model->setContingente_det_contingente_id($contingente_id);
+		$this->model->setContingente_det_contingente_acuerdo_det_id($contingente_acuerdo_det_id);
+		$this->model->setContingente_det_contingente_acuerdo_det_acuerdo_id($contingente_acuerdo_det_acuerdo_id);
+
+		$result = $this->modelAdo->exactSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		//realiza el borrado de cada contingente_det
+		foreach ($result['data'] as $key => $row) {
+			$this->model = $this->getModel();
+			$primaryKey  = $row[$this->primaryKey];
+
+			$result = $this->findPrimaryKey($primaryKey);
+			if ($result['success']) {
+				$result = $this->modelAdo->delete($this->model);
+			}
+		}
+
+		return $result;
+	}
+
 	public function setData($params, $action)
 	{
 		extract($params);
 
 		if ($action == 'modify') {
-			$result = $this->findPrimaryKey($contingente_det_contingente_acuerdo_det_acuerdo_id);
+			$result = $this->findPrimaryKey($contingente_det_id);
 
 			if (!$result['success']) {
 				$result = [
@@ -56,10 +120,8 @@ class Contingente_detRepo extends BaseRepo {
 		}
 
 		if (
-			empty($contingente_det_id) ||
 			empty($contingente_det_anio_ini) ||
 			empty($contingente_det_anio_fin) ||
-			empty($contingente_det_peso_neto) ||
 			empty($contingente_det_contingente_id) ||
 			empty($contingente_det_contingente_acuerdo_det_id) ||
 			empty($contingente_det_contingente_acuerdo_det_acuerdo_id)

@@ -112,6 +112,8 @@ Ext.ux.lang.folder = {
 Ext.ns('Ext.ux', 'Ext.ux.lang.form');
 Ext.ux.lang.form = {
 	dateFieldHelp: 'Formato de fecha AAAA-mm-dd'
+	,radioBtnYes: 'Si'
+	,radioBtnNo: 'No'
 }
 
 /*

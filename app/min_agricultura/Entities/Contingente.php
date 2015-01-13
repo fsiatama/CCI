@@ -5,6 +5,8 @@ class Contingente {
 	private $contingente_id_pais;
 	private $contingente_mcontingente;
 	private $contingente_desc;
+	private $contingente_msalvaguardia;
+	private $contingente_salvaguardia_sobretasa;
 	private $contingente_acuerdo_det_id;
 	private $contingente_acuerdo_det_acuerdo_id;
 
@@ -40,6 +42,22 @@ class Contingente {
 		return $this->contingente_desc;
 	}
 
+	public function setContingente_msalvaguardia($contingente_msalvaguardia){
+		$this->contingente_msalvaguardia = $contingente_msalvaguardia;
+	}
+
+	public function getContingente_msalvaguardia(){
+		return $this->contingente_msalvaguardia;
+	}
+
+	public function setContingente_salvaguardia_sobretasa($contingente_salvaguardia_sobretasa){
+		$this->contingente_salvaguardia_sobretasa = $contingente_salvaguardia_sobretasa;
+	}
+
+	public function getContingente_salvaguardia_sobretasa(){
+		return $this->contingente_salvaguardia_sobretasa;
+	}
+
 	public function setContingente_acuerdo_det_id($contingente_acuerdo_det_id){
 		$this->contingente_acuerdo_det_id = $contingente_acuerdo_det_id;
 	}
@@ -54,6 +72,16 @@ class Contingente {
 
 	public function getContingente_acuerdo_det_acuerdo_id(){
 		return $this->contingente_acuerdo_det_acuerdo_id;
+	}
+
+	public function getContingenteMcontingenteTitleAttribute($key)
+	{
+		return Lang::get('contingente.contingente_mcontingente.' . $key);
+	}
+
+	public function getContingenteMsalvaguardiaTitleAttribute($key)
+	{
+		return Lang::get('contingente.contingente_msalvaguardia.' . $key);
 	}
 
 }

@@ -14,6 +14,8 @@ var storeContingente = new Ext.data.JsonStore({
 		{name:'contingente_id_pais', type:'float'},
 		{name:'contingente_mcontingente', type:'string'},
 		{name:'contingente_desc', type:'string'},
+		{name:'contingente_msalvaguardia', type:'string'},
+		{name:'contingente_salvaguardia_sobretasa', type:'float'},
 		{name:'contingente_acuerdo_det_id', type:'float'},
 		{name:'contingente_acuerdo_det_acuerdo_id', type:'float'}
 	]
@@ -44,6 +46,8 @@ var cmContingente = new Ext.grid.ColumnModel({
 		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_id_pais'); ?>', align:'right', hidden:false, dataIndex:'contingente_id_pais'},
 		{header:'<?= Lang::get('contingente.columns_title.contingente_mcontingente'); ?>', align:'left', hidden:false, dataIndex:'contingente_mcontingente'},
 		{header:'<?= Lang::get('contingente.columns_title.contingente_desc'); ?>', align:'left', hidden:false, dataIndex:'contingente_desc'},
+		{header:'<?= Lang::get('contingente.columns_title.contingente_msalvaguardia'); ?>', align:'left', hidden:false, dataIndex:'contingente_msalvaguardia'},
+		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_salvaguardia_sobretasa'); ?>', align:'right', hidden:false, dataIndex:'contingente_salvaguardia_sobretasa'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_acuerdo_det_id'); ?>', align:'right', hidden:false, dataIndex:'contingente_acuerdo_det_id'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('contingente.columns_title.contingente_acuerdo_det_acuerdo_id'); ?>', align:'right', hidden:false, dataIndex:'contingente_acuerdo_det_acuerdo_id'}
 	]
@@ -88,6 +92,8 @@ var formContingente = new Ext.FormPanel({
 			{name:'contingente_id_pais', mapping:'contingente_id_pais', type:'float'},
 			{name:'contingente_mcontingente', mapping:'contingente_mcontingente', type:'string'},
 			{name:'contingente_desc', mapping:'contingente_desc', type:'string'},
+			{name:'contingente_msalvaguardia', mapping:'contingente_msalvaguardia', type:'string'},
+			{name:'contingente_salvaguardia_sobretasa', mapping:'contingente_salvaguardia_sobretasa', type:'float'},
 			{name:'contingente_acuerdo_det_id', mapping:'contingente_acuerdo_det_id', type:'float'},
 			{name:'contingente_acuerdo_det_acuerdo_id', mapping:'contingente_acuerdo_det_acuerdo_id', type:'float'}
 		]
@@ -138,6 +144,24 @@ var formContingente = new Ext.FormPanel({
 				,name:'contingente_desc'
 				,fieldLabel:'<?= Lang::get('contingente.columns_title.contingente_desc'); ?>'
 				,id:module+'contingente_desc'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'contingente_msalvaguardia'
+				,fieldLabel:'<?= Lang::get('contingente.columns_title.contingente_msalvaguardia'); ?>'
+				,id:module+'contingente_msalvaguardia'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'numberfield'
+				,name:'contingente_salvaguardia_sobretasa'
+				,fieldLabel:'<?= Lang::get('contingente.columns_title.contingente_salvaguardia_sobretasa'); ?>'
+				,id:module+'contingente_salvaguardia_sobretasa'
 				,allowBlank:false
 			}]
 		},{

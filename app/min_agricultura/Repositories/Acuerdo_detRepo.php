@@ -2,10 +2,12 @@
 
 require PATH_MODELS.'Entities/Acuerdo_det.php';
 require PATH_MODELS.'Ado/Acuerdo_detAdo.php';
-require PATH_MODELS.'Repositories/ContingenteRepo.php';
+require_once PATH_MODELS.'Repositories/ContingenteRepo.php';
 require_once ('BaseRepo.php');
 
 class Acuerdo_detRepo extends BaseRepo {
+
+	private $contingenteRepo;
 
 	public function getModel()
 	{
@@ -38,15 +40,73 @@ class Acuerdo_detRepo extends BaseRepo {
 		return $result;
 	}
 
+	private function deleteQuota($acuerdo_det_id, $acuerdo_det_acuerdo_id)
+	{
+		$result = $this->contingenteRepo->deleteByParent(
+			compact('acuerdo_det_id', 'acuerdo_det_acuerdo_id')
+		);
+		return $result;
+	}
+
+	private function createQuota($acuerdo_det_id, $acuerdo_det_acuerdo_id, $acuerdo_det_contingente_acumulado_pais)
+	{
+		$result = $this->contingenteRepo->createByAgreement(
+			compact('acuerdo_det_id', 'acuerdo_det_acuerdo_id', 'acuerdo_det_contingente_acumulado_pais')
+		);
+		return $result;
+	}
+
+	public function create($params)
+	{
+		$result = $this->setData($params, 'create');
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$result = $this->modelAdo->create($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+		$acuerdo_det_id = $result['insertId'];
+		$acuerdo_det_acuerdo_id = $this->model->getAcuerdo_det_acuerdo_id();
+		$acuerdo_det_contingente_acumulado_pais = $this->model->getAcuerdo_det_contingente_acumulado_pais();
+
+		//generar los contingentes en blanco para cada pais o mercado del acuerdo
+		$result = $this->createQuota(
+			$acuerdo_det_id,
+			$acuerdo_det_acuerdo_id,
+			$acuerdo_det_contingente_acumulado_pais
+		);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		return ['success' => true];;
+	}
+
 	public function setData($params, $action)
 	{
 		extract($params);
+		$this->contingenteRepo = new ContingenteRepo;
 
 		$acuerdo_det_productos = (empty($acuerdo_det_productos) || !is_array($acuerdo_det_productos)) ? [] : $acuerdo_det_productos ;
 		$acuerdo_det_contingente_acumulado_pais = (isset($acuerdo_det_contingente_acumulado_pais)) ? $acuerdo_det_contingente_acumulado_pais : '0' ;
 		$acuerdo_det_contingente_acumulado_pais = ($acuerdo_det_contingente_acumulado_pais === '1') ? '1' : '0' ;
 
-		$createQuota = true;
+		if (
+			empty($acuerdo_det_productos) ||
+			empty($acuerdo_det_productos_desc) ||
+			empty($acuerdo_det_administracion) ||
+			empty($acuerdo_det_administrador) ||
+			empty($acuerdo_det_nperiodos) ||
+			empty($acuerdo_det_acuerdo_id)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
 
 		if ($action == 'modify') {
 			$result = $this->findPrimaryKey($acuerdo_det_id);
@@ -65,31 +125,24 @@ class Acuerdo_detRepo extends BaseRepo {
 
 			//si acuerdo_det_contingente_acumulado_pais es diferente debe borrar los contingentes y volverlos a crear
 			if ($acuerdo_det_contingente_acumulado_pais != $row['acuerdo_det_contingente_acumulado_pais']) {
-				$result = $this->deleteQuota();
-				$createQuota = true;
-			} else {
-				$createQuota = false;
+				$result = $this->deleteQuota(
+					$acuerdo_det_id,
+					$acuerdo_det_acuerdo_id
+				);
+				if (!$result['success']) {
+					return $result;
+				}
+				$result = $this->createQuota(
+					$acuerdo_det_id,
+					$acuerdo_det_acuerdo_id,
+					$acuerdo_det_contingente_acumulado_pais
+				);
+				if (!$result['success']) {
+					return $result;
+				}
 			}
 		}
 
-		//buscar el acuerdo y generar un
-
-
-
-		if (
-			empty($acuerdo_det_productos) ||
-			empty($acuerdo_det_productos_desc) ||
-			empty($acuerdo_det_administracion) ||
-			empty($acuerdo_det_administrador) ||
-			empty($acuerdo_det_nperiodos) ||
-			empty($acuerdo_det_acuerdo_id)
-		) {
-			$result = [
-				'success' => false,
-				'error'   => 'Incomplete data for this request.'
-			];
-			return $result;
-		}
 		$this->model->setAcuerdo_det_id($acuerdo_det_id);
 		$this->model->setAcuerdo_det_arancel_base($acuerdo_det_arancel_base);
 		$this->model->setAcuerdo_det_productos(implode(',', $acuerdo_det_productos));
@@ -199,6 +252,27 @@ class Acuerdo_detRepo extends BaseRepo {
 		]);
 
 		$result = $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
+
+		return $result;
+	}
+
+	public function listId($params)
+	{
+		extract($params);
+		$acuerdo_det_id = (empty($acuerdo_det_id)) ? '' : $acuerdo_det_id ;
+
+		$result = $this->findPrimaryKey($acuerdo_det_id);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$row = array_shift($result['data']);
+
+		$result = [
+			'success'      => true,
+			'data'         => [$row]
+		];
 
 		return $result;
 	}

@@ -203,10 +203,16 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 					,id:module+'acuerdo_det_contingente_acumulado_pais'
 					,disabled:<?= $disable_acumulado_pais; ?>
 					,allowBlank:false
-					,items: [
-						{boxLabel:'Yes', inputValue:1, name:'acuerdo_det_contingente_acumulado_pais'},
-						{boxLabel:'No', checked:true, inputValue:0, name:'acuerdo_det_contingente_acumulado_pais'}
-					]
+					,items: [{
+						boxLabel:Ext.ux.lang.form.radioBtnYes
+						,inputValue:1
+						,name:'acuerdo_det_contingente_acumulado_pais'
+					},{
+						boxLabel:Ext.ux.lang.form.radioBtnNo
+						,checked:true
+						,inputValue:0
+						,name:'acuerdo_det_contingente_acumulado_pais'
+					}]
 				}]
 			}]
 		}]

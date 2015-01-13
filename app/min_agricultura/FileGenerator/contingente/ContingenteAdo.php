@@ -22,6 +22,8 @@ class ContingenteAdo extends BaseAdo {
 		$contingente_id_pais = $contingente->getContingente_id_pais();
 		$contingente_mcontingente = $contingente->getContingente_mcontingente();
 		$contingente_desc = $contingente->getContingente_desc();
+		$contingente_msalvaguardia = $contingente->getContingente_msalvaguardia();
+		$contingente_salvaguardia_sobretasa = $contingente->getContingente_salvaguardia_sobretasa();
 		$contingente_acuerdo_det_id = $contingente->getContingente_acuerdo_det_id();
 		$contingente_acuerdo_det_acuerdo_id = $contingente->getContingente_acuerdo_det_acuerdo_id();
 
@@ -30,6 +32,8 @@ class ContingenteAdo extends BaseAdo {
 			'contingente_id_pais',
 			'contingente_mcontingente',
 			'contingente_desc',
+			'contingente_msalvaguardia',
+			'contingente_salvaguardia_sobretasa',
 			'contingente_acuerdo_det_id',
 			'contingente_acuerdo_det_acuerdo_id'
 		);
@@ -47,6 +51,8 @@ class ContingenteAdo extends BaseAdo {
 				contingente_id_pais,
 				contingente_mcontingente,
 				contingente_desc,
+				contingente_msalvaguardia,
+				contingente_salvaguardia_sobretasa,
 				contingente_acuerdo_det_id,
 				contingente_acuerdo_det_acuerdo_id
 			)
@@ -55,6 +61,8 @@ class ContingenteAdo extends BaseAdo {
 				"'.$this->data['contingente_id_pais'].'",
 				"'.$this->data['contingente_mcontingente'].'",
 				"'.$this->data['contingente_desc'].'",
+				"'.$this->data['contingente_msalvaguardia'].'",
+				"'.$this->data['contingente_salvaguardia_sobretasa'].'",
 				"'.$this->data['contingente_acuerdo_det_id'].'",
 				"'.$this->data['contingente_acuerdo_det_acuerdo_id'].'"
 			)
@@ -90,6 +98,8 @@ class ContingenteAdo extends BaseAdo {
 			 contingente_id_pais,
 			 contingente_mcontingente,
 			 contingente_desc,
+			 contingente_msalvaguardia,
+			 contingente_salvaguardia_sobretasa,
 			 contingente_acuerdo_det_id,
 			 contingente_acuerdo_det_acuerdo_id
 			FROM contingente

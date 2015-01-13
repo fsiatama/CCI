@@ -14,6 +14,8 @@ if(isset($accion)){
 			$contingente->setContingente_id_pais($contingente_id_pais);
 			$contingente->setContingente_mcontingente($contingente_mcontingente);
 			$contingente->setContingente_desc($contingente_desc);
+			$contingente->setContingente_msalvaguardia($contingente_msalvaguardia);
+			$contingente->setContingente_salvaguardia_sobretasa($contingente_salvaguardia_sobretasa);
 			$contingente->setContingente_acuerdo_det_id($contingente_acuerdo_det_id);
 			$contingente->setContingente_acuerdo_det_acuerdo_id($contingente_acuerdo_det_acuerdo_id);
 			$rs_contingente = $contingenteAdo->actualizar($contingente);
@@ -51,6 +53,8 @@ if(isset($accion)){
 			$contingente->setContingente_id_pais($contingente_id_pais);
 			$contingente->setContingente_mcontingente($contingente_mcontingente);
 			$contingente->setContingente_desc($contingente_desc);
+			$contingente->setContingente_msalvaguardia($contingente_msalvaguardia);
+			$contingente->setContingente_salvaguardia_sobretasa($contingente_salvaguardia_sobretasa);
 			$contingente->setContingente_acuerdo_det_id($contingente_acuerdo_det_id);
 			$contingente->setContingente_acuerdo_det_acuerdo_id($contingente_acuerdo_det_acuerdo_id);
 			$rs_contingente = $contingenteAdo->insertar($contingente);
@@ -76,6 +80,8 @@ if(isset($accion)){
 			$contingente->setContingente_id_pais($contingente_id_pais);
 			$contingente->setContingente_mcontingente($contingente_mcontingente);
 			$contingente->setContingente_desc($contingente_desc);
+			$contingente->setContingente_msalvaguardia($contingente_msalvaguardia);
+			$contingente->setContingente_salvaguardia_sobretasa($contingente_salvaguardia_sobretasa);
 			$contingente->setContingente_acuerdo_det_id($contingente_acuerdo_det_id);
 			$contingente->setContingente_acuerdo_det_acuerdo_id($contingente_acuerdo_det_acuerdo_id);
 			$rs_contingente = $contingenteAdo->lista($contingente);

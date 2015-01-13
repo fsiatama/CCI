@@ -60,6 +60,8 @@ class ContingenteRepo extends BaseRepo {
 			empty($contingente_id_pais) ||
 			empty($contingente_mcontingente) ||
 			empty($contingente_desc) ||
+			empty($contingente_msalvaguardia) ||
+			empty($contingente_salvaguardia_sobretasa) ||
 			empty($contingente_acuerdo_det_id) ||
 			empty($contingente_acuerdo_det_acuerdo_id)
 		) {
@@ -73,6 +75,8 @@ class ContingenteRepo extends BaseRepo {
 		$this->model->setContingente_id_pais($contingente_id_pais);
 		$this->model->setContingente_mcontingente($contingente_mcontingente);
 		$this->model->setContingente_desc($contingente_desc);
+		$this->model->setContingente_msalvaguardia($contingente_msalvaguardia);
+		$this->model->setContingente_salvaguardia_sobretasa($contingente_salvaguardia_sobretasa);
 		$this->model->setContingente_acuerdo_det_id($contingente_acuerdo_det_id);
 		$this->model->setContingente_acuerdo_det_acuerdo_id($contingente_acuerdo_det_acuerdo_id);
 
@@ -96,6 +100,8 @@ class ContingenteRepo extends BaseRepo {
 			$this->model->setContingente_id_pais(implode('", "', $query));
 			$this->model->setContingente_mcontingente(implode('", "', $query));
 			$this->model->setContingente_desc(implode('", "', $query));
+			$this->model->setContingente_msalvaguardia(implode('", "', $query));
+			$this->model->setContingente_salvaguardia_sobretasa(implode('", "', $query));
 			$this->model->setContingente_acuerdo_det_id(implode('", "', $query));
 			$this->model->setContingente_acuerdo_det_acuerdo_id(implode('", "', $query));
 
@@ -106,6 +112,8 @@ class ContingenteRepo extends BaseRepo {
 			$this->model->setContingente_id_pais($query);
 			$this->model->setContingente_mcontingente($query);
 			$this->model->setContingente_desc($query);
+			$this->model->setContingente_msalvaguardia($query);
+			$this->model->setContingente_salvaguardia_sobretasa($query);
 			$this->model->setContingente_acuerdo_det_id($query);
 			$this->model->setContingente_acuerdo_det_acuerdo_id($query);
 
