@@ -110,8 +110,17 @@ class ContingenteAdo extends BaseAdo {
 			 acuerdo_mercado_id,
 			 mercado_nombre,
 			 acuerdo_id_pais,
-			 pais
+			 pais,
+			 alerta_id,
+			 alerta_contingente_verde,
+			 alerta_contingente_amarilla,
+			 alerta_contingente_roja,
+			 alerta_salvaguardia_verde,
+			 alerta_salvaguardia_amarilla,
+			 alerta_salvaguardia_roja,
+			 alerta_emails
 			FROM contingente
+			LEFT JOIN alerta ON contingente_id = alerta_contingente_id
 			LEFT JOIN acuerdo ON contingente_acuerdo_det_acuerdo_id = acuerdo_id
 			LEFT JOIN mercado ON acuerdo_mercado_id = mercado_id
 			LEFT JOIN pais ON acuerdo_id_pais = id_pais

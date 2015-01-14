@@ -101,4 +101,9 @@ class Acuerdo {
 		return $this->acuerdo_id_pais;
 	}
 
+	public function getAcuerdoIntercambioTitleAttribute($key)
+	{
+		return Lang::get('indicador.reports.' . $key);
+	}
+
 }

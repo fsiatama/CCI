@@ -128,6 +128,7 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 		,trackResetOnLoad:false
 		,buttonAlign:'center'
 		,monitorValid:true
+		,bodyStyle:'padding:5px'
 		,reader: new Ext.data.JsonReader({
 			root:'datos',totalProperty: 'total'
 			,fields:[
@@ -138,7 +139,15 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 				{name:'contingente_msalvaguardia', mapping:'contingente_msalvaguardia', type:'string'},
 				{name:'contingente_salvaguardia_sobretasa', mapping:'contingente_salvaguardia_sobretasa', type:'float'},
 				{name:'contingente_acuerdo_det_id', mapping:'contingente_acuerdo_det_id', type:'float'},
-				{name:'contingente_acuerdo_det_acuerdo_id', mapping:'contingente_acuerdo_det_acuerdo_id', type:'float'}
+				{name:'contingente_acuerdo_det_acuerdo_id', mapping:'contingente_acuerdo_det_acuerdo_id', type:'float'},
+				{name:'alerta_id', mapping:'alerta_id', type:'float'},
+				{name:'alerta_contingente_verde', mapping:'alerta_contingente_verde', type:'float'},
+				{name:'alerta_contingente_amarilla', mapping:'alerta_contingente_amarilla', type:'float'},
+				{name:'alerta_contingente_roja', mapping:'alerta_contingente_roja', type:'float'},
+				{name:'alerta_salvaguardia_verde', mapping:'alerta_salvaguardia_verde', type:'float'},
+				{name:'alerta_salvaguardia_amarilla', mapping:'alerta_salvaguardia_amarilla', type:'float'},
+				{name:'alerta_salvaguardia_roja', mapping:'alerta_salvaguardia_roja', type:'float'},
+				{name:'alerta_emails', mapping:'alerta_emails', type:'string'},
 			]
 		})
 		,items:[{
@@ -201,7 +210,65 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 					,growMin: 60
 					,growMax: 100
 				}]
+			}]
+		},{
+			xtype:'fieldset'
+			,title:'<?= Lang::get('alerta.alerta_contingente'); ?>'
+			,layout:'column'
+			,flex: 1
+			,defaults:{
+				columnWidth:1
+				,layout:'form'
+				,labelAlign:'top'
+				,border:false
+				,xtype:'panel'
+				,bodyStyle:'padding:0 18px 0 0'
+			}
+			,items:[{
+				defaults:{anchor:'100%'}
+				,columnWidth:.33
+				,items:[{
+					xtype:'numberfield'
+					,name:'alerta_contingente_verde'
+					,fieldLabel:'<?= Lang::get('alerta.columns_title.alerta_contingente_verde'); ?>'
+					,id:module+'alerta_contingente_verde'
+					,allowBlank:false
+				}]
 			},{
+				defaults:{anchor:'100%'}
+				,columnWidth:.33
+				,items:[{
+					xtype:'numberfield'
+					,name:'alerta_contingente_amarilla'
+					,fieldLabel:'<?= Lang::get('alerta.columns_title.alerta_contingente_amarilla'); ?>'
+					,id:module+'alerta_contingente_amarilla'
+					,allowBlank:false
+				}]
+			},{
+				defaults:{anchor:'100%'}
+				,columnWidth:.33
+				,items:[{
+					xtype:'numberfield'
+					,name:'alerta_contingente_roja'
+					,fieldLabel:'<?= Lang::get('alerta.columns_title.alerta_contingente_roja'); ?>'
+					,id:module+'alerta_contingente_roja'
+					,allowBlank:false
+				}]
+			}]
+		},{
+			xtype:'fieldset'
+			,title:'<?= Lang::get('contingente.salvaguardia'); ?>'
+			,layout:'column'
+			,flex: 1
+			,defaults:{
+				columnWidth:1
+				,layout:'form'
+				,labelAlign:'top'
+				,border:false
+				,xtype:'panel'
+				,bodyStyle:'padding:0 18px 0 0'
+			}
+			,items:[{
 				defaults:{anchor:'88%',border:false}
 				,items:[{
 					xtype:'radiogroup'
@@ -257,6 +324,50 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 				xtype:'hidden'
 				,name:'contingente_acuerdo_det_acuerdo_id'
 			}]
+		},{
+			xtype:'fieldset'
+			,title:'<?= Lang::get('alerta.alerta_salvaguardia'); ?>'
+			,layout:'column'
+			,flex: 1
+			,defaults:{
+				columnWidth:1
+				,layout:'form'
+				,labelAlign:'top'
+				,border:false
+				,xtype:'panel'
+				,bodyStyle:'padding:0 18px 0 0'
+			}
+			,items:[{
+				defaults:{anchor:'100%'}
+				,columnWidth:.33
+				,items:[{
+					xtype:'numberfield'
+					,name:'alerta_salvaguardia_verde'
+					,fieldLabel:'<?= Lang::get('alerta.columns_title.alerta_salvaguardia_verde'); ?>'
+					,id:module+'alerta_salvaguardia_verde'
+					,allowBlank:false
+				}]
+			},{
+				defaults:{anchor:'100%'}
+				,columnWidth:.33
+				,items:[{
+					xtype:'numberfield'
+					,name:'alerta_salvaguardia_amarilla'
+					,fieldLabel:'<?= Lang::get('alerta.columns_title.alerta_salvaguardia_amarilla'); ?>'
+					,id:module+'alerta_salvaguardia_amarilla'
+					,allowBlank:false
+				}]
+			},{
+				defaults:{anchor:'100%'}
+				,columnWidth:.33
+				,items:[{
+					xtype:'numberfield'
+					,name:'alerta_salvaguardia_roja'
+					,fieldLabel:'<?= Lang::get('alerta.columns_title.alerta_salvaguardia_roja'); ?>'
+					,id:module+'alerta_salvaguardia_roja'
+					,allowBlank:false
+				}]
+			}]
 		}]
 		,buttons: [{
 			text:Ext.ux.lang.buttons.cancel
@@ -309,6 +420,14 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 			{name:'contingente_salvaguardia_sobretasa', type:'float'},
 			{name:'contingente_acuerdo_det_id', type:'float'},
 			{name:'contingente_acuerdo_det_acuerdo_id', type:'float'},
+			{name:'alerta_id', type:'float'},
+			{name:'alerta_contingente_verde', type:'float'},
+			{name:'alerta_contingente_amarilla', type:'float'},
+			{name:'alerta_contingente_roja', type:'float'},
+			{name:'alerta_salvaguardia_verde', type:'float'},
+			{name:'alerta_salvaguardia_amarilla', type:'float'},
+			{name:'alerta_salvaguardia_roja', type:'float'},
+			{name:'alerta_emails', type:'string'},
 		]
 	});
 

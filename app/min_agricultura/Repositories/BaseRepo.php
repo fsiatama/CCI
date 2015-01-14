@@ -1,4 +1,5 @@
 <?php
+require_once PATH_MODELS.'Repositories/AuditRepo.php';
 
 abstract class BaseRepo {
 	
@@ -16,6 +17,11 @@ abstract class BaseRepo {
 	abstract public function getModelAdo();
 	abstract public function getPrimaryKey();
 	abstract public function setData($params, $action);
+
+	protected function getAuditRepo()
+	{
+		return new AuditRepo;
+	}
 	
 	public function getColumnMethodName($metod, $columnName)
 	{
@@ -57,6 +63,12 @@ abstract class BaseRepo {
 			return $result;
 		}
 
+		//insertar registro de auditoria
+		$result = $this->createAudit($params);
+		if (!$result['success']) {
+			return $result;
+		}
+
 		$result = $this->modelAdo->create($this->model);
 		if ($result['success']) {
 			return ['success' => true];
@@ -72,6 +84,12 @@ abstract class BaseRepo {
 			return $result;
 		}
 
+		//insertar registro de auditoria
+		$result = $this->createAudit($params);
+		if (!$result['success']) {
+			return $result;
+		}
+
 		$result = $this->modelAdo->update($this->model);
 		if ($result['success']) {
 			return ['success' => true];
@@ -82,12 +100,31 @@ abstract class BaseRepo {
 	public function delete($params)
 	{
 		$primaryKey = $params[$this->primaryKey];
+
+		//insertar registro de auditoria
+		$result = $this->createAudit($params);
+		if (!$result['success']) {
+			return $result;
+		}
 		
 		$result = $this->findPrimaryKey($primaryKey);
 
 		if ($result['success']) {
 			$result = $this->modelAdo->delete($this->model);
 		}
+
+		return $result;
+	}
+
+	protected function createAudit($params)
+	{
+		if (empty($params)) {
+			return ['success' => true];
+		}
+
+		$auditRepo = $this->getAuditRepo();
+
+		$result = $auditRepo->create($params);
 
 		return $result;
 	}

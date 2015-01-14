@@ -73,8 +73,11 @@ class AcuerdoController {
 				}
 			}
 
+			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+			$trade = Helpers::arrayGet($lines, 'trade');
+
 			$postParams['is_template'] = true;
-			$params = array_merge($postParams, $result, compact('action'));
+			$params = array_merge($postParams, $result, compact('action', 'trade'));
 			
 			//el template de adicionar y editar son los mismos
 			$action = ($action == 'modify') ? 'create' : $action;

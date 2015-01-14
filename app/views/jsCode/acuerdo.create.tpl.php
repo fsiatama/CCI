@@ -85,6 +85,21 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 		,displayFieldTpl:'{mercado_nombre}'
 	});
 
+	var arrTrade = <?= json_encode($trade); ?>;
+
+	var comboIntercambio = new Ext.form.ComboBox({
+		hiddenName:'acuerdo_intercambio'
+		,id:module+'comboIntercambio'
+		,store:arrTrade
+		,fieldLabel:Ext.ux.lang.reports.trade
+		,typeAhead:false
+		,forceSelection:true
+		,selectOnFocus:true
+		,allowBlank:false
+		,triggerAction:'all'
+		,flex:true
+	});
+
 	var formAcuerdo = new Ext.FormPanel({
 		baseCls:'x-plain'
 		,id:module + 'formAcuerdo'
@@ -102,6 +117,7 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 				{name:'acuerdo_id', mapping:'acuerdo_id', type:'float'},
 				{name:'acuerdo_nombre', mapping:'acuerdo_nombre', type:'string'},
 				{name:'acuerdo_descripcion', mapping:'acuerdo_descripcion', type:'string'},
+				{name:'acuerdo_intercambio', mapping:'acuerdo_intercambio', type:'string'},
 				{name:'acuerdo_fvigente', mapping:'acuerdo_fvigente', type:'string'},
 				{name:'acuerdo_mercado_id', mapping:'acuerdo_mercado_id', type:'float'},
 				{name:'acuerdo_id_pais', mapping:'acuerdo_id_pais', type:'float'}
@@ -122,7 +138,6 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 			}
 			,items:[{
 				defaults:{anchor:'98%'}
-				,columnWidth:.7
 				,items:[{
 					xtype:'textfield'
 					,name:'acuerdo_nombre'
@@ -143,6 +158,10 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 					,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.form.dateFieldHelp)]
 				}]
 			},{
+				defaults:{anchor:'93%'}
+				,columnWidth:.3
+				,items:[comboIntercambio]
+			},{
 				defaults:{anchor:'98%'}
 				,items:[{
 					xtype: 'textarea'
@@ -155,7 +174,30 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 					,growMin: 60
 					,growMax: 100
 				}]
+			}]
+		},{
+			xtype:'fieldset'
+			,title:'<?= Lang::get('acuerdo.partner_title'); ?>'
+			,layout:'column'
+			,flex: 1
+			,defaults:{
+				columnWidth:1
+				,layout:'form'
+				,labelAlign:'top'
+				,border:false
+				,xtype:'panel'
+				,bodyStyle:'padding:0 18px 0 0'
+			}
+			,items:[{
+	<?php
+	if ($action == 'modify') {
+
+		echo "
+				html:'<div class=\"bootstrap-styles\"><p class=\"text-danger\">".Lang::get('acuerdo.alerts.change_partner')."</p></div>'
 			},{
+		";
+	}
+	?>
 				defaults:{anchor:'98%'}
 				,items:[comboPais]
 			},{

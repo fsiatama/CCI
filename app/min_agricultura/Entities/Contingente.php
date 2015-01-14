@@ -35,7 +35,7 @@ class Contingente {
 	}
 
 	public function setContingente_desc($contingente_desc){
-		$this->contingente_desc = $contingente_desc;
+		$this->contingente_desc = Inflector::cleanInputString($contingente_desc);
 	}
 
 	public function getContingente_desc(){

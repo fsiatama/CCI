@@ -820,8 +820,8 @@ return [
 		[1,  Lang::get('indicador.reports.montly')]
 	],
 	'trade' => [
-		['impo', Lang::get('indicador.reports.imports')],
-		['expo', Lang::get('indicador.reports.exports')]
+		['impo', Lang::get('indicador.reports.impo')],
+		['expo', Lang::get('indicador.reports.expo')]
 	],
 	'scopes' => [
 		['1', Lang::get('indicador.reports.national')],

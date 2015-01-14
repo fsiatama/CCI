@@ -42,6 +42,9 @@ class Contingente_detRepo extends BaseRepo {
 	{
 		extract($params);
 		$arrData = json_decode(stripslashes($data), true);
+		if (empty($arrData)) {
+			return ['success' => true];
+		}
 		//extrae los campos de la llave del primer registro
 		$row            = current($arrData);
 		$contingente_id = (empty($row['contingente_det_contingente_id'])) ? '' : $row['contingente_det_contingente_id'] ;

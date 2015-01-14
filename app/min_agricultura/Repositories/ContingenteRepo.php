@@ -3,6 +3,7 @@
 require PATH_MODELS.'Entities/Contingente.php';
 require PATH_MODELS.'Ado/ContingenteAdo.php';
 require_once PATH_MODELS.'Repositories/Contingente_detRepo.php';
+require_once PATH_MODELS.'Repositories/AlertaRepo.php';
 require_once ('BaseRepo.php');
 
 class ContingenteRepo extends BaseRepo {
@@ -55,6 +56,8 @@ class ContingenteRepo extends BaseRepo {
 
 		$countryAccumulated = ($acuerdo_det_contingente_acumulado_pais == '1') ? true : false ;
 
+		$alertaRepo = new AlertaRepo;
+
 		if ($countryAccumulated) {
 			$params = [
 				'contingente_id_pais'                => $rowAcuerdo['acuerdo_mercado_id'],
@@ -66,6 +69,25 @@ class ContingenteRepo extends BaseRepo {
 				'contingente_acuerdo_det_acuerdo_id' => $acuerdo_det_acuerdo_id,
 			];
 			$result = $this->create($params);
+			if (!$result['success']) {
+				return $result;
+			}
+
+			//crear registro de alerta
+			$params = [
+				'alerta_contingente_verde' => '60',
+				'alerta_contingente_amarilla' => '90',
+				'alerta_contingente_roja' => '100',
+				'alerta_salvaguardia_verde' => '70',
+				'alerta_salvaguardia_amarilla' => '90',
+				'alerta_salvaguardia_roja' => '100',
+				'alerta_emails' => '',
+				'alerta_contingente_id' => $result['insertId'],
+				'alerta_contingente_acuerdo_det_id' => $acuerdo_det_id,
+				'alerta_contingente_acuerdo_det_acuerdo_id' => $acuerdo_det_acuerdo_id,
+			];
+
+			$result = $alertaRepo->create($params);
 			if (!$result['success']) {
 				return $result;
 			}
@@ -83,6 +105,24 @@ class ContingenteRepo extends BaseRepo {
 					'contingente_acuerdo_det_acuerdo_id' => $acuerdo_det_acuerdo_id,
 				];
 				$result = $this->create($params);
+				if (!$result['success']) {
+					return $result;
+				}
+				//crear registro de alerta
+				$params = [
+					'alerta_contingente_verde' => '60',
+					'alerta_contingente_amarilla' => '90',
+					'alerta_contingente_roja' => '100',
+					'alerta_salvaguardia_verde' => '70',
+					'alerta_salvaguardia_amarilla' => '90',
+					'alerta_salvaguardia_roja' => '100',
+					'alerta_emails' => '',
+					'alerta_contingente_id' => $result['insertId'],
+					'alerta_contingente_acuerdo_det_id' => $acuerdo_det_id,
+					'alerta_contingente_acuerdo_det_acuerdo_id' => $acuerdo_det_acuerdo_id,
+				];
+
+				$result = $alertaRepo->create($params);
 				if (!$result['success']) {
 					return $result;
 				}
@@ -302,7 +342,15 @@ class ContingenteRepo extends BaseRepo {
 			'acuerdo_mercado_id',
 			'acuerdo_id_pais',
 			'pais',
-			'mercado_nombre'
+			'mercado_nombre',
+			'alerta_id',
+			'alerta_contingente_verde',
+			'alerta_contingente_amarilla',
+			'alerta_contingente_roja',
+			'alerta_salvaguardia_verde',
+			'alerta_salvaguardia_amarilla',
+			'alerta_salvaguardia_roja',
+			'alerta_emails',
 		]);
 		$result = $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 
@@ -326,6 +374,14 @@ class ContingenteRepo extends BaseRepo {
 				'contingente_salvaguardia_sobretasa' => $row['contingente_salvaguardia_sobretasa'],
 				'contingente_acuerdo_det_id'         => $row['contingente_acuerdo_det_id'],
 				'contingente_acuerdo_det_acuerdo_id' => $row['contingente_acuerdo_det_acuerdo_id'],
+				'alerta_id'                          => $row['alerta_id'],
+				'alerta_contingente_verde'           => $row['alerta_contingente_verde'],
+				'alerta_contingente_amarilla'        => $row['alerta_contingente_amarilla'],
+				'alerta_contingente_roja'            => $row['alerta_contingente_roja'],
+				'alerta_salvaguardia_verde'          => $row['alerta_salvaguardia_verde'],
+				'alerta_salvaguardia_amarilla'       => $row['alerta_salvaguardia_amarilla'],
+				'alerta_salvaguardia_roja'           => $row['alerta_salvaguardia_roja'],
+				'alerta_emails'                      => $row['alerta_emails'],
 			];
 		}
 

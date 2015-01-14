@@ -1,5 +1,8 @@
 <?php
 return [
+	'alerts' => [
+		'change_nperiodos'   => '¡Advertencia!  Modificar este parámetro eliminará toda la información de contingentes, si existen.',
+    ],
 	'table_name' => 'Productos del acuerdo comercial',
     'columns_title' => [
 		'acuerdo_det_arancel_base'               => 'Arancel Base (Valor en Porcentaje)',

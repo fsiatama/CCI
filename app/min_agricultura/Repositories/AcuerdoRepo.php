@@ -64,6 +64,7 @@ class AcuerdoRepo extends BaseRepo {
 		if (
 			empty($acuerdo_nombre) ||
 			empty($acuerdo_descripcion) ||
+			empty($acuerdo_intercambio) ||
 			empty($acuerdo_fvigente) ||
 			(empty($acuerdo_mercado_id) && empty($acuerdo_id_pais))
 		) {
@@ -77,7 +78,7 @@ class AcuerdoRepo extends BaseRepo {
 		$this->model->setAcuerdo_id($acuerdo_id);
 		$this->model->setAcuerdo_nombre($acuerdo_nombre);
 		$this->model->setAcuerdo_descripcion($acuerdo_descripcion);
-		$this->model->setAcuerdo_intercambio('impo');
+		$this->model->setAcuerdo_intercambio($acuerdo_intercambio);
 		$this->model->setAcuerdo_fvigente($acuerdo_fvigente);
 		$this->model->setAcuerdo_mercado_id(implode(',', $acuerdo_mercado_id));
 		$this->model->setAcuerdo_id_pais(implode(',', $acuerdo_id_pais));
@@ -169,6 +170,8 @@ class AcuerdoRepo extends BaseRepo {
 			'acuerdo_id',
 			'acuerdo_nombre',
 			'acuerdo_descripcion',
+			'acuerdo_intercambio',
+			'acuerdo_intercambio_title',
 			'acuerdo_fvigente',
 			'acuerdo_mercado_id',
 			'acuerdo_id_pais'

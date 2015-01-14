@@ -14,6 +14,8 @@
 			{name:'acuerdo_id', type:'float'},
 			{name:'acuerdo_nombre', type:'string'},
 			{name:'acuerdo_descripcion', type:'string'},
+			{name:'acuerdo_intercambio', type:'string'},
+			{name:'acuerdo_intercambio_title', type:'string'},
 			{name:'acuerdo_fvigente', type:'string'}
 		]
 	});
@@ -46,6 +48,7 @@
 			}
 		}
 	});
+
 	gridAcuerdoExpander = new Ext.grid.RowExpander({
 		tpl: new Ext.Template(
 			 '<br><p style="margin:0 0 4px 8px"><b><?= Lang::get('acuerdo.columns_title.acuerdo_descripcion'); ?>:</b> {acuerdo_descripcion}</p>'
@@ -57,6 +60,7 @@
 			gridAcuerdoExpander,
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_nombre'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_nombre'},
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_descripcion'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_descripcion'},
+			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_intercambio'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_intercambio_title'},
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_fvigente'},
 			gridAcuerdoAction
 		]
@@ -145,7 +149,7 @@
 	
 	function fnEditItm(record){
 		var key = record.get('acuerdo_id');
-		if(Ext.getCmp('tab-add_'+module)){
+		if(Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-detail_'+module)){
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
 				,msg:Ext.ux.lang.error.close_tab

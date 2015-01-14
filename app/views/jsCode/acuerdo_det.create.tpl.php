@@ -133,6 +133,16 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 					,fieldLabel:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_nperiodos'); ?>'
 					,id:module+'acuerdo_det_nperiodos'
 					,allowBlank:false
+		<?php
+		if ($action == 'modify') {
+
+			echo "
+				},{
+					html:'<div class=\"bootstrap-styles\"><p class=\"text-danger\"><small>".Lang::get('acuerdo_det.alerts.change_nperiodos')."</small></p></div>'
+					,border:false
+			";
+		}
+		?>
 				}]
 			},{
 				defaults:{anchor:'98%'}
