@@ -40,30 +40,47 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Project name</a>
+                    <a class="navbar-brand" href="<?= URL_RAIZ ?>">
+                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    </a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Menú<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li class="divider"></li>
-                                <li class="dropdown-header">Nav header</li>
-                                <li><a href="#">Separated link</a></li>
-                                <li><a href="#">One more separated link</a></li>
+                                <li><a href="<?= URL_RAIZ ?>Home/GuiaBasicaParaExportar">1. Guía básica para exportar </a></li>
+                                <li><a href="<?= URL_RAIZ ?>Home/InformacionGeneralTLC">2. Información General de los TLC</a></li>
+                                <li><a href="<?= URL_RAIZ ?>Home/RequisitosIngresoColombia">3. Condiciones y requisitos de ingreso para Colombia por producto</a></li>
+                                <li><a href="#">- Cronograma de desgravación y contingentes otorgados</a></li>
+                                <li><a href="<?= URL_RAIZ ?>Home/ProtocolosExportacion">4. Protocolos de exportación</a></li>
+                                <li><a href="<?= URL_RAIZ ?>Home/RequisitosSanitariosFitosanitarios">5. Requisitos sanitarios y fitosanitarios</a></li>
+                                <li><a href="<?= URL_RAIZ ?>Home/LosgisticaTransporte">6. Logística de transporte</a></li>
+                                <li><a href="<?= URL_RAIZ ?>Home/ComercioAgropecuarioColombia">7. Comercio agropecuario de Colombia</a></li>
+                                <li><a href="#">- Colombia al Mundo</a></li>
+                                <li><a href="#">- Principales destinos y orígenes</a></li>
+                                <li><a href="<?= URL_RAIZ ?>Home/ColombiaPorAcuerdoComercial">8. Colombia Por Acuerdo comercial</a></li>
+                                <li><a href="#">- Composición de las exportaciones e importaciones a 6 dígitos por socio comercial</a></li>
+                                <li><a href="#">- Utilización de contingentes</a></li>
+                                <li><a href="#">- Tarifas arancelarias y Precios Implícitos por Partida arancelaria (producto)</a></li>
+                                <li><a href="<?= URL_RAIZ ?>Home/ComercioAgropecuarioMundial">9. Comercio agropecuario mundial por producto</a></li>
+                                <li><a href="<?= URL_RAIZ ?>Home/PosicionamientoProductos">10. Posicionamiento y dinamismo de los productos</a></li>
                             </ul>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="../navbar/">Default</a></li>
-                        <li><a href="../navbar-static-top/">Static top</a></li>
-                        <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+                        <li><a class="navbar-brand" href="<?= URL_RAIZ ?>Home/Login">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                <span>Ingresar</span>
+                            </a></li>
+                        <li><a class="navbar-brand" href="#">
+                                <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                                <span>Acerca de</span>
+                            </a></li>
+                        <li><a class="navbar-brand" href="#">
+                                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                                <span>Contacto</span>
+                            </a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
