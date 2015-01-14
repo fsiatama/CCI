@@ -56,7 +56,6 @@ class ContingenteRepo extends BaseRepo {
 		$countryAccumulated = ($acuerdo_det_contingente_acumulado_pais == '1') ? true : false ;
 
 		if ($countryAccumulated) {
-
 			$params = [
 				'contingente_id_pais'                => $rowAcuerdo['acuerdo_mercado_id'],
 				'contingente_mcontingente'           => '0',
@@ -73,6 +72,7 @@ class ContingenteRepo extends BaseRepo {
 			
 		} else {
 			foreach ($country_data as $key => $row) {
+				$this->model = $this->getModel();
 				$params = [
 					'contingente_id_pais'                => $row['id_pais'],
 					'contingente_mcontingente'           => '0',
@@ -104,6 +104,9 @@ class ContingenteRepo extends BaseRepo {
 
 		//realiza el borrado de cada contingente y sus hijos en contingente_det
 		foreach ($result['data'] as $key => $row) {
+			//implementar borrado de contingente_det
+
+
 			$this->model = $this->getModel();
 			$primaryKey  = $row[$this->primaryKey];
 

@@ -78,6 +78,7 @@ class Contingente_detRepo extends BaseRepo {
 				$row['contingente_det_id']
 			);
 			if ($rowModified !== false) {
+				$this->model = $this->getModel();
 				$params = [
 					'contingente_det_id'                                 => $row['contingente_det_id'],
 					'contingente_det_anio_ini'                           => $row['contingente_det_anio_ini'],
@@ -118,6 +119,8 @@ class Contingente_detRepo extends BaseRepo {
 		reset($rangeYear);
 
 		foreach ($rangeYear as $year) {
+
+			$this->model = $this->getModel();
 
 			$yearLast = ($year == $endYear) ? _UNDEFINEDYEAR : $year ;
 

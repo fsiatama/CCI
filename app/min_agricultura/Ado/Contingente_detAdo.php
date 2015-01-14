@@ -115,6 +115,8 @@ class Contingente_detAdo extends BaseAdo {
 			$sql .= '  ('. implode( $joinOperator, $filter ).')';
 		}
 
+		//echo "<pre>$sql</pre>";
+
 		return $sql;
 	}
 
