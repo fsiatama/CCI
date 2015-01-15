@@ -82,7 +82,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
 			,handler: function(){
-				if(Ext.getCmp('tab-edit_'+module)){
+				if(Ext.getCmp('tab-quote_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
 					Ext.Msg.show({
 						 title:Ext.ux.lang.messages.warning
 						,msg:Ext.ux.lang.error.close_tab
@@ -132,6 +132,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 		,buttonAlign:'center'
 		,title:''
 		,iconCls:'icon-grid'
+		,stripeRows: true
 		,autoHeight:true
 		,autoWidth:true
 		,plugins:[
@@ -195,7 +196,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 	function fnEditItm(record){
 		var key = record.get('acuerdo_det_id');
 		var pkey = record.get('acuerdo_det_acuerdo_id');
-		if(Ext.getCmp('tab-add_'+module)){
+		if(Ext.getCmp('tab-quote_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
 				,msg:Ext.ux.lang.error.close_tab
@@ -237,13 +238,16 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 				if(btn == 'yes'){
 					var gridMask = new Ext.LoadMask(gridAcuerdo_det.getEl(), { msg: 'Erasing .....' });
 					gridMask.show();
+					
 					var key = record.get('acuerdo_det_id');
+					var pkey = record.get('acuerdo_det_acuerdo_id');
 
 					Ext.Ajax.request({
 						 url:'acuerdo_det/delete'
 						,params: {
 							id: '<?= $id; ?>'
 							,acuerdo_det_id: key
+							,acuerdo_det_acuerdo_id: pkey
 						}
 						,callback: function(options, success, response){
 							gridMask.hide();
@@ -269,7 +273,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 	function fnOpenQuote (record) {
 		var key = record.get('acuerdo_det_id');
 		var pkey = record.get('acuerdo_det_acuerdo_id');
-		if(Ext.getCmp('tab-quote_'+module)){
+		if(Ext.getCmp('tab-quote_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
 				,msg:Ext.ux.lang.error.close_tab

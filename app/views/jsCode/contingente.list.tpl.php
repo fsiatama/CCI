@@ -11,7 +11,6 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 	var module = '<?= $module."_".$acuerdo_id; ?>';
 	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
 	Ext.getCmp('tab-<?= $module; ?>').on('beforeclose', function(){
-		dialogoContingente.destroy();
 		dialogoContingente_det.destroy();
 	});
 
@@ -73,7 +72,6 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 		,colModel:cmContingente_det
 		,viewConfig: {
 			forceFit: true
-			,scrollOffset:2
 		}
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
 		//,bbar:new Ext.PagingToolbar({pageSize:10, store:storeContingente_det, displayInfo:true})
@@ -118,7 +116,7 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 	});
 
 	/*********************************************** contingente Form ***********************************************/
-	var formContingente = new Ext.FormPanel({
+	/*var formContingente = new Ext.FormPanel({
 		labelAlign:'top'
 		,method:'POST'
 		,url:'contingente/modify'
@@ -395,7 +393,7 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 		,resizable:false
 		,draggable:false
 		,items:[formContingente]
-	});
+	});*/
 	
 	/*********************************************** contingente grid ***********************************************/
 	var storeContingente = new Ext.data.JsonStore({
@@ -493,6 +491,7 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 		,buttonAlign:'center'
 		,title:''
 		,iconCls:'icon-grid'
+		,stripeRows: true
 		,autoHeight:true
 		,autoWidth:true
 		,plugins:[
@@ -590,7 +589,41 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 		}
 	}
 	function fnEditItm (record) {
-		formContingente.form.reset();
+		var key = record.get('contingente_id');
+		if(Ext.getCmp('tab-edit_'+module)) {
+			Ext.Msg.show({
+				 title:Ext.ux.lang.messages.warning
+				,msg:Ext.ux.lang.error.close_tab
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+		}
+		else{
+			var data = {
+				id:'edit_' + module
+				,iconCls:'silk-page-edit'
+				,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
+				,url:'contingente/jscode/modify'
+				,params:{
+					id:'<?= $id; ?>'
+					,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
+					,module: 'edit_' + module
+					,parent: module
+					,contingente_id: key
+					,acuerdo_det_id:'<?= $acuerdo_det_id; ?>'
+					,acuerdo_det_acuerdo_id:'<?= $acuerdo_det_acuerdo_id; ?>'
+				}
+			};
+			Ext.getCmp('oeste').addTab(this,this,data);
+		}
+
+
+
+
+
+
+
+		/*formContingente.form.reset();
 		formContingente.form.loadRecord(record);
 		dialogoContingente.show();
 		var radio = Ext.getCmp(module+'contingente_mcontingente');
@@ -599,7 +632,7 @@ $availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 
 		radio = Ext.getCmp(module+'contingente_msalvaguardia');
 		value = record.get('contingente_msalvaguardia');
-		radio.setValue([value]).fireEvent('change', radio, radio.getValue() );
+		radio.setValue([value]).fireEvent('change', radio, radio.getValue() );*/
 	}
 	function fnOpenDetail (record) {
 

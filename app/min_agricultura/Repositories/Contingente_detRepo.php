@@ -161,11 +161,9 @@ class Contingente_detRepo extends BaseRepo {
 		//realiza el borrado de cada contingente_det
 		foreach ($result['data'] as $key => $row) {
 			$this->model = $this->getModel();
-			$primaryKey  = $row[$this->primaryKey];
-
-			$result = $this->findPrimaryKey($primaryKey);
-			if ($result['success']) {
-				$result = $this->modelAdo->delete($this->model);
+			$result = $this->delete($row);
+			if (!$result['success']) {
+				return $result;
 			}
 		}
 

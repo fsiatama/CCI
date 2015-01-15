@@ -11,7 +11,7 @@ class AlertaAdo extends BaseAdo {
 
 	protected function setPrimaryKey()
 	{
-		$this->primaryKey = 'alerta_contingente_acuerdo_det_acuerdo_id';
+		$this->primaryKey = 'alerta_id';
 	}
 
 	protected function setData()

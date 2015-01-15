@@ -70,9 +70,9 @@ abstract class BaseRepo {
 		}
 
 		$result = $this->modelAdo->create($this->model);
-		if ($result['success']) {
+		/*if ($result['success']) {
 			return ['success' => true];
-		}
+		}*/
 
 		return $result;
 	}

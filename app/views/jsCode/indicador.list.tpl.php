@@ -154,7 +154,7 @@ $tipo_indicador_html = Inflector::compress($tipo_indicador_html);
 					,border: false
 					,autoDestroy:true
 					,plugins: new Ext.ux.Plugin.RemoteComponent({
-						url: 'indicador/jscodeExecute/'
+						url: 'indicador/jscodeExecute'
 						,params:{
 							indicador_id: indicador_id
 							,id: '<?= $id; ?>'

@@ -2,12 +2,15 @@
 
 require PATH_MODELS.'Entities/Acuerdo.php';
 require PATH_MODELS.'Ado/AcuerdoAdo.php';
-require PATH_MODELS.'Repositories/PaisRepo.php';
-require PATH_MODELS.'Repositories/MercadoRepo.php';
+require_once PATH_MODELS.'Repositories/PaisRepo.php';
+require_once PATH_MODELS.'Repositories/MercadoRepo.php';
+require_once PATH_MODELS.'Repositories/Acuerdo_detRepo.php';
 
 require_once ('BaseRepo.php');
 
 class AcuerdoRepo extends BaseRepo {
+
+	private $acuerdo_detRepo;
 
 	public function getModel()
 	{
@@ -40,23 +43,44 @@ class AcuerdoRepo extends BaseRepo {
 		return $result;
 	}
 
+	private function deleteAgreementDet($acuerdo_id)
+	{
+		$result = $this->acuerdo_detRepo->deleteByParent(
+			compact(
+				'acuerdo_id'
+			)
+		);
+		return $result;
+	}
+
+	public function delete($params)
+	{
+
+		extract($params);
+
+		$this->acuerdo_detRepo = new Acuerdo_detRepo;
+
+		if (empty($acuerdo_id)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+		$result = $this->deleteAgreementDet(
+			$acuerdo_id
+		);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$result = parent::delete($params);
+		return $result;
+	}
+
 	public function setData($params, $action)
 	{
 		extract($params);
-
-		if ($action == 'modify') {
-			$result = $this->findPrimaryKey($acuerdo_id);
-
-			if (!$result['success']) {
-				$result = [
-					'success'  => false,
-					'closeTab' => true,
-					'tab'      => 'tab-'.$module,
-					'error'    => $result['error']
-				];
-				return $result;
-			}
-		}
 
 		$acuerdo_mercado_id = (empty($acuerdo_mercado_id) || !is_array($acuerdo_mercado_id)) ? [] : $acuerdo_mercado_id ;
 		$acuerdo_id_pais    = (empty($acuerdo_id_pais) || !is_array($acuerdo_id_pais)) ? [] : $acuerdo_id_pais ;
@@ -75,13 +99,48 @@ class AcuerdoRepo extends BaseRepo {
 			return $result;
 		}
 
-		$this->model->setAcuerdo_id($acuerdo_id);
+		$acuerdo_mercado_id = implode(',', $acuerdo_mercado_id);
+		$acuerdo_id_pais    = implode(',', $acuerdo_id_pais);
+
+		if ($action == 'modify') {
+			$this->acuerdo_detRepo = new Acuerdo_detRepo;
+
+			$result = $this->findPrimaryKey($acuerdo_id);
+
+			if (!$result['success']) {
+				$result = [
+					'success'  => false,
+					'closeTab' => true,
+					'tab'      => 'tab-'.$module,
+					'error'    => $result['error']
+				];
+				return $result;
+			}
+
+			$row = array_shift($result['data']);
+
+			//si acuerdo_mercado_id o acuerdo_id_pais o acuerdo_fvigente es diferente debe borrar los contingentes y volverlos a crear
+			if (
+				$acuerdo_mercado_id != $row['acuerdo_mercado_id'] || 
+				$acuerdo_id_pais != $row['acuerdo_id_pais'] || 
+				$acuerdo_fvigente != $row['acuerdo_fvigente'] 
+			) {
+				$result = $this->deleteAgreementDet(
+					$acuerdo_id
+				);
+				if (!$result['success']) {
+					return $result;
+				}
+			}
+		}
+
+		//$this->model->setAcuerdo_id($acuerdo_id);
 		$this->model->setAcuerdo_nombre($acuerdo_nombre);
 		$this->model->setAcuerdo_descripcion($acuerdo_descripcion);
 		$this->model->setAcuerdo_intercambio($acuerdo_intercambio);
 		$this->model->setAcuerdo_fvigente($acuerdo_fvigente);
-		$this->model->setAcuerdo_mercado_id(implode(',', $acuerdo_mercado_id));
-		$this->model->setAcuerdo_id_pais(implode(',', $acuerdo_id_pais));
+		$this->model->setAcuerdo_mercado_id($acuerdo_mercado_id);
+		$this->model->setAcuerdo_id_pais($acuerdo_id_pais);
 
 		if ($action == 'create') {
 			$this->model->setAcuerdo_uinsert($_SESSION['user_id']);

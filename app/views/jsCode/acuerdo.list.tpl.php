@@ -35,6 +35,9 @@
 		},{
 			iconCls: 'silk-cart'
 			,qtip: '<?= Lang::get('acuerdo_det.table_name'); ?>'
+		},{
+			iconCls:'silk-chart-bar-link'
+			,qtip: '<?= Lang::get('acuerdo.analyze_agreement'); ?>'
 		}]
 		,callbacks:{
 			'silk-delete':function(grid, record, action, row, col) {
@@ -45,6 +48,9 @@
 			}
 			,'silk-cart':function(grid, record, action, row, col) {
 				fnOpenDetail(record);
+			}
+			,'silk-chart-bar-link':function(grid, record, action, row, col) {
+				fnReport(record);
 			}
 		}
 	});
@@ -75,7 +81,7 @@
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
 			,handler: function(){
-				if(Ext.getCmp('tab-edit_'+module)){
+				if(Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-detail_'+module) || Ext.getCmp('tab-edit_'+module)){
 					Ext.Msg.show({
 						title:Ext.ux.lang.messages.warning
 						,msg:Ext.ux.lang.error.close_tab
@@ -123,6 +129,7 @@
 		,buttonAlign:'center'
 		,title:''
 		,iconCls:'icon-grid'
+		,stripeRows: true
 		,plugins:[
 			new Ext.ux.grid.Search({
 				iconCls:'silk-zoom'
@@ -149,7 +156,7 @@
 	
 	function fnEditItm(record){
 		var key = record.get('acuerdo_id');
-		if(Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-detail_'+module)){
+		if(Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-detail_'+module) || Ext.getCmp('tab-edit_'+module)){
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
 				,msg:Ext.ux.lang.error.close_tab
@@ -222,7 +229,7 @@
 	}
 	function fnOpenDetail (record) {
 		var key = record.get('acuerdo_id');
-		if(Ext.getCmp('tab-detail_'+module)){
+		if(Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-detail_'+module) || Ext.getCmp('tab-edit_'+module)){
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
 				,msg:Ext.ux.lang.error.close_tab
@@ -246,6 +253,25 @@
 			};
 			Ext.getCmp('oeste').addTab(this,this,data);
 		}
+	}
+
+	function fnReport(record){
+		var key   = record.get('acuerdo_id');
+		var title = record.get('acuerdo_nombre');
+		var data  = {
+			id:'indicator_' + key
+			,iconCls:'silk-chart-bar-link'
+			,titleTab: title
+			,url:'acuerdo/jscodeExecute'
+			,params:{
+				id:'<?= $id; ?>'
+				,title: title
+				,module: 'indicator_' + key
+				,parent: module
+				,tipo_indicador_id: key
+			}
+		};
+		Ext.getCmp('oeste').addTab(this,this,data);
 	}
 
 	/*********************************************** End functions***********************************************/

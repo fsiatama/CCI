@@ -120,7 +120,7 @@
 		var abbrev = record.get('tipo_indicador_abrev');
 		var data = {
 			id:'indicator_' + key
-			,iconCls:'silk-page-edit'
+			,iconCls:'silk-chart-bar-link'
 			,titleTab: abbrev
 			,url:'indicador/jscode'
 			,params:{

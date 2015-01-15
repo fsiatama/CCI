@@ -18,13 +18,13 @@ class AlertaRepo extends BaseRepo {
 
 	public function getPrimaryKey()
 	{
-		return 'alerta_contingente_acuerdo_det_acuerdo_id';
+		return 'alerta_id';
 	}
 
 	public function validateModify($params)
 	{
 		extract($params);
-		$result = $this->findPrimaryKey($alerta_contingente_acuerdo_det_acuerdo_id);
+		$result = $this->findPrimaryKey($alerta_id);
 
 		if (!$result['success']) {
 			$result = [
@@ -42,13 +42,11 @@ class AlertaRepo extends BaseRepo {
 		extract($params);
 
 		if ($action == 'modify') {
-			$result = $this->findPrimaryKey($alerta_contingente_acuerdo_det_acuerdo_id);
+			$result = $this->findPrimaryKey($alerta_id);
 
 			if (!$result['success']) {
 				$result = [
 					'success'  => false,
-					'closeTab' => true,
-					'tab'      => 'tab-'.$module,
 					'error'    => $result['error']
 				];
 				return $result;
@@ -56,23 +54,9 @@ class AlertaRepo extends BaseRepo {
 		}
 
 		if (
-			empty($alerta_id) ||
-			empty($alerta_contingente_verde) ||
-			empty($alerta_contingente_amarilla) ||
-			empty($alerta_contingente_roja) ||
-			empty($alerta_salvaguardia_verde) ||
-			empty($alerta_salvaguardia_amarilla) ||
-			empty($alerta_salvaguardia_roja) ||
-			empty($alerta_emails) ||
 			empty($alerta_contingente_id) ||
 			empty($alerta_contingente_acuerdo_det_id) ||
-			empty($alerta_contingente_acuerdo_det_acuerdo_id) ||
-			empty($alerta_disp1) ||
-			empty($alerta_disp2) ||
-			empty($alerta_disp3) ||
-			empty($alerta_disp4) ||
-			empty($alerta_disp5) ||
-			empty($alerta_disp6)
+			empty($alerta_contingente_acuerdo_det_acuerdo_id) 
 		) {
 			$result = [
 				'success' => false,
@@ -80,7 +64,6 @@ class AlertaRepo extends BaseRepo {
 			];
 			return $result;
 		}
-		$this->model->setAlerta_id($alerta_id);
 		$this->model->setAlerta_contingente_verde($alerta_contingente_verde);
 		$this->model->setAlerta_contingente_amarilla($alerta_contingente_amarilla);
 		$this->model->setAlerta_contingente_roja($alerta_contingente_roja);
@@ -91,12 +74,12 @@ class AlertaRepo extends BaseRepo {
 		$this->model->setAlerta_contingente_id($alerta_contingente_id);
 		$this->model->setAlerta_contingente_acuerdo_det_id($alerta_contingente_acuerdo_det_id);
 		$this->model->setAlerta_contingente_acuerdo_det_acuerdo_id($alerta_contingente_acuerdo_det_acuerdo_id);
-		$this->model->setAlerta_disp1($alerta_disp1);
+		/*$this->model->setAlerta_disp1($alerta_disp1);
 		$this->model->setAlerta_disp2($alerta_disp2);
 		$this->model->setAlerta_disp3($alerta_disp3);
 		$this->model->setAlerta_disp4($alerta_disp4);
 		$this->model->setAlerta_disp5($alerta_disp5);
-		$this->model->setAlerta_disp6($alerta_disp6);
+		$this->model->setAlerta_disp6($alerta_disp6);*/
 
 		if ($action == 'create') {
 		} elseif ($action == 'modify') {
@@ -125,12 +108,12 @@ class AlertaRepo extends BaseRepo {
 			$this->model->setAlerta_contingente_id(implode('", "', $query));
 			$this->model->setAlerta_contingente_acuerdo_det_id(implode('", "', $query));
 			$this->model->setAlerta_contingente_acuerdo_det_acuerdo_id(implode('", "', $query));
-			$this->model->setAlerta_disp1(implode('", "', $query));
+			/*$this->model->setAlerta_disp1(implode('", "', $query));
 			$this->model->setAlerta_disp2(implode('", "', $query));
 			$this->model->setAlerta_disp3(implode('", "', $query));
 			$this->model->setAlerta_disp4(implode('", "', $query));
 			$this->model->setAlerta_disp5(implode('", "', $query));
-			$this->model->setAlerta_disp6(implode('", "', $query));
+			$this->model->setAlerta_disp6(implode('", "', $query));*/
 
 			return $this->modelAdo->inSearch($this->model);
 		}
@@ -146,16 +129,41 @@ class AlertaRepo extends BaseRepo {
 			$this->model->setAlerta_contingente_id($query);
 			$this->model->setAlerta_contingente_acuerdo_det_id($query);
 			$this->model->setAlerta_contingente_acuerdo_det_acuerdo_id($query);
-			$this->model->setAlerta_disp1($query);
+			/*$this->model->setAlerta_disp1($query);
 			$this->model->setAlerta_disp2($query);
 			$this->model->setAlerta_disp3($query);
 			$this->model->setAlerta_disp4($query);
 			$this->model->setAlerta_disp5($query);
-			$this->model->setAlerta_disp6($query);
+			$this->model->setAlerta_disp6($query);*/
 
 			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 		}
 
+	}
+
+	public function deleteByParent($params)
+	{
+		extract($params);
+		//busca todos los registros en alerta por la llave de contingente
+		$this->model->setAlerta_contingente_id($contingente_id);
+		$this->model->setAlerta_contingente_acuerdo_det_id($contingente_acuerdo_det_id);
+		$this->model->setAlerta_contingente_acuerdo_det_acuerdo_id($contingente_acuerdo_det_acuerdo_id);
+
+		$result = $this->modelAdo->exactSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		//realiza el borrado de cada alerta
+		foreach ($result['data'] as $key => $row) {
+			$this->model = $this->getModel();
+			$result = $this->delete($row);
+			if (!$result['success']) {
+				return $result;
+			}
+		}
+
+		return $result;
 	}
 
 }

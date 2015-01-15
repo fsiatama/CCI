@@ -40,6 +40,38 @@ class Acuerdo_detRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function deleteByParent($params)
+	{
+		extract($params);
+
+		if (empty($acuerdo_id)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+
+		$this->model->setAcuerdo_det_acuerdo_id($acuerdo_id);
+		$result = $this->modelAdo->exactSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$arrData = $result['data'];
+
+		//realiza el borrado de cada acuerdo_det
+		foreach ($arrData as $key => $row) {
+			$this->model = $this->getModel();
+			$result = $this->delete($row);
+			if (!$result['success']) {
+				return $result;
+			}
+		}
+
+		return $result;
+	}
+
 	private function deleteQuota($acuerdo_det_id, $acuerdo_det_acuerdo_id)
 	{
 		$result = $this->contingenteRepo->deleteByParent(
@@ -56,17 +88,36 @@ class Acuerdo_detRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function create($params)
+	public function delete($params)
 	{
-		$result = $this->setData($params, 'create');
+
+		extract($params);
+
+		$this->contingenteRepo = new ContingenteRepo;
+
+		if (empty($acuerdo_det_id) || empty($acuerdo_det_acuerdo_id)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+		$result = $this->deleteQuota(
+			$acuerdo_det_id,
+			$acuerdo_det_acuerdo_id
+		);
 		if (!$result['success']) {
 			return $result;
 		}
 
-		$result = $this->modelAdo->create($this->model);
-		if (!$result['success']) {
-			return $result;
-		}
+		$result = parent::delete($params);
+		return $result;
+	}
+
+	public function create($params)
+	{
+		$result = parent::create($params);
+		
 		$acuerdo_det_id = $result['insertId'];
 		$acuerdo_det_acuerdo_id = $this->model->getAcuerdo_det_acuerdo_id();
 		$acuerdo_det_contingente_acumulado_pais = $this->model->getAcuerdo_det_contingente_acumulado_pais();
@@ -123,8 +174,11 @@ class Acuerdo_detRepo extends BaseRepo {
 
 			$row = array_shift($result['data']);
 
-			//si acuerdo_det_contingente_acumulado_pais es diferente debe borrar los contingentes y volverlos a crear
-			if ($acuerdo_det_contingente_acumulado_pais != $row['acuerdo_det_contingente_acumulado_pais']) {
+			//si acuerdo_det_contingente_acumulado_pais o acuerdo_det_nperiodos es diferente debe borrar los contingentes y volverlos a crear
+			if (
+				$acuerdo_det_contingente_acumulado_pais != $row['acuerdo_det_contingente_acumulado_pais'] || 
+				$acuerdo_det_nperiodos != $row['acuerdo_det_nperiodos']
+			) {
 				$result = $this->deleteQuota(
 					$acuerdo_det_id,
 					$acuerdo_det_acuerdo_id

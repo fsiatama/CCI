@@ -88,6 +88,19 @@ class AcuerdoController {
 		return $result;
 	}
 
+	public function jscodeExecuteAction($urlParams, $postParams)
+	{
+		$action = array_shift($urlParams);
+		$action = (empty($action)) ? 'list' : $action;
+
+		$result = $this->userRepo->validateMenu($action, $postParams);
+
+		var_dump($result);
+
+		if ($result['success']) {
+		}
+	}
+
 }
 	
 
