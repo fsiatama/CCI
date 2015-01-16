@@ -148,6 +148,7 @@ class Contingente_detRepo extends BaseRepo {
 	public function deleteByParent($params)
 	{
 		extract($params);
+		$this->model = $this->getModel();
 		//busca todos los registros en contingente_det por la llave de contingente
 		$this->model->setContingente_det_contingente_id($contingente_id);
 		$this->model->setContingente_det_contingente_acuerdo_det_id($contingente_acuerdo_det_id);

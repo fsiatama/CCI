@@ -111,6 +111,7 @@ class ContingenteAdo extends BaseAdo {
 			 mercado_nombre,
 			 acuerdo_id_pais,
 			 pais,
+			 acuerdo_det_contingente_acumulado_pais,
 			 alerta_id,
 			 alerta_contingente_verde,
 			 alerta_contingente_amarilla,
@@ -122,8 +123,9 @@ class ContingenteAdo extends BaseAdo {
 			FROM contingente
 			LEFT JOIN alerta ON contingente_id = alerta_contingente_id
 			LEFT JOIN acuerdo ON contingente_acuerdo_det_acuerdo_id = acuerdo_id
-			LEFT JOIN mercado ON acuerdo_mercado_id = mercado_id
-			LEFT JOIN pais ON acuerdo_id_pais = id_pais
+			LEFT JOIN acuerdo_det ON contingente_acuerdo_det_id = acuerdo_det_id
+			LEFT JOIN mercado ON contingente_id_pais = mercado_id
+			LEFT JOIN pais ON contingente_id_pais = id_pais
 		';
 
 		$whereAssignment = false;

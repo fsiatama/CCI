@@ -95,9 +95,16 @@ class AcuerdoController {
 
 		$result = $this->userRepo->validateMenu($action, $postParams);
 
-		var_dump($result);
-
 		if ($result['success']) {
+			//verifica que exista el acuerdo y trae los datos
+			$result = $this->acuerdoRepo->validateModify($postParams);
+			if (!$result['success']) {
+				return $result;
+			}
+			$rowAcuerdo = array_shift($result['data']);
+
+			$postParams['is_template'] = true;
+			var_dump($result);
 		}
 	}
 

@@ -268,7 +268,7 @@
 				,title: title
 				,module: 'indicator_' + key
 				,parent: module
-				,tipo_indicador_id: key
+				,acuerdo_id: key
 			}
 		};
 		Ext.getCmp('oeste').addTab(this,this,data);

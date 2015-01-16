@@ -1,7 +1,8 @@
 <?php
 return [
 	'alerts' => [
-		'change_nperiodos'   => '¡Advertencia!  Modificar este parámetro eliminará toda la información de contingentes, si existen.',
+		'change_nperiodos' => '¡Advertencia!  Modificar este parámetro eliminará toda la información de contingentes, si existen.',
+		'change_contingente_acumulado_pais' => '¡Advertencia!  Modificar este parámetro eliminará toda la información de contingentes, si existen.',
     ],
 	'table_name' => 'Productos del acuerdo comercial',
     'columns_title' => [

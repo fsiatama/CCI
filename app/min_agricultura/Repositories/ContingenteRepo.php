@@ -135,6 +135,7 @@ class ContingenteRepo extends BaseRepo {
 	public function deleteByParent($params)
 	{
 		extract($params);
+		$this->model = $this->getModel();
 		//busca todos los contingentes hijos por acuerdo_det_id
 		$this->model->setContingente_acuerdo_det_id($acuerdo_det_id);
 		$this->model->setContingente_acuerdo_det_acuerdo_id($acuerdo_det_acuerdo_id);
@@ -147,6 +148,8 @@ class ContingenteRepo extends BaseRepo {
 		$this->contingente_detRepo = new Contingente_detRepo;
 
 		$arrData = $result['data'];
+
+		//var_dump('contingentes a borrar',$result['data']);
 
 		//realiza el borrado de cada contingente y sus hijos en contingente_det
 		foreach ($arrData as $key => $row) {
@@ -407,6 +410,7 @@ class ContingenteRepo extends BaseRepo {
 			'acuerdo_id_pais',
 			'pais',
 			'mercado_nombre',
+			'acuerdo_det_contingente_acumulado_pais',
 			'alerta_id',
 			'alerta_contingente_verde',
 			'alerta_contingente_amarilla',
@@ -414,7 +418,7 @@ class ContingenteRepo extends BaseRepo {
 			'alerta_salvaguardia_verde',
 			'alerta_salvaguardia_amarilla',
 			'alerta_salvaguardia_roja',
-			'alerta_emails',
+			'alerta_emails'
 		]);
 		$result = $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 
@@ -425,7 +429,7 @@ class ContingenteRepo extends BaseRepo {
 		$arrData = [];
 
 		foreach ($result['data'] as $key => $row) {
-			$pais = (empty($row['acuerdo_mercado_id'])) ? $row['pais'] : $row['mercado_nombre'] ;
+			$pais = ($row['acuerdo_det_contingente_acumulado_pais'] == '0') ? $row['pais'] : $row['mercado_nombre'] ;
 			$arrData[] = [
 				'contingente_id'                     => $row['contingente_id'],
 				'contingente_id_pais'                => $row['contingente_id_pais'],

@@ -144,12 +144,16 @@ class AlertaRepo extends BaseRepo {
 	public function deleteByParent($params)
 	{
 		extract($params);
+		$this->model = $this->getModel();
 		//busca todos los registros en alerta por la llave de contingente
 		$this->model->setAlerta_contingente_id($contingente_id);
 		$this->model->setAlerta_contingente_acuerdo_det_id($contingente_acuerdo_det_id);
 		$this->model->setAlerta_contingente_acuerdo_det_acuerdo_id($contingente_acuerdo_det_acuerdo_id);
 
 		$result = $this->modelAdo->exactSearch($this->model);
+
+		//var_dump('alertas a borrar',$result, $contingente_id, $contingente_acuerdo_det_id, $contingente_acuerdo_det_acuerdo_id);
+
 		if (!$result['success']) {
 			return $result;
 		}

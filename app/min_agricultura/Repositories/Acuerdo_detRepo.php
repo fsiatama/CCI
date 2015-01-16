@@ -43,6 +43,7 @@ class Acuerdo_detRepo extends BaseRepo {
 	public function deleteByParent($params)
 	{
 		extract($params);
+		$this->model = $this->getModel();
 
 		if (empty($acuerdo_id)) {
 			$result = [
@@ -142,7 +143,7 @@ class Acuerdo_detRepo extends BaseRepo {
 
 		$acuerdo_det_productos = (empty($acuerdo_det_productos) || !is_array($acuerdo_det_productos)) ? [] : $acuerdo_det_productos ;
 		$acuerdo_det_contingente_acumulado_pais = (isset($acuerdo_det_contingente_acumulado_pais)) ? $acuerdo_det_contingente_acumulado_pais : '0' ;
-		$acuerdo_det_contingente_acumulado_pais = ($acuerdo_det_contingente_acumulado_pais === '1') ? '1' : '0' ;
+		$acuerdo_det_contingente_acumulado_pais = ($acuerdo_det_contingente_acumulado_pais == '1') ? '1' : '0' ;
 
 		if (
 			empty($acuerdo_det_productos) ||
@@ -175,6 +176,7 @@ class Acuerdo_detRepo extends BaseRepo {
 			$row = array_shift($result['data']);
 
 			//si acuerdo_det_contingente_acumulado_pais o acuerdo_det_nperiodos es diferente debe borrar los contingentes y volverlos a crear
+			//var_dump($acuerdo_det_contingente_acumulado_pais, $row['acuerdo_det_contingente_acumulado_pais']);
 			if (
 				$acuerdo_det_contingente_acumulado_pais != $row['acuerdo_det_contingente_acumulado_pais'] || 
 				$acuerdo_det_nperiodos != $row['acuerdo_det_nperiodos']

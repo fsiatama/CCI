@@ -224,6 +224,17 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 						,name:'acuerdo_det_contingente_acumulado_pais'
 					}]
 				}]
+		<?php
+		if ($action == 'modify') {
+
+			echo "
+				},{
+					html:'<div class=\"bootstrap-styles\"><p class=\"text-danger\"><small>".Lang::get('acuerdo_det.alerts.change_contingente_acumulado_pais')."</small></p></div>'
+					,border:false
+					,columnWidth:1
+			";
+		}
+		?>
 			}]
 		}]
 		,buttons: [{
@@ -246,7 +257,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 	<?php
 	if ($action == 'modify') {
 
-		echo "
+	echo "
 	formAcuerdo_det.on('show', function(){
 		formAcuerdo_det.form.load({
 			 url: 'acuerdo_det/listId'

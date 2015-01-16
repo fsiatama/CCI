@@ -153,6 +153,8 @@ class AlertaAdo extends BaseAdo {
 			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
 		}
 
+		//echo "<pre>$sql</pre>";
+
 		return $sql;
 	}
 
