@@ -135,6 +135,16 @@ class ContingenteRepo extends BaseRepo {
 	public function deleteByParent($params)
 	{
 		extract($params);
+		if (
+			empty($acuerdo_det_acuerdo_id) ||
+			empty($acuerdo_det_id)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request. contingenteRepo  deleteByParent'
+			];
+			return $result;
+		}
 		$this->model = $this->getModel();
 		//busca todos los contingentes hijos por acuerdo_det_id
 		$this->model->setContingente_acuerdo_det_id($acuerdo_det_id);

@@ -105,6 +105,18 @@ class Contingente_detRepo extends BaseRepo {
 	public function createByAgreementDet($params)
 	{
 		extract($params);
+
+		if (
+			empty($contingente_acuerdo_det_id)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request. contingente_detRepo  createByAgreementDet'
+			];
+			return $result;
+		}
+
+
 		$acuerdo_detRepo = new Acuerdo_detRepo;
 		$acuerdo_det_id  = $contingente_acuerdo_det_id;
 		//verifica que exista el acuerdo_det y trae los datos
@@ -148,6 +160,19 @@ class Contingente_detRepo extends BaseRepo {
 	public function deleteByParent($params)
 	{
 		extract($params);
+
+		if (
+			empty($contingente_id) ||
+			empty($contingente_acuerdo_det_id) ||
+			empty($contingente_acuerdo_det_acuerdo_id)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request. contingente_detRepo  deleteByParent'
+			];
+			return $result;
+		}
+
 		$this->model = $this->getModel();
 		//busca todos los registros en contingente_det por la llave de contingente
 		$this->model->setContingente_det_contingente_id($contingente_id);
@@ -174,6 +199,8 @@ class Contingente_detRepo extends BaseRepo {
 	public function setData($params, $action)
 	{
 		extract($params);
+		
+		$contingente_det_id = (empty($contingente_det_id)) ? '' : $contingente_det_id ;
 
 		if ($action == 'modify') {
 			$result = $this->findPrimaryKey($contingente_det_id);

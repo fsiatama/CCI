@@ -67,20 +67,25 @@ class DesgravacionAdo extends BaseAdo {
 
 	public function buildSelect()
 	{
-		$filter = [];
-		$operator = $this->getOperator();
-		$joinOperator = ' AND ';
+		$filter        = [];
+		$primaryFilter = [];
+		$operator      = $this->getOperator();
+		$joinOperator  = ' AND ';
 		foreach($this->data as $key => $data){
 			if ($data <> ''){
-				if ($operator == '=') {
-					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
-				}
-				elseif ($operator == 'IN') {
-					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
-				}
-				else {
-					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
-					$joinOperator = ' OR ';
+				if ($key == 'desgravacion_acuerdo_det_id' || $key == 'desgravacion_acuerdo_det_acuerdo_id') {
+					$primaryFilter[] = $key . ' = "' . $data . '"';
+				} else {
+					if ($operator == '=') {
+						$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
+					}
+					elseif ($operator == 'IN') {
+						$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+					}
+					else {
+						$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+						$joinOperator = ' OR ';
+					}
 				}
 			}
 		}
@@ -91,13 +96,31 @@ class DesgravacionAdo extends BaseAdo {
 			 desgravacion_mdesgravacion,
 			 desgravacion_desc,
 			 desgravacion_acuerdo_det_id,
-			 desgravacion_acuerdo_det_acuerdo_id
+			 desgravacion_acuerdo_det_acuerdo_id,
+			 acuerdo_mercado_id,
+			 mercado_nombre,
+			 acuerdo_id_pais,
+			 pais,
+			 acuerdo_det_desgravacion_igual_pais
 			FROM desgravacion
+			LEFT JOIN acuerdo ON desgravacion_acuerdo_det_acuerdo_id = acuerdo_id
+			LEFT JOIN acuerdo_det ON desgravacion_acuerdo_det_id = acuerdo_det_id
+			LEFT JOIN mercado ON desgravacion_id_pais = mercado_id
+			LEFT JOIN pais ON desgravacion_id_pais = id_pais
 		';
+		$whereAssignment = false;
+
+		if(!empty($primaryFilter)){
+			$sql            .= ' WHERE ('. implode( ' AND ', $primaryFilter ).')';
+			$whereAssignment = true;
+		}
 		if(!empty($filter)){
-			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+			$sql .= ($whereAssignment) ? ' AND ' : ' WHERE ' ;
+			$sql .= '  ('. implode( $joinOperator, $filter ).')';
 		}
 
+		//echo "<pre>$sql</pre>";
+		
 		return $sql;
 	}
 

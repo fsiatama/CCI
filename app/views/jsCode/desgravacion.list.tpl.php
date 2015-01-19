@@ -11,9 +11,9 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 		dialogoDesgravacion.destroy();
 	});
 
-	/*********************************************** contingente_det grid ***********************************************/
+	/*********************************************** desgravacion_det grid ***********************************************/
 	var storeDesgravacion_det = new Ext.data.JsonStore({
-		url:'contingente_det/list'
+		url:'desgravacion_det/list'
 		,pruneModifiedRecords:true
 		,root:'data'
 		,sortInfo:{field:'desgravacion_det_anio_ini',direction:'ASC'}
@@ -25,8 +25,9 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 		}
 		,fields:[
 			{name:'desgravacion_det_id', type:'float'},
-			{name:'desgravacion_det_anio_ini', type:'float'},
-			{name:'desgravacion_det_anio_fin', type:'float'},
+			{name:'desgravacion_det_anio_ini', type:'string'},
+			{name:'desgravacion_det_anio_fin', type:'string'},
+			{name:'desgravacion_det_anio_fin_title', type:'string'},
 			{name:'desgravacion_det_tasa', type:'float'},
 			{name:'desgravacion_det_desgravacion_id', type:'float'},
 			{name:'desgravacion_det_desgravacion_acuerdo_det_id', type:'float'},
@@ -111,7 +112,7 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 		,items:[gridDesgravacion_det]
 	});
 
-	/*********************************************** contingente Form ***********************************************/
+	/*********************************************** desgravacion Form ***********************************************/
 	var formDesgravacion = new Ext.FormPanel({
 		labelAlign:'top'
 		,method:'POST'
@@ -245,14 +246,14 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 			,desgravacion_acuerdo_det_acuerdo_id:'<?= $acuerdo_det_acuerdo_id; ?>'
 		}
 		,fields:[
-			{name:'contingente_id', type:'float'},
-			{name:'contingente_id_pais', type:'float'},
+			{name:'desgravacion_id', type:'float'},
+			{name:'desgravacion_id_pais', type:'float'},
 			{name:'pais', type:'string'},
-			{name:'contingente_mcontingente', type:'string'},
-			{name:'contingente_mcontingente_title', type:'string'},
-			{name:'contingente_desc', type:'string'},
-			{name:'contingente_acuerdo_det_id', type:'float'},
-			{name:'contingente_acuerdo_det_acuerdo_id', type:'float'},
+			{name:'desgravacion_mdesgravacion', type:'string'},
+			{name:'desgravacion_mdesgravacion_title', type:'string'},
+			{name:'desgravacion_desc', type:'string'},
+			{name:'desgravacion_acuerdo_det_id', type:'float'},
+			{name:'desgravacion_acuerdo_det_acuerdo_id', type:'float'},
 		]
 	});
 
@@ -267,7 +268,7 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 			,qtip: Ext.ux.lang.buttons.modify_tt
 		},{
 			 iconCls: 'fuel'
-			,qtip: '<?= Lang::get('contingente_det.table_name'); ?>'
+			,qtip: '<?= Lang::get('desgravacion_det.table_name'); ?>'
 		}]
 		,callbacks:{
 			'silk-page-edit':function(grid, record, action, row, col) {
@@ -281,11 +282,9 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 
 	var cmDesgravacion = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('contingente.columns_title.contingente_id_pais'); ?>', hidden:false, dataIndex:'pais'},
-			{header:'<?= Lang::get('contingente.columns_title.contingente_mcontingente'); ?>', hidden:false, dataIndex:'contingente_mcontingente_title'},
-			{header:'<?= Lang::get('contingente.columns_title.contingente_desc'); ?>', hidden:false, dataIndex:'contingente_desc'},
-			{header:'<?= Lang::get('contingente.columns_title.contingente_msalvaguardia'); ?>', hidden:false, dataIndex:'contingente_msalvaguardia_title'},
-			{header:'<?= Lang::get('contingente.columns_title.contingente_salvaguardia_sobretasa'); ?>', align:'left', hidden:false, dataIndex:'contingente_salvaguardia_sobretasa'},
+			{header:'<?= Lang::get('desgravacion.columns_title.desgravacion_id_pais'); ?>', hidden:false, dataIndex:'pais'},
+			{header:'<?= Lang::get('desgravacion.columns_title.desgravacion_mdesgravacion'); ?>', hidden:false, dataIndex:'desgravacion_mdesgravacion_title'},
+			{header:'<?= Lang::get('desgravacion.columns_title.desgravacion_desc'); ?>', hidden:false, dataIndex:'desgravacion_desc'},
 			gridDesgravacionAction
 		]
 		,defaults:{
@@ -370,7 +369,7 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 			,bodyStyle:'padding:10px;'
 			,items:[
 			{
-				html:'<div class="bootstrap-styles"><h4 class="text-center"><?= Lang::get('contingente.table_name'); ?></h4></div>'
+				html:'<div class="bootstrap-styles"><h4 class="text-center"><?= Lang::get('desgravacion.table_name'); ?></h4></div>'
 			},
 				gridDesgravacion
 			]
@@ -388,7 +387,7 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 			formDesgravacion.getForm().submit({
 				waitMsg: 'Saving....'
 				,waitTitle:'Wait please...'
-				,url:'contingente/modify'
+				,url:'desgravacion/modify'
 				,params: params
 				,success: function(form, action){
 					storeDesgravacion.load();
@@ -416,54 +415,17 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 		}
 	}
 	function fnEditItm (record) {
-		var key = record.get('contingente_id');
-		if(Ext.getCmp('tab-edit_'+module)) {
-			Ext.Msg.show({
-				 title:Ext.ux.lang.messages.warning
-				,msg:Ext.ux.lang.error.close_tab
-				,buttons: Ext.Msg.OK
-				,icon: Ext.Msg.WARNING
-			});
-		}
-		else{
-			var data = {
-				id:'edit_' + module
-				,iconCls:'silk-page-edit'
-				,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
-				,url:'contingente/jscode/modify'
-				,params:{
-					id:'<?= $id; ?>'
-					,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.modify
-					,module: 'edit_' + module
-					,parent: module
-					,contingente_id: key
-					,acuerdo_det_id:'<?= $acuerdo_det_id; ?>'
-					,acuerdo_det_acuerdo_id:'<?= $acuerdo_det_acuerdo_id; ?>'
-				}
-			};
-			Ext.getCmp('oeste').addTab(this,this,data);
-		}
-
-
-
-
-
-
-
-		/*formDesgravacion.form.reset();
+		
+		formDesgravacion.form.reset();
 		formDesgravacion.form.loadRecord(record);
 		dialogoDesgravacion.show();
-		var radio = Ext.getCmp(module+'contingente_mcontingente');
-		var value = record.get('contingente_mcontingente');
+		var radio = Ext.getCmp(module+'desgravacion_mdesgravacion');
+		var value = record.get('desgravacion_mdesgravacion');
 		radio.setValue([value]).fireEvent('change', radio, radio.getValue() );
-
-		radio = Ext.getCmp(module+'contingente_msalvaguardia');
-		value = record.get('contingente_msalvaguardia');
-		radio.setValue([value]).fireEvent('change', radio, radio.getValue() );*/
 	}
 	function fnOpenDetail (record) {
 
-		storeDesgravacion_det.baseParams['contingente_det_contingente_id'] = record.get('contingente_id');
+		storeDesgravacion_det.baseParams['desgravacion_det_desgravacion_id'] = record.get('desgravacion_id');
 
 		storeDesgravacion_det.load();
 
@@ -478,7 +440,7 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 			data.push(r.data);
 		});
 		Ext.Ajax.request({
-			 url:'contingente_det/saveGrid'
+			 url:'desgravacion_det/saveGrid'
 			,method:'POST'
 			,scope:this
 			,timeout:100000

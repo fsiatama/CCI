@@ -32,6 +32,11 @@ class Desgravacion {
 		return $this->desgravacion_mdesgravacion;
 	}
 
+	public function getDesgravacionMdesgravacionTitleAttribute($key)
+	{
+		return Lang::get('desgravacion.desgravacion_mdesgravacion.' . $key);
+	}
+
 	public function setDesgravacion_desc($desgravacion_desc){
 		$this->desgravacion_desc = $desgravacion_desc;
 	}

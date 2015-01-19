@@ -318,7 +318,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 		}
 		else{
 			var data = {
-				id:'quote_' + module
+				id:'deduction_' + module
 				,iconCls:'silk-basket'
 				,titleTab:'<?= Lang::get('desgravacion.table_name'); ?>'
 				,url:'desgravacion/jscode'

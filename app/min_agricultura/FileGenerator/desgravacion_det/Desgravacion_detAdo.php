@@ -71,20 +71,26 @@ class Desgravacion_detAdo extends BaseAdo {
 
 	public function buildSelect()
 	{
-		$filter = [];
-		$operator = $this->getOperator();
-		$joinOperator = ' AND ';
+		$filter        = [];
+		$primaryFilter = [];
+		$operator      = $this->getOperator();
+		$joinOperator  = ' AND ';
+
 		foreach($this->data as $key => $data){
 			if ($data <> ''){
-				if ($operator == '=') {
-					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
-				}
-				elseif ($operator == 'IN') {
-					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
-				}
-				else {
-					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
-					$joinOperator = ' OR ';
+				if ($key == 'desgravacion_det_desgravacion_acuerdo_det_acuerdo_id') {
+					$primaryFilter[] = $key . ' = "' . $data . '"';
+				} else {
+					if ($operator == '=') {
+						$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
+					}
+					elseif ($operator == 'IN') {
+						$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+					}
+					else {
+						$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+						$joinOperator = ' OR ';
+					}
 				}
 			}
 		}
@@ -99,8 +105,16 @@ class Desgravacion_detAdo extends BaseAdo {
 			 desgravacion_det_desgravacion_acuerdo_det_acuerdo_id
 			FROM desgravacion_det
 		';
+
+		$whereAssignment = false;
+
+		if(!empty($primaryFilter)){
+			$sql            .= ' WHERE ('. implode( ' AND ', $primaryFilter ).')';
+			$whereAssignment = true;
+		}
 		if(!empty($filter)){
-			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+			$sql .= ($whereAssignment) ? ' AND ' : ' WHERE ' ;
+			$sql .= '  ('. implode( $joinOperator, $filter ).')';
 		}
 
 		return $sql;

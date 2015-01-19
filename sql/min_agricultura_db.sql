@@ -58,11 +58,11 @@ CREATE TABLE `acuerdo_det` (
   `acuerdo_det_desgravacion_igual_pais` enum('0','1') NOT NULL,
   PRIMARY KEY (`acuerdo_det_id`,`acuerdo_det_acuerdo_id`),
   KEY `fk_acuerdo_det_acuerdo_idx` (`acuerdo_det_acuerdo_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 /*Data for the table `acuerdo_det` */
 
-insert  into `acuerdo_det`(`acuerdo_det_id`,`acuerdo_det_arancel_base`,`acuerdo_det_productos`,`acuerdo_det_productos_desc`,`acuerdo_det_administracion`,`acuerdo_det_administrador`,`acuerdo_det_nperiodos`,`acuerdo_det_acuerdo_id`,`acuerdo_det_contingente_acumulado_pais`,`acuerdo_det_desgravacion_igual_pais`) values (13,40,'2309109000','LOS DEMAS ALIMENTOS PARA ANIMALES','REQUISITOS LEGALES Y ADMINISTRATIVOS \n TRASPARENTES, OPORTUNOS Y  NO DISCRIMINATORIOS , ESTABLECIDOS MEDIANTE RESOLUCION POR EL MADR, PARA LA DISTRIBUCION DEL CONTINGENTE A PRORRATA  ENTRE LOS SOLICITANTES.','PAIS IMPORTADOR\nMINISTERIO DE AGRICULTURA Y DESARROLLO RURAL',10,6,'0','1'),(12,0,'0201301000,0202301000','CARNE DE BOVINO  DESHUESADA','REQUISITOS LEGALES Y ADMINISTRATIVOS  TRASPARENTES, OPORTUNOS Y  NO DISCRIMINATORIOS, ESTABLECIDOS MEDIANTE RESOLUCION POR EL MADR, PARA LA DISTRIBUCION  A PRORRATA ENTRE:\n-EXPORTADORES HISTORICOS 80\n-EXPORTADORES NUEVOS 20','MINISTEIO DE AGRICULTURA Y DESARROLLO RURAL',10,5,'0','0');
+insert  into `acuerdo_det`(`acuerdo_det_id`,`acuerdo_det_arancel_base`,`acuerdo_det_productos`,`acuerdo_det_productos_desc`,`acuerdo_det_administracion`,`acuerdo_det_administrador`,`acuerdo_det_nperiodos`,`acuerdo_det_acuerdo_id`,`acuerdo_det_contingente_acumulado_pais`,`acuerdo_det_desgravacion_igual_pais`) values (13,40,'2309109000','LOS DEMAS ALIMENTOS PARA ANIMALES','REQUISITOS LEGALES Y ADMINISTRATIVOS \n TRASPARENTES, OPORTUNOS Y  NO DISCRIMINATORIOS , ESTABLECIDOS MEDIANTE RESOLUCION POR EL MADR, PARA LA DISTRIBUCION DEL CONTINGENTE A PRORRATA  ENTRE LOS SOLICITANTES.','PAIS IMPORTADOR\nMINISTERIO DE AGRICULTURA Y DESARROLLO RURAL',10,6,'0','0'),(12,0,'0201301000,0202301000','CARNE DE BOVINO  DESHUESADA','REQUISITOS LEGALES Y ADMINISTRATIVOS  TRASPARENTES, OPORTUNOS Y  NO DISCRIMINATORIOS, ESTABLECIDOS MEDIANTE RESOLUCION POR EL MADR, PARA LA DISTRIBUCION  A PRORRATA ENTRE:\n-EXPORTADORES HISTORICOS 80\n-EXPORTADORES NUEVOS 20','MINISTEIO DE AGRICULTURA Y DESARROLLO RURAL',10,5,'0','0'),(14,0,'040221,040210','LECHE EN POLVO O EN PASTILLAS, LAS DEMAS.','REQUISITOS LEGALES Y ADMINISTRATIVOS   ESTABLECIDOS  POR EL MADR A TRAVES DE LAS RESOLUCIONES  NO. 0281 DE 2012 Y 00182 DE 2013, PARA LA DISTRIBUCION  A PRORRATA A\n LAS EMPRESAS CON PLANTAS PROCESADORAS DE PRODUCTOS LACTEOS, CERTIFICADAS POR EL INVIMA Y HABILITADAS POR LA AUTORIDAD SANITARIA DE MEXICO PARA EXPORTAR A ESE PAIS. ASI MISMO EL CUPO DE LECHE EN POLVO ESTARA VIGENTE DURANE LOS MESES DE ENERO A ABRIL  Y DE AGOSTO A DICIEMBRE DE CADA ANO','MINISTERIO DE AGRICULTURA Y DESARROLLO RURAL',10,5,'0','0');
 
 /*Table structure for table `alerta` */
 
@@ -88,11 +88,11 @@ CREATE TABLE `alerta` (
   `alerta_disp6` char(1) NOT NULL,
   PRIMARY KEY (`alerta_id`,`alerta_contingente_id`,`alerta_contingente_acuerdo_det_id`,`alerta_contingente_acuerdo_det_acuerdo_id`),
   KEY `fk_alerta_contingente1_idx` (`alerta_contingente_id`,`alerta_contingente_acuerdo_det_id`,`alerta_contingente_acuerdo_det_acuerdo_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 /*Data for the table `alerta` */
 
-insert  into `alerta`(`alerta_id`,`alerta_contingente_verde`,`alerta_contingente_amarilla`,`alerta_contingente_roja`,`alerta_salvaguardia_verde`,`alerta_salvaguardia_amarilla`,`alerta_salvaguardia_roja`,`alerta_emails`,`alerta_contingente_id`,`alerta_contingente_acuerdo_det_id`,`alerta_contingente_acuerdo_det_acuerdo_id`,`alerta_disp1`,`alerta_disp2`,`alerta_disp3`,`alerta_disp4`,`alerta_disp5`,`alerta_disp6`) values (15,60,90,100,0,0,0,'',3,12,5,'','','','','',''),(42,0,0,0,0,0,0,'',24,13,6,'','','','','',''),(41,0,0,0,0,0,0,'',23,13,6,'','','','','',''),(40,0,0,0,0,0,0,'',22,13,6,'','','','','','');
+insert  into `alerta`(`alerta_id`,`alerta_contingente_verde`,`alerta_contingente_amarilla`,`alerta_contingente_roja`,`alerta_salvaguardia_verde`,`alerta_salvaguardia_amarilla`,`alerta_salvaguardia_roja`,`alerta_emails`,`alerta_contingente_id`,`alerta_contingente_acuerdo_det_id`,`alerta_contingente_acuerdo_det_acuerdo_id`,`alerta_disp1`,`alerta_disp2`,`alerta_disp3`,`alerta_disp4`,`alerta_disp5`,`alerta_disp6`) values (44,60,90,100,0,0,0,'',26,12,5,'','','','','',''),(42,0,0,0,0,0,0,'',24,13,6,'','','','','',''),(41,0,0,0,0,0,0,'',23,13,6,'','','','','',''),(40,0,0,0,0,0,0,'',22,13,6,'','','','','',''),(45,0,0,0,0,0,0,'',27,14,5,'','','','','','');
 
 /*Table structure for table `category_menu` */
 
@@ -154,11 +154,11 @@ CREATE TABLE `contingente` (
   PRIMARY KEY (`contingente_id`,`contingente_acuerdo_det_id`,`contingente_acuerdo_det_acuerdo_id`),
   KEY `fk_contingente_acuerdo_det1_idx` (`contingente_acuerdo_det_id`,`contingente_acuerdo_det_acuerdo_id`),
   KEY `fk_contingente_pais1_idx` (`contingente_id_pais`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 
 /*Data for the table `contingente` */
 
-insert  into `contingente`(`contingente_id`,`contingente_id_pais`,`contingente_mcontingente`,`contingente_desc`,`contingente_msalvaguardia`,`contingente_salvaguardia_sobretasa`,`contingente_acuerdo_det_id`,`contingente_acuerdo_det_acuerdo_id`) values (3,493,'1','CRECIMIENTO ANUAL DEL 10 DE LAS CANTIDADES\nARANCEL INTRACUOTA: 0','0',0,12,5),(24,345,'0','','0',0,13,6),(23,317,'0','','0',0,13,6),(22,242,'0','','0',0,13,6);
+insert  into `contingente`(`contingente_id`,`contingente_id_pais`,`contingente_mcontingente`,`contingente_desc`,`contingente_msalvaguardia`,`contingente_salvaguardia_sobretasa`,`contingente_acuerdo_det_id`,`contingente_acuerdo_det_acuerdo_id`) values (26,493,'1','CRECIMIENTO ANUAL DEL 10 DE LAS CANTIDADES\nARANCEL INTRACUOTA: 0','0',0,12,5),(27,493,'0','','0',0,14,5),(24,345,'0','','0',0,13,6),(23,317,'0','','0',0,13,6),(22,242,'0','','0',0,13,6);
 
 /*Table structure for table `contingente_det` */
 
@@ -174,11 +174,11 @@ CREATE TABLE `contingente_det` (
   `contingente_det_contingente_acuerdo_det_acuerdo_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`contingente_det_id`,`contingente_det_contingente_id`,`contingente_det_contingente_acuerdo_det_id`,`contingente_det_contingente_acuerdo_det_acuerdo_id`),
   KEY `fk_contingente_det_contingente1_idx` (`contingente_det_contingente_id`,`contingente_det_contingente_acuerdo_det_id`,`contingente_det_contingente_acuerdo_det_acuerdo_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=179 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=189 DEFAULT CHARSET=utf8;
 
 /*Data for the table `contingente_det` */
 
-insert  into `contingente_det`(`contingente_det_id`,`contingente_det_anio_ini`,`contingente_det_anio_fin`,`contingente_det_peso_neto`,`contingente_det_contingente_id`,`contingente_det_contingente_acuerdo_det_id`,`contingente_det_contingente_acuerdo_det_acuerdo_id`) values (178,2020,65535,7781.00,3,12,5),(177,2019,2019,7074.00,3,12,5),(176,2018,2018,6431.00,3,12,5),(175,2017,2017,5846.00,3,12,5),(174,2016,2016,5315.00,3,12,5),(173,2015,2015,4832.00,3,12,5),(172,2014,2014,4392.00,3,12,5),(171,2013,2013,3993.00,3,12,5),(170,2012,2012,3630.00,3,12,5),(169,2011,2011,3300.00,3,12,5);
+insert  into `contingente_det`(`contingente_det_id`,`contingente_det_anio_ini`,`contingente_det_anio_fin`,`contingente_det_peso_neto`,`contingente_det_contingente_id`,`contingente_det_contingente_acuerdo_det_id`,`contingente_det_contingente_acuerdo_det_acuerdo_id`) values (188,2020,65535,7781.00,26,12,5),(187,2019,2019,7074.00,26,12,5),(186,2018,2018,6431.00,26,12,5),(185,2017,2017,5846.00,26,12,5),(184,2016,2016,5315.00,26,12,5),(183,2015,2015,4832.00,26,12,5),(182,2014,2014,4392.00,26,12,5),(181,2013,2013,3993.00,26,12,5),(180,2012,2012,3630.00,26,12,5),(179,2011,2011,3300.00,26,12,5);
 
 /*Table structure for table `correlativa` */
 
@@ -231,11 +231,11 @@ CREATE TABLE `desgravacion` (
   PRIMARY KEY (`desgravacion_id`,`desgravacion_acuerdo_det_id`,`desgravacion_acuerdo_det_acuerdo_id`),
   KEY `fk_desgravacion_acuerdo_det1_idx` (`desgravacion_acuerdo_det_id`,`desgravacion_acuerdo_det_acuerdo_id`),
   KEY `fk_desgravacion_pais1_idx` (`desgravacion_id_pais`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 /*Data for the table `desgravacion` */
 
-insert  into `desgravacion`(`desgravacion_id`,`desgravacion_id_pais`,`desgravacion_mdesgravacion`,`desgravacion_desc`,`desgravacion_acuerdo_det_id`,`desgravacion_acuerdo_det_acuerdo_id`) values (4,1,'0','',13,6);
+insert  into `desgravacion`(`desgravacion_id`,`desgravacion_id_pais`,`desgravacion_mdesgravacion`,`desgravacion_desc`,`desgravacion_acuerdo_det_id`,`desgravacion_acuerdo_det_acuerdo_id`) values (11,345,'0','Categoría de desgravación H. Fuera del Contingente no hay ningun compromiso de reduccion arancelaria.',13,6),(10,317,'0','Categoría de desgravación H. Fuera del Contingente no hay ningun compromiso de reduccion arancelaria.',13,6),(9,242,'1','Categoría de desgravacion C(10). Los aranceles aduaneros sobre estas mercacias, serán eliminados en 10 etapas anuales iguales. Las mercancias quedarán libres de arancel a partir del 1ero de nero del año 10.',13,6),(13,493,'1','Suspensión de preferencias arancelarias por fuera del cupo. El arancel de importación aplicable, será el arancel de Nación Más Favorecida (NMF).',12,5),(14,493,'0','',14,5);
 
 /*Table structure for table `desgravacion_det` */
 
@@ -251,9 +251,11 @@ CREATE TABLE `desgravacion_det` (
   `desgravacion_det_desgravacion_acuerdo_det_acuerdo_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`desgravacion_det_id`,`desgravacion_det_desgravacion_id`,`desgravacion_det_desgravacion_acuerdo_det_id`,`desgravacion_det_desgravacion_acuerdo_det_acuerdo_id`),
   KEY `fk_desgravacion_det_desgravacion1_idx` (`desgravacion_det_desgravacion_id`,`desgravacion_det_desgravacion_acuerdo_det_id`,`desgravacion_det_desgravacion_acuerdo_det_acuerdo_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
 
 /*Data for the table `desgravacion_det` */
+
+insert  into `desgravacion_det`(`desgravacion_det_id`,`desgravacion_det_anio_ini`,`desgravacion_det_anio_fin`,`desgravacion_det_tasa`,`desgravacion_det_desgravacion_id`,`desgravacion_det_desgravacion_acuerdo_det_id`,`desgravacion_det_desgravacion_acuerdo_det_acuerdo_id`) values (1,2010,2010,36,9,13,6),(2,2011,2011,32,9,13,6),(3,2012,2012,28,9,13,6),(4,2013,2013,24,9,13,6),(5,2014,2014,20,9,13,6),(6,2015,2015,16,9,13,6),(7,2016,2016,12,9,13,6),(8,2017,2017,8,9,13,6),(9,2018,2018,4,9,13,6),(10,2019,65535,0,9,13,6),(50,2020,65535,0,13,12,5),(49,2019,2019,0,13,12,5),(48,2018,2018,0,13,12,5),(47,2017,2017,0,13,12,5),(46,2016,2016,0,13,12,5),(45,2015,2015,0,13,12,5),(44,2014,2014,0,13,12,5),(43,2013,2013,0,13,12,5),(42,2012,2012,0,13,12,5),(41,2011,2011,0,13,12,5);
 
 /*Table structure for table `indicador` */
 
@@ -506,7 +508,7 @@ CREATE TABLE `session` (
 
 /*Data for the table `session` */
 
-insert  into `session`(`session_user_id`,`session_php_id`,`session_date`,`session_active`) values (1,'4m4cgsbdh91bkkrei8v2m6p483','2015-01-19 02:57:55','1'),(7,'uvebgut0rm4tmto14l33a2kdn6','2014-12-02 21:43:44','1'),(8,'pokrfv4hsmvdnc32h4e726jjn2','2015-01-05 16:54:58','0'),(13,'pokrfv4hsmvdnc32h4e726jjn2','2015-01-05 17:07:03','0');
+insert  into `session`(`session_user_id`,`session_php_id`,`session_date`,`session_active`) values (1,'rki36m68h3nbr4kulfbvr4bb13','2015-01-19 22:35:03','1'),(7,'uvebgut0rm4tmto14l33a2kdn6','2014-12-02 21:43:44','1'),(8,'pokrfv4hsmvdnc32h4e726jjn2','2015-01-05 16:54:58','0'),(13,'pokrfv4hsmvdnc32h4e726jjn2','2015-01-05 17:07:03','0');
 
 /*Table structure for table `subpartida` */
 

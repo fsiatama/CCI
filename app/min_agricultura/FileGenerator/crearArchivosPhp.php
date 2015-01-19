@@ -121,20 +121,26 @@ class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {
 
 	public function buildSelect()
 	{
-		\$filter = [];
-		\$operator = \$this->getOperator();
-		\$joinOperator = ' AND ';
+		\$filter        = [];
+		\$primaryFilter = [];
+		\$operator      = \$this->getOperator();
+		\$joinOperator  = ' AND ';
+
 		foreach(\$this->data as \$key => \$data){
 			if (\$data <> ''){
-				if (\$operator == '=') {
-					\$filter[] = \$key . ' ' . \$operator . ' \"' . \$data . '\"';
-				}
-				elseif (\$operator == 'IN') {
-					\$filter[] = \$key . ' ' . \$operator . '(\"' . \$data . '\")';
-				}
-				else {
-					\$filter[] = \$key . ' ' . \$operator . ' \"%' . \$data . '%\"';
-					\$joinOperator = ' OR ';
+				if (\$key == '".$llave_primaria."') {
+					\$primaryFilter[] = \$key . ' = \"' . \$data . '\"';
+				} else {
+					if (\$operator == '=') {
+						\$filter[] = \$key . ' ' . \$operator . ' \"' . \$data . '\"';
+					}
+					elseif (\$operator == 'IN') {
+						\$filter[] = \$key . ' ' . \$operator . '(\"' . \$data . '\")';
+					}
+					else {
+						\$filter[] = \$key . ' ' . \$operator . ' \"%' . \$data . '%\"';
+						\$joinOperator = ' OR ';
+					}
 				}
 			}
 		}
@@ -143,8 +149,16 @@ class ".ucfirst($nombre_tabla)."Ado extends BaseAdo {
 			 ".implode(",\r\n			 ", $result)."
 			FROM ".$nombre_tabla."
 		';
+
+		\$whereAssignment = false;
+
+		if(!empty(\$primaryFilter)){
+			\$sql            .= ' WHERE ('. implode( ' AND ', \$primaryFilter ).')';
+			\$whereAssignment = true;
+		}
 		if(!empty(\$filter)){
-			\$sql .= ' WHERE ('. implode( \$joinOperator, \$filter ).')';
+			\$sql .= (\$whereAssignment) ? ' AND ' : ' WHERE ' ;
+			\$sql .= '  ('. implode( \$joinOperator, \$filter ).')';
 		}
 
 		return \$sql;

@@ -204,6 +204,30 @@ class DesgravacionRepo extends BaseRepo {
 				];
 				return $result;
 			}
+			$row = array_shift($result['data']);
+			$this->desgravacion_detRepo = new Desgravacion_detRepo;
+
+			if ($desgravacion_mdesgravacion != $row['desgravacion_mdesgravacion']) {
+				$result = $this->deleteDeductions(
+					$desgravacion_id,
+					$desgravacion_acuerdo_det_id,
+					$desgravacion_acuerdo_det_acuerdo_id
+				);
+				if (!$result['success']) {
+					return $result;
+				}
+
+				if ($desgravacion_mdesgravacion === '1') {
+					$result = $this->createDeductions(
+						$desgravacion_id,
+						$desgravacion_acuerdo_det_id,
+						$desgravacion_acuerdo_det_acuerdo_id
+					);
+					if (!$result['success']) {
+						return $result;
+					}
+				}
+			}
 		}
 
 		$this->model->setDesgravacion_id($desgravacion_id);
@@ -249,6 +273,88 @@ class DesgravacionRepo extends BaseRepo {
 			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 		}
 
+	}
+
+	public function grid($params)
+	{
+		extract($params);
+		/**/
+		$start = ( isset($start) ) ? $start : 0;
+		$limit = ( isset($limit) ) ? $limit : 30;
+		$page  = ( $start==0 ) ? 1 : ( $start / $limit ) + 1;
+
+		if (empty($desgravacion_acuerdo_det_id) || empty($desgravacion_acuerdo_det_acuerdo_id)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request. desgravacionRepo grid'
+			];
+			return $result;
+		}
+		$this->model->setDesgravacion_acuerdo_det_id($desgravacion_acuerdo_det_id);
+		$this->model->setDesgravacion_acuerdo_det_acuerdo_id($desgravacion_acuerdo_det_acuerdo_id);
+
+		if (!empty($query)) {
+			if (!empty($fullTextFields)) {
+				
+				$fullTextFields = json_decode(stripslashes($fullTextFields));
+				
+				foreach ($fullTextFields as $value) {
+					$methodName = $this->getColumnMethodName('set', $value);
+					
+					if (method_exists($this->model, $methodName)) {
+						call_user_func_array([$this->model, $methodName], compact('query'));
+					}
+				}
+			} else {
+				$this->model->setDesgravacion_id($query);
+				$this->model->setDesgravacion_id_pais($query);
+				$this->model->setDesgravacion_mdesgravacion($query);
+				$this->model->setDesgravacion_desc($query);
+				$this->model->setDesgravacion_acuerdo_det_id($query);
+				$this->model->setDesgravacion_acuerdo_det_acuerdo_id($query);
+			}
+			
+		}
+
+		$this->modelAdo->setColumns([
+			'desgravacion_id',
+			'desgravacion_id_pais',
+			'desgravacion_mdesgravacion',
+			'desgravacion_mdesgravacion_title',
+			'desgravacion_desc',
+			'desgravacion_acuerdo_det_id',
+			'desgravacion_acuerdo_det_acuerdo_id',
+			'acuerdo_mercado_id',
+			'acuerdo_id_pais',
+			'pais',
+			'mercado_nombre',
+			'acuerdo_det_desgravacion_igual_pais',
+		]);
+		$result = $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$arrData = [];
+
+		foreach ($result['data'] as $key => $row) {
+			$pais = ($row['acuerdo_det_desgravacion_igual_pais'] == '0') ? $row['pais'] : $row['mercado_nombre'] ;
+			$arrData[] = [
+				'desgravacion_id'                     => $row['desgravacion_id'],
+				'desgravacion_id_pais'                => $row['desgravacion_id_pais'],
+				'pais'                                => $pais,
+				'desgravacion_mdesgravacion'          => $row['desgravacion_mdesgravacion'],
+				'desgravacion_mdesgravacion_title'    => $row['desgravacion_mdesgravacion_title'],
+				'desgravacion_desc'                   => $row['desgravacion_desc'],
+				'desgravacion_acuerdo_det_id'         => $row['desgravacion_acuerdo_det_id'],
+				'desgravacion_acuerdo_det_acuerdo_id' => $row['desgravacion_acuerdo_det_acuerdo_id'],
+			];
+		}
+
+		$result['data'] = $arrData;
+
+		return $result;
 	}
 
 }
