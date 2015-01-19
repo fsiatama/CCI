@@ -64,7 +64,8 @@ class Acuerdo_detRepo extends BaseRepo {
 			empty($acuerdo_det_administrador) ||
 			empty($acuerdo_det_nperiodos) ||
 			empty($acuerdo_det_acuerdo_id) ||
-			empty($acuerdo_det_contingente_acumulado_pais)
+			empty($acuerdo_det_contingente_acumulado_pais) ||
+			empty($acuerdo_det_desgravacion_igual_pais)
 		) {
 			$result = [
 				'success' => false,
@@ -81,6 +82,7 @@ class Acuerdo_detRepo extends BaseRepo {
 		$this->model->setAcuerdo_det_nperiodos($acuerdo_det_nperiodos);
 		$this->model->setAcuerdo_det_acuerdo_id($acuerdo_det_acuerdo_id);
 		$this->model->setAcuerdo_det_contingente_acumulado_pais($acuerdo_det_contingente_acumulado_pais);
+		$this->model->setAcuerdo_det_desgravacion_igual_pais($acuerdo_det_desgravacion_igual_pais);
 
 		if ($action == 'create') {
 		} elseif ($action == 'modify') {
@@ -107,6 +109,7 @@ class Acuerdo_detRepo extends BaseRepo {
 			$this->model->setAcuerdo_det_nperiodos(implode('", "', $query));
 			$this->model->setAcuerdo_det_acuerdo_id(implode('", "', $query));
 			$this->model->setAcuerdo_det_contingente_acumulado_pais(implode('", "', $query));
+			$this->model->setAcuerdo_det_desgravacion_igual_pais(implode('", "', $query));
 
 			return $this->modelAdo->inSearch($this->model);
 		}
@@ -120,6 +123,7 @@ class Acuerdo_detRepo extends BaseRepo {
 			$this->model->setAcuerdo_det_nperiodos($query);
 			$this->model->setAcuerdo_det_acuerdo_id($query);
 			$this->model->setAcuerdo_det_contingente_acumulado_pais($query);
+			$this->model->setAcuerdo_det_desgravacion_igual_pais($query);
 
 			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 		}

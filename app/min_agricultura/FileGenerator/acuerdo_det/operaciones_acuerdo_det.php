@@ -19,6 +19,7 @@ if(isset($accion)){
 			$acuerdo_det->setAcuerdo_det_nperiodos($acuerdo_det_nperiodos);
 			$acuerdo_det->setAcuerdo_det_acuerdo_id($acuerdo_det_acuerdo_id);
 			$acuerdo_det->setAcuerdo_det_contingente_acumulado_pais($acuerdo_det_contingente_acumulado_pais);
+			$acuerdo_det->setAcuerdo_det_desgravacion_igual_pais($acuerdo_det_desgravacion_igual_pais);
 			$rs_acuerdo_det = $acuerdo_detAdo->actualizar($acuerdo_det);
 			if($rs_acuerdo_det !== true){
 				$success = false;
@@ -59,6 +60,7 @@ if(isset($accion)){
 			$acuerdo_det->setAcuerdo_det_nperiodos($acuerdo_det_nperiodos);
 			$acuerdo_det->setAcuerdo_det_acuerdo_id($acuerdo_det_acuerdo_id);
 			$acuerdo_det->setAcuerdo_det_contingente_acumulado_pais($acuerdo_det_contingente_acumulado_pais);
+			$acuerdo_det->setAcuerdo_det_desgravacion_igual_pais($acuerdo_det_desgravacion_igual_pais);
 			$rs_acuerdo_det = $acuerdo_detAdo->insertar($acuerdo_det);
 			if($rs_acuerdo_det["success"] !== true){
 				$respuesta = array(
@@ -87,6 +89,7 @@ if(isset($accion)){
 			$acuerdo_det->setAcuerdo_det_nperiodos($acuerdo_det_nperiodos);
 			$acuerdo_det->setAcuerdo_det_acuerdo_id($acuerdo_det_acuerdo_id);
 			$acuerdo_det->setAcuerdo_det_contingente_acumulado_pais($acuerdo_det_contingente_acumulado_pais);
+			$acuerdo_det->setAcuerdo_det_desgravacion_igual_pais($acuerdo_det_desgravacion_igual_pais);
 			$rs_acuerdo_det = $acuerdo_detAdo->lista($acuerdo_det);
 			if(!is_array($rs_acuerdo_det)){
 				$respuesta = array(

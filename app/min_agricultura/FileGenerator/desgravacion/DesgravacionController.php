@@ -1,22 +1,22 @@
 <?php
 
-require PATH_MODELS.'Repositories/Acuerdo_detRepo.php';
+require PATH_MODELS.'Repositories/DesgravacionRepo.php';
 require PATH_MODELS.'Repositories/UserRepo.php';
 
-class Acuerdo_detController {
+class DesgravacionController {
 	
-	protected $acuerdo_detRepo;
+	protected $desgravacionRepo;
 	protected $userRepo;
 
 	public function __construct()
 	{
-		$this->acuerdo_detRepo = new Acuerdo_detRepo;
+		$this->desgravacionRepo = new DesgravacionRepo;
 		$this->userRepo        = new UserRepo;
 	}
 	
 	public function listAction($urlParams, $postParams)
     {
-        return $this->acuerdo_detRepo->listAll($postParams);
+        return $this->desgravacionRepo->listAll($postParams);
     }
 
 }

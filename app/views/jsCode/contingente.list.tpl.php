@@ -1,9 +1,5 @@
 <?php
 $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
-$yearIni = (int)date('Y', strtotime($acuerdo_fvigente));
-$yearFin = $yearIni + (int)$acuerdo_det_nperiodos - 1;
-$rangeYear = range($yearIni, $yearFin);
-$availableYear = [end($rangeYear) => end($rangeYear),'9999' => 'Indefinido'];
 ?>
 /*<script>*/
 (function(){

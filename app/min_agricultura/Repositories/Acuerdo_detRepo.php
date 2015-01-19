@@ -3,11 +3,13 @@
 require PATH_MODELS.'Entities/Acuerdo_det.php';
 require PATH_MODELS.'Ado/Acuerdo_detAdo.php';
 require_once PATH_MODELS.'Repositories/ContingenteRepo.php';
+require_once PATH_MODELS.'Repositories/DesgravacionRepo.php';
 require_once ('BaseRepo.php');
 
 class Acuerdo_detRepo extends BaseRepo {
 
 	private $contingenteRepo;
+	private $desgravacionRepo;
 
 	public function getModel()
 	{
@@ -81,10 +83,26 @@ class Acuerdo_detRepo extends BaseRepo {
 		return $result;
 	}
 
+	private function deleteDeduction($acuerdo_det_id, $acuerdo_det_acuerdo_id)
+	{
+		$result = $this->desgravacionRepo->deleteByParent(
+			compact('acuerdo_det_id', 'acuerdo_det_acuerdo_id')
+		);
+		return $result;
+	}
+
 	private function createQuota($acuerdo_det_id, $acuerdo_det_acuerdo_id, $acuerdo_det_contingente_acumulado_pais)
 	{
 		$result = $this->contingenteRepo->createByAgreement(
 			compact('acuerdo_det_id', 'acuerdo_det_acuerdo_id', 'acuerdo_det_contingente_acumulado_pais')
+		);
+		return $result;
+	}
+
+	private function createDeduction($acuerdo_det_id, $acuerdo_det_acuerdo_id, $acuerdo_det_desgravacion_igual_pais)
+	{
+		$result = $this->desgravacionRepo->createByAgreement(
+			compact('acuerdo_det_id', 'acuerdo_det_acuerdo_id', 'acuerdo_det_desgravacion_igual_pais')
 		);
 		return $result;
 	}
@@ -94,7 +112,8 @@ class Acuerdo_detRepo extends BaseRepo {
 
 		extract($params);
 
-		$this->contingenteRepo = new ContingenteRepo;
+		$this->contingenteRepo  = new ContingenteRepo;
+		$this->desgravacionRepo = new DesgravacionRepo;
 
 		if (empty($acuerdo_det_id) || empty($acuerdo_det_acuerdo_id)) {
 			$result = [
@@ -111,6 +130,14 @@ class Acuerdo_detRepo extends BaseRepo {
 			return $result;
 		}
 
+		$result = $this->deleteDeduction(
+			$acuerdo_det_id,
+			$acuerdo_det_acuerdo_id
+		);
+		if (!$result['success']) {
+			return $result;
+		}
+
 		$result = parent::delete($params);
 		return $result;
 	}
@@ -119,9 +146,10 @@ class Acuerdo_detRepo extends BaseRepo {
 	{
 		$result = parent::create($params);
 		
-		$acuerdo_det_id = $result['insertId'];
-		$acuerdo_det_acuerdo_id = $this->model->getAcuerdo_det_acuerdo_id();
+		$acuerdo_det_id                         = $result['insertId'];
+		$acuerdo_det_acuerdo_id                 = $this->model->getAcuerdo_det_acuerdo_id();
 		$acuerdo_det_contingente_acumulado_pais = $this->model->getAcuerdo_det_contingente_acumulado_pais();
+		$acuerdo_det_desgravacion_igual_pais    = $this->model->getAcuerdo_det_desgravacion_igual_pais();
 
 		//generar los contingentes en blanco para cada pais o mercado del acuerdo
 		$result = $this->createQuota(
@@ -133,17 +161,30 @@ class Acuerdo_detRepo extends BaseRepo {
 			return $result;
 		}
 
-		return ['success' => true];;
+		$result = $this->createDeduction(
+			$acuerdo_det_id,
+			$acuerdo_det_acuerdo_id,
+			$acuerdo_det_desgravacion_igual_pais
+		);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		return ['success' => true];
 	}
 
 	public function setData($params, $action)
 	{
 		extract($params);
-		$this->contingenteRepo = new ContingenteRepo;
+		$this->contingenteRepo  = new ContingenteRepo;
+		$this->desgravacionRepo = new DesgravacionRepo;
 
 		$acuerdo_det_productos = (empty($acuerdo_det_productos) || !is_array($acuerdo_det_productos)) ? [] : $acuerdo_det_productos ;
 		$acuerdo_det_contingente_acumulado_pais = (isset($acuerdo_det_contingente_acumulado_pais)) ? $acuerdo_det_contingente_acumulado_pais : '0' ;
 		$acuerdo_det_contingente_acumulado_pais = ($acuerdo_det_contingente_acumulado_pais == '1') ? '1' : '0' ;
+
+		$acuerdo_det_desgravacion_igual_pais = (isset($acuerdo_det_desgravacion_igual_pais)) ? $acuerdo_det_desgravacion_igual_pais : '0' ;
+		$acuerdo_det_desgravacion_igual_pais = ($acuerdo_det_desgravacion_igual_pais == '1') ? '1' : '0' ;
 
 		if (
 			empty($acuerdo_det_productos) ||
@@ -176,7 +217,6 @@ class Acuerdo_detRepo extends BaseRepo {
 			$row = array_shift($result['data']);
 
 			//si acuerdo_det_contingente_acumulado_pais o acuerdo_det_nperiodos es diferente debe borrar los contingentes y volverlos a crear
-			//var_dump($acuerdo_det_contingente_acumulado_pais, $row['acuerdo_det_contingente_acumulado_pais']);
 			if (
 				$acuerdo_det_contingente_acumulado_pais != $row['acuerdo_det_contingente_acumulado_pais'] || 
 				$acuerdo_det_nperiodos != $row['acuerdo_det_nperiodos']
@@ -197,6 +237,28 @@ class Acuerdo_detRepo extends BaseRepo {
 					return $result;
 				}
 			}
+
+			//si acuerdo_det_desgravacion_igual_pais o acuerdo_det_nperiodos es diferente debe borrar la informacion de desgravacion y volverla a crear
+			if (
+				$acuerdo_det_desgravacion_igual_pais != $row['acuerdo_det_desgravacion_igual_pais'] || 
+				$acuerdo_det_nperiodos != $row['acuerdo_det_nperiodos']
+			) {
+				$result = $this->deleteDeduction(
+					$acuerdo_det_id,
+					$acuerdo_det_acuerdo_id
+				);
+				if (!$result['success']) {
+					return $result;
+				}
+				$result = $this->createDeduction(
+					$acuerdo_det_id,
+					$acuerdo_det_acuerdo_id,
+					$acuerdo_det_desgravacion_igual_pais
+				);
+				if (!$result['success']) {
+					return $result;
+				}
+			}
 		}
 
 		$this->model->setAcuerdo_det_id($acuerdo_det_id);
@@ -208,6 +270,7 @@ class Acuerdo_detRepo extends BaseRepo {
 		$this->model->setAcuerdo_det_nperiodos($acuerdo_det_nperiodos);
 		$this->model->setAcuerdo_det_acuerdo_id($acuerdo_det_acuerdo_id);
 		$this->model->setAcuerdo_det_contingente_acumulado_pais($acuerdo_det_contingente_acumulado_pais);
+		$this->model->setAcuerdo_det_desgravacion_igual_pais($acuerdo_det_desgravacion_igual_pais);
 
 		if ($action == 'create') {
 		} elseif ($action == 'modify') {
@@ -234,6 +297,7 @@ class Acuerdo_detRepo extends BaseRepo {
 			$this->model->setAcuerdo_det_nperiodos(implode('", "', $query));
 			$this->model->setAcuerdo_det_acuerdo_id(implode('", "', $query));
 			$this->model->setAcuerdo_det_contingente_acumulado_pais(implode('", "', $query));
+			$this->model->setAcuerdo_det_desgravacion_igual_pais(implode('", "', $query));
 
 			return $this->modelAdo->inSearch($this->model);
 		}
@@ -247,6 +311,7 @@ class Acuerdo_detRepo extends BaseRepo {
 			$this->model->setAcuerdo_det_nperiodos($query);
 			$this->model->setAcuerdo_det_acuerdo_id($query);
 			$this->model->setAcuerdo_det_contingente_acumulado_pais($query);
+			$this->model->setAcuerdo_det_desgravacion_igual_pais($query);
 
 			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 		}
@@ -291,6 +356,7 @@ class Acuerdo_detRepo extends BaseRepo {
 				$this->model->setAcuerdo_det_administrador($query);
 				$this->model->setAcuerdo_det_nperiodos($query);
 				$this->model->setAcuerdo_det_contingente_acumulado_pais($query);
+				$this->model->setAcuerdo_det_desgravacion_igual_pais($query);
 			}
 			
 		}

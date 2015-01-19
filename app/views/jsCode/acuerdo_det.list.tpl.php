@@ -43,6 +43,9 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 		},{
 			iconCls: 'silk-basket'
 			,tooltip: '<?= Lang::get('contingente.table_name'); ?>'
+		},{
+			iconCls: 'silk-money-delete'
+			,tooltip: '<?= Lang::get('desgravacion.table_name'); ?>'
 		}]
 		,callbacks:{
 			'silk-delete':function(grid, record, action, row, col) {
@@ -53,6 +56,9 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 			}
 			,'silk-basket':function(grid, record, action, row, col) {
 				fnOpenQuote(record);
+			}
+			,'silk-money-delete':function(grid, record, action, row, col) {
+				fnOpenDeduction(record);
 			}
 		}
 	});
@@ -82,7 +88,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 			text: Ext.ux.lang.buttons.add
 			,iconCls: 'silk-add'
 			,handler: function(){
-				if(Ext.getCmp('tab-quote_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
+				if(Ext.getCmp('tab-deduction_'+module) || Ext.getCmp('tab-quote_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
 					Ext.Msg.show({
 						 title:Ext.ux.lang.messages.warning
 						,msg:Ext.ux.lang.error.close_tab
@@ -196,7 +202,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 	function fnEditItm(record){
 		var key = record.get('acuerdo_det_id');
 		var pkey = record.get('acuerdo_det_acuerdo_id');
-		if(Ext.getCmp('tab-quote_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
+		if(Ext.getCmp('tab-deduction_'+module) || Ext.getCmp('tab-quote_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
 				,msg:Ext.ux.lang.error.close_tab
@@ -223,7 +229,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 		}
 	}
 	function fnDeleteItem(record){
-		if(Ext.getCmp('tab-quote_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
+		if(Ext.getCmp('tab-deduction_'+module) || Ext.getCmp('tab-quote_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
 				,msg:Ext.ux.lang.error.close_tab
@@ -291,6 +297,35 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 					id:'<?= $id; ?>'
 					,title: '<?= Lang::get('contingente.table_name'); ?>'
 					,module: 'quote_' + module
+					,parent: module
+					,acuerdo_det_id: key
+					,acuerdo_det_acuerdo_id: pkey
+				}
+			};
+			Ext.getCmp('oeste').addTab(this,this,data);
+		}
+	}
+	function fnOpenDeduction (record) {
+		var key = record.get('acuerdo_det_id');
+		var pkey = record.get('acuerdo_det_acuerdo_id');
+		if(Ext.getCmp('tab-deduction_'+module) || Ext.getCmp('tab-add_'+module) || Ext.getCmp('tab-edit_'+module)) {
+			Ext.Msg.show({
+				 title:Ext.ux.lang.messages.warning
+				,msg:Ext.ux.lang.error.close_tab
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+		}
+		else{
+			var data = {
+				id:'quote_' + module
+				,iconCls:'silk-basket'
+				,titleTab:'<?= Lang::get('desgravacion.table_name'); ?>'
+				,url:'desgravacion/jscode'
+				,params:{
+					id:'<?= $id; ?>'
+					,title: '<?= Lang::get('desgravacion.table_name'); ?>'
+					,module: 'deduction_' + module
 					,parent: module
 					,acuerdo_det_id: key
 					,acuerdo_det_acuerdo_id: pkey

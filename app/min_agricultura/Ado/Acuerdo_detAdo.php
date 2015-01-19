@@ -27,6 +27,7 @@ class Acuerdo_detAdo extends BaseAdo {
 		$acuerdo_det_nperiodos = $acuerdo_det->getAcuerdo_det_nperiodos();
 		$acuerdo_det_acuerdo_id = $acuerdo_det->getAcuerdo_det_acuerdo_id();
 		$acuerdo_det_contingente_acumulado_pais = $acuerdo_det->getAcuerdo_det_contingente_acumulado_pais();
+		$acuerdo_det_desgravacion_igual_pais = $acuerdo_det->getAcuerdo_det_desgravacion_igual_pais();
 
 		$this->data = compact(
 			'acuerdo_det_id',
@@ -37,7 +38,8 @@ class Acuerdo_detAdo extends BaseAdo {
 			'acuerdo_det_administrador',
 			'acuerdo_det_nperiodos',
 			'acuerdo_det_acuerdo_id',
-			'acuerdo_det_contingente_acumulado_pais'
+			'acuerdo_det_contingente_acumulado_pais',
+			'acuerdo_det_desgravacion_igual_pais'
 		);
 	}
 
@@ -57,7 +59,8 @@ class Acuerdo_detAdo extends BaseAdo {
 				acuerdo_det_administrador,
 				acuerdo_det_nperiodos,
 				acuerdo_det_acuerdo_id,
-				acuerdo_det_contingente_acumulado_pais
+				acuerdo_det_contingente_acumulado_pais,
+				acuerdo_det_desgravacion_igual_pais
 			)
 			VALUES (
 				"'.$this->data['acuerdo_det_id'].'",
@@ -68,7 +71,8 @@ class Acuerdo_detAdo extends BaseAdo {
 				"'.$this->data['acuerdo_det_administrador'].'",
 				"'.$this->data['acuerdo_det_nperiodos'].'",
 				"'.$this->data['acuerdo_det_acuerdo_id'].'",
-				"'.$this->data['acuerdo_det_contingente_acumulado_pais'].'"
+				"'.$this->data['acuerdo_det_contingente_acumulado_pais'].'",
+				"'.$this->data['acuerdo_det_desgravacion_igual_pais'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -112,6 +116,7 @@ class Acuerdo_detAdo extends BaseAdo {
 			 acuerdo_det_nperiodos,
 			 acuerdo_det_acuerdo_id,
 			 acuerdo_det_contingente_acumulado_pais,
+			 acuerdo_det_desgravacion_igual_pais,
 			 acuerdo_nombre,
 			 acuerdo_fvigente
 			FROM acuerdo_det

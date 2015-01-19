@@ -89,7 +89,8 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 				{name:'acuerdo_det_administrador', mapping:'acuerdo_det_administrador', type:'string'},
 				{name:'acuerdo_det_nperiodos', mapping:'acuerdo_det_nperiodos', type:'float'},
 				{name:'acuerdo_det_acuerdo_id', mapping:'acuerdo_det_acuerdo_id', type:'float'},
-				{name:'acuerdo_det_contingente_acumulado_pais', mapping:'acuerdo_det_contingente_acumulado_pais', type:'float'}
+				{name:'acuerdo_det_contingente_acumulado_pais', mapping:'acuerdo_det_contingente_acumulado_pais', type:'float'},
+				{name:'acuerdo_det_desgravacion_igual_pais', mapping:'acuerdo_det_desgravacion_igual_pais', type:'float'}
 			]
 		})
 		,items:[{
@@ -230,6 +231,50 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 			echo "
 				},{
 					html:'<div class=\"bootstrap-styles\"><p class=\"text-danger\"><small>".Lang::get('acuerdo_det.alerts.change_contingente_acumulado_pais')."</small></p></div>'
+					,border:false
+					,columnWidth:1
+			";
+		}
+		?>
+			}]
+		},{
+			xtype:'fieldset'
+			,title:'<?= Lang::get('desgravacion.table_name'); ?>'
+			,layout:'column'
+			,flex: 1
+			,defaults:{
+				columnWidth:.5
+				,layout:'form'
+				,labelAlign:'top'
+				,border:false
+				,xtype:'panel'
+				,bodyStyle:'padding:0 18px 0 0'
+			}
+			,items:[{
+				defaults:{anchor:'88%'}
+				,items:[{
+					xtype:'radiogroup'
+					,fieldLabel:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_desgravacion_igual_pais'); ?>'
+					,id:module+'acuerdo_det_desgravacion_igual_pais'
+					,disabled:<?= $disable_acumulado_pais; ?>
+					,allowBlank:false
+					,items: [{
+						boxLabel:Ext.ux.lang.form.radioBtnYes
+						,inputValue:1
+						,name:'acuerdo_det_desgravacion_igual_pais'
+					},{
+						boxLabel:Ext.ux.lang.form.radioBtnNo
+						,checked:true
+						,inputValue:0
+						,name:'acuerdo_det_desgravacion_igual_pais'
+					}]
+				}]
+		<?php
+		if ($action == 'modify') {
+
+			echo "
+				},{
+					html:'<div class=\"bootstrap-styles\"><p class=\"text-danger\"><small>".Lang::get('acuerdo_det.alerts.change_desgravacion_igual_pais')."</small></p></div>'
 					,border:false
 					,columnWidth:1
 			";
