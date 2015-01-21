@@ -1,7 +1,7 @@
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
-	Ext.ns('Indicador');
+	Ext.ns('Acuerdo');
 	var module       = '<?= $module; ?>';
 	
 
@@ -35,7 +35,7 @@
 			,collapseMode:'mini'
 	        ,root: new Ext.tree.AsyncTreeNode()
             ,loader: {
-            	url:'indicador/treeAdmin'
+            	url:'acuerdo/tree'
             	,baseParams:{
             		id: '<?= $id; ?>'
             		,module: module
@@ -44,12 +44,12 @@
 	        ,listeners: {
 	            'render': function(tp){
                     tp.getSelectionModel().on('selectionchange', function(tree, node){
-                        var el = Ext.getCmp('details-panel').body;
+                        /*var el = Ext.getCmp('details-panel').body;
 	                    if(node && node.leaf){
 	                        tpl.overwrite(el, node.attributes);
 	                    }else{
                             el.update(detailsText);
-                        }
+                        }*/
                     })
 	            }
 	        }
@@ -58,17 +58,17 @@
 					initialPanel();
 				}
 				,'click': function(node, e){
-					Ext.getCmp(module + 'btnEdit').setDisabled(!node.leaf);
+					/*Ext.getCmp(module + 'btnEdit').setDisabled(!node.leaf);
 					Ext.getCmp(module + 'btnDel').setDisabled(!node.leaf);
 
 					if (node.leaf) {
 						indicador_id = node.id;
 						folder_id    = node.parentNode.id;
-						IndicadorTree.consultar(node.id)
+						AcuerdoTree.consultar(node.id)
 					} else {
 						folder_id    = node.id;
 						initialPanel();
-					}
+					}*/
 				}
 				,'contextmenu': function(node, e){
 					
@@ -76,7 +76,7 @@
 			}
 		});
 	}
-	Ext.extend(Indicador.tree, Tree.TreePanel, {
+	Ext.extend(Acuerdo.tree, Ext.tree.TreePanel, {
 		consultar:function(indicador){
 			/*var node = this.getNodeById(indicador);
 			Ext.getCmp('tab-' + module).purgeListeners();
@@ -98,7 +98,7 @@
 							indicador_id: indicador_id
 							,id: '<?= $id; ?>'
 							,tipo_indicador_id: '<?= $tipo_indicador_id; ?>'
-							,tree: module + 'TreeIndicador'
+							,tree: module + 'TreeAcuerdo'
 							,module: 'execute_' + module
 							,panel: 'tab-' + module
 						}
@@ -107,7 +107,7 @@
 					})
 					,items: []
 				});
-				var lp     = Ext.getCmp(module + 'lpIndicador');
+				var lp     = Ext.getCmp(module + 'lpAcuerdo');
 				var remove = lp.removeAll(true);
 				lp.add(dataViewer);
 				lp.doLayout();
@@ -134,64 +134,31 @@
 	});
 
 	AcuerdoTree.getLoader().on('beforeload', function(loader, node, callback){
-		/*if(Ext.getCmp(module+'lpIndicador').items.items.length == 0){
+		/*if(Ext.getCmp(module+'lpAcuerdo').items.items.length == 0){
 			AcuerdoTree.getRootNode().select();
 			initialPanel();
 		}*/
 	});
 
-	var indicadorLayout = new Ext.Panel({
+	var acuerdoLayout = new Ext.Panel({
 		xtype: 'panel'
 		,layout: 'border'
 		,id:module + 'acuerdoLayout'
 		,border: false
 		,items: [
-			IndicadorTree
+			AcuerdoTree
 		,{
 			region:'center'
 			,layout: 'fit'
-			,id: module + 'lpIndicador'
-			,tbar: new Ext.Toolbar({
-				enableOverflow: true
-				,items: [{
-					text: Ext.ux.lang.buttons.new_btn
-					,iconCls: 'silk-report-add'
-					,handler: function(){
-						cfg_reporte('create');
-					}
-				},{
-					text: Ext.ux.lang.buttons.edit
-					,iconCls: 'silk-report-edit'
-					,id: module + 'btnEdit'
-					,disabled: true
-					,handler: function(){
-						cfg_reporte('modify');
-					}
-				},{
-					text: Ext.ux.lang.buttons.delete_btn
-					,iconCls: 'silk-application-delete'
-					,id:module + 'btnDel'
-					,disabled: true
-					,handler: function(){
-						var node;
-						if(IndicadorTree.getSelectionModel().getSelectedNode()){
-							node = IndicadorTree.getSelectionModel().getSelectedNode();
-						}
-						else{
-							node = IndicadorTree.getRootNode();
-						}
-						IndicadorTree.removeNode(node);
-					}
-				}]
-			})
+			,id: module + 'lpAcuerdo'
 			,items:[]
 		}]
 	});
 
 	/*elimiar cualquier estado del Tree guardado con anterioridad */
-	Ext.state.Manager.clear(IndicadorTree.getItemId());
+	Ext.state.Manager.clear(AcuerdoTree.getItemId());
 
-	return indicadorLayout;
+	return acuerdoLayout;
 	/*********************************************** Start functions***********************************************/
 
 	function initialPanel(){
@@ -199,7 +166,7 @@
 		Ext.getCmp(module + 'btnDel').setDisabled(true);
 		Ext.getCmp('tab-' + module).purgeListeners();
 		if(!Ext.getCmp(module+'initialPanel')){
-			var lp = Ext.getCmp(module + 'lpIndicador');
+			var lp = Ext.getCmp(module + 'lpAcuerdo');
 
 			var remove = lp.removeAll(true);
 
@@ -222,60 +189,13 @@
 						,columnWidth:1
 						,border: false
 						//,layout:'fit'
-						,html: '<?= $tipo_indicador_html; ?>'
+						,html: ''
 					}]
 				}]
 			}
-			Ext.getCmp(module+'lpIndicador').add(initialPanel);
-			Ext.getCmp(module+'lpIndicador').doLayout();
+			Ext.getCmp(module+'lpAcuerdo').add(initialPanel);
+			Ext.getCmp(module+'lpAcuerdo').doLayout();
 		}
-	}
-	function cfg_reporte(action){
-		Ext.getCmp('tab-' + module).purgeListeners();
-		
-		var url = 'indicador/jscodeCfg/' + action;
-		
-		var node;
-
-		if(IndicadorTree.getSelectionModel().getSelectedNode()){
-			node = IndicadorTree.getSelectionModel().getSelectedNode();
-		}
-		else{
-			node = IndicadorTree.getRootNode();
-		}
-		var parent = (node.leaf) ? node.parentNode.id: node.id;
-
-		var lp = Ext.getCmp(module + 'lpIndicador');
-
-		var remove = lp.removeAll(true);
-		var panelCfg = {
-			autoScroll: false
-			,layout: 'fit'
-			,autoShow: true
-			,frame:false
-			,border: false
-			,autoDestroy:true
-			,plugins: new Ext.ux.Plugin.RemoteComponent({
-				url:url
-				,params:{
-					indicador_id: indicador_id
-					,id: '<?= $id; ?>'
-					,tipo_indicador_id: '<?= $tipo_indicador_id; ?>'
-					,parent: parent
-					,tree: module + 'TreeIndicador'
-					,module: 'cfg_' + module
-				}
-				,disableCaching:false
-				,method:'POST'
-			})
-			,bbar:new Ext.ux.StatusBar({
-				text:'',
-				id:module+'sbPanel'
-			})
-		}
-
-		lp.add(panelCfg);
-		lp.doLayout();
 	}
 
 	/*********************************************** End functions***********************************************/

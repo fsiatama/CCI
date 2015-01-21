@@ -38,6 +38,8 @@ class View extends Response {
 		$templateFileName = $this->getTemplateFileName();
 		$vars             = $this->getVars();
 
+		//var_dump($templateFileName);
+
 		if ( ! file_exists($templateFileName))
 		{
 			$return = [

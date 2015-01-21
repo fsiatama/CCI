@@ -104,7 +104,12 @@ class AcuerdoController {
 			$rowAcuerdo = array_shift($result['data']);
 
 			$postParams['is_template'] = true;
-			var_dump($result);
+
+			$params = array_merge($postParams, $rowAcuerdo);
+			//var_dump($params);
+
+			$postParams['is_template'] = true;
+			return new View('jsCode/acuerdo.execute', $params);
 		}
 	}
 
