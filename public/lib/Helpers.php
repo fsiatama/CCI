@@ -20,6 +20,11 @@ class Helpers
 		return date('Y-m-d');
 	}
 
+	public static function getDate($string)
+	{
+		return DateTime::createFromFormat('Y-m-d', $string);
+	}
+
 	public static function arraySortByValue($key, $desc = false)
 	{
 		return function ($a, $b) use ($key, $desc) {

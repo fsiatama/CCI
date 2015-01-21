@@ -73,7 +73,6 @@ class IndicadorRepo extends BaseRepo {
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
 			];
-			return $result;
 		}
 		$this->model->setIndicador_parent($indicador_parent);
 		$this->model->setIndicador_uinsert($_SESSION['user_id']);

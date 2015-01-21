@@ -16,7 +16,8 @@
 			{name:'acuerdo_descripcion', type:'string'},
 			{name:'acuerdo_intercambio', type:'string'},
 			{name:'acuerdo_intercambio_title', type:'string'},
-			{name:'acuerdo_fvigente', type:'string'}
+			{name:'acuerdo_fvigente', type:'string'},
+			{name:'acuerdo_fvigente_title', type:'string'},
 		]
 	});
 	
@@ -67,7 +68,7 @@
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_nombre'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_nombre'},
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_descripcion'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_descripcion'},
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_intercambio'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_intercambio_title'},
-			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_fvigente'},
+			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_fvigente_title'},
 			gridAcuerdoAction
 		]
 		,defaults:{

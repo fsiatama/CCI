@@ -323,7 +323,7 @@ class Acuerdo_detRepo extends BaseRepo {
 		extract($params);
 		/**/
 		$start = ( isset($start) ) ? $start : 0;
-		$limit = ( isset($limit) ) ? $limit : 30;
+		$limit = ( isset($limit) ) ? $limit : MAXREGEXCEL;
 		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
 
 		if (empty($acuerdo_det_acuerdo_id)) {
@@ -397,6 +397,40 @@ class Acuerdo_detRepo extends BaseRepo {
 		];
 
 		return $result;
+	}
+
+	public function listTreebyParent($params)
+	{
+		extract($params);
+
+		if (empty($acuerdo_id)) {
+			return [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+		}
+
+		$this->model->setAcuerdo_det_acuerdo_id($acuerdo_id);
+		$result = $this->modelAdo->exactSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$arrData = $result['data'];
+		$arr     = [];
+		foreach ($arrData as $key => $row) {
+
+			$arr[] = [
+				'id'   => $row['acuerdo_det_id'],
+				'text' => $row['acuerdo_det_productos_desc'],
+				'leaf' => true,
+			];
+			
+		}
+		$result = $arr;
+
+		return $result;
+
 	}
 
 }

@@ -119,11 +119,13 @@ class AcuerdoRepo extends BaseRepo {
 
 			$row = array_shift($result['data']);
 
+			$acuerdo_mercado_id = (empty($acuerdo_mercado_id)) ? '0' : $acuerdo_mercado_id ;
+			$acuerdo_id_pais    = (empty($acuerdo_id_pais)) ? '0' : $acuerdo_id_pais ;
 			//si acuerdo_mercado_id o acuerdo_id_pais o acuerdo_fvigente es diferente debe borrar los contingentes y volverlos a crear
 			if (
 				$acuerdo_mercado_id != $row['acuerdo_mercado_id'] || 
 				$acuerdo_id_pais != $row['acuerdo_id_pais'] || 
-				$acuerdo_fvigente != $row['acuerdo_fvigente'] 
+				$acuerdo_fvigente != $row['acuerdo_fvigente']
 			) {
 				$result = $this->deleteAgreementDet(
 					$acuerdo_id
@@ -232,6 +234,7 @@ class AcuerdoRepo extends BaseRepo {
 			'acuerdo_intercambio',
 			'acuerdo_intercambio_title',
 			'acuerdo_fvigente',
+			'acuerdo_fvigente_title',
 			'acuerdo_mercado_id',
 			'acuerdo_id_pais'
 		]);
@@ -244,6 +247,20 @@ class AcuerdoRepo extends BaseRepo {
 	public function listId($params)
 	{
 		extract($params);
+
+		$this->modelAdo->setColumns([
+			'acuerdo_id',
+			'acuerdo_nombre',
+			'acuerdo_descripcion',
+			'acuerdo_intercambio',
+			'acuerdo_intercambio_title',
+			'acuerdo_fvigente',
+			'acuerdo_fvigente_title',
+			'acuerdo_mercado_id',
+			'acuerdo_id_pais',
+			'pais',
+			'mercado_nombre',
+		]);
 
 		$result = $this->findPrimaryKey($acuerdo_id);
 
@@ -271,6 +288,8 @@ class AcuerdoRepo extends BaseRepo {
 			$rowMercado      = array_shift($result['data']);
 			$params['query'] = str_replace(',', '|', $rowMercado['mercado_paises']);
 		}
+
+
 		
 		$result = $paisRepo->listAll($params);
 

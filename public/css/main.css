@@ -133,3 +133,6 @@ div.countTo label {font-weight: 300; font-size: 22px; line-height: 22px; }
 #loading {position: absolute; top: 40%; left: 45%; z-index: 2; }
 #loading span {background: url('../img/progress.gif') no-repeat top left; display: block; color:#666; padding-left:20px; padding:5px 0 20px 40px; }
 .x-form-helptext {color: #888; font-size: 9px; padding: 0; margin: 0 0 8px; }
+.rotate i {float: right; color: #dfd7ca; position: absolute; left: 0; left: auto; right: 0; bottom: 0; display: block; height: 65px; font-size: 75px; -webkit-transform: rotate(-40deg); -moz-transform: rotate(-40deg); -o-transform: rotate(-40deg); -ms-transform: rotate(-40deg); transform: rotate(-40deg); text-shadow:1px 0 #ddd; }
+
+.dashboard-block {position: relative; display: block; padding: 30px 20px; background-color: #f8f5f0!important; opacity:0.9; overflow: hidden; margin-bottom:5px; }

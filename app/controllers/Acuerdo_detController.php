@@ -101,6 +101,26 @@ class Acuerdo_detController {
 		return $result;
 	}
 
+	public function treeAction($urlParams, $postParams)
+	{
+		$action = array_shift($urlParams);
+		$action = (empty($action)) ? 'list' : $action;
+		$result = $this->userRepo->validateMenu('list', $postParams);
+
+		if ($result['success']) {
+			//verifica que exista el acuerdo y trae los datos
+			$result = $this->acuerdoRepo->validateModify($postParams);
+			if (!$result['success']) {
+				return $result;
+			}
+
+			$result = $this->acuerdo_detRepo->listTreebyParent($postParams);
+			//var_dump($result);
+			
+		}
+		return $result;
+	}
+
 }
 	
 

@@ -53,6 +53,12 @@ class Acuerdo {
 		return $this->acuerdo_fvigente;
 	}
 
+	public function getAcuerdoFvigenteTitleAttribute($key)
+	{
+		$date = Helpers::getDate($key);
+		return Lang::get('shared.months.'.$date->format('m')).' - '.$date->format('Y');
+	}
+
 	public function setAcuerdo_uinsert($acuerdo_uinsert){
 		$this->acuerdo_uinsert = $acuerdo_uinsert;
 	}
