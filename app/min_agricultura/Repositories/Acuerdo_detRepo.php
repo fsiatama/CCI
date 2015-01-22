@@ -4,6 +4,7 @@ require PATH_MODELS.'Entities/Acuerdo_det.php';
 require PATH_MODELS.'Ado/Acuerdo_detAdo.php';
 require_once PATH_MODELS.'Repositories/ContingenteRepo.php';
 require_once PATH_MODELS.'Repositories/DesgravacionRepo.php';
+require_once PATH_MODELS.'Repositories/PosicionRepo.php';
 require_once ('BaseRepo.php');
 
 class Acuerdo_detRepo extends BaseRepo {
@@ -145,6 +146,10 @@ class Acuerdo_detRepo extends BaseRepo {
 	public function create($params)
 	{
 		$result = parent::create($params);
+
+		if (!$result['success']) {
+			return $result;
+		}
 		
 		$acuerdo_det_id                         = $result['insertId'];
 		$acuerdo_det_acuerdo_id                 = $this->model->getAcuerdo_det_acuerdo_id();
@@ -189,8 +194,6 @@ class Acuerdo_detRepo extends BaseRepo {
 		if (
 			empty($acuerdo_det_productos) ||
 			empty($acuerdo_det_productos_desc) ||
-			empty($acuerdo_det_administracion) ||
-			empty($acuerdo_det_administrador) ||
 			empty($acuerdo_det_nperiodos) ||
 			empty($acuerdo_det_acuerdo_id)
 		) {
@@ -388,12 +391,33 @@ class Acuerdo_detRepo extends BaseRepo {
 		if (!$result['success']) {
 			return $result;
 		}
+		$rowAcuerdo_det = array_shift($result['data']);
 
-		$row = array_shift($result['data']);
+		$posicionRepo = new PosicionRepo;
+		$params = [
+			'valuesqry' => true,
+			'query'     => $rowAcuerdo_det['acuerdo_det_productos']
+		];
+
+		$result = $posicionRepo->listAll($params);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$arrData = [];
+		$arrProducts = explode(',', $rowAcuerdo_det['acuerdo_det_productos']);
+
+		foreach ($result['data'] as $key => $row) {
+			if (in_array($row['id_posicion'], $arrProducts) ) {
+				$arrData[] = $row;
+			}
+		}
 
 		$result = [
 			'success'      => true,
-			'data'         => [$row]
+			'productsData' => $arrData,
+			'data'         => [$rowAcuerdo_det]
 		];
 
 		return $result;
@@ -430,7 +454,6 @@ class Acuerdo_detRepo extends BaseRepo {
 		$result = $arr;
 
 		return $result;
-
 	}
 
 }

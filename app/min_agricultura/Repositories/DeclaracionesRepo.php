@@ -5,7 +5,7 @@ require PATH_MODELS.'Ado/DeclaraimpAdo.php';
 require PATH_MODELS.'Entities/Declaraexp.php';
 require PATH_MODELS.'Ado/DeclaraexpAdo.php';
 require PATH_MODELS.'Repositories/SectorRepo.php';
-require PATH_MODELS.'Repositories/MercadoRepo.php';
+require_once PATH_MODELS.'Repositories/MercadoRepo.php';
 
 require_once ('BaseRepo.php');
 
@@ -3037,6 +3037,51 @@ class DeclaracionesRepo extends BaseRepo {
 		];
 
 		return $result;
+	}
+
+	public function executeAcumuladoContingente()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$trade            = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
+
+		$this->setTrade($trade);
+		$this->setRange('ini');
+
+		if ($trade == 'impo') {
+			$this->model      = $this->getModelImpo();
+			$this->modelAdo   = $this->getModelImpoAdo();
+			$columnValue      = $this->columnValueImpo;
+		} else {
+			$this->model      = $this->getModelExpo();
+			$this->modelAdo   = $this->getModelExpoAdo();
+			$columnValue      = $this->columnValueExpo;
+		}
+
+		$rowField = Helpers::getPeriodColumnSql($this->period);
+
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues();
+		$this->model->setAnio($this->year);
+		$row = 'anio AS id';
+		//si el periodo es diferente a anual debe cambiar el group by
+		if ($this->period != 12 && !empty($this->year)) {
+			$row = 'periodo AS id';
+		}
+
+		$arrRowField = [$row, $rowField];
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+
+
+		if (!$rsDeclaraciones['success']) {
+			return $rsDeclaraciones;
+		}
+
+		var_dump($rsDeclaraciones, $this->period, $this->year);
 	}
 }
 

@@ -1,34 +1,34 @@
 <?php
 
-$arrDescription  = explode('||', $indicador_campos);
 
-$htmlDescription = '<ol class="breadcrumb">';
+$htmlProducts = '<ol class="list-group">';
 
-foreach ($arrDescription as $value) {
-	$arr = explode(':', $value);
-	$text = (empty($arr[1])) ? '' : $arr[1] ;
-	$htmlDescription .= '<li class="active">'.$text.'</li>';
+foreach ($productsData as $row) {
+	$htmlProducts .= '<li class="list-group-item"><span class="badge">'.$row['id_posicion'].'</span>'.$row['posicion'].'</li>';
 }
 
-$htmlDescription .= '</ol>';
+$htmlProducts .= '</ol>';
+
+//var_dump($productsData);
 
 ?>
 
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
-	var module = '<?= $module.'_'.$indicador_id; ?>';
+	var module = '<?= $module.'_'.$acuerdo_id; ?>';
 	var panelHeight = Math.floor(Ext.getCmp('tabpanel').getInnerHeight() - 260);
 
-	var storeBalanza = new Ext.data.JsonStore({
-		url:'indicador/execute'
+	var storeAcuerdo_det = new Ext.data.JsonStore({
+		url:'contingente/execute'
 		,root:'data'
-		,id:module+'storeBalanza'
+		,id:module+'storeAcuerdo_det'
 		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
-			,indicador_id: '<?= $indicador_id; ?>'
+			,acuerdo_id: '<?= $acuerdo_id; ?>'
+			,acuerdo_det_id: '<?= $acuerdo_det_id; ?>'
 		}
 		,fields:[
 			{name:'id', type:'float'},
@@ -39,7 +39,7 @@ $htmlDescription .= '</ol>';
 		]
 	});
 
-	storeBalanza.on('beforeload', function(){
+	storeAcuerdo_det.on('beforeload', function(){
 		var year   = Ext.getCmp(module + 'comboYear').getValue();
 		var period = Ext.getCmp(module + 'comboPeriod').getValue();
 		if (!year || !period) {
@@ -50,7 +50,7 @@ $htmlDescription .= '</ol>';
 		Ext.ux.bodyMask.show();
 	});
 	
-	storeBalanza.on('load', function(store){
+	storeAcuerdo_det.on('load', function(store){
 		FusionCharts.setCurrentRenderer('javascript');
 		
 		disposeCharts();
@@ -61,12 +61,12 @@ $htmlDescription .= '</ol>';
 		chart.render(module + 'AreaChart');
 		Ext.ux.bodyMask.hide();
 	});
-	var colModelBalanza = new Ext.grid.ColumnModel({
+	var colModelAcuerdo_det = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'% <?= Lang::get('indicador.reports.relation'); ?>', dataIndex:'valor_balanza' ,'renderer':rateFormat}
+			{header:'<?= Lang::get('acuerdo_det.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
+			{header:'<?= Lang::get('acuerdo_det.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('acuerdo_det.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
+			{header:'% <?= Lang::get('acuerdo_det.reports.relation'); ?>', dataIndex:'valor_balanza' ,'renderer':rateFormat}
 		]
 		,defaults: {
 			sortable: true
@@ -74,11 +74,11 @@ $htmlDescription .= '</ol>';
 		}
 	});
 	
-	var gridBalanza = new Ext.grid.GridPanel({
+	var gridAcuerdo_det = new Ext.grid.GridPanel({
 		border:true
 		,monitorResize:true
-		,store:storeBalanza
-		,colModel:colModelBalanza
+		,store:storeAcuerdo_det
+		,colModel:colModelAcuerdo_det
 		,stateful:true
 		,columnLines:true
 		,stripeRows:true
@@ -86,9 +86,9 @@ $htmlDescription .= '</ol>';
 			forceFit:true
 		}
 		,enableColumnMove:false
-		,id:module+'gridBalanza'			
+		,id:module+'gridAcuerdo_det'			
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar: new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
+		,bbar: new Ext.PagingToolbar({pageSize:10000, store:storeAcuerdo_det, displayInfo:true})
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
@@ -97,7 +97,7 @@ $htmlDescription .= '</ol>';
 		,margins:'10 15 5 0'
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
-	Ext.state.Manager.clear(gridBalanza.getItemId());
+	Ext.state.Manager.clear(gridAcuerdo_det.getItemId());
 	
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 	var defaultYear = <?= end($yearsAvailable); ?>;
@@ -106,9 +106,9 @@ $htmlDescription .= '</ol>';
 
 	/******************************************************************************************************************************************************************************/
 	
-	var indicadorContainer = new Ext.Panel({
+	var acuerdo_detContainer = new Ext.Panel({
 		xtype:'panel'
-		,id:module + 'excuteIndicadorContainer'
+		,id:module + 'excuteAcuerdo_detContainer'
 		,layout:'column'
 		,border:false
 		,baseCls:'x-plain'
@@ -126,8 +126,8 @@ $htmlDescription .= '</ol>';
 			style:{padding:'0px'}
 			,html: '<div class="bootstrap-styles">' +
 				'<div class="page-head">' +
-					'<h4 class="nopadding"><i class="styleColor fa fa-area-chart"></i> <?= $tipo_indicador_nombre; ?>: <small><?= $indicador_nombre; ?></small></h4>' +
-					'<div class="clearfix"></div><?= $htmlDescription; ?>' +
+					'<h4 class="nopadding"><i class="styleColor fa fa-area-chart"></i> <?= $acuerdo_nombre; ?>: <small><?= $acuerdo_det_productos_desc; ?></small></h4>' +
+					'<div class="clearfix"></div><?= $htmlProducts; ?>' +
 				'</div>' +
 			'</div>'
 		},{
@@ -150,7 +150,7 @@ $htmlDescription .= '</ol>';
 				,listeners:{
 					select: {
 						fn: function(combo,reg){
-							Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
+							//Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
 						}
 					}
 				}
@@ -166,15 +166,14 @@ $htmlDescription .= '</ol>';
 				,triggerAction: 'all'
 				,selectOnFocus:true
 				,value: defaultYear
-				,disabled: true
 				,width: 100
 			},'-',{
 				text: Ext.ux.lang.buttons.generate
 				,iconCls: 'icon-refresh'
 				,handler: function () {
-					/*var html = Ext.getCmp(module + 'excuteIndicadorContainer').getEl().dom.innerHTML;
+					/*var html = Ext.getCmp(module + 'excuteAcuerdo_detContainer').getEl().dom.innerHTML;
 					console.log(html);*/
-					storeBalanza.load();
+					storeAcuerdo_det.load();
 				}
 			}]
 		/*},{
@@ -195,7 +194,7 @@ $htmlDescription .= '</ol>';
 			}]
 		},{
 			defaults:{anchor:'100%'}
-			,items:[gridBalanza]
+			,items:[gridAcuerdo_det]
 		}]
 		,listeners:{
 			beforedestroy: {
@@ -211,12 +210,12 @@ $htmlDescription .= '</ol>';
 	});
 
 	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
-		storeBalanza.load();
+		storeAcuerdo_det.load();
 	});
 	
-	storeBalanza.load();
+	storeAcuerdo_det.load();
 
-	return indicadorContainer;
+	return acuerdo_detContainer;
 
 	/*********************************************** Start functions***********************************************/
 	

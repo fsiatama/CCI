@@ -118,7 +118,8 @@ class Acuerdo_detAdo extends BaseAdo {
 			 acuerdo_det_contingente_acumulado_pais,
 			 acuerdo_det_desgravacion_igual_pais,
 			 acuerdo_nombre,
-			 acuerdo_fvigente
+			 acuerdo_fvigente,
+			 acuerdo_intercambio
 			FROM acuerdo_det
 			LEFT JOIN acuerdo ON acuerdo_det_acuerdo_id = acuerdo_id
 		';

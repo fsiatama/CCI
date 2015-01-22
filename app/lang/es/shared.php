@@ -13,6 +13,5 @@ return [
 		'10' => 'Octubre',
 		'11' => 'Noviembre',
 		'12' => 'Diciembre',
-
 	]
 ];

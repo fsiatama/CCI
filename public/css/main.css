@@ -135,4 +135,18 @@ div.countTo label {font-weight: 300; font-size: 22px; line-height: 22px; }
 .x-form-helptext {color: #888; font-size: 9px; padding: 0; margin: 0 0 8px; }
 .rotate i {float: right; color: #dfd7ca; position: absolute; left: 0; left: auto; right: 0; bottom: 0; display: block; height: 65px; font-size: 75px; -webkit-transform: rotate(-40deg); -moz-transform: rotate(-40deg); -o-transform: rotate(-40deg); -ms-transform: rotate(-40deg); transform: rotate(-40deg); text-shadow:1px 0 #ddd; }
 
-.dashboard-block {position: relative; display: block; padding: 30px 20px; background-color: #f8f5f0!important; opacity:0.9; overflow: hidden; margin-bottom:5px; }
+.dashboard-block {
+	opacity:0.9;
+	clear:both;
+	position:relative;
+	overflow:hidden;
+	background:#f8f5f0!important;
+	margin:15px 0;
+	padding:30px 10px;
+
+	border: 1px solid #CCC;
+
+	-webkit-border-radius: 6px;
+	   -moz-border-radius: 6px;
+			border-radius: 6px;
+}

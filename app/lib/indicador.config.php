@@ -786,6 +786,26 @@ return [
 				'multivalue' => false,
 			]
 		],
+		'contingente' => [
+			[
+				'field'      => 'intercambio',
+				'field_expo' => 'intercambio',
+				'field_impo' => 'intercambio',
+				'required'   => true,
+				'multivalue' => false,
+			],[
+				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
+				'multivalue' => true,
+			],[
+				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
+				'required'   => false,
+				'multivalue' => true,
+			]
+		],
 	],
 	'executeConfig' => [
 		'1'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaRelativa'],
@@ -811,6 +831,7 @@ return [
 		'21' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ConsumoAparente'],
 		'22' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ComtradePenetracionMercado'],
 		'23' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ComtradePuestoColombiaProveedor'],
+		'contingente' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'AcumuladoContingente'],
 	],
 	'yearsAvailable' => ['2005','2006','2007','2008','2009','2010', '2011', '2012', '2013', '2014'],
 	'periods' => [

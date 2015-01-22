@@ -9,7 +9,7 @@ require 'PHPExcel_Cell_MyValueBinder.php';
 *
 * @author   Fabian Siatama
 *
-* Esta clase permite exportar cualquier grilla en formato EXCEL o PDF
+* Esta clase permite exportar cualquier grilla ExtJs en formato EXCEL o PDF
 */
 class Excel
 {

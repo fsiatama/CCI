@@ -110,6 +110,15 @@ class ContingenteController {
 		return $result;
 	}
 
+	public function executeAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('list', $postParams);
+		if ($result['success']) {
+			$result = $this->contingenteRepo->execute($postParams);
+		}
+		return $result;
+	}
+
 }
 	
 

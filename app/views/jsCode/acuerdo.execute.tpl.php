@@ -8,9 +8,9 @@ foreach ($countryData as $key => $row) {
 $htmlAgreement = '
 <div class="container">
 	<div class="row">
-		<div class="col-lg-10 col-md-9 col-xs-8">
+		<div class="col-lg-9 col-md-7 col-sm-6">
 			<h1 class="page-header">'.$acuerdo_nombre.'</h1>
-			<div class="jumbotron">
+			<div class="dashboard-block">
 				<p>'.nl2br($acuerdo_descripcion).'</p>
 			</div>
 			<hr>
@@ -217,6 +217,7 @@ $htmlAgreement = Inflector::compress($htmlAgreement);
 			AcuerdoTree
 		,{
 			region:'center'
+			,monitorResize:true
 			,layout: 'fit'
 			,id: module + 'lpAcuerdo'
 			,items:[]
@@ -242,6 +243,7 @@ $htmlAgreement = Inflector::compress($htmlAgreement);
 				,border:false
 				,autoScroll: false
 				,layout: 'fit'
+				,monitorResize:true
 				,items:[{
 					border:false
 					,xtype:'panel'

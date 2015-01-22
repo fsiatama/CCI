@@ -3,6 +3,7 @@
 require PATH_MODELS.'Entities/Contingente.php';
 require PATH_MODELS.'Ado/ContingenteAdo.php';
 require_once PATH_MODELS.'Repositories/Contingente_detRepo.php';
+//require_once PATH_MODELS.'Repositories/AcuerdoRepo.php';
 require_once PATH_MODELS.'Repositories/AlertaRepo.php';
 require_once ('BaseRepo.php');
 
@@ -466,6 +467,122 @@ class ContingenteRepo extends BaseRepo {
 		$result['data'] = $arrData;
 
 		return $result;
+	}
+
+	public function execute($params)
+	{
+		extract($params);
+
+		$year   = (empty($year)) ? '' : $year ;
+		$period = (empty($period)) ? 12 : $period ;
+		$format = (empty($format)) ? false : $format ;
+		$fields = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
+		$scope  = (empty($scope)) ? 1 : $scope ;
+
+		if (
+			empty($acuerdo_id) ||
+			empty($acuerdo_det_id)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request. contingenteRepo  execute'
+			];
+			return $result;
+		}
+		$acuerdo_detRepo = new Acuerdo_detRepo;
+		$result = $acuerdo_detRepo->listId($params);
+
+		if (!$result['success']) {
+			return $result;
+		}
+		$rowAcuerdo_det = array_shift($result['data']);
+
+		//busca todos los contingentes hijos por acuerdo_det_id
+		$this->model->setContingente_acuerdo_det_id($acuerdo_det_id);
+		$this->model->setContingente_acuerdo_det_acuerdo_id($acuerdo_id);
+		$result = $this->modelAdo->exactSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$rowContingente = array_shift($result['data']);
+
+		$acuerdoRepo = new AcuerdoRepo;
+		$result      = $acuerdoRepo->listId(compact('acuerdo_id'));
+		if (!$result['success']) {
+			return $result;
+		}
+		$rowAcuerdo     = array_shift($result['data']);
+		$countryData    = $result['country_data'];
+		$arrCountriesId = array_column($countryData, 'id_pais');
+
+		
+		$lines            = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.contingente');
+		$arrFiltersName   = Helpers::arrayGet($lines, 'filters.contingente');
+
+		if (empty($arrExecuteConfig)) {
+			return [
+				'success' => false,
+				'error'   => 'There is no configuration for this method'
+			];
+		}
+
+		$repoFileName   = PATH_MODELS.'Repositories/'.$arrExecuteConfig['repoClassName'].'.php';
+		$repoClassName  = $arrExecuteConfig['repoClassName'];
+		$repoMethodName = 'execute' . $arrExecuteConfig['methodName'];
+
+		if ( ! file_exists($repoFileName)) {
+			return [
+				'success' => false,
+				'error'   => 'unavailable repo '. $repoClassName
+			];
+		}
+
+		$arrFiltros   = [];
+		$arrFiltros[] = 'id_pais:'.implode(',', $arrCountriesId);
+		$arrFiltros[] = 'id_posicion:'.$rowAcuerdo_det['acuerdo_det_productos'];
+
+		$params = [
+			'indicador_filtros'        => implode('||', $arrFiltros),
+			'tipo_indicador_activador' => 'volumen',
+		];
+
+		require $repoFileName;
+
+		$repo = new $repoClassName(
+			$params,
+			$arrFiltersName,
+			$year,
+			$period,
+			$scope
+		);
+		if (method_exists($repo, $repoMethodName)) {
+			$result = call_user_func_array([$repo, $repoMethodName], []);
+
+			if ($format !== false && !empty($fields) && $result['total'] > 0) {
+				$arrDescription   = [];
+				$arrDescription['title'] = $rowAcuerdo_det['acuerdo_nombre'];
+				$arrDescription[Lang::get('acuerdo_det.table_name')] = $rowAcuerdo_det['acuerdo_det_productos_desc'];
+
+				$excel = new Excel (
+					$result,
+					$format,
+					$fields,
+					$rowAcuerdo_det['acuerdo_nombre'],
+					$arrDescription
+				);
+				$result = $excel->write();
+			}
+		} else {
+			return [
+				'success' => false,
+				'error'   => 'unavailable method '. $repoMethodName
+			];
+		}
+
+		return $result;
+
 	}
 
 }
