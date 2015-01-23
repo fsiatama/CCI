@@ -3045,7 +3045,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$trade            = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
 
 		$this->setTrade($trade);
-		$this->setRange('ini');
+		//$this->setRange('ini');
 
 		if ($trade == 'impo') {
 			$this->model      = $this->getModelImpo();
@@ -3068,7 +3068,20 @@ class DeclaracionesRepo extends BaseRepo {
 			$row = 'periodo AS id';
 		}
 
-		$arrRowField = [$row, $rowField];
+		if ($arrFiltersValues['acuerdo_det_contingente_acumulado_pais'] == '0') {
+			$filter = Helpers::findKeyInArrayMulti(
+				$this->filtersConfig,
+				'field',
+				'id_pais'
+			);
+			$fieldName = ($trade == 'impo') ? $filter['field_impo'] : $filter['field_expo'] ;
+			$arrRowField = [$row, $fieldName, 'pais', $rowField];
+		} else {
+			$arrRowField = [$row, $rowField];
+		}
+
+		//var_dump($fieldName);
+
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($columnValue);
@@ -3079,6 +3092,31 @@ class DeclaracionesRepo extends BaseRepo {
 
 		if (!$rsDeclaraciones['success']) {
 			return $rsDeclaraciones;
+		}
+
+		if ($rsDeclaraciones['total'] == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		$arrData   = [];
+		$arrTotals = [];
+		$arrSeries = [];
+
+		foreach ($rsDeclaraciones['data'] as $row) {
+			/*foreach ($row as $key => $value) {
+				if (!in_array($key, $arrFieldAlias)) {
+					//suma las columnas que no estan en array de filas
+					//es decir las columnas calculadas
+					if (empty($arrTotals[$key])) {
+						$arrTotals[$key] = 0;
+					}
+					$arrTotals[$key] += $value;
+					$arrSeries[]      = $key;
+				}
+			}*/
 		}
 
 		var_dump($rsDeclaraciones, $this->period, $this->year);

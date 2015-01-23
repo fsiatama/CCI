@@ -542,6 +542,7 @@ class ContingenteRepo extends BaseRepo {
 		$arrFiltros   = [];
 		$arrFiltros[] = 'id_pais:'.implode(',', $arrCountriesId);
 		$arrFiltros[] = 'id_posicion:'.$rowAcuerdo_det['acuerdo_det_productos'];
+		$arrFiltros[] = 'acuerdo_det_contingente_acumulado_pais:'.$rowAcuerdo_det['acuerdo_det_contingente_acumulado_pais'];
 
 		$params = [
 			'indicador_filtros'        => implode('||', $arrFiltros),
