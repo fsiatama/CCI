@@ -30,13 +30,6 @@ $htmlProducts .= '</ol>';
 			,acuerdo_id: '<?= $acuerdo_id; ?>'
 			,acuerdo_det_id: '<?= $acuerdo_det_id; ?>'
 		}
-		,fields:[
-			{name:'id', type:'float'},
-			{name:'periodo', type:'string'},
-			{name:'valor_impo', type:'float'},
-			{name:'valor_expo', type:'float'},
-			{name:'valor_balanza', type:'float'}
-		]
 	});
 
 	storeAcuerdo_det.on('beforeload', function(){
@@ -51,23 +44,20 @@ $htmlProducts .= '</ol>';
 	});
 	
 	storeAcuerdo_det.on('load', function(store){
-		FusionCharts.setCurrentRenderer('javascript');
+		console.log(store);
+		/*FusionCharts.setCurrentRenderer('javascript');
 		
 		disposeCharts();
 		
 		var chart = new FusionCharts('<?= AREA; ?>', module + 'AreaChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
 		chart.setJSONData(store.reader.jsonData.areaChartData);
-		chart.render(module + 'AreaChart');
+		chart.render(module + 'AreaChart');*/
 		Ext.ux.bodyMask.hide();
 	});
+
 	var colModelAcuerdo_det = new Ext.grid.ColumnModel({
-		columns:[
-			{header:'<?= Lang::get('acuerdo_det.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
-			{header:'<?= Lang::get('acuerdo_det.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('acuerdo_det.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'% <?= Lang::get('acuerdo_det.reports.relation'); ?>', dataIndex:'valor_balanza' ,'renderer':rateFormat}
-		]
+		columns:[]
 		,defaults: {
 			sortable: true
 			,align: 'right'
@@ -88,13 +78,45 @@ $htmlProducts .= '</ol>';
 		,enableColumnMove:false
 		,id:module+'gridAcuerdo_det'			
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar: new Ext.PagingToolbar({pageSize:10000, store:storeAcuerdo_det, displayInfo:true})
+		,bbar: []
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
 		,height:350
 		,autoWidth:true
 		,margins:'10 15 5 0'
+		,listeners:{
+			render: {
+				fn: function(grid){
+					
+					/*st.on('load', function(store){
+						console.log(store);
+
+						if (typeof(store.reader.jsonData.columns) === 'object') {
+							var columns = [];
+
+							Ext.each(store.reader.jsonData.columns, function(column) {
+								columns.push(column);
+							});
+
+							cm.setConfig(columns);
+
+						}
+
+
+
+
+						//{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'}
+
+
+						Ext.ux.bodyMask.hide();
+					});*/
+
+
+					//st.load();
+				}
+			}
+		}
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridAcuerdo_det.getItemId());
@@ -173,7 +195,7 @@ $htmlProducts .= '</ol>';
 				,handler: function () {
 					/*var html = Ext.getCmp(module + 'excuteAcuerdo_detContainer').getEl().dom.innerHTML;
 					console.log(html);*/
-					storeAcuerdo_det.load();
+					//storeAcuerdo_det.load();
 				}
 			}]
 		/*},{
@@ -210,7 +232,7 @@ $htmlProducts .= '</ol>';
 	});
 
 	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
-		storeAcuerdo_det.load();
+		//storeAcuerdo_det.load();
 	});
 	
 	storeAcuerdo_det.load();
@@ -220,9 +242,9 @@ $htmlProducts .= '</ol>';
 	/*********************************************** Start functions***********************************************/
 	
 	function disposeCharts () {
-		if(FusionCharts(module + 'AreaChartId')){
+		/*if(FusionCharts(module + 'AreaChartId')){
 			FusionCharts(module + 'AreaChartId').dispose();
-		}
+		}*/
 	}
 	
 

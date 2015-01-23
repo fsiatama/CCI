@@ -497,16 +497,6 @@ class ContingenteRepo extends BaseRepo {
 		}
 		$rowAcuerdo_det = array_shift($result['data']);
 
-		//busca todos los contingentes hijos por acuerdo_det_id
-		$this->model->setContingente_acuerdo_det_id($acuerdo_det_id);
-		$this->model->setContingente_acuerdo_det_acuerdo_id($acuerdo_id);
-		$result = $this->modelAdo->exactSearch($this->model);
-		if (!$result['success']) {
-			return $result;
-		}
-
-		$rowContingente = array_shift($result['data']);
-
 		$acuerdoRepo = new AcuerdoRepo;
 		$result      = $acuerdoRepo->listId(compact('acuerdo_id'));
 		if (!$result['success']) {
@@ -542,6 +532,7 @@ class ContingenteRepo extends BaseRepo {
 		$arrFiltros   = [];
 		$arrFiltros[] = 'id_pais:'.implode(',', $arrCountriesId);
 		$arrFiltros[] = 'id_posicion:'.$rowAcuerdo_det['acuerdo_det_productos'];
+		//se envia como informacion adicional la llave de contingente en arrFiltros para buscar el detalle, no funciona como filtro en declaraciones ni sobordos
 		$arrFiltros[] = 'acuerdo_det_contingente_acumulado_pais:'.$rowAcuerdo_det['acuerdo_det_contingente_acumulado_pais'];
 
 		$params = [
@@ -558,29 +549,124 @@ class ContingenteRepo extends BaseRepo {
 			$period,
 			$scope
 		);
-		if (method_exists($repo, $repoMethodName)) {
-			$result = call_user_func_array([$repo, $repoMethodName], []);
-
-			if ($format !== false && !empty($fields) && $result['total'] > 0) {
-				$arrDescription   = [];
-				$arrDescription['title'] = $rowAcuerdo_det['acuerdo_nombre'];
-				$arrDescription[Lang::get('acuerdo_det.table_name')] = $rowAcuerdo_det['acuerdo_det_productos_desc'];
-
-				$excel = new Excel (
-					$result,
-					$format,
-					$fields,
-					$rowAcuerdo_det['acuerdo_nombre'],
-					$arrDescription
-				);
-				$result = $excel->write();
-			}
-		} else {
+		if (!method_exists($repo, $repoMethodName)) {
 			return [
 				'success' => false,
 				'error'   => 'unavailable method '. $repoMethodName
 			];
 		}
+		$result = call_user_func_array([$repo, $repoMethodName], []);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		return $result;
+
+		$arrExecutedData   = $result['data'];
+		$arrCumulativeData = $result['cumulativeData'];
+		var_dump($result);
+
+
+
+		//busca todos los contingentes hijos por acuerdo_det_id
+		$this->model->setContingente_acuerdo_det_id($acuerdo_det_id);
+		$this->model->setContingente_acuerdo_det_acuerdo_id($acuerdo_id);
+		$result = $this->modelAdo->exactSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$this->contingente_detRepo = new Contingente_detRepo;
+		
+		$arrData = [];
+
+		foreach ($result['data'] as $key => $row) {
+			$quotaWeight = 0;
+			if ($row['contingente_mcontingente'] == '1') {
+				$params = [
+					'contingente_id'                     => $row['contingente_id'],
+					'contingente_acuerdo_det_id'         => $row['contingente_acuerdo_det_id'],
+					'contingente_acuerdo_det_acuerdo_id' => $row['contingente_acuerdo_det_acuerdo_id'],
+					'year'                               => $year,
+				];
+				$result = $this->contingente_detRepo->listId($params);
+				if (!$result['success']) {
+					return $result;
+				}
+				if (empty($result['data'])) {
+					//si no hay datos, significa un error debido a que si maneja contingente pero no existen hijos en contingente_det
+					return [
+						'success' => false,
+						'error'   => 'Not found Quota detail configuration'
+					];
+				}
+				//esta consulta deberia arrojar un solo registro
+				$rowQuota    = array_shift($result['data']);
+				$quotaWeight = $rowQuota['contingente_det_peso_neto'];
+			}
+
+			/*$totalWeight = 0;
+			$id_pais_ant = '';
+
+			foreach ($arrExecutedData as $data) {
+				if (empty($data['id_pais']) || $data['id_pais'] == $row['contingente_id_pais']) {
+
+					$id_pais = ($rowAcuerdo_det['acuerdo_det_contingente_acumulado_pais'] == '1') ? $rowAcuerdo['acuerdo_mercado_id'] : $data['id_pais'] ;
+					$pais    = ($rowAcuerdo_det['acuerdo_det_contingente_acumulado_pais'] == '1') ? $rowAcuerdo['mercado_nombre'] : $data['pais'] ;
+
+					if ($id_pais_ant != $id_pais) {
+						$totalWeight = 0;
+						$id_pais_ant = $id_pais;
+					}
+					$totalWeight += (float)$data['peso_neto'];
+					$arrData[] = [
+						'id'                  => $data['id'],
+						'periodo'             => $data['periodo'],
+						'pais'                => $pais,
+						'id_pais'             => $id_pais,
+						'peso_neto'           => $data['peso_neto'],
+						'peso_neto_acumulado' => $totalWeight,
+						'contingente'         => $quotaWeight,
+					];
+				}
+				/*if ($rowAcuerdo_det['acuerdo_det_contingente_acumulado_pais'] == '1') {
+					$arrData[] = [
+						'id'          => $data['id'],
+						'periodo'     => $data['periodo'],
+						'pais'        => $rowAcuerdo['mercado_nombre'],
+						'id_pais'     => $rowAcuerdo['acuerdo_mercado_id'],
+						'peso_neto'   => $data['peso_neto'],
+						'contingente' => $quotaWeight,
+					];
+				} elseif ($data['id_pais'] == $row['contingente_id_pais']) {
+				}
+			}*/
+		}
+
+		var_dump($arrData);
+
+
+
+
+
+
+
+		if ($format !== false && !empty($fields) && $result['total'] > 0) {
+			$arrDescription   = [];
+			$arrDescription['title'] = $rowAcuerdo_det['acuerdo_nombre'];
+			$arrDescription[Lang::get('acuerdo_det.table_name')] = $rowAcuerdo_det['acuerdo_det_productos_desc'];
+
+			$excel = new Excel (
+				$result,
+				$format,
+				$fields,
+				$rowAcuerdo_det['acuerdo_nombre'],
+				$arrDescription
+			);
+			$result = $excel->write();
+		}
+			
 
 		return $result;
 

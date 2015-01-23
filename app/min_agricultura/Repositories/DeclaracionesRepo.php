@@ -3048,13 +3048,13 @@ class DeclaracionesRepo extends BaseRepo {
 		//$this->setRange('ini');
 
 		if ($trade == 'impo') {
-			$this->model      = $this->getModelImpo();
-			$this->modelAdo   = $this->getModelImpoAdo();
-			$columnValue      = $this->columnValueImpo;
+			$this->model    = $this->getModelImpo();
+			$this->modelAdo = $this->getModelImpoAdo();
+			$columnValue    = $this->columnValueImpo;
 		} else {
-			$this->model      = $this->getModelExpo();
-			$this->modelAdo   = $this->getModelExpoAdo();
-			$columnValue      = $this->columnValueExpo;
+			$this->model    = $this->getModelExpo();
+			$this->modelAdo = $this->getModelExpoAdo();
+			$columnValue    = $this->columnValueExpo;
 		}
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
@@ -3068,23 +3068,24 @@ class DeclaracionesRepo extends BaseRepo {
 			$row = 'periodo AS id';
 		}
 
-		if ($arrFiltersValues['acuerdo_det_contingente_acumulado_pais'] == '0') {
-			$filter = Helpers::findKeyInArrayMulti(
-				$this->filtersConfig,
-				'field',
-				'id_pais'
-			);
-			$fieldName = ($trade == 'impo') ? $filter['field_impo'] : $filter['field_expo'] ;
-			$arrRowField = [$row, $fieldName, 'pais', $rowField];
+		$filter = Helpers::findKeyInArrayMulti(
+			$this->filtersConfig,
+			'field',
+			'id_pais'
+		);
+		$fieldName = ($trade == 'impo') ? $filter['field_impo'] : $filter['field_expo'] ;
+		/*if ($arrFiltersValues['acuerdo_det_contingente_acumulado_pais'] == '0') {
+			$arrRowField = [$row, $fieldName . ' AS id_pais', 'pais', $rowField];
 		} else {
+		}*/
 			$arrRowField = [$row, $rowField];
-		}
 
 		//var_dump($fieldName);
 
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotColumnFields('CONCAT('.$fieldName.', "-", pais)');
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
 		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
@@ -3101,12 +3102,13 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 
+		$arrFieldAlias = ['id', 'periodo'];
 		$arrData   = [];
 		$arrTotals = [];
 		$arrSeries = [];
 
 		foreach ($rsDeclaraciones['data'] as $row) {
-			/*foreach ($row as $key => $value) {
+			foreach ($row as $key => $value) {
 				if (!in_array($key, $arrFieldAlias)) {
 					//suma las columnas que no estan en array de filas
 					//es decir las columnas calculadas
@@ -3116,10 +3118,59 @@ class DeclaracionesRepo extends BaseRepo {
 					$arrTotals[$key] += $value;
 					$arrSeries[]      = $key;
 				}
-			}*/
+			}
 		}
 
-		var_dump($rsDeclaraciones, $this->period, $this->year);
+		foreach ($rsDeclaraciones['data'] as $row) {
+			$arr = [];
+			foreach ($row as $key => $value) {
+				//suprimir la palabra " peso_neto" que le pone por defecto la clase pivottable a las columnas calculadas
+				$index = str_replace(' '.$columnValue, '', $key);
+				$arr[$index] = $value;
+				if (in_array($key, $arrSeries)) {
+					if ($key == $columnValue) {
+						$rate = ($arrTotals[$key] == 0) ? 0 : ( $value / $arrTotals[$key] ) ;
+					} else {
+						$rate = ($row[$columnValue] == 0) ? 0 : ( $value / $row[$columnValue] ) ;
+					}
+					
+					//calcula la participacion y la agrega como columna
+					$arr['rate_'.$index] = $rate;
+				}
+			}
+			$arrData[] = $arr;
+		}
+
+		$row        = current($arrData);
+		$arrKeys    = array_keys($row);
+		$arrColumns = [];
+
+		foreach ($arrKeys as $key) {
+			if ($key == 'id') {
+				# code...
+			} elseif ($key == 'periodo') {
+				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.periodo'), 'dataIndex' => $key];
+			} elseif ($key == $columnValue) {
+				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.peso_tm'), 'dataIndex' => $key];
+			} elseif (substr($key,0,5) == 'rate_') {
+				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.participacion'), 'dataIndex' => $key, 'hidden' => true];
+			} else {
+				$arr   = explode('-', $key);
+				$title = (empty($arr[1])) ? $key : $arr[1] ;
+				$arrColumns[] = ['header' => $title, 'dataIndex' => $key];
+			}
+		}
+
+		$result = [
+			'success'        => true,
+			'data'           => $arrData,
+			'cumulativeData' => $arrTotals,
+			'columns'        => $arrColumns,
+			'total'          => $rsDeclaraciones['total'],
+		];
+
+		return $result;
+
 	}
 }
 

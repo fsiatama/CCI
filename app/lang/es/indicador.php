@@ -20,6 +20,7 @@ return [
 		'participacion'           => 'Participación %',
 		'peso_impo'               => 'Total Impo (Kg)',
 		'peso_expo'               => 'Total Expo (Kg)',
+		'peso_tm'                 => 'Total Peso (Tm)',
 		'produccion_peso'         => 'Total Producción (Kg)',
 		'valorfob'                => 'Valor FOB (US$)',
 		'valor_impo'              => 'Total Impo CIF (US$)',

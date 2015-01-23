@@ -150,7 +150,7 @@ $htmlAgreement = Inflector::compress($htmlAgreement);
 		consultar:function(node_id){
 			var node = this.getNodeById(node_id);
 			Ext.getCmp('tab-' + module).purgeListeners();
-			console.log(node);
+			//console.log(node);
 			if(node){
 				var dataViewer = new Ext.Panel({
 					autoScroll: false

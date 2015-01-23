@@ -79,6 +79,10 @@ class Contingente_detAdo extends BaseAdo {
 			if ($data <> ''){
 				if ($key == 'contingente_det_contingente_id' || $key == 'contingente_det_contingente_acuerdo_det_id'  || $key == 'contingente_det_contingente_acuerdo_det_acuerdo_id') {
 					$primaryFilter[] = $key . ' = "' . $data . '"';
+				} elseif ($key == 'contingente_det_anio_ini') {
+					$filter[] = '"' . $data . '" >= '.$key ;
+				} elseif ($key == 'contingente_det_anio_fin') {
+					$filter[] = '"' . $data . '" <= '.$key ;
 				} else {
 					if ($operator == '=') {
 						$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
