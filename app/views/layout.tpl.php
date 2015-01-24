@@ -26,11 +26,15 @@
 
     </head>
     <body>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+
         <!--[if lt IE 7]>
                 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
         <!-- Fixed navbar -->
+        
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
@@ -41,6 +45,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="<?= URL_RAIZ ?>">
+                        <!--<img src="<?= URL_RAIZ ?>img/logo.png" />-->
                         <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
                     </a>
                 </div>
@@ -86,8 +91,8 @@
             </div>
         </div>
 
-        <hr>
-        <div class="container">
+        
+        <div class="container main-block">
             <?= $tpl_content; ?>
         </div><!-- /container -->
 
@@ -145,8 +150,6 @@
                 </div>
             </div>
         </div>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
         <script src="/js/vendor/bootstrap.min.js"></script>
         <script src="/js/plugins.js"></script>
         <script src="/js/main.js"></script>		
