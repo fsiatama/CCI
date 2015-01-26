@@ -393,10 +393,11 @@ class Acuerdo_detRepo extends BaseRepo {
 		}
 		$rowAcuerdo_det = array_shift($result['data']);
 
+		$arrProducts  = explode(',', $rowAcuerdo_det['acuerdo_det_productos']);
 		$posicionRepo = new PosicionRepo;
 		$params = [
 			'valuesqry' => true,
-			'query'     => $rowAcuerdo_det['acuerdo_det_productos']
+			'query'     => implode('|', $arrProducts)
 		];
 
 		$result = $posicionRepo->listAll($params);
@@ -405,8 +406,7 @@ class Acuerdo_detRepo extends BaseRepo {
 			return $result;
 		}
 
-		$arrData = [];
-		$arrProducts = explode(',', $rowAcuerdo_det['acuerdo_det_productos']);
+		$arrData     = [];
 
 		foreach ($result['data'] as $key => $row) {
 			if (in_array($row['id_posicion'], $arrProducts) ) {

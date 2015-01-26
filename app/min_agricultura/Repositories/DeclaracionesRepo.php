@@ -3142,7 +3142,8 @@ class DeclaracionesRepo extends BaseRepo {
 		$arrKeys    = array_keys($row);
 		$arrColumns = [];
 		$arrFields  = [];
-		$hidden     = (count($arrKeys) > 20) ? true : false ;
+		//var_dump(count($arrKeys), $arrKeys);
+		$hidden     = (count($arrKeys) > 20 || count($arrKeys) < 7) ? true : false ;
 
 		foreach ($arrKeys as $key) {
 			$arrFields[] = ['name' => $key, 'type' => 'string'];
@@ -3152,13 +3153,15 @@ class DeclaracionesRepo extends BaseRepo {
 				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.periodo'), 'dataIndex' => $key];
 			} elseif ($key == $columnValue) {
 				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.peso_tm'), 'dataIndex' => $key, 'renderer' => 'numberFormat'];
+			} elseif ($key == 'rate_'.$columnValue) {
+				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.participacion'), 'dataIndex' => $key, 'renderer' => 'rateFormat'];
 			} elseif (substr($key,0,5) == 'rate_') {
 				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.participacion'), 'dataIndex' => $key, 'renderer' => 'rateFormat', 'hidden' => true];
 			} else {
 				$arr   = explode('_', $key);
 				$title = (empty($arr[1])) ? $key : $arr[1] . ' (Tm)' ;
 
-				$arrColumns[] = ['header' => $title, 'dataIndex' => $key, 'renderer' => 'numberFormat', 'hidden' => $hidden];
+				$arrColumns[] = ['header' => $title, 'dataIndex' => $key, 'renderer' => 'numberFormat', 'hidden' => true];
 			}
 		}
 

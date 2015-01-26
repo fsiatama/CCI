@@ -9,8 +9,6 @@ foreach ($productsData as $row) {
 
 $htmlProducts .= '</ol>';
 
-//var_dump($productsData);
-
 ?>
 
 /*<script>*/
@@ -18,6 +16,8 @@ $htmlProducts .= '</ol>';
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module.'_'.$acuerdo_id; ?>';
 	var panelHeight = Math.floor(Ext.getCmp('tabpanel').getInnerHeight() - 260);
+
+	var chartsId = [];
 
 	var storeContingente = new Ext.data.JsonStore({
 		url:'contingente/execute'
@@ -88,7 +88,7 @@ $htmlProducts .= '</ol>';
 						,sortable:false
 						,align:'right'
 						,renderer:numberFormat
-						,hidden:false
+						,hidden:column.hidden
 					});
 				} else if (column.renderer == 'rateFormat') {
 					columns.push({
@@ -97,7 +97,7 @@ $htmlProducts .= '</ol>';
 						,sortable:false
 						,align:'right'
 						,renderer:rateFormat
-						,hidden:true
+						,hidden:column.hidden
 					});
 				} else {
 					columns.push(column);
@@ -112,57 +112,27 @@ $htmlProducts .= '</ol>';
 
 		}
 		FusionCharts.setCurrentRenderer('javascript');
-		
 		disposeCharts();
-
-		var csatGauge = new FusionCharts({
-	        "type": "angulargauge",
-	        "renderAt": module + 'AreaChart',
-	        "width": "400",
-	        "height": "250",
-	        "dataFormat": "json",
-	        "dataSource":{
-				"chart": {
-				  "caption": "Customer Satisfaction Score",
-				  "subcaption": "Last week",
-				  "lowerLimit": "0",
-				  "upperLimit": "100",
-				  "theme": "fint"
-				},
-				"colorRange": {
-				  "color": [
-				     {
-				        "minValue": "0",
-				        "maxValue": "50",
-				        "code": "#e44a00"
-				     },
-				     {
-				        "minValue": "50",
-				        "maxValue": "75",
-				        "code": "#f8bd19"
-				     },
-				     {
-				        "minValue": "75",
-				        "maxValue": "100",
-				        "code": "#6baa01"
-				     }
-				  ]
-				},
-				"dials": {
-				  "dial": [
-				     {
-				        "value": "67"
-				     }
-				  ]
-				}
-			}
-	    });
-		
-		var chart = new FusionCharts('angulargauge', module + 'AreaChartId', '100%', '100%', '0', '1');
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.chartData);
-		chart.render(module + 'AreaChart');
-		/*csatGauge.render();*/
+		if (typeof(store.reader.jsonData.chartsData) === 'object') {
+			var chartsDiv = Ext.get(module + 'chartsDiv');
+			var html      = '';
+			var divClass  = '';
+			if (store.reader.jsonData.chartsData.length == 1) {
+				//divClass = 'col-md-offset-3'
+			};
+			Ext.each(store.reader.jsonData.chartsData, function(chartData) {
+				html += '<div class="col-xs-9 ' + divClass + '" id="' + module + '_gaugeChart_' + chartData.id + '"></div>';
+			});
+			chartsDiv.update(html);
+			Ext.each(store.reader.jsonData.chartsData, function(chartData) {
+				var divId = module + '_gaugeChart_' + chartData.id;
+				var chart = new FusionCharts('angulargauge', divId + 'Id', '100%', '350', '0', '1');
+				chart.setTransparent(true);
+				chart.setJSONData(chartData.data);
+				chart.render(divId);
+				chartsId.push(divId + 'Id');
+			});
+		}
 		Ext.ux.bodyMask.hide();
 	});
 
@@ -183,6 +153,7 @@ $htmlProducts .= '</ol>';
 		}
 		,enableColumnMove:false
 		,id:module+'gridAcuerdo_det'
+		,title: '<?= Lang::get('contingente.table_name'); ?> - ' + Ext.ux.lang.reports.detail
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
 		,bbar: ['->']
 		,iconCls:'silk-grid'
@@ -222,7 +193,8 @@ $htmlProducts .= '</ol>';
 			forceFit:true
 		}
 		,enableColumnMove:false
-		,id:module+'gridContingente'			
+		,id:module+'gridContingente'
+		,title: '<?= Lang::get('contingente.table_name'); ?>'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
 		,bbar: ['->']
 		,iconCls:'silk-grid'
@@ -236,6 +208,7 @@ $htmlProducts .= '</ol>';
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridAcuerdo_det.getItemId());
+	Ext.state.Manager.clear(gridContingente.getItemId());
 	
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 	var defaultYear = <?= end($yearsAvailable); ?>;
@@ -258,81 +231,92 @@ $htmlProducts .= '</ol>';
 			,border:false
 			,xtype:'panel'
 			,style:{padding:'10px'}
-			,layout:'fit'
+			//,layout:'fit'
 		}
 		,items:[{
-			style:{padding:'0px'}
-			,html: '<div class="bootstrap-styles">' +
-				'<div class="page-head">' +
-					'<h4 class="nopadding"><i class="styleColor fa fa-area-chart"></i> <?= $acuerdo_nombre; ?>: <small><?= $acuerdo_det_productos_desc; ?></small></h4>' +
-					'<div class="clearfix"></div><?= $htmlProducts; ?>' +
-				'</div>' +
-			'</div>'
-		},{
-			style:{padding:'0px'}
-			,border:true
-			,html: ''
-			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
-			},{
-				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 12
-				,width: 100
-				,listeners:{
-					select: {
-						fn: function(combo,reg){
-							//Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
-						}
-					}
-				}
-			},'-',{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectYear + ': '
-			},{
-				xtype: 'combo'
-				,store: arrYears
-				,id: module + 'comboYear'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: defaultYear
-				,width: 100
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					/*var html = Ext.getCmp(module + 'excuteAcuerdo_detContainer').getEl().dom.innerHTML;
-					console.log(html);*/
-					storeAcuerdo_det.load();
-				}
-			}]
-		/*},{
-			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
+			defaults:{anchor:'100%'}
 			,items:[{
-				xtype:'panel'
-				,id: module + 'ColumnChart'
-				,plain:true
-			}]*/
-		},{
-			height:430
-			,html:'<div id="' + module + 'AreaChart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'AreaChart'
-				,plain:true
+				style:{padding:'0px'}
+				,autoHeight:true
+				,border:false
+				,margins:'10 15 5 0'
+				,html: '<div class="bootstrap-styles">' +
+					'<div class="page-head">' +
+						'<h4 class="nopadding"><i class="styleColor fa fa-area-chart"></i> <?= $acuerdo_nombre; ?>: <small><?= $acuerdo_det_productos_desc; ?></small></h4>' +
+						'<div class="clearfix"></div><?= $htmlProducts; ?>' +
+					'</div>' +
+				'</div>'
 			}]
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridContingente]
+		},{
+			defaults:{anchor:'95%'}
+			,items:[{
+				style:{padding:'0px'}
+				,autoHeight:true
+				,border:false
+				,margins:'10 15 5 0'
+				//,title: Ext.ux.lang.reports.charts
+				,html: '<div class="bootstrap-styles">' +
+					'<div class="container">' +
+						'<div class="row" id="' + module + 'chartsDiv">' +
+						'</div>' +
+					'</div>' +
+				'</div>'
+			}]
+
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				style:{padding:'0px'}
+				,border:true
+				,html: ''
+				,autoHeight:true
+				,margins:'10 15 5 0'
+				,tbar:[{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectPeriod + ': '
+				},{
+					xtype: 'combo'
+					,store: arrPeriods
+					,id: module + 'comboPeriod'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: 12
+					,width: 100
+					,listeners:{
+						select: {
+							fn: function(combo,reg){
+								//Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
+							}
+						}
+					}
+				},'-',{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectYear + ': '
+				},{
+					xtype: 'combo'
+					,store: arrYears
+					,id: module + 'comboYear'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: defaultYear
+					,width: 100
+				},'-',{
+					text: Ext.ux.lang.buttons.generate
+					,iconCls: 'icon-refresh'
+					,handler: function () {
+						/*var html = Ext.getCmp(module + 'excuteAcuerdo_detContainer').getEl().dom.innerHTML;
+						console.log(html);*/
+						storeAcuerdo_det.load();
+					}
+				}]
+			}]
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridAcuerdo_det]
@@ -351,7 +335,7 @@ $htmlProducts .= '</ol>';
 	});
 
 	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
-		//storeAcuerdo_det.load();
+		storeAcuerdo_det.load();
 	});
 
 	return acuerdo_detContainer;
@@ -359,6 +343,13 @@ $htmlProducts .= '</ol>';
 	/*********************************************** Start functions***********************************************/
 	
 	function disposeCharts () {
+		var chartsDiv  = Ext.get(module + 'chartsDiv');
+		Ext.each(chartsId, function(chart) {
+			if(FusionCharts(chart)){
+				FusionCharts(chart).dispose();
+			}
+		});
+
 		/*if(FusionCharts(module + 'AreaChartId')){
 			FusionCharts(module + 'AreaChartId').dispose();
 		}*/

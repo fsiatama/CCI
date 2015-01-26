@@ -169,6 +169,8 @@ class PosicionAdo extends BaseAdo {
 		ORDER BY id_posicion 
 		';
 
+		//echo "<pre>$sql</pre>";
+
 		$sql = str_replace("''","'",$sql);
 
 		return $sql;

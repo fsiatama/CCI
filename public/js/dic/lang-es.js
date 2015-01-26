@@ -46,6 +46,7 @@ Ext.ux.lang.reports = {
 	,countryPartnerHelp: 'País socio comercial (Nombre de paises en Ingles)'
 	,hsCode: 'Clasificación mundial de la mercancía a 6 dígitos'
 	,detail: 'Detalle'
+	,charts: 'Graficas'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');

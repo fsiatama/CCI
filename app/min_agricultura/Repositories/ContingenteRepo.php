@@ -624,7 +624,10 @@ class ContingenteRepo extends BaseRepo {
 
 			$arr = $this->getGaugeData($row, $rate, $quotaWeight, $pais);
 			if (!empty($arr)) {
-				$arrCharts[] = $arr;
+				$arrCharts[] = [
+					'data' => $arr,
+					'id' => $row['contingente_id_pais']
+				];
 			}
 
 			$arrData[] = [
@@ -646,7 +649,7 @@ class ContingenteRepo extends BaseRepo {
 
 		$result = ($summary) ? $rsSummary : $rsDeclaraciones ;
 
-		$result = array_merge($result, ['chartData' => array_shift($arrCharts)]);
+		$result = array_merge($result, ['chartsData' => ($arrCharts)]);
 
 		if ($format !== false && !empty($fields) && $result['total'] > 0) {
 			$arrDescription   = [];
@@ -739,10 +742,11 @@ class ContingenteRepo extends BaseRepo {
 			$upperLimit = ($dial > $upperLimit) ? ($dial + 5) : $upperLimit ;
 			$arr = [
 				'chart' => [
-					'lowerLimit' => '0',
-					'upperLimit' => $upperLimit,
-					'caption'    => $title,
-					'showValue'  => '1',
+					'lowerLimit'    => '0',
+					'upperLimit'    => $upperLimit,
+					'caption'       => $title,
+					'showValue'     => '1',
+					'exportenabled' => '1',
 				],
 				'colorRange' => [
 					'color' => $colors

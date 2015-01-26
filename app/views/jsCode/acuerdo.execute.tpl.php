@@ -217,7 +217,6 @@ $htmlAgreement = Inflector::compress($htmlAgreement);
 			AcuerdoTree
 		,{
 			region:'center'
-			,monitorResize:true
 			,layout: 'fit'
 			,id: module + 'lpAcuerdo'
 			,items:[]

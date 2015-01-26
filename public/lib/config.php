@@ -24,11 +24,11 @@ define("DEFAULT_LANGUAGE", "es");
 define("MAXREGEXCEL", 65000);
 
 //DEFINE LOS TIPOS DE GRAFICA
-define("COLUMNAS", "MSColumn3D.swf");     //GRAFICA DE BARRAS
-define("BARRAS", "MSBar3D.swf");     //GRAFICA DE BARRAS
-define("PIE", "Pie3D.swf");        //GRAFICA DE PIE
-define("LINEAL", "MSLine.swf");      //GRAFICA LINEAL
-define("AREA", "StackedArea2D.swf");      //GRAFICA LINEAL
+define("COLUMNAS", "mscolumn3d");     //GRAFICA DE BARRAS
+define("BARRAS", "msbar3d");     //GRAFICA DE BARRAS
+define("PIE", "pie3d");        //GRAFICA DE PIE
+define("LINEAL", "msline");      //GRAFICA LINEAL
+define("AREA", "stackedarea2d");      //GRAFICA LINEAL
 
 
 define("_UNDEFINEDYEAR", 65535); //anio indefinido ( maximo numero soportado por SMALLINT(4) )
