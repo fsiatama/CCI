@@ -221,6 +221,8 @@ class Excel
 				$this->objPHPExcel->getActiveSheet()->mergeCells($range);
 				$this->objPHPExcel->getActiveSheet()->getCell('A'.$rowNumber)->setValue($value);
 
+				//var_dump($key, $value);
+
 				if ($key == 'title') {
 					$this->objPHPExcel->getActiveSheet()->getStyle($range)->applyFromArray( $this->getTitleStyle() );
 				} else {

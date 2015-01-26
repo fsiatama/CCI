@@ -3074,18 +3074,11 @@ class DeclaracionesRepo extends BaseRepo {
 			'id_pais'
 		);
 		$fieldName = ($trade == 'impo') ? $filter['field_impo'] : $filter['field_expo'] ;
-		/*if ($arrFiltersValues['acuerdo_det_contingente_acumulado_pais'] == '0') {
-			$arrRowField = [$row, $fieldName . ' AS id_pais', 'pais', $rowField];
-		} else {
-		}*/
-			$arrRowField = [$row, $rowField];
-
-		//var_dump($fieldName);
-
+		$arrRowField = [$row, $rowField];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($columnValue);
-		$this->modelAdo->setPivotColumnFields('CONCAT('.$fieldName.', "-", pais)');
+		$this->modelAdo->setPivotColumnFields('CONCAT('.$fieldName.', "_", pais)');
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
 		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
@@ -3115,7 +3108,7 @@ class DeclaracionesRepo extends BaseRepo {
 					if (empty($arrTotals[$key])) {
 						$arrTotals[$key] = 0;
 					}
-					$arrTotals[$key] += $value;
+					$arrTotals[$key] += (float)($value / 1000);
 					$arrSeries[]      = $key;
 				}
 			}
@@ -3126,16 +3119,20 @@ class DeclaracionesRepo extends BaseRepo {
 			foreach ($row as $key => $value) {
 				//suprimir la palabra " peso_neto" que le pone por defecto la clase pivottable a las columnas calculadas
 				$index = str_replace(' '.$columnValue, '', $key);
-				$arr[$index] = $value;
+				
 				if (in_array($key, $arrSeries)) {
+					//debe convertir el peso en toneladas metricas, por lo cual divide por 1000
+					$value = (float)($value / 1000);
 					if ($key == $columnValue) {
-						$rate = ($arrTotals[$key] == 0) ? 0 : ( $value / $arrTotals[$key] ) ;
+						$rate = ($arrTotals[$key] == 0) ? 0 : ( $value / $arrTotals[$key]) ;
 					} else {
-						$rate = ($row[$columnValue] == 0) ? 0 : ( $value / $row[$columnValue] ) ;
+						$rate = ($row[$columnValue] == 0) ? 0 : ( $value / (float)($row[$columnValue] / 1000) ) ;
 					}
-					
+					$arr[$index] = $value;
 					//calcula la participacion y la agrega como columna
-					$arr['rate_'.$index] = $rate;
+					$arr['rate_'.$index] = $rate * 100;
+				} else {
+					$arr[$index] = $value;
 				}
 			}
 			$arrData[] = $arr;
@@ -3144,20 +3141,24 @@ class DeclaracionesRepo extends BaseRepo {
 		$row        = current($arrData);
 		$arrKeys    = array_keys($row);
 		$arrColumns = [];
+		$arrFields  = [];
+		$hidden     = (count($arrKeys) > 20) ? true : false ;
 
 		foreach ($arrKeys as $key) {
+			$arrFields[] = ['name' => $key, 'type' => 'string'];
 			if ($key == 'id') {
 				# code...
 			} elseif ($key == 'periodo') {
 				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.periodo'), 'dataIndex' => $key];
 			} elseif ($key == $columnValue) {
-				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.peso_tm'), 'dataIndex' => $key];
+				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.peso_tm'), 'dataIndex' => $key, 'renderer' => 'numberFormat'];
 			} elseif (substr($key,0,5) == 'rate_') {
-				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.participacion'), 'dataIndex' => $key, 'hidden' => true];
+				$arrColumns[] = ['header' => Lang::get('indicador.columns_title.participacion'), 'dataIndex' => $key, 'renderer' => 'rateFormat', 'hidden' => true];
 			} else {
-				$arr   = explode('-', $key);
-				$title = (empty($arr[1])) ? $key : $arr[1] ;
-				$arrColumns[] = ['header' => $title, 'dataIndex' => $key];
+				$arr   = explode('_', $key);
+				$title = (empty($arr[1])) ? $key : $arr[1] . ' (Tm)' ;
+
+				$arrColumns[] = ['header' => $title, 'dataIndex' => $key, 'renderer' => 'numberFormat', 'hidden' => $hidden];
 			}
 		}
 
@@ -3167,6 +3168,14 @@ class DeclaracionesRepo extends BaseRepo {
 			'cumulativeData' => $arrTotals,
 			'columns'        => $arrColumns,
 			'total'          => $rsDeclaraciones['total'],
+			'metaData'       => [
+				'idProperty'    => 'id',
+				'totalProperty' => 'total',
+				'root'          => 'data',
+				'successProperty' => 'success',
+				'fields'        => $arrFields,
+				'sortInfo'      => ['field' => 'id', 'direction' => 'ASC'],
+			]
 		];
 
 		return $result;

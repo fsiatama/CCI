@@ -19,17 +19,39 @@ $htmlProducts .= '</ol>';
 	var module = '<?= $module.'_'.$acuerdo_id; ?>';
 	var panelHeight = Math.floor(Ext.getCmp('tabpanel').getInnerHeight() - 260);
 
-	var storeAcuerdo_det = new Ext.data.JsonStore({
+	var storeContingente = new Ext.data.JsonStore({
 		url:'contingente/execute'
 		,root:'data'
-		,id:module+'storeAcuerdo_det'
+		,id:module+'storeContingente'
 		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
 			,acuerdo_id: '<?= $acuerdo_id; ?>'
 			,acuerdo_det_id: '<?= $acuerdo_det_id; ?>'
+			,summary: true
 		}
+		,fields:[
+			{name:'id', type:'float'},
+			{name:'periodo', type:'string'},
+			{name:'pais', type:'string'},
+			{name:'quotaWeight', type:'float'},
+			{name:'executedWeight', type:'float'},
+			{name:'rate', type:'float'},
+		]
+	});
+
+	var storeAcuerdo_det = new Ext.data.JsonStore({
+		url:'contingente/execute'
+		,reader: new Ext.data.JsonReader()
+		,remoteSort: true
+		,baseParams: {
+			id: '<?= $id; ?>'
+			,acuerdo_id: '<?= $acuerdo_id; ?>'
+			,acuerdo_det_id: '<?= $acuerdo_det_id; ?>'
+			,summary: false
+		}
+		,id:module+'storeAcuerdo_det'
 	});
 
 	storeAcuerdo_det.on('beforeload', function(){
@@ -42,26 +64,110 @@ $htmlProducts .= '</ol>';
 		this.setBaseParam('period', period);
 		Ext.ux.bodyMask.show();
 	});
+	storeContingente.on('beforeload', function(){
+		var year   = Ext.getCmp(module + 'comboYear').getValue();
+		var period = Ext.getCmp(module + 'comboPeriod').getValue();
+		if (!year || !period) {
+			return false;
+		};
+		this.setBaseParam('year', year);
+		this.setBaseParam('period', period);
+		//Ext.ux.bodyMask.show();
+	});
 	
 	storeAcuerdo_det.on('load', function(store){
-		console.log(store);
-		/*FusionCharts.setCurrentRenderer('javascript');
+		if (typeof(store.reader.jsonData.columns) === 'object') {
+			var columns = [];
+			var cm = gridAcuerdo_det.getColumnModel();
+
+			Ext.each(store.reader.jsonData.columns, function(column) {
+				if (column.renderer == 'numberFormat') {
+					columns.push({
+						header:column.header
+						,dataIndex:column.dataIndex
+						,sortable:false
+						,align:'right'
+						,renderer:numberFormat
+						,hidden:false
+					});
+				} else if (column.renderer == 'rateFormat') {
+					columns.push({
+						header:column.header
+						,dataIndex:column.dataIndex
+						,sortable:false
+						,align:'right'
+						,renderer:rateFormat
+						,hidden:true
+					});
+				} else {
+					columns.push(column);
+				};
+			});
+
+			cm.setConfig(columns);
+
+			gridAcuerdo_det.reconfigure(store, cm);
+
+			storeContingente.load();
+
+		}
+		FusionCharts.setCurrentRenderer('javascript');
 		
 		disposeCharts();
+
+		var csatGauge = new FusionCharts({
+	        "type": "angulargauge",
+	        "renderAt": module + 'AreaChart',
+	        "width": "400",
+	        "height": "250",
+	        "dataFormat": "json",
+	        "dataSource":{
+				"chart": {
+				  "caption": "Customer Satisfaction Score",
+				  "subcaption": "Last week",
+				  "lowerLimit": "0",
+				  "upperLimit": "100",
+				  "theme": "fint"
+				},
+				"colorRange": {
+				  "color": [
+				     {
+				        "minValue": "0",
+				        "maxValue": "50",
+				        "code": "#e44a00"
+				     },
+				     {
+				        "minValue": "50",
+				        "maxValue": "75",
+				        "code": "#f8bd19"
+				     },
+				     {
+				        "minValue": "75",
+				        "maxValue": "100",
+				        "code": "#6baa01"
+				     }
+				  ]
+				},
+				"dials": {
+				  "dial": [
+				     {
+				        "value": "67"
+				     }
+				  ]
+				}
+			}
+	    });
 		
-		var chart = new FusionCharts('<?= AREA; ?>', module + 'AreaChartId', '100%', '100%', '0', '1');
+		var chart = new FusionCharts('angulargauge', module + 'AreaChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.areaChartData);
-		chart.render(module + 'AreaChart');*/
+		chart.setJSONData(store.reader.jsonData.chartData);
+		chart.render(module + 'AreaChart');
+		/*csatGauge.render();*/
 		Ext.ux.bodyMask.hide();
 	});
 
 	var colModelAcuerdo_det = new Ext.grid.ColumnModel({
 		columns:[]
-		,defaults: {
-			sortable: true
-			,align: 'right'
-		}
 	});
 	
 	var gridAcuerdo_det = new Ext.grid.GridPanel({
@@ -76,47 +182,57 @@ $htmlProducts .= '</ol>';
 			forceFit:true
 		}
 		,enableColumnMove:false
-		,id:module+'gridAcuerdo_det'			
+		,id:module+'gridAcuerdo_det'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar: []
+		,bbar: ['->']
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:350
+		,autoHeight:true
 		,autoWidth:true
 		,margins:'10 15 5 0'
 		,listeners:{
 			render: {
 				fn: function(grid){
-					
-					/*st.on('load', function(store){
-						console.log(store);
-
-						if (typeof(store.reader.jsonData.columns) === 'object') {
-							var columns = [];
-
-							Ext.each(store.reader.jsonData.columns, function(column) {
-								columns.push(column);
-							});
-
-							cm.setConfig(columns);
-
-						}
-
-
-
-
-						//{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'}
-
-
-						Ext.ux.bodyMask.hide();
-					});*/
-
-
-					//st.load();
+					storeAcuerdo_det.load();
 				}
 			}
 		}
+	});
+
+	var colModelContingente = new Ext.grid.ColumnModel({
+		columns:[
+			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
+			{header:'<?= Lang::get('acuerdo.partner_title'); ?>', dataIndex:'pais', align:'left'},
+			{header:'<?= Lang::get('contingente_det.peso_contingente'); ?>', dataIndex:'quotaWeight' ,'renderer':numberFormat , align:'right'},
+			{header:'<?= Lang::get('contingente_det.peso_ejecutado'); ?>', dataIndex:'executedWeight' ,'renderer':numberFormat , align:'right'},
+			{header:'% <?= Lang::get('contingente_det.valor_ejecutado'); ?>', dataIndex:'rate' ,'renderer':rateFormat , align:'right'}
+		]
+	});
+
+	var gridContingente = new Ext.grid.GridPanel({
+		border:true
+		,monitorResize:true
+		,store:storeContingente
+		,colModel:colModelContingente
+		,stateful:true
+		,columnLines:true
+		,stripeRows:true
+		,viewConfig: {
+			forceFit:true
+		}
+		,enableColumnMove:false
+		,id:module+'gridContingente'			
+		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
+		,bbar: ['->']
+		,iconCls:'silk-grid'
+		,plugins:[new Ext.ux.grid.Excel()]
+		,layout:'fit'
+		,enableColumnMove:false
+		,enableColumnResize:false
+		,autoHeight:true
+		,autoWidth:true
+		,margins:'10 15 5 0'
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridAcuerdo_det.getItemId());
@@ -195,7 +311,7 @@ $htmlProducts .= '</ol>';
 				,handler: function () {
 					/*var html = Ext.getCmp(module + 'excuteAcuerdo_detContainer').getEl().dom.innerHTML;
 					console.log(html);*/
-					//storeAcuerdo_det.load();
+					storeAcuerdo_det.load();
 				}
 			}]
 		/*},{
@@ -216,6 +332,9 @@ $htmlProducts .= '</ol>';
 			}]
 		},{
 			defaults:{anchor:'100%'}
+			,items:[gridContingente]
+		},{
+			defaults:{anchor:'100%'}
 			,items:[gridAcuerdo_det]
 		}]
 		,listeners:{
@@ -234,8 +353,6 @@ $htmlProducts .= '</ol>';
 	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
 		//storeAcuerdo_det.load();
 	});
-	
-	storeAcuerdo_det.load();
 
 	return acuerdo_detContainer;
 

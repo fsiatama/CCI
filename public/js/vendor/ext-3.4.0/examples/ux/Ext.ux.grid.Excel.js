@@ -126,12 +126,14 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 	 */
 	,onTriggerExcel:function(val){
 				
-		var cm = this.grid.colModel;
-		var store = this.grid.store;
+		var cm = this.grid.getColumnModel();
+		//console.log(cm);
+		var store = this.grid.getStore();
+		var columns = (cm.columns.lenght > 0) ? cm.columns : cm.config;
 		
 		var parametros = new Object();
 		var columnas=new Object();
-		Ext.iterate(cm.columns, function(key, value) {
+		Ext.iterate(columns, function(key, value) {
 			if((key.hidden == undefined || key.hidden == false) && key.header != ''){
 				columnas[key.dataIndex] = key.header;
 			}

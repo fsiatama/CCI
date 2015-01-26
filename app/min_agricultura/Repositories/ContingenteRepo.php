@@ -473,11 +473,12 @@ class ContingenteRepo extends BaseRepo {
 	{
 		extract($params);
 
-		$year   = (empty($year)) ? '' : $year ;
-		$period = (empty($period)) ? 12 : $period ;
-		$format = (empty($format)) ? false : $format ;
-		$fields = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
-		$scope  = (empty($scope)) ? 1 : $scope ;
+		$year    = (empty($year)) ? '' : $year ;
+		$period  = (empty($period)) ? 12 : $period ;
+		$format  = (empty($format)) ? false : $format ;
+		$fields  = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
+		$scope   = (empty($scope)) ? 1 : $scope ;
+		$summary = ($summary === 'true') ? true : false ;
 
 		if (
 			empty($acuerdo_id) ||
@@ -561,13 +562,8 @@ class ContingenteRepo extends BaseRepo {
 			return $result;
 		}
 
-		return $result;
-
-		$arrExecutedData   = $result['data'];
+		$rsDeclaraciones   = $result;
 		$arrCumulativeData = $result['cumulativeData'];
-		var_dump($result);
-
-
 
 		//busca todos los contingentes hijos por acuerdo_det_id
 		$this->model->setContingente_acuerdo_det_id($acuerdo_det_id);
@@ -580,8 +576,10 @@ class ContingenteRepo extends BaseRepo {
 		$this->contingente_detRepo = new Contingente_detRepo;
 		
 		$arrData = [];
+		$arrCharts = [];
 
 		foreach ($result['data'] as $key => $row) {
+			//var_dump($row);
 			$quotaWeight = 0;
 			if ($row['contingente_mcontingente'] == '1') {
 				$params = [
@@ -604,58 +602,56 @@ class ContingenteRepo extends BaseRepo {
 				//esta consulta deberia arrojar un solo registro
 				$rowQuota    = array_shift($result['data']);
 				$quotaWeight = $rowQuota['contingente_det_peso_neto'];
+
 			}
 
-			/*$totalWeight = 0;
-			$id_pais_ant = '';
+			$pais = ($row['acuerdo_det_contingente_acumulado_pais'] == '0') ? $row['pais'] : $row['mercado_nombre'] ;
+			$executedWeight = 0;
 
-			foreach ($arrExecutedData as $data) {
-				if (empty($data['id_pais']) || $data['id_pais'] == $row['contingente_id_pais']) {
-
-					$id_pais = ($rowAcuerdo_det['acuerdo_det_contingente_acumulado_pais'] == '1') ? $rowAcuerdo['acuerdo_mercado_id'] : $data['id_pais'] ;
-					$pais    = ($rowAcuerdo_det['acuerdo_det_contingente_acumulado_pais'] == '1') ? $rowAcuerdo['mercado_nombre'] : $data['pais'] ;
-
-					if ($id_pais_ant != $id_pais) {
-						$totalWeight = 0;
-						$id_pais_ant = $id_pais;
+			if ($row['acuerdo_det_contingente_acumulado_pais'] == '0') {
+				foreach ($arrCumulativeData as $index => $value) {
+					$arr   = explode('_', $index);
+					$countryId = (empty($arr[0])) ? $index : $arr[0] ;
+					if ($row['contingente_id_pais'] == $countryId) {
+						$executedWeight = $value;
 					}
-					$totalWeight += (float)$data['peso_neto'];
-					$arrData[] = [
-						'id'                  => $data['id'],
-						'periodo'             => $data['periodo'],
-						'pais'                => $pais,
-						'id_pais'             => $id_pais,
-						'peso_neto'           => $data['peso_neto'],
-						'peso_neto_acumulado' => $totalWeight,
-						'contingente'         => $quotaWeight,
-					];
 				}
-				/*if ($rowAcuerdo_det['acuerdo_det_contingente_acumulado_pais'] == '1') {
-					$arrData[] = [
-						'id'          => $data['id'],
-						'periodo'     => $data['periodo'],
-						'pais'        => $rowAcuerdo['mercado_nombre'],
-						'id_pais'     => $rowAcuerdo['acuerdo_mercado_id'],
-						'peso_neto'   => $data['peso_neto'],
-						'contingente' => $quotaWeight,
-					];
-				} elseif ($data['id_pais'] == $row['contingente_id_pais']) {
-				}
-			}*/
+			} else {
+				$executedWeight = $arrCumulativeData['peso_neto'];
+			}
+
+			$rate = ($quotaWeight == 0) ? 0 : ($executedWeight / $quotaWeight ) * 100 ;
+
+			$arr = $this->getGaugeData($row, $rate, $quotaWeight, $pais);
+			if (!empty($arr)) {
+				$arrCharts[] = $arr;
+			}
+
+			$arrData[] = [
+				'id' => $row['contingente_id'],
+				'periodo' => $year,
+				'pais' => $pais,
+				'quotaWeight' => $quotaWeight,
+				'executedWeight' => $executedWeight,
+				'rate' => $rate,
+			];
+
 		}
 
-		var_dump($arrData);
+		$rsSummary = [
+			'success' => true,
+			'total' => count($arrData),
+			'data' => $arrData,
+		];
 
+		$result = ($summary) ? $rsSummary : $rsDeclaraciones ;
 
-
-
-
-
+		$result = array_merge($result, ['chartData' => array_shift($arrCharts)]);
 
 		if ($format !== false && !empty($fields) && $result['total'] > 0) {
 			$arrDescription   = [];
 			$arrDescription['title'] = $rowAcuerdo_det['acuerdo_nombre'];
-			$arrDescription[Lang::get('acuerdo_det.table_name')] = $rowAcuerdo_det['acuerdo_det_productos_desc'];
+			$arrDescription[Lang::get('acuerdo_det.table_name')] = Lang::get('acuerdo_det.table_name') . ': ' . $rowAcuerdo_det['acuerdo_det_productos_desc'];
 
 			$excel = new Excel (
 				$result,
@@ -670,6 +666,108 @@ class ContingenteRepo extends BaseRepo {
 
 		return $result;
 
+	}
+
+	private function getGaugeData($row, $dial, $quotaWeight, $title)
+	{
+		//var_dump($row);
+		$arr = [];
+		if ($row['contingente_mcontingente'] == '1' && $quotaWeight > 0) {
+			$upperLimit = 100;			
+
+			$green  = (float)$row['alerta_contingente_verde'];
+			$green  = ($green < 1) ? 60 : $green;
+			
+			$yellow = (float)$row['alerta_contingente_amarilla'];
+			$yellow = ($yellow < $green) ? 90 : $yellow;
+			
+			$red    = (float)$row['alerta_contingente_roja'];
+			$red    = ($red < $yellow) ? 100 : $red;
+
+			$colors = [
+				[
+					'minValue' => '0',
+					'maxValue' => $green,
+					'code'     => '#6baa01',
+				],[
+					'minValue' => $green,
+					'maxValue' => $yellow,
+					'code'     => '#f8bd19',
+				],[
+					'minValue' => $yellow,
+					'maxValue' => $red,
+					'code'     => '#e44a00',
+				]
+			];
+
+			$colorsSalvag = [];
+			if ($row['contingente_msalvaguardia'] == '1') {
+				$sobretasa   = (float)$row['contingente_salvaguardia_sobretasa'];
+				$upperLimit += $sobretasa;
+				
+				$greenS  = (float)$row['alerta_salvaguardia_verde'];
+				$greenS  = ($greenS < 1) ? 70 : $greenS;
+				$greenS  = $sobretasa * ($greenS / 100);
+				
+				$yellowS = (float)$row['alerta_salvaguardia_amarilla'];
+				$yellowS = ($yellowS < $greenS) ? 90 : $yellowS;
+				$yellowS = $sobretasa * ($yellowS / 100);
+				
+				$redS    = (float)$row['alerta_salvaguardia_roja'];
+				$redS    = ($redS < $yellowS) ? 100 : $redS;
+				$redS    = $sobretasa * ($redS / 100);
+
+				$colorsSalvag = [
+					[
+						'minValue' => $red,
+						'maxValue' => ($red + $greenS),
+						'code'     => '#399e38',
+					],[
+						'minValue' => ($red + $greenS),
+						'maxValue' => ($red + $yellowS),
+						'code'     => '#e48739',
+					],[
+						'minValue' => ($red + $yellowS),
+						'maxValue' => ($red + $redS),
+						'code'     => '#b41527',
+					]
+				];
+			}
+
+			$colors = array_merge($colors, $colorsSalvag);
+
+			$upperLimit = ($dial > $upperLimit) ? ($dial + 5) : $upperLimit ;
+			$arr = [
+				'chart' => [
+					'lowerLimit' => '0',
+					'upperLimit' => $upperLimit,
+					'caption'    => $title,
+					'showValue'  => '1',
+				],
+				'colorRange' => [
+					'color' => $colors
+				],
+				'dials' => [
+					'dial' => [
+						['value' => $dial]
+					]
+				],
+				'trendPoints' => [
+					'point' => [
+						[
+							'startValue'  => $row['alerta_contingente_roja'],
+							'dashed'      => 1,
+							'color'       => '#0075c2'
+						],[
+							'startValue'  => $row['alerta_contingente_roja'],
+							'endValue'    => $upperLimit,
+							'color'       => '#0075c2'
+						]
+					]
+				]
+			];
+		}
+		return $arr;
 	}
 
 }
