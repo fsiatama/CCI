@@ -49,41 +49,21 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a class="navbar-brand" href="<?= URL_RAIZ ?>Home/Login">
+                        <li>
+                            <a class="navbar-brand" href="<?= URL_RAIZ ?>Home/InformacionGeneral">
                                 <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
                                 <span>Información general sobre tlcs</span>
                             </a></li>
-                        <li><a class="navbar-brand" href="<?= URL_RAIZ ?>Home/Login">
+                        <li>
+                            <a class="navbar-brand" href="<?= URL_RAIZ ?>Home/GuiaBasicaParaExportar">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                 <span>Guia básica para exportar</span>
                             </a></li>
-                        <li><a class="navbar-brand" href="<?= URL_RAIZ ?>Home/Login">
+                        <li>
+                            <a class="navbar-brand" href="<?= URL_RAIZ ?>Home/Herramientas">
                                 <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
-                                <span>Información extra y herramientas</span>
+                                <span>Herramientas</span>
                             </a></li>
-                        <!--
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Menú<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="<?= URL_RAIZ ?>Home/GuiaBasicaParaExportar">1. Guía básica para exportar </a></li>
-                                <li><a href="<?= URL_RAIZ ?>Home/InformacionGeneralTLC">2. Información General de los TLC</a></li>
-                                <li><a href="<?= URL_RAIZ ?>Home/RequisitosIngresoColombia">3. Condiciones y requisitos de ingreso para Colombia por producto</a></li>
-                                <li><a href="#">- Cronograma de desgravación y contingentes otorgados</a></li>
-                                <li><a href="<?= URL_RAIZ ?>Home/ProtocolosExportacion">4. Protocolos de exportación</a></li>
-                                <li><a href="<?= URL_RAIZ ?>Home/RequisitosSanitariosFitosanitarios">5. Requisitos sanitarios y fitosanitarios</a></li>
-                                <li><a href="<?= URL_RAIZ ?>Home/LosgisticaTransporte">6. Logística de transporte</a></li>
-                                <li><a href="<?= URL_RAIZ ?>Home/ComercioAgropecuarioColombia">7. Comercio agropecuario de Colombia</a></li>
-                                <li><a href="#">- Colombia al Mundo</a></li>
-                                <li><a href="#">- Principales destinos y orígenes</a></li>
-                                <li><a href="<?= URL_RAIZ ?>Home/ColombiaPorAcuerdoComercial">8. Colombia Por Acuerdo comercial</a></li>
-                                <li><a href="#">- Composición de las exportaciones e importaciones a 6 dígitos por socio comercial</a></li>
-                                <li><a href="#">- Utilización de contingentes</a></li>
-                                <li><a href="#">- Tarifas arancelarias y Precios Implícitos por Partida arancelaria (producto)</a></li>
-                                <li><a href="<?= URL_RAIZ ?>Home/ComercioAgropecuarioMundial">9. Comercio agropecuario mundial por producto</a></li>
-                                <li><a href="<?= URL_RAIZ ?>Home/PosicionamientoProductos">10. Posicionamiento y dinamismo de los productos</a></li>
-                            </ul>
-                        </li>
-                        -->
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a class="navbar-brand" href="<?= URL_RAIZ ?>Home/Login">

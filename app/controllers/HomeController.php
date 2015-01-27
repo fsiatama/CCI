@@ -14,18 +14,18 @@ class HomeController {
     
     // 2.2 COMPONENTES DEL MODULO 2: ACCESO AL PÚBLICO EN GENERAL
 
-    public function guiaBasicaParaExportarAction() {
-        $is_template = false;
-        return new View('guia_basica', compact('is_template'));
-    }
-
     public function informacionGeneralAction() {
         $is_template = false;
         return new View('informacion_general', compact('is_template'));
     }
 
-    public function informacionExtraAction() {
+    public function guiaBasicaParaExportarAction() {
         $is_template = false;
-        return new View('informacion_extra', compact('is_template'));
+        return new View('guia_basica', compact('is_template'));
+    }
+
+    public function herramientasAction() {
+        $is_template = false;
+        return new View('herramientas', compact('is_template'));
     }
 }

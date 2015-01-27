@@ -145,3 +145,25 @@ div.countTo label {font-weight: 300; font-size: 22px; line-height: 22px; }
     text-align: center;
     vertical-align: middle;
 }
+
+.carousel-caption
+{
+    margin: 0 0 30px 0;
+    padding: 0;
+
+    opacity: 0.85;
+    background-color: white;
+    color: black;
+    
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border: 0px solid #000000;
+}
+
+.carousel-caption h1,
+.carousel-caption h2,
+.carousel-caption h3
+{
+    color: greenyellow;
+}
