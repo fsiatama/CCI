@@ -12,7 +12,6 @@
         <meta name="google" content="notranslate" />
 
         <link rel="stylesheet" href="/css/normalize.css" type="text/css"/>
-        <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
         <link rel="stylesheet" href="/css/bootstrap-theme.min.css" type="text/css">
 
         <link rel="stylesheet" href="/css/main.css">
