@@ -1,15 +1,9 @@
 <script src="https://maps.googleapis.com/maps/api/js?v=3" type="text/javascript"></script>
-<script type="text/javascript">
-    (function () {
-        if (typeof (GLatLng) === "undefined") {
-            GLatLng = google.maps.LatLng;
-        }
-    })();
-</script>
-<script src="http://countrypoints.googlecode.com/files/countrypoints.js" type="text/javascript"></script>
+<script src="/js/google.maps.countrypoints.js" type="text/javascript"></script>
 
+<br />
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-10 col-md-offset-1">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <strong class="">Información general de los Tratados de Libre Comercio (TLC)</strong>
@@ -28,7 +22,7 @@
         function initialize() {
             var mapOptions = {
                 zoom: 2,
-                center: new google.maps.LatLng(30, 0)
+                center: new google.maps.LatLng(35, 0)
             };
             map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
@@ -106,30 +100,41 @@
                 backgroundOpacity: 0.2 // Opacidad del fondo.
             };
 
-            paintCountry('CO', mapOptionsLoc, map);
-            paintCountry('AR', mapOptionsPen, map);
-            paintCountry('VE', mapOptionsAso, map);
-            paintCountry('MX', mapOptionsAso, map);
-            paintCountry('US', mapOptionsAso, map);
+            paintCountry('CO', mapOptionsLoc, '<?= URL_RAIZ ?>img/flag_colombia.png', new google.maps.LatLng(0,-85));
+            paintCountry('VE', mapOptionsAso, null, null);
+            paintCountry('CL', mapOptionsAso, null, null);
+            paintCountry('US', mapOptionsAso, null, null);
+            paintCountry('MX', mapOptionsPen, '<?= URL_RAIZ ?>img/flag_mexico.png', new google.maps.LatLng(19.2600029,-116.5110027,7));
+            paintCountry('ES', mapOptionsPen, null, null);
         }
 
-        function paintCountry(code, param, mapa) {
-            var gMap = mapa || map;
-            var pais = country[code];
+        function paintCountry(countryCode, countryOptions, countryIcon, countryPosition) {
             
-            var imag = new google.maps.Polygon({
-                paths: pais.coord,
-                strokeColor: param.lineColor,
-                strokeOpacity: param.lineOpacity,
-                strokeWeight: param.lineWidth,
-                fillColor: param.backgroundColor,
-                fillOpacity: param.backgroundOpacity
+            var countryObj = country[countryCode];
+            
+            //Area pintada del país
+            var polygonObj = new google.maps.Polygon({
+                paths: countryObj.coord,
+                strokeColor: countryOptions.lineColor,
+                strokeOpacity: countryOptions.lineOpacity,
+                strokeWeight: countryOptions.lineWidth,
+                fillColor: countryOptions.backgroundColor,
+                fillOpacity: countryOptions.backgroundOpacity
             });
-            imag.setMap(gMap);
+            polygonObj.setMap(map);
+            
+            //Icono del pais
+            if (countryPosition) {
+                var beachMarker = new google.maps.Marker({
+                    position: countryPosition,
+                    map: map,
+                    icon: countryIcon
+                });
+            }
 
-            google.maps.event.addListener(imag, 'click', function (event) {
+            google.maps.event.addListener(polygonObj, 'click', function (event) {
                 //alert the index of the polygon
-                alert("PAIS: " + pais.desc);
+                alert("PAIS: " + countryObj.desc);
             });
         }
 

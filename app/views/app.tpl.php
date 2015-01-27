@@ -47,7 +47,10 @@
 
 	</head>
     <body>
-		<!--[if lt IE 7]>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+
+        <!--[if lt IE 7]>
 			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 		<![endif]-->
     
@@ -56,9 +59,6 @@
 			<span id="loading-message">Loading. Please wait...</span>
 		</div>
 
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
-		
 		<script type="text/javascript" src="/js/vendor/ext-3.4.0/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript" src="/js/vendor/ext-3.4.0/ext-all.js"></script>
 		<script type="text/javascript" src="/js/vendor/ext-3.4.0/examples/shared/extjs/App.js"></script>

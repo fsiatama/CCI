@@ -1,6 +1,7 @@
+<br />
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
-        <img src="<?= URL_RAIZ ?>img/logo-330_106.png" class="img-responsive center-block" alt="Responsive image">
+        <!--<img src="<?= URL_RAIZ ?>img/logo-330_106.png" class="img-responsive center-block" alt="Responsive image">-->
         <div class="panel panel-default">
             <div class="panel-heading">
                 <strong class="">Login</strong>
