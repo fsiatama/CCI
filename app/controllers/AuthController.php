@@ -21,6 +21,11 @@ class AuthController {
 		$this->userRepo = new UserRepo;
 	}
 
+	public function indexAction() {
+        $is_template = false;
+        return new View('login', compact('is_template'));
+    }
+
 	public function loginAction($urlParams, $postParams)
 	{
 		$result = $this->userRepo->login($postParams);

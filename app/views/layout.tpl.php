@@ -50,23 +50,23 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a class="navbar-brand" href="<?= URL_RAIZ ?>Home/InformacionGeneral">
+                            <a class="navbar-brand" href="<?= URL_RAIZ ?>informacion-general">
                                 <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
                                 <span>Información general sobre tlcs</span>
                             </a></li>
                         <li>
-                            <a class="navbar-brand" href="<?= URL_RAIZ ?>Home/GuiaBasicaParaExportar">
+                            <a class="navbar-brand" href="<?= URL_RAIZ ?>guia-basica-exportar">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                 <span>Guia básica para exportar</span>
                             </a></li>
                         <li>
-                            <a class="navbar-brand" href="<?= URL_RAIZ ?>Home/Herramientas">
+                            <a class="navbar-brand" href="<?= URL_RAIZ ?>herramientas">
                                 <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
                                 <span>Herramientas</span>
                             </a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a class="navbar-brand" href="<?= URL_RAIZ ?>Home/Login">
+                        <li><a class="navbar-brand" href="<?= URL_RAIZ ?>auth">
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                                 <span>Inicio de sesión</span>
                             </a></li>
