@@ -26,6 +26,8 @@ class IndicadorRepo extends BaseRepo {
 		extract($params);
 		$result = $this->findPrimaryKey($indicador_id);
 
+		$module = (empty($module)) ? '' : $module ;
+
 		if (!$result['success']) {
 			$result = [
 				'success'  => false,
@@ -279,6 +281,13 @@ class IndicadorRepo extends BaseRepo {
 	public function renameNode($params)
 	{
 		extract($params);
+
+		if (!empty($parentId) && substr($parentId, -4) == 'root') {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.root_folder_is_not_editable'),
+			];
+		}
 
 		$indicador_id = $parentId;
 
