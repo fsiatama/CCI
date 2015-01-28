@@ -129,7 +129,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 		})
 		//,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeAcuerdo_det, displayInfo:true})
 		,enableColumnMove:false
-		,enableColumnResize:false
+		//,enableColumnResize:false
 		,tbar:tbAcuerdo_det
 		,loadMask:true
 		,border:false

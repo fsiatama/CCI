@@ -26,6 +26,16 @@ class Acuerdo_detController {
 		}
 		return $result;
 	}
+	
+	public function executeAction($urlParams, $postParams)
+	{
+		$result = $this->userRepo->validateMenu('list', $postParams);
+
+		if ($result['success']) {
+			$result = $this->acuerdo_detRepo->gridDetailed($postParams);
+		}
+		return $result;
+	}
 
 	public function listIdAction($urlParams, $postParams)
 	{
@@ -115,25 +125,17 @@ class Acuerdo_detController {
 				return $result;
 			}
 			$rowAcuerdo  = array_shift($result['data']);
-
-			$result = $this->acuerdo_detRepo->listId($postParams);
-			if (!$result['success']) {
-				return $result;
-			}
-			$rowAcuerdo_det = array_shift($result['data']);
-			$productsData   = $result['productsData'];
+			$countryData = $result['country_data'];
 
 			$postParams['is_template'] = true;
 
-			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
-			$periods = Helpers::arrayGet($lines, 'periods');
-
-			$params = array_merge($postParams, $rowAcuerdo, $rowAcuerdo_det, compact('productsData', 'yearsAvailable', 'periods'));
+			$params = array_merge($postParams, $rowAcuerdo, compact('countryData'));
 
 			$postParams['is_template'] = true;
 			return new View('jsCode/acuerdo_det.execute', $params);
 		}
+
+		return $result;
 	}
 
 	public function treeAction($urlParams, $postParams)

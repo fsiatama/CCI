@@ -18,6 +18,6 @@ return [
 		'contingente_mcontingente'           => 'Maneja Contingente?',
 		'contingente_desc'                   => 'Descripción',
 		'contingente_msalvaguardia'          => 'Maneja Salvaguardia?',
-		'contingente_salvaguardia_sobretasa' => 'Porcentaje para aplicar Salvaguardia',
+		'contingente_salvaguardia_sobretasa' => 'Porcentaje para aplicar Salvaguardia (%)',
 	]
 ];

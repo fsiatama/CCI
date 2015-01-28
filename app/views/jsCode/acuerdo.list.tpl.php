@@ -36,9 +36,6 @@
 		},{
 			iconCls: 'silk-cart'
 			,qtip: '<?= Lang::get('acuerdo_det.table_name'); ?>'
-		},{
-			iconCls:'silk-chart-bar-link'
-			,qtip: '<?= Lang::get('acuerdo.analyze_agreement'); ?>'
 		}]
 		,callbacks:{
 			'silk-delete':function(grid, record, action, row, col) {
@@ -49,9 +46,6 @@
 			}
 			,'silk-cart':function(grid, record, action, row, col) {
 				fnOpenDetail(record);
-			}
-			,'silk-chart-bar-link':function(grid, record, action, row, col) {
-				fnReport(record);
 			}
 		}
 	});
@@ -254,25 +248,6 @@
 			};
 			Ext.getCmp('oeste').addTab(this,this,data);
 		}
-	}
-
-	function fnReport(record){
-		var key   = record.get('acuerdo_id');
-		var title = record.get('acuerdo_nombre');
-		var data  = {
-			id:'indicator_' + key
-			,iconCls:'silk-chart-bar-link'
-			,titleTab: title
-			,url:'acuerdo/jscodeExecute'
-			,params:{
-				id:'<?= $id; ?>'
-				,title: title
-				,module: 'indicator_' + key
-				,parent: module
-				,acuerdo_id: key
-			}
-		};
-		Ext.getCmp('oeste').addTab(this,this,data);
 	}
 
 	/*********************************************** End functions***********************************************/

@@ -225,7 +225,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 					,fieldLabel: '<?= Lang::get('contingente.columns_title.contingente_salvaguardia_sobretasa'); ?>'
 					,allowBlank: false
 					,maxValue: 100
-					,minValue: 0
+					,minValue: 1
 				}]
 			},{
 				xtype:'hidden'

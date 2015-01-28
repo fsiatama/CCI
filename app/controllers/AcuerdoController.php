@@ -96,21 +96,11 @@ class AcuerdoController {
 		$result = $this->userRepo->validateMenu($action, $postParams);
 
 		if ($result['success']) {
-			//verifica que exista el acuerdo y trae los datos
-			$result = $this->acuerdoRepo->listId($postParams);
-			if (!$result['success']) {
-				return $result;
-			}
-			$rowAcuerdo  = array_shift($result['data']);
-			$countryData = $result['country_data'];
-
 			$postParams['is_template'] = true;
-
-			$params = array_merge($postParams, $rowAcuerdo, compact('countryData'));
-
-			$postParams['is_template'] = true;
-			return new View('jsCode/acuerdo.execute', $params);
+			return new View('jsCode/acuerdo.execute', $postParams);
 		}
+
+		return $result;
 	}
 
 }

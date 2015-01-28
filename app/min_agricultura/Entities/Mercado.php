@@ -18,7 +18,7 @@ class Mercado {
 	}
 
 	public function setMercado_nombre($mercado_nombre){
-		$this->mercado_nombre = $mercado_nombre;
+		$this->mercado_nombre = Inflector::cleanInputString($mercado_nombre);
 	}
 
 	public function getMercado_nombre(){

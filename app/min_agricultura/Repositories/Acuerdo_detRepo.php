@@ -381,6 +381,56 @@ class Acuerdo_detRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function gridDetailed($params)
+	{
+		extract($params);
+		/**/
+		$start = ( isset($start) ) ? $start : 0;
+		$limit = ( isset($limit) ) ? $limit : MAXREGEXCEL;
+		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
+
+		if (empty($acuerdo_id)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+		$this->model->setAcuerdo_det_acuerdo_id($acuerdo_id);
+
+		if (!empty($query)) {
+			if (!empty($fullTextFields)) {
+				
+				$fullTextFields = json_decode(stripslashes($fullTextFields));
+				
+				foreach ($fullTextFields as $value) {
+					$methodName = $this->getColumnMethodName('set', $value);
+					
+					if (method_exists($this->model, $methodName)) {
+						call_user_func_array([$this->model, $methodName], compact('query'));
+					}
+				}
+			} else {
+				$this->model->setAcuerdo_det_id($query);
+				$this->model->setAcuerdo_det_arancel_base($query);
+				$this->model->setAcuerdo_det_productos($query);
+				$this->model->setAcuerdo_det_productos_desc($query);
+				$this->model->setAcuerdo_det_administracion($query);
+				$this->model->setAcuerdo_det_administrador($query);
+				$this->model->setAcuerdo_det_nperiodos($query);
+				$this->model->setAcuerdo_det_contingente_acumulado_pais($query);
+				$this->model->setAcuerdo_det_desgravacion_igual_pais($query);
+			}
+			
+		}
+
+		$year = 2014;
+
+		$result = $this->modelAdo->paginateDetailed($this->model, 'LIKE', $limit, $page, $year);
+
+		return $result;
+	}
+
 	public function listId($params)
 	{
 		extract($params);

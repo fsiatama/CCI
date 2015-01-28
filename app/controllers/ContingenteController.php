@@ -110,6 +110,44 @@ class ContingenteController {
 		return $result;
 	}
 
+	public function jscodeExecuteAction($urlParams, $postParams)
+	{
+		$action = array_shift($urlParams);
+		$action = (empty($action)) ? 'list' : $action;
+
+		$result = $this->userRepo->validateMenu($action, $postParams);
+
+		if ($result['success']) {
+			$acuerdoRepo = new AcuerdoRepo;
+			//verifica que exista el acuerdo y trae los datos
+			$result = $acuerdoRepo->listId($postParams);
+			if (!$result['success']) {
+				return $result;
+			}
+			$rowAcuerdo  = array_shift($result['data']);
+
+			$acuerdo_detRepo = new Acuerdo_detRepo;
+
+			$result = $acuerdo_detRepo->listId($postParams);
+			if (!$result['success']) {
+				return $result;
+			}
+			$rowAcuerdo_det = array_shift($result['data']);
+			$productsData   = $result['productsData'];
+
+			$postParams['is_template'] = true;
+
+			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
+			$periods = Helpers::arrayGet($lines, 'periods');
+
+			$params = array_merge($postParams, $rowAcuerdo, $rowAcuerdo_det, compact('productsData', 'yearsAvailable', 'periods'));
+
+			$postParams['is_template'] = true;
+			return new View('jsCode/contingente.execute', $params);
+		}
+	}
+
 	public function executeAction($urlParams, $postParams)
 	{
 		$result = $this->userRepo->validateMenu('list', $postParams);
