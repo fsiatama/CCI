@@ -5,6 +5,9 @@ foreach ($countryData as $key => $row) {
 	$htmlCountryies .= '<li class="list-group-item"><span class="badge">'.($key + 1).'</span>'.$row['pais'].'</li>';
 }
 $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
+
+$updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo['dateTo']->format('m')).' - '.$updateInfo['dateTo']->format('Y') : '' ;
+
 ?>
 
 
@@ -238,7 +241,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 				}
 				,enableColumnMove:false
 				,id:module+'gridAcuerdo_det'
-				,title: '<?= Lang::get('contingente.table_name'); ?> - ' + Ext.ux.lang.reports.detail
+				,title: '<?= Lang::get('acuerdo_det.table_name') . " - " . Lang::get('update_info.table_name') . " " . Lang::get('update_info.columns_title.update_info_to') . " " . $updateInfo; ?>'
 				,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
 				,bbar: ['->']
 				,iconCls:'silk-grid'
@@ -284,7 +287,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 								'<div class="panel-heading">' +
 									'<?= $acuerdo_nombre; ?>' +
 								'</div>' +
-								'<div class="panel-body"><p><?= ($acuerdo_descripcion); ?></p></div>' +
+								'<div class="panel-body"><p><?= ($acuerdo_descripcion); ?></p><p><?= $updateInfo; ?></p></div>' +
 							'</div>' +
 							'<div class="row">' +
 								'<div class="col-md-4">' +

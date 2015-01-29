@@ -53,7 +53,7 @@
 		
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/adapter/ext/ext-base.js"></script>
 		<!-- ext-all-debug-w-comments.js -->
-		<script type="text/javascript" src="js/vendor/ext-3.4.0/ext-all-debug-w-comments.js"></script> 
+		<script type="text/javascript" src="js/vendor/ext-3.4.0/ext-all.js"></script> 
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/shared/extjs/App.js"></script>
 
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/datepicker/ext.ux.datepickerplus-min.js"></script>

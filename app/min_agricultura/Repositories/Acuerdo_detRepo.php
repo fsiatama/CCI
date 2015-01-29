@@ -426,7 +426,7 @@ class Acuerdo_detRepo extends BaseRepo {
 
 		$updateInfo = Helpers::getUpdateInfo('aduanas', 'impo');
 
-		$year = ($updateInfo !== false) ? $updateInfo['dateTo']->format('Y') : date('y') ;
+		$year = ( $updateInfo !== false ) ? $updateInfo['dateTo']->format('Y') : date('y') ;
 
 		$result = $this->modelAdo->paginateDetailed($this->model, 'LIKE', $limit, $page, $year);
 

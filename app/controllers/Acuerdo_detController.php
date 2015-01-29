@@ -127,9 +127,11 @@ class Acuerdo_detController {
 			$rowAcuerdo  = array_shift($result['data']);
 			$countryData = $result['country_data'];
 
+			$updateInfo = Helpers::getUpdateInfo('aduanas', 'impo');
+
 			$postParams['is_template'] = true;
 
-			$params = array_merge($postParams, $rowAcuerdo, compact('countryData'));
+			$params = array_merge($postParams, $rowAcuerdo, compact('countryData', 'updateInfo'));
 
 			$postParams['is_template'] = true;
 			return new View('jsCode/acuerdo_det.execute', $params);
