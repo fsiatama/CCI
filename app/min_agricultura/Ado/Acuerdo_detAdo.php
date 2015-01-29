@@ -139,6 +139,7 @@ class Acuerdo_detAdo extends BaseAdo {
 			contingente_mcontingente,
 			contingente_msalvaguardia,
 			mercado_nombre,
+			IF(acuerdo_det_contingente_acumulado_pais = "0", id_pais, mercado_paises) AS id_pais,
 			IF(acuerdo_det_contingente_acumulado_pais = "0", pais, mercado_nombre) AS pais,
 			IF(contingente_det_peso_neto IS NULL, 0, contingente_det_peso_neto) AS contingente_det_peso_neto,
 			IF(contingente_msalvaguardia = "0", 0, ( ( 1 + (contingente_salvaguardia_sobretasa / 100 ) ) *  contingente_det_peso_neto)) AS salvaguardia_peso_neto,

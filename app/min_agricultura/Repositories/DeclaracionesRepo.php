@@ -3039,6 +3039,45 @@ class DeclaracionesRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function executeAcumuladoPosicionPais()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$trade            = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
+
+		$this->setTrade($trade);
+
+		if ( $trade == 'impo' ) {
+			$this->model    = $this->getModelImpo();
+			$this->modelAdo = $this->getModelImpoAdo();
+			$columnValue    = $this->columnValueImpo;
+		} else {
+			$this->model    = $this->getModelExpo();
+			$this->modelAdo = $this->getModelExpoAdo();
+			$columnValue    = $this->columnValueExpo;
+		}
+
+		$rowField = Helpers::getPeriodColumnSql($this->period);
+
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues();
+		$this->model->setAnio($this->year);
+		$row = 'anio AS id';
+		//si el periodo es diferente a anual debe cambiar el group by
+		if ($this->period != 12 && !empty($this->year)) {
+			$row = 'periodo AS id';
+		}
+
+		$arrRowField = [$row, $rowField];
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+
+		return $rsDeclaraciones;
+	}
+
 	public function executeAcumuladoContingente()
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
@@ -3047,7 +3086,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->setTrade($trade);
 		//$this->setRange('ini');
 
-		if ($trade == 'impo') {
+		if ( $trade == 'impo' ) {
 			$this->model    = $this->getModelImpo();
 			$this->modelAdo = $this->getModelImpoAdo();
 			$columnValue    = $this->columnValueImpo;

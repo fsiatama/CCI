@@ -80,10 +80,13 @@ class IndicadorController {
 			$row = array_shift($result['data']);
 			$postParams['is_template'] = true;
 
-			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
-			$trade = Helpers::arrayGet($lines, 'trade');
+			$lines          = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+			$trade          = Helpers::arrayGet($lines, 'trade');
+			$yearsAvailable =  Helpers::arrayGet($lines, 'yearsAvailable');
 			
+			$updateInfo     = Helpers::getUpdateInfo('aduanas', 'impo');
+			$yearsAvailable = ($updateInfo !== false) ? $updateInfo['yearsAvailable'] : $yearsAvailable ;
+
 			$params = array_merge($postParams, $row, compact('action', 'yearsAvailable', 'trade'));
 
 			$tipo_indicador = $row['tipo_indicador_id'];
@@ -122,10 +125,13 @@ class IndicadorController {
 
 			$postParams['is_template'] = true;
 
-			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+			$lines          = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
-			$periods = Helpers::arrayGet($lines, 'periods');
-			$scopes = Helpers::arrayGet($lines, 'scopes');
+			$periods        = Helpers::arrayGet($lines, 'periods');
+			$scopes         = Helpers::arrayGet($lines, 'scopes');
+
+			$updateInfo     = Helpers::getUpdateInfo('aduanas', 'impo');
+			$yearsAvailable = ($updateInfo !== false) ? $updateInfo['yearsAvailable'] : $yearsAvailable ;
 
 			$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action', 'yearsAvailable', 'periods', 'scopes'));
 

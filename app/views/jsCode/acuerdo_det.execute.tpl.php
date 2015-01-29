@@ -4,55 +4,7 @@ $htmlCountryies = '';
 foreach ($countryData as $key => $row) {
 	$htmlCountryies .= '<li class="list-group-item"><span class="badge">'.($key + 1).'</span>'.$row['pais'].'</li>';
 }
-
-$htmlAgreement = '
-<div class="container">
-	<div class="row">
-		<div class="col-lg-9 col-md-7 col-sm-6">
-			<h1 class="page-header">'.$acuerdo_nombre.'</h1>
-			<div class="dashboard-block">
-				<p>'.nl2br($acuerdo_descripcion).'</p>
-			</div>
-			<hr>
-			<div class="col-md-4 col-xs-12">
-				<div class="dashboard-block">
-					<div class="rotate">
-						<i class="fa fa-calendar"></i>
-					</div>
-					<h5 class="bold">'.Lang::get('acuerdo.columns_title.acuerdo_fvigente').'</h5>
-					<p>'.$acuerdo_fvigente_title.'</p>
-				</div>
-			</div>
-			<div class="col-md-4 col-xs-12">
-				<div class="dashboard-block">
-					<div class="rotate">
-						<i class="fa fa-money"></i>
-					</div>
-					<h5 class="bold">'.Lang::get('acuerdo.columns_title.acuerdo_intercambio').'</h5>
-					<p>'.$acuerdo_intercambio_title.'</p>
-				</div>
-			</div>
-			<div class="col-md-4 col-xs-12">
-				<div class="dashboard-block">
-					<div class="rotate">
-						<i class="fa fa-globe"></i>
-					</div>
-					<h5 class="bold">'.Lang::get('acuerdo.partner_title').'</h5>
-					<p>'.$partner.'</p>
-				</div>
-			</div>
-
-			<div class="clearfix"></div>
-			<hr>
-		  	<p class="lead">'.Lang::get('acuerdo.countries_agreement').'</p>
-		  	<ul class="list-group ">
-				'.$htmlCountryies.'
-			</ul>
-		</div>
-	</div>
-</div>
-';
-$htmlAgreement = Inflector::compress($htmlAgreement);
+$acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 ?>
 
 
@@ -65,7 +17,7 @@ $htmlAgreement = Inflector::compress($htmlAgreement);
 	var storeAcuerdo_det = new Ext.data.JsonStore({
 		url:'acuerdo_det/execute'
 		,root:'data'
-		,id:module+'storeContingente'
+		,id:module+'storeAcuerdo_det'
 		,sortInfo:{field:'acuerdo_det_id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
@@ -80,9 +32,13 @@ $htmlAgreement = Inflector::compress($htmlAgreement);
 			{name:'acuerdo_det_productos_desc', type:'string'},
 			{name:'pais', type:'string'},
 			{name:'contingente_det_peso_neto', type:'float'},
-			{name:'salvaguardia_peso_neto', type:'float'}
+			{name:'salvaguardia_peso_neto', type:'float'},
+			{name:'peso_neto', type:'float'},
+			{name:'ejecutado', type:'float'},
 		]
 	});
+
+	storeAcuerdo_det.load();
 
 	var colModelAcuerdo_det = new Ext.grid.ColumnModel({
 		columns:[
@@ -90,45 +46,11 @@ $htmlAgreement = Inflector::compress($htmlAgreement);
 			{header:'<?= Lang::get('acuerdo.partner_title'); ?>', dataIndex:'pais', align:'left'},
 			{header:'<?= Lang::get('contingente_det.peso_contingente'); ?>', dataIndex:'contingente_det_peso_neto' ,'renderer':numberFormat , align:'right'},
 			{header:'<?= Lang::get('contingente_det.peso_contingente'); ?>', dataIndex:'salvaguardia_peso_neto' ,'renderer':numberFormat , align:'right'},
-
-
-			/*{header:'<?= Lang::get('contingente_det.peso_ejecutado'); ?>', dataIndex:'executedWeight' ,'renderer':numberFormat , align:'right'},
-			{header:'% <?= Lang::get('contingente_det.valor_ejecutado'); ?>', dataIndex:'rate' ,'renderer':rateFormat , align:'right'}*/
+			{header:'<?= Lang::get('contingente_det.peso_ejecutado'); ?>', dataIndex:'peso_neto' ,'renderer':numberFormat , align:'right'},
+			{header:'% <?= Lang::get('contingente_det.valor_ejecutado'); ?>', dataIndex:'ejecutado' ,'renderer':rateFormat , align:'right'},
 		]
 	});
 
-	var gridAcuerdo_det = new Ext.grid.GridPanel({
-		border:true
-		,monitorResize:true
-		,store:storeAcuerdo_det
-		,colModel:colModelAcuerdo_det
-		,stateful:true
-		,columnLines:true
-		,stripeRows:true
-		,viewConfig: {
-			forceFit:true
-		}
-		,enableColumnMove:false
-		,id:module+'gridAcuerdo_det'
-		,title: '<?= Lang::get('contingente.table_name'); ?> - ' + Ext.ux.lang.reports.detail
-		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar: ['->']
-		,iconCls:'silk-grid'
-		,plugins:[new Ext.ux.grid.Excel()]
-		,layout:'fit'
-		,autoHeight:true
-		,autoWidth:true
-		,margins:'10 15 5 0'
-		,listeners:{
-			render: {
-				fn: function(grid){
-					storeAcuerdo_det.load();
-				}
-			}
-		}
-	});
-
-	
 	var root = new Ext.tree.AsyncTreeNode({
 		text: '<?= Lang::get('acuerdo_det.table_name'); ?>'
 		,type: 'root'
@@ -303,22 +225,92 @@ $htmlAgreement = Inflector::compress($htmlAgreement);
 
 			var remove = lp.removeAll(true);
 
+			var gridAcuerdo_det = new Ext.grid.GridPanel({
+				border:true
+				,monitorResize:true
+				,store:storeAcuerdo_det
+				,colModel:colModelAcuerdo_det
+				,stateful:true
+				,columnLines:true
+				,stripeRows:true
+				,viewConfig: {
+					forceFit:true
+				}
+				,enableColumnMove:false
+				,id:module+'gridAcuerdo_det'
+				,title: '<?= Lang::get('contingente.table_name'); ?> - ' + Ext.ux.lang.reports.detail
+				,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
+				,bbar: ['->']
+				,iconCls:'silk-grid'
+				,plugins:[new Ext.ux.grid.Excel()]
+				,layout:'fit'
+				,autoHeight:true
+				,autoWidth:true
+				,margins:'10 15 5 0'
+				/*,listeners:{
+					render: {
+						fn: function(grid){
+							storeAcuerdo_det.load();
+						}
+					}
+				}*/
+			});
+
 			var initialPanel = {
 				xtype:'panel'
 				,id:module+'initialPanel'
+				,layout:'column'
 				,border:false
-				,autoScroll: false
-				,layout: 'fit'
-				,monitorResize:true
-				,items:[{
-					border:false
+				,baseCls:'x-plain'
+				,autoWidth:true
+				,autoScroll:true
+				,bodyStyle:	'padding:15px;position:relative;'
+				,defaults:{
+					columnWidth:1
+					,border:false
 					,xtype:'panel'
-					,autoWidth:true
-					,autoScroll:true
-					,border: false
-					//,baseCls:'bootstrap-styles'
-					,layout:'column'
-					,items: [gridAcuerdo_det]
+					,style:{padding:'10px'}
+					,layout:'fit'
+				}
+				,items:[{
+					defaults:{anchor:'100%'}
+					,items:[{
+						style:{padding:'0px'}
+						,autoHeight:true
+						,border:false
+						,margins:'10 15 5 0'
+						,html: '<div class="bootstrap-styles">' +
+							'<div class="panel panel-default">' +
+								'<div class="panel-heading">' +
+									'<?= $acuerdo_nombre; ?>' +
+								'</div>' +
+								'<div class="panel-body"><p><?= ($acuerdo_descripcion); ?></p></div>' +
+							'</div>' +
+							'<div class="row">' +
+								'<div class="col-md-4">' +
+									'<div class="well well-sm nomargin">' +
+								    	'<strong class="text-success margin-bottom-5"><span class="label label-success pull-right"><i class="fa fa-2x fa-calendar"></i></span> <?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?> </strong>' +
+								    	'<p><?= $acuerdo_fvigente_title; ?></p>' +
+									'</div>' +
+								'</div>' +
+								'<div class="col-md-4">' +
+									'<div class="well well-sm nomargin">' +
+								    	'<strong class="text-success margin-bottom-5"><span class="label label-success pull-right"><i class="fa fa-2x fa-money"></i></span> <?= Lang::get('acuerdo.columns_title.acuerdo_intercambio'); ?> </strong>' +
+								    	'<p><?= $acuerdo_intercambio_title; ?></p>' +
+									'</div>' +
+								'</div>' +
+								'<div class="col-md-4">' +
+									'<div class="well well-sm nomargin">' +
+								    	'<strong class="text-success margin-bottom-5"><span class="label label-success pull-right"><i class="fa fa-2x fa-globe"></i></span> <?= Lang::get('acuerdo.partner_title'); ?> </strong>' +
+								    	'<p><?= $partner; ?></p>' +
+									'</div>' +
+								'</div>' +
+							'</div>' +
+						'</div>'
+					}]
+				},{
+					defaults:{anchor:'100%'}
+					,items:[gridAcuerdo_det]
 				}]
 			}
 			Ext.getCmp(module+'lpAcuerdo').add(initialPanel);

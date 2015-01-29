@@ -424,9 +424,81 @@ class Acuerdo_detRepo extends BaseRepo {
 			
 		}
 
-		$year = 2014;
+		$updateInfo = Helpers::getUpdateInfo('aduanas', 'impo');
+
+		$year = ($updateInfo !== false) ? $updateInfo['dateTo']->format('Y') : date('y') ;
 
 		$result = $this->modelAdo->paginateDetailed($this->model, 'LIKE', $limit, $page, $year);
+
+		if ( ! $result['success'] ) {
+			return $result;
+		}
+
+		$lines            = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.acuerdo_det');
+		$arrFiltersName   = Helpers::arrayGet($lines, 'filters.acuerdo_det');
+
+		if (empty($arrExecuteConfig)) {
+			return [
+				'success' => false,
+				'error'   => 'There is no configuration for this method'
+			];
+		}
+
+		$repoFileName   = PATH_MODELS.'Repositories/'.$arrExecuteConfig['repoClassName'].'.php';
+		$repoClassName  = $arrExecuteConfig['repoClassName'];
+		$repoMethodName = 'execute' . $arrExecuteConfig['methodName'];
+
+		if ( ! file_exists($repoFileName)) {
+			return [
+				'success' => false,
+				'error'   => 'unavailable repo '. $repoClassName
+			];
+		}
+		require $repoFileName;
+
+		$arrData = [];
+
+		foreach ($result['data'] as $key => $row) {
+			$arrFiltros   = [];
+			$arrFiltros[] = 'id_pais:'.$row['id_pais'];
+			$arrFiltros[] = 'id_posicion:'.$row['acuerdo_det_productos'];
+			$params       = [
+				'indicador_filtros'        => implode('||', $arrFiltros),
+				'tipo_indicador_activador' => 'volumen',
+			];
+
+
+			$repo = new $repoClassName(
+				$params,
+				$arrFiltersName,
+				$year,
+				12,
+				1
+			);
+			if (!method_exists($repo, $repoMethodName)) {
+				return [
+					'success' => false,
+					'error'   => 'unavailable method '. $repoMethodName
+				];
+			}
+			$rsExecuted = call_user_func_array([$repo, $repoMethodName], []);
+			if ( ! $rsExecuted['success'] ) {
+				return $rsExecuted;
+			}
+			$executedWeight = 0;
+			if ( $rsExecuted['total'] > 0) {
+				$rowExecuted = array_shift($rsExecuted['data']);
+				//se divide por 1000 para convertir en Toneladas metricas
+				$executedWeight = ( $rowExecuted['peso_neto'] / 1000 );
+			}
+			$rate = ($row['contingente_det_peso_neto'] == 0) ? 0 : ($executedWeight / $row['contingente_det_peso_neto'] ) * 100 ;
+
+			$arrData[] = array_merge($row, [ 'peso_neto' =>  $executedWeight, 'ejecutado' => $rate ]);
+
+		}
+
+		$result['data'] = $arrData;
 
 		return $result;
 	}
@@ -438,7 +510,7 @@ class Acuerdo_detRepo extends BaseRepo {
 
 		$result = $this->findPrimaryKey($acuerdo_det_id);
 
-		if (!$result['success']) {
+		if ( ! $result['success'] ) {
 			return $result;
 		}
 		$rowAcuerdo_det = array_shift($result['data']);
@@ -452,7 +524,7 @@ class Acuerdo_detRepo extends BaseRepo {
 
 		$result = $posicionRepo->listAll($params);
 
-		if (!$result['success']) {
+		if ( ! $result['success'] ) {
 			return $result;
 		}
 

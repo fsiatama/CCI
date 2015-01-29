@@ -317,7 +317,10 @@ function unsignedIntegerFormat (value) {
 	}
 }
 function rateFormat(value){
-	if(value > 0){
+	if(value == 0){
+		value = Ext.util.Format.number(value,'0,0.00');
+		return '<span>' + value + '%</span>';
+	} else if(value > 0){
 		value = Ext.util.Format.number(value,'0,0.00');
 		return '<span style="color:green;">' + value + '%</span>';
 	} else {

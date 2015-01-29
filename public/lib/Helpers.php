@@ -428,4 +428,28 @@ class Helpers
 		return $result;
 	}
 
+	public static function getUpdateInfo($product, $trade)
+	{
+		//require_once PATH_MODELS.'Repositories/Update_infoRepo.php';
+
+		self::getRequire(PATH_MODELS.'Repositories/Update_infoRepo.php');
+		$update_infoRepo = new Update_infoRepo;
+
+		$result = $update_infoRepo->updateInfo(compact('product', 'trade'));
+
+		if (!$result['success'] || $result['total'] == 0) {
+			return false;
+		}
+
+		$row = array_shift($result['data']);
+
+		$dateFrom = self::getDate($row['update_info_from']);
+		$dateTo   = self::getDate($row['update_info_to']);
+
+		$yearsAvailable = range($dateFrom->format('Y'), $dateTo->format('Y'));
+
+		return compact('dateFrom', 'dateTo', 'yearsAvailable');
+
+	}
+
 }

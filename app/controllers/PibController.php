@@ -73,8 +73,11 @@ class PibController {
 				}
 			}
 			$postParams['is_template'] = true;
-			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+			$lines          = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
+
+			$updateInfo     = Helpers::getUpdateInfo('aduanas', 'impo');
+			$yearsAvailable = ($updateInfo !== false) ? $updateInfo['yearsAvailable'] : $yearsAvailable ;
 			$params = array_merge($postParams, $result, compact('action', 'yearsAvailable'));
 			
 			//el template de adicionar y editar son los mismos

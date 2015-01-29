@@ -137,9 +137,12 @@ class ContingenteController {
 
 			$postParams['is_template'] = true;
 
-			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+			$lines          = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
-			$periods = Helpers::arrayGet($lines, 'periods');
+			$periods        = Helpers::arrayGet($lines, 'periods');
+
+			$updateInfo     = Helpers::getUpdateInfo('aduanas', 'impo');
+			$yearsAvailable = ($updateInfo !== false) ? $updateInfo['yearsAvailable'] : $yearsAvailable ;
 
 			$params = array_merge($postParams, $rowAcuerdo, $rowAcuerdo_det, compact('productsData', 'yearsAvailable', 'periods'));
 

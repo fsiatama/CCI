@@ -231,7 +231,7 @@ $htmlProducts .= '</ol>';
 			,border:false
 			,xtype:'panel'
 			,style:{padding:'10px'}
-			//,layout:'fit'
+			,layout:'fit'
 		}
 		,items:[{
 			defaults:{anchor:'100%'}
