@@ -494,7 +494,57 @@ class Acuerdo_detRepo extends BaseRepo {
 			}
 			$rate = ($row['contingente_det_peso_neto'] == 0) ? 0 : ($executedWeight / $row['contingente_det_peso_neto'] ) * 100 ;
 
-			$arrData[] = array_merge($row, [ 'peso_neto' =>  $executedWeight, 'ejecutado' => $rate ]);
+			$statusCtgCls = 'good_traffic';
+			$statusCtgTxt = Lang::get('alerta.verde');
+			$statusSvgCls = 'good_traffic';
+			$statusSvgTxt = Lang::get('alerta.verde');
+			if ($row['contingente_mcontingente'] == '1' && $row['contingente_det_peso_neto'] > 0) {
+
+				$green  = (float)$row['alerta_contingente_verde'];
+				$yellow = (float)$row['alerta_contingente_amarilla'];
+				$red    = (float)$row['alerta_contingente_roja'];
+				
+				if ( $rate <= $yellow && $rate >= $green) {
+					$statusCtgCls = 'average_traffic';
+					$statusCtgTxt = Lang::get('alerta.amarilla');
+				} elseif ( $rate > $yellow ) {
+					$statusCtgCls = 'poor_traffic';
+					$statusCtgTxt = Lang::get('alerta.roja');
+				} else {
+					$statusCtgCls = 'good_traffic';
+					$statusCtgTxt = Lang::get('alerta.verde');
+				}
+				if ($row['contingente_msalvaguardia'] == '1') {
+					$sobretasa = (float)$row['contingente_salvaguardia_sobretasa'];
+
+					$green   = $red + ( $sobretasa * ( (float)$row['alerta_salvaguardia_verde'] / 100) );
+					$yellow  = $red + ( $sobretasa * ( (float)$row['alerta_salvaguardia_amarilla'] / 100) );
+					$red     = $red + ( $sobretasa * ( (float)$row['alerta_salvaguardia_roja'] / 100) );
+
+					//var_dump($green, $yellow, $red, $rate);
+
+					if ( $rate <= $yellow && $rate >= $green) {
+						$statusSvgCls = 'average_traffic';
+						$statusSvgTxt = Lang::get('alerta.amarilla');
+					} elseif ( $rate > $yellow ) {
+						$statusSvgCls = 'poor_traffic';
+						$statusSvgTxt = Lang::get('alerta.roja');
+					} else {
+						$statusSvgCls = 'good_traffic';
+						$statusSvgTxt = Lang::get('alerta.verde');
+					}
+				}
+			}
+
+			$arrData[] = array_merge(
+				$row,
+				[ 'peso_neto'     => $executedWeight ],
+				[ 'ejecutado'     => $rate ],
+				[ 'estado_ctg'    => $statusCtgCls ],
+				[ 'estado_ctg_tt' => $statusCtgTxt ],
+				[ 'estado_svg'    => $statusSvgCls ],
+				[ 'estado_svg_tt' => $statusSvgTxt ]
+			);
 
 		}
 

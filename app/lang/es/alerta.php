@@ -2,6 +2,9 @@
 return [
 	'alerta_salvaguardia' => 'Alertas Salvaguardia',
 	'alerta_contingente'  => 'Alertas Contingente',
+	'verde'               => 'Normal',
+	'amarilla'            => 'Medio',
+	'roja'                => 'Alto',
 	'columns_title' => [
 		'alerta_contingente_verde'     => 'Limite verde (%)',
 		'alerta_contingente_amarilla'  => 'Limite Amarillo (%)',

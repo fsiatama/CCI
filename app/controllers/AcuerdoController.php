@@ -73,11 +73,11 @@ class AcuerdoController {
 				}
 			}
 
-			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-			$trade = Helpers::arrayGet($lines, 'trade');
-
+			$lines                     = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+			$trade                     = Helpers::arrayGet($lines, 'trade');
+			$updateInfo                = Helpers::getUpdateInfo('aduanas', 'impo');
 			$postParams['is_template'] = true;
-			$params = array_merge($postParams, $result, compact('action', 'trade'));
+			$params                    = array_merge($postParams, $result, compact('action', 'trade', 'updateInfo'));
 			
 			//el template de adicionar y editar son los mismos
 			$action = ($action == 'modify') ? 'create' : $action;
@@ -96,8 +96,14 @@ class AcuerdoController {
 		$result = $this->userRepo->validateMenu($action, $postParams);
 
 		if ($result['success']) {
+			
+			$updateInfo = Helpers::getUpdateInfo('aduanas', 'impo');
+
 			$postParams['is_template'] = true;
-			return new View('jsCode/acuerdo.execute', $postParams);
+
+			$params = array_merge($postParams, compact('updateInfo'));
+
+			return new View('jsCode/acuerdo.execute', $params);
 		}
 
 		return $result;

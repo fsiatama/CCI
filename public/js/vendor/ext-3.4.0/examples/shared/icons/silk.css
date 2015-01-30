@@ -336,4 +336,8 @@
 	height: 24px;
 }
 
+.poor_traffic {background: url('fam/poor_traffic.gif') no-repeat center left!important}
+.average_traffic {background: url('fam/average_traffic.gif') no-repeat center left!important}
+.good_traffic {background: url('fam/good_traffic.gif') no-repeat center left!important}
+
 

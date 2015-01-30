@@ -133,7 +133,6 @@ class Acuerdo_detController {
 
 			$params = array_merge($postParams, $rowAcuerdo, compact('countryData', 'updateInfo'));
 
-			$postParams['is_template'] = true;
 			return new View('jsCode/acuerdo_det.execute', $params);
 		}
 

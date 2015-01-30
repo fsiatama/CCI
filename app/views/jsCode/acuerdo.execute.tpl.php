@@ -1,3 +1,7 @@
+<?php
+$updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo['dateTo']->format('m')).' - '.$updateInfo['dateTo']->format('Y') : '' ;
+?>
+
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
@@ -44,7 +48,7 @@
 		)
 	});
 	
-	var cmAcuerdo = new Ext.grid.ColumnModel({
+	var colModelAcuerdo = new Ext.grid.ColumnModel({
 		columns:[
 			gridAcuerdoExpander,
 			{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_nombre'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_nombre'},
@@ -90,29 +94,26 @@
 			}
 		}]
 	});
+
 	var gridAcuerdo = new Ext.grid.GridPanel({
-		store:storeAcuerdo
-		,id:module + 'gridAcuerdo'
-		,colModel:cmAcuerdo
+		border:true
+		,monitorResize:true
+		,store:storeAcuerdo
+		,colModel:colModelAcuerdo
+		,stateful:true
+		,columnLines:true
+		,stripeRows:true
 		,viewConfig: {
-			forceFit: true
-			,scrollOffset:2
+			forceFit:true
 		}
-		,sm: new Ext.grid.RowSelectionModel({
-			singleSelect: true
-		})
-		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeAcuerdo, displayInfo:true})
-		,enableColumnMove:false
-		,enableColumnResize:false
-		,tbar:tbAcuerdo
-		,loadMask:true
-		,border:false
-		,frame: false
-		,baseCls: 'x-panel-mc'
-		,buttonAlign:'center'
+		,id:module+'gridAcuerdo'
 		,title:''
-		,iconCls:'icon-grid'
-		,stripeRows: true
+		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
+		,iconCls:'silk-grid'
+		,layout:'fit'
+		,autoHeight:true
+		,autoWidth:true
+		,margins:'10 15 5 0'
 		,plugins:[
 			new Ext.ux.grid.Search({
 				iconCls:'silk-zoom'
@@ -129,12 +130,52 @@
 			,gridAcuerdoAction
 			,gridAcuerdoExpander
 		]
+		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeAcuerdo, displayInfo:true})
+		,tbar:tbAcuerdo
+	});
+
+	var panelAcuerdo = new Ext.Panel({
+		xtype:'panel'
+		,id:module+'panelAcuerdo'
+		,layout:'column'
+		,border:false
+		,baseCls:'x-plain'
+		,autoWidth:true
+		,autoScroll:true
+		,bodyStyle:	'padding:15px;position:relative;'
+		,defaults:{
+			columnWidth:1
+			,border:false
+			,xtype:'panel'
+			,style:{padding:'10px'}
+			,layout:'fit'
+		}
+		,items:[{
+			defaults:{anchor:'100%'}
+			,items:[{
+				style:{padding:'0px'}
+				,autoHeight:true
+				,border:false
+				,margins:'10 15 5 0'
+				,html: '<div class="bootstrap-styles">' +
+					'<div class="panel panel-default">' +
+						'<div class="panel-heading">' +
+							'<?= $title; ?>' +
+						'</div>' +
+						'<div class="panel-body"><p><?= Lang::get('update_info.table_name') . " " . Lang::get('update_info.columns_title.update_info_to') . ": " . $updateInfo; ?></p></div>' +
+					'</div>' +
+				'</div>'
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[gridAcuerdo]
+		}]
 	});
 
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridAcuerdo.getItemId());
 	
-	return gridAcuerdo;	
+	return panelAcuerdo;	
 	/*********************************************** Start functions***********************************************/
 	
 	function fnReport(record){
