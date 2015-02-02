@@ -9,8 +9,6 @@ foreach ($productsData as $row) {
 
 $htmlProducts .= '</ol>';
 
-$updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo['dateTo']->format('m')).' - '.$updateInfo['dateTo']->format('Y') : '' ;
-
 ?>
 
 /*<script>*/
@@ -18,6 +16,8 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module.'_'.$acuerdo_id; ?>';
 	var panelHeight = Math.floor(Ext.getCmp('tabpanel').getInnerHeight() - 260);
+
+	var chartsId = [];
 
 	var storeContingente = new Ext.data.JsonStore({
 		url:'contingente/execute'
@@ -27,22 +27,34 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
-			,contingente_id: '<?= $contingente_id; ?>'
-			,acuerdo_det_id: '<?= $acuerdo_det_id; ?>'
 			,acuerdo_id: '<?= $acuerdo_id; ?>'
+			,acuerdo_det_id: '<?= $acuerdo_det_id; ?>'
+			,summary: true
 		}
 		,fields:[
 			{name:'id', type:'float'},
 			{name:'periodo', type:'string'},
+			{name:'pais', type:'string'},
 			{name:'quotaWeight', type:'float'},
-			{name:'safeguardWeight', type:'float'},
 			{name:'executedWeight', type:'float'},
-			{name:'cumulativeRate', type:'float'},
 			{name:'rate', type:'float'},
 		]
 	});
 
-	storeContingente.on('beforeload', function(){
+	var storeAcuerdo_det = new Ext.data.JsonStore({
+		url:'contingente/execute'
+		,reader: new Ext.data.JsonReader()
+		,remoteSort: true
+		,baseParams: {
+			id: '<?= $id; ?>'
+			,acuerdo_id: '<?= $acuerdo_id; ?>'
+			,acuerdo_det_id: '<?= $acuerdo_det_id; ?>'
+			,summary: false
+		}
+		,id:module+'storeAcuerdo_det'
+	});
+
+	storeAcuerdo_det.on('beforeload', function(){
 		var year   = Ext.getCmp(module + 'comboYear').getValue();
 		var period = Ext.getCmp(module + 'comboPeriod').getValue();
 		if (!year || !period) {
@@ -52,28 +64,120 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		this.setBaseParam('period', period);
 		Ext.ux.bodyMask.show();
 	});
+	storeContingente.on('beforeload', function(){
+		var year   = Ext.getCmp(module + 'comboYear').getValue();
+		var period = Ext.getCmp(module + 'comboPeriod').getValue();
+		if (!year || !period) {
+			return false;
+		};
+		this.setBaseParam('year', year);
+		this.setBaseParam('period', period);
+		//Ext.ux.bodyMask.show();
+	});
 	
-	storeContingente.on('load', function(store){
-		if (typeof(store.reader.jsonData.gaugeChartData) === 'object') {
-			FusionCharts.setCurrentRenderer('javascript');
-			disposeCharts();
-			var chart = new FusionCharts('hlineargauge', module + 'AreaChartId', '100%', '100%', '0', '1');
-			chart.setTransparent(true);
-			chart.setJSONData(store.reader.jsonData.gaugeChartData);
-			chart.render(module + 'AreaChart');
+	storeAcuerdo_det.on('load', function(store){
+		if (typeof(store.reader.jsonData.columns) === 'object') {
+			var columns = [];
+			var cm = gridAcuerdo_det.getColumnModel();
+
+			Ext.each(store.reader.jsonData.columns, function(column) {
+				if (column.renderer == 'numberFormat') {
+					columns.push({
+						header:column.header
+						,dataIndex:column.dataIndex
+						,sortable:false
+						,align:'right'
+						,renderer:numberFormat
+						,hidden:column.hidden
+					});
+				} else if (column.renderer == 'rateFormat') {
+					columns.push({
+						header:column.header
+						,dataIndex:column.dataIndex
+						,sortable:false
+						,align:'right'
+						,renderer:rateFormat
+						,hidden:column.hidden
+					});
+				} else {
+					columns.push(column);
+				};
+			});
+
+			cm.setConfig(columns);
+
+			gridAcuerdo_det.reconfigure(store, cm);
+
+			storeContingente.load();
+
+		}
+		FusionCharts.setCurrentRenderer('javascript');
+		disposeCharts();
+		if (typeof(store.reader.jsonData.chartsData) === 'object') {
+			var chartsDiv = Ext.get(module + 'chartsDiv');
+			var html      = '';
+			var divClass  = '';
+			if (store.reader.jsonData.chartsData.length == 1) {
+				//divClass = 'col-md-offset-3'
+			};
+			Ext.each(store.reader.jsonData.chartsData, function(chartData) {
+				html += '<div class="col-xs-9 ' + divClass + '" id="' + module + '_gaugeChart_' + chartData.id + '"></div>';
+			});
+			chartsDiv.update(html);
+			Ext.each(store.reader.jsonData.chartsData, function(chartData) {
+				var divId = module + '_gaugeChart_' + chartData.id;
+				var chart = new FusionCharts('angulargauge', divId + 'Id', '100%', '350', '0', '1');
+				chart.setTransparent(true);
+				chart.setJSONData(chartData.data);
+				chart.render(divId);
+				chartsId.push(divId + 'Id');
+			});
 		}
 		Ext.ux.bodyMask.hide();
 	});
 
+	var colModelAcuerdo_det = new Ext.grid.ColumnModel({
+		columns:[]
+	});
+	
+	var gridAcuerdo_det = new Ext.grid.GridPanel({
+		border:true
+		,monitorResize:true
+		,store:storeAcuerdo_det
+		,colModel:colModelAcuerdo_det
+		,stateful:true
+		,columnLines:true
+		,stripeRows:true
+		,viewConfig: {
+			forceFit:true
+		}
+		,enableColumnMove:false
+		,id:module+'gridAcuerdo_det'
+		,title: '<?= Lang::get('contingente.table_name'); ?> - ' + Ext.ux.lang.reports.detail
+		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
+		,bbar: ['->']
+		,iconCls:'silk-grid'
+		,plugins:[new Ext.ux.grid.Excel()]
+		,layout:'fit'
+		,autoHeight:true
+		,autoWidth:true
+		,margins:'10 15 5 0'
+		,listeners:{
+			render: {
+				fn: function(grid){
+					storeAcuerdo_det.load();
+				}
+			}
+		}
+	});
+
 	var colModelContingente = new Ext.grid.ColumnModel({
-		defaultSortable: true
-		,columns:[
+		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
+			{header:'<?= Lang::get('acuerdo.partner_title'); ?>', dataIndex:'pais', align:'left'},
 			{header:'<?= Lang::get('contingente_det.peso_contingente'); ?>', dataIndex:'quotaWeight' ,'renderer':numberFormat , align:'right'},
-			{header:'<?= Lang::get('contingente_det.peso_salvaguardia'); ?>', dataIndex:'safeguardWeight' ,'renderer':numberFormat , align:'right'},
 			{header:'<?= Lang::get('contingente_det.peso_ejecutado'); ?>', dataIndex:'executedWeight' ,'renderer':numberFormat , align:'right'},
-			{header:'<?= Lang::get('contingente_det.valor_ejecutado'); ?>', dataIndex:'cumulativeRate' ,'renderer':rateFormat , align:'right'},
-			{header:'<?= Lang::get('indicador.reports.variation'); ?> (%)', dataIndex:'rate' ,'renderer':rateFormat , align:'right', hidden: true}
+			{header:'% <?= Lang::get('contingente_det.valor_ejecutado'); ?>', dataIndex:'rate' ,'renderer':rateFormat , align:'right'}
 		]
 	});
 
@@ -88,6 +192,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		,viewConfig: {
 			forceFit:true
 		}
+		,enableColumnMove:false
 		,id:module+'gridContingente'
 		,title: '<?= Lang::get('contingente.table_name'); ?>'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
@@ -100,15 +205,9 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		,autoHeight:true
 		,autoWidth:true
 		,margins:'10 15 5 0'
-		,listeners:{
-			render: {
-				fn: function(grid){
-					storeContingente.load();
-				}
-			}
-		}
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
+	Ext.state.Manager.clear(gridAcuerdo_det.getItemId());
 	Ext.state.Manager.clear(gridContingente.getItemId());
 	
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
@@ -118,9 +217,9 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 
 	/******************************************************************************************************************************************************************************/
 	
-	var contingenteContainer = new Ext.Panel({
+	var acuerdo_detContainer = new Ext.Panel({
 		xtype:'panel'
-		,id:module + 'excuteContingenteContainer'
+		,id:module + 'excuteAcuerdo_detContainer'
 		,layout:'column'
 		,border:false
 		,baseCls:'x-plain'
@@ -142,22 +241,9 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 				,border:false
 				,margins:'10 15 5 0'
 				,html: '<div class="bootstrap-styles">' +
-					'<div class="panel panel-default">' +
-						'<div class="panel-heading">' +
-							'<?= Lang::get('contingente.table_name'); ?>' +
-						'</div>' +
-						'<div class="panel-body">' +
-							'<dl class="dl-horizontal">' +
-								'<dt><?= Lang::get('acuerdo.table_name'); ?></dt>' +
-								'<dd><?= $acuerdo_nombre; ?></dd>' +
-								'<dt><?= Lang::get('acuerdo.partner_title'); ?></dt>' +
-								'<dd><?= $pais; ?></dd>' +
-								'<dt><?= Lang::get('acuerdo_det.table_name'); ?></dt>' +
-								'<dd><?= $acuerdo_det_productos_desc; ?></dd>' +
-								'<dt><?= Lang::get('update_info.table_name') . " " . Lang::get('update_info.columns_title.update_info_to') . ":"; ?></dt>' +
-								'<dd><?= $updateInfo; ?></dd>' +
-							'</dl>' +
-						'</div>' +
+					'<div class="page-head">' +
+						'<h4 class="nopadding"><i class="styleColor fa fa-area-chart"></i> <?= $acuerdo_nombre; ?>: <small><?= $acuerdo_det_productos_desc; ?></small></h4>' +
+						'<div class="clearfix"></div><?= $htmlProducts; ?>' +
 					'</div>' +
 				'</div>'
 			}]
@@ -206,7 +292,9 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 					text: Ext.ux.lang.buttons.generate
 					,iconCls: 'icon-refresh'
 					,handler: function () {
-						storeContingente.load();
+						/*var html = Ext.getCmp(module + 'excuteAcuerdo_detContainer').getEl().dom.innerHTML;
+						console.log(html);*/
+						storeAcuerdo_det.load();
 					}
 				}]
 			}]
@@ -214,12 +302,19 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			defaults:{anchor:'100%'}
 			,items:[gridContingente]
 		},{
-			height:140
-			,html:'<div id="' + module + 'AreaChart"></div>'
+			defaults:{anchor:'95%'}
 			,items:[{
-				xtype:'panel'
-				,id: module + 'AreaChart'
-				,plain:true
+				style:{padding:'0px'}
+				,autoHeight:true
+				,border:false
+				,margins:'10 15 5 0'
+				//,title: Ext.ux.lang.reports.charts
+				,html: '<div class="bootstrap-styles">' +
+					'<div class="container">' +
+						'<div class="row" id="' + module + 'chartsDiv">' +
+						'</div>' +
+					'</div>' +
+				'</div>'
 			}]
 		}]
 		,listeners:{
@@ -239,15 +334,21 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		storeAcuerdo_det.load();
 	});*/
 
-	return contingenteContainer;
+	return acuerdo_detContainer;
 
 	/*********************************************** Start functions***********************************************/
 	
 	function disposeCharts () {
+		var chartsDiv  = Ext.get(module + 'chartsDiv');
+		Ext.each(chartsId, function(chart) {
+			if(FusionCharts(chart)){
+				FusionCharts(chart).dispose();
+			}
+		});
 
-		if(FusionCharts(module + 'AreaChartId')){
+		/*if(FusionCharts(module + 'AreaChartId')){
 			FusionCharts(module + 'AreaChartId').dispose();
-		}
+		}*/
 	}
 	
 

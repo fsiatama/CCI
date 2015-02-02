@@ -437,36 +437,8 @@ class ContingenteRepo extends BaseRepo {
 			return $result;
 		}
 
-		$arrData = [];
-
-		foreach ($result['data'] as $key => $row) {
-			$pais = ($row['acuerdo_det_contingente_acumulado_pais'] == '0') ? $row['pais'] : $row['mercado_nombre'] ;
-			$arrData[] = [
-				'contingente_id'                     => $row['contingente_id'],
-				'contingente_id_pais'                => $row['contingente_id_pais'],
-				'pais'                               => $pais,
-				'contingente_mcontingente'           => $row['contingente_mcontingente'],
-				'contingente_mcontingente_title'     => $row['contingente_mcontingente_title'],
-				'contingente_desc'                   => $row['contingente_desc'],
-				'contingente_msalvaguardia'          => $row['contingente_msalvaguardia'],
-				'contingente_msalvaguardia_title'    => $row['contingente_msalvaguardia_title'],
-				'contingente_salvaguardia_sobretasa' => $row['contingente_salvaguardia_sobretasa'],
-				'contingente_acuerdo_det_id'         => $row['contingente_acuerdo_det_id'],
-				'contingente_acuerdo_det_acuerdo_id' => $row['contingente_acuerdo_det_acuerdo_id'],
-				'alerta_id'                          => $row['alerta_id'],
-				'alerta_contingente_verde'           => $row['alerta_contingente_verde'],
-				'alerta_contingente_amarilla'        => $row['alerta_contingente_amarilla'],
-				'alerta_contingente_roja'            => $row['alerta_contingente_roja'],
-				'alerta_salvaguardia_verde'          => $row['alerta_salvaguardia_verde'],
-				'alerta_salvaguardia_amarilla'       => $row['alerta_salvaguardia_amarilla'],
-				'alerta_salvaguardia_roja'           => $row['alerta_salvaguardia_roja'],
-				'alerta_emails'                      => $row['alerta_emails'],
-			];
-		}
-
-		$result['data'] = $arrData;
-
 		return $result;
+
 	}
 
 	public function execute($params)
@@ -478,11 +450,11 @@ class ContingenteRepo extends BaseRepo {
 		$format  = (empty($format)) ? false : $format ;
 		$fields  = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
 		$scope   = (empty($scope)) ? 1 : $scope ;
-		$summary = ($summary === 'true') ? true : false ;
 
 		if (
 			empty($acuerdo_id) ||
-			empty($acuerdo_det_id)
+			empty($acuerdo_det_id) ||
+			empty($contingente_id)
 		) {
 			$result = [
 				'success' => false,
@@ -490,27 +462,41 @@ class ContingenteRepo extends BaseRepo {
 			];
 			return $result;
 		}
-		$acuerdo_detRepo = new Acuerdo_detRepo;
-		$result = $acuerdo_detRepo->listId($params);
+		$this->model->setContingente_acuerdo_det_id($acuerdo_det_id);
+		$this->model->setContingente_acuerdo_det_acuerdo_id($acuerdo_id);
+		$this->model->setContingente_id($contingente_id);
 
+		$result = $this->modelAdo->exactSearch($this->model);
 		if (!$result['success']) {
 			return $result;
 		}
-		$rowAcuerdo_det = array_shift($result['data']);
+		//la consulta solo deberia arrojar un registro
+		$arrContingente = array_shift($result['data']);
 
-		$acuerdoRepo = new AcuerdoRepo;
-		$result      = $acuerdoRepo->listId(compact('acuerdo_id'));
+		$this->contingente_detRepo = new Contingente_detRepo;
+		$params = [
+			'contingente_id'                     => $arrContingente['contingente_id'],
+			'contingente_acuerdo_det_id'         => $arrContingente['contingente_acuerdo_det_id'],
+			'contingente_acuerdo_det_acuerdo_id' => $arrContingente['contingente_acuerdo_det_acuerdo_id'],
+			'year'                               => $year,
+		];
+		$result = $this->contingente_detRepo->listId($params);
 		if (!$result['success']) {
 			return $result;
 		}
-		$rowAcuerdo     = array_shift($result['data']);
-		$countryData    = $result['country_data'];
-		$arrCountriesId = array_column($countryData, 'id_pais');
 
-		
+		//la consulta solo deberia arrojar un registro
+		$arrContingente_det = array_shift( $result['data'] );
+		$quotaWeight        = ( empty( $arrContingente_det['contingente_det_peso_neto'] ) ) ? 0 : (float)$arrContingente_det['contingente_det_peso_neto'] ;
+		$safeguardWeight    = 0;
+		if ($arrContingente['contingente_msalvaguardia'] == '1') {
+			$safeguard       = (float)$arrContingente['contingente_salvaguardia_sobretasa'];
+			$safeguardWeight = $quotaWeight * ( 1 + ( $safeguard / 100 ) );
+		}
+
 		$lines            = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-		$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.contingente');
-		$arrFiltersName   = Helpers::arrayGet($lines, 'filters.contingente');
+		$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.acuerdo_det');
+		$arrFiltersName   = Helpers::arrayGet($lines, 'filters.acuerdo_det');
 
 		if (empty($arrExecuteConfig)) {
 			return [
@@ -529,19 +515,15 @@ class ContingenteRepo extends BaseRepo {
 				'error'   => 'unavailable repo '. $repoClassName
 			];
 		}
+		require $repoFileName;
 
 		$arrFiltros   = [];
-		$arrFiltros[] = 'id_pais:'.implode(',', $arrCountriesId);
-		$arrFiltros[] = 'id_posicion:'.$rowAcuerdo_det['acuerdo_det_productos'];
-		//se envia como informacion adicional la llave de contingente en arrFiltros para buscar el detalle, no funciona como filtro en declaraciones ni sobordos
-		$arrFiltros[] = 'acuerdo_det_contingente_acumulado_pais:'.$rowAcuerdo_det['acuerdo_det_contingente_acumulado_pais'];
-
-		$params = [
+		$arrFiltros[] = 'id_pais:'.$arrContingente['id_pais'];
+		$arrFiltros[] = 'id_posicion:'.$arrContingente['acuerdo_det_productos'];
+		$params       = [
 			'indicador_filtros'        => implode('||', $arrFiltros),
 			'tipo_indicador_activador' => 'volumen',
 		];
-
-		require $repoFileName;
 
 		$repo = new $repoClassName(
 			$params,
@@ -561,111 +543,70 @@ class ContingenteRepo extends BaseRepo {
 		if (!$result['success']) {
 			return $result;
 		}
-
-		$rsDeclaraciones   = $result;
-		$arrCumulativeData = $result['cumulativeData'];
-
-		//busca todos los contingentes hijos por acuerdo_det_id
-		$this->model->setContingente_acuerdo_det_id($acuerdo_det_id);
-		$this->model->setContingente_acuerdo_det_acuerdo_id($acuerdo_id);
-		$result = $this->modelAdo->exactSearch($this->model);
-		if (!$result['success']) {
-			return $result;
-		}
-
-		$this->contingente_detRepo = new Contingente_detRepo;
 		
-		$arrData = [];
-		$arrCharts = [];
+		$arrData    = [];
+		$gaugeChart = [];
 
-		foreach ($result['data'] as $key => $row) {
-			//var_dump($row);
-			$quotaWeight = 0;
-			if ($row['contingente_mcontingente'] == '1') {
-				$params = [
-					'contingente_id'                     => $row['contingente_id'],
-					'contingente_acuerdo_det_id'         => $row['contingente_acuerdo_det_id'],
-					'contingente_acuerdo_det_acuerdo_id' => $row['contingente_acuerdo_det_acuerdo_id'],
-					'year'                               => $year,
-				];
-				$result = $this->contingente_detRepo->listId($params);
-				if (!$result['success']) {
-					return $result;
-				}
-				if (empty($result['data'])) {
-					//si no hay datos, significa un error debido a que si maneja contingente pero no existen hijos en contingente_det
-					return [
-						'success' => false,
-						'error'   => 'Not found Quota detail configuration'
-					];
-				}
-				//esta consulta deberia arrojar un solo registro
-				$rowQuota    = array_shift($result['data']);
-				$quotaWeight = $rowQuota['contingente_det_peso_neto'];
-
-			}
-
-			$pais = ($row['acuerdo_det_contingente_acumulado_pais'] == '0') ? $row['pais'] : $row['mercado_nombre'] ;
-			$executedWeight = 0;
-
-			if ($row['acuerdo_det_contingente_acumulado_pais'] == '0') {
-				foreach ($arrCumulativeData as $index => $value) {
-					$arr   = explode('_', $index);
-					$countryId = (empty($arr[0])) ? $index : $arr[0] ;
-					if ($row['contingente_id_pais'] == $countryId) {
-						$executedWeight = $value;
-					}
-				}
-			} else {
-				$executedWeight = $arrCumulativeData['peso_neto'];
-			}
-
-			$rate = ($quotaWeight == 0) ? 0 : ($executedWeight / $quotaWeight ) * 100 ;
-
-			$arr = $this->getGaugeData($row, $rate, $quotaWeight, $pais);
-			if (!empty($arr)) {
-				$arrCharts[] = [
-					'data' => $arr,
-					'id' => $row['contingente_id_pais']
-				];
-			}
-
+		if ($result['total'] == 0) {
+			
 			$arrData[] = [
-				'id' => $row['contingente_id'],
-				'periodo' => $year,
-				'pais' => $pais,
-				'quotaWeight' => $quotaWeight,
-				'executedWeight' => $executedWeight,
-				'rate' => $rate,
+				'id'              => $arrContingente['contingente_id'],
+				'periodo'         => $year,
+				'quotaWeight'     => $quotaWeight,
+				'safeguardWeight' => $safeguardWeight,
+				'executedWeight'  => 0,
+				'rate'            => 0,
 			];
 
+		} else {
+
+			$arrDeclaraciones = $result['data'];
+
+			$cumulativeRate = 0;
+			foreach ($arrDeclaraciones as $data) {
+
+				$executedWeight     = ( $data['peso_neto'] / 1000 );
+				$rate               = ($quotaWeight == 0) ? 0 : ( $executedWeight / $quotaWeight ) * 100 ;
+				$cumulativeRate    += $rate;
+
+				$arrData[] = [
+					'id'              => $arrContingente['contingente_id'],
+					'periodo'         => $data['periodo'],
+					'quotaWeight'     => $quotaWeight,
+					'safeguardWeight' => $safeguardWeight,
+					'executedWeight'  => $executedWeight,
+					'cumulativeRate'  => $cumulativeRate,
+					'rate'            => $rate,
+				];
+
+			}
+
+			$gaugeChart = $this->getGaugeData($arrContingente, $cumulativeRate, $quotaWeight, $arrContingente['pais']);
 		}
 
-		$rsSummary = [
-			'success' => true,
-			'total' => count($arrData),
-			'data' => $arrData,
+
+		$result = [
+			'success'        => true,
+			'data'           => $arrData,
+			'gaugeChartData' => $gaugeChart,
+			'total'          => count($arrData)
 		];
-
-		$result = ($summary) ? $rsSummary : $rsDeclaraciones ;
-
-		$result = array_merge($result, ['chartsData' => ($arrCharts)]);
 
 		if ($format !== false && !empty($fields) && $result['total'] > 0) {
 			$arrDescription   = [];
-			$arrDescription['title'] = $rowAcuerdo_det['acuerdo_nombre'];
-			$arrDescription[Lang::get('acuerdo_det.table_name')] = Lang::get('acuerdo_det.table_name') . ': ' . $rowAcuerdo_det['acuerdo_det_productos_desc'];
+			$arrDescription['title'] = $arrContingente['acuerdo_nombre'];
+			$arrDescription[Lang::get('acuerdo.partner_title')]  = Lang::get('acuerdo.partner_title') . ': ' . $arrContingente['pais'];
+			$arrDescription[Lang::get('acuerdo_det.table_name')] = Lang::get('acuerdo_det.table_name') . ': ' . $arrContingente['acuerdo_det_productos_desc'];
 
 			$excel = new Excel (
 				$result,
 				$format,
 				$fields,
-				$rowAcuerdo_det['acuerdo_nombre'],
+				$arrContingente['acuerdo_nombre'],
 				$arrDescription
 			);
 			$result = $excel->write();
 		}
-			
 
 		return $result;
 
@@ -747,27 +688,77 @@ class ContingenteRepo extends BaseRepo {
 					'caption'       => $title,
 					'showValue'     => '1',
 					'exportenabled' => '1',
+					'numberSuffix'  => '%',
+					'theme'  => 'fint',
+					'majorTMColor'  => '333333',
+					'majorTMAlpha'  => '100',
+					'majorTMHeight'  => '10',
+					'majorTMThickness'  => '2',
+					'minorTMColor'  => '666666',
+					'minorTMAlpha'  => '100',
+					'minorTMHeight'  => '7',
+					'minorTMThickness'  => '7',
+					'tickMarkDistance'  => '10',
+					'tickValueDistance'  => '10',
+					'majorTMNumber'  => '14',
 				],
 				'colorRange' => [
 					'color' => $colors
 				],
-				'dials' => [
-					'dial' => [
+				'pointers' => [
+					'pointer' => [
 						['value' => $dial]
 					]
 				],
 				'trendPoints' => [
 					'point' => [
 						[
+							'startValue'  => 0,
+							'displayValue' => ' ',
+							'showValues' => 0,
+							'color'       => '#0075c2',
+							'useMarker' => '1',
+						],[
 							'startValue'  => $row['alerta_contingente_roja'],
-							'dashed'      => 1,
-							'color'       => '#0075c2'
+							'displayValue' => ' ',
+							'showValues' => 0,
+							'color'       => '#0075c2',
+							'useMarker' => '1',
+						],[
+							'startValue'  => 0,
+							'endValue'    => $row['alerta_contingente_roja'],
+							'displayValue' => ' ',
+							'alpha' => 1,
+							'markerTooltext' => Lang::get('contingente.contingente'),
+							'displayValue' => Lang::get('contingente.contingente')
+							//'color'       => '#0075c2'
+						],[
+							'startValue'  => $row['alerta_contingente_roja'],
+							//'dashed'      => 1,
+							'displayValue' => ' ',
+							'showValues' => 0,
+							'color'       => '#0075c2',
+							'useMarker' => '1',
+						],[
+							'startValue'  => $upperLimit,
+							//'dashed'      => 1,
+							'displayValue' => ' ',
+							'showValues' => 0,
+							'color'       => '#0075c2',
+							'useMarker' => '1',
 						],[
 							'startValue'  => $row['alerta_contingente_roja'],
 							'endValue'    => $upperLimit,
-							'color'       => '#0075c2'
+							'displayValue' => ' ',
+							'alpha' => 50,
+							'markerTooltext' => Lang::get('contingente.salvaguardia'),
+							'displayValue' => Lang::get('contingente.salvaguardia')
+							//'color'       => '#0075c2'
 						]
 					]
+				],
+				'tickValues' => [
+					['value' => $dial]
 				]
 			];
 		}

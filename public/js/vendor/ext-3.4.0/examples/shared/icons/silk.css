@@ -80,7 +80,9 @@
 .silk-calendar-edit { background-image: url(fam/calendar_edit.png) !important; background-repeat: no-repeat; }
 .silk-cart { background-image: url(fam/cart.png) !important; background-repeat: no-repeat; }
 .silk-clock-red { background-image: url(fam/clock_red.png) !important; background-repeat: no-repeat; }
+.silk-graph-line{ background-image: url(fam/graph_line.gif) !important; background-repeat: no-repeat; }
 .silk-chart-line{ background-image: url(fam/chart_line.png) !important; background-repeat: no-repeat; }
+.silk-chart-pie{ background-image: url(fam/chart_pie.png) !important; background-repeat: no-repeat; }
 .silk-chart-pie-link{ background-image: url(fam/chart_pie_link.png) !important; background-repeat: no-repeat; }
 .silk-chart-bar-link{ background-image: url(fam/chart_bar_link.png) !important; background-repeat: no-repeat; }
 .silk-chart-organisation{ background-image: url(fam/chart_organisation.png) !important; background-repeat: no-repeat; }

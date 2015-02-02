@@ -118,13 +118,12 @@ class ContingenteController {
 		$result = $this->userRepo->validateMenu($action, $postParams);
 
 		if ($result['success']) {
-			$acuerdoRepo = new AcuerdoRepo;
 			//verifica que exista el acuerdo y trae los datos
-			$result = $acuerdoRepo->listId($postParams);
+			$result = $this->contingenteRepo->validateModify($postParams);
 			if (!$result['success']) {
 				return $result;
 			}
-			$rowAcuerdo  = array_shift($result['data']);
+			$rowContingente = array_shift($result['data']);
 
 			$acuerdo_detRepo = new Acuerdo_detRepo;
 
@@ -133,6 +132,7 @@ class ContingenteController {
 				return $result;
 			}
 			$rowAcuerdo_det = array_shift($result['data']);
+
 			$productsData   = $result['productsData'];
 
 			$postParams['is_template'] = true;
@@ -144,7 +144,7 @@ class ContingenteController {
 			$updateInfo     = Helpers::getUpdateInfo('aduanas', 'impo');
 			$yearsAvailable = ($updateInfo !== false) ? $updateInfo['yearsAvailable'] : $yearsAvailable ;
 
-			$params = array_merge($postParams, $rowAcuerdo, $rowAcuerdo_det, compact('productsData', 'yearsAvailable', 'periods'));
+			$params = array_merge($postParams, $rowContingente, $rowAcuerdo_det, compact('productsData', 'yearsAvailable', 'periods', 'updateInfo'));
 
 			$postParams['is_template'] = true;
 			return new View('jsCode/contingente.execute', $params);

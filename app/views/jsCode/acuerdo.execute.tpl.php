@@ -7,7 +7,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module; ?>';
 	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
-	
+
 	var storeAcuerdo = new Ext.data.JsonStore({
 		url:'acuerdo/list'
 		,root:'data'
@@ -24,13 +24,15 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			{name:'acuerdo_fvigente_title', type:'string'},
 		]
 	});
-	
+
 	storeAcuerdo.load({params:{start:0, limit:numberRecords}});
-	
+
 	gridAcuerdoAction = new Ext.ux.grid.RowActions({
 		header: Ext.ux.lang.grid.options
 		,keepSelection:true
 		,autoWidth:false
+		,width:30
+		,resizable:false
 		,actions:[{
 			iconCls:'silk-chart-bar-link'
 			,qtip: '<?= Lang::get('acuerdo.analyze_agreement'); ?>'
@@ -47,7 +49,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			 '<br><p style="margin:0 0 4px 8px"><b><?= Lang::get('acuerdo.columns_title.acuerdo_descripcion'); ?>:</b> {acuerdo_descripcion}</p>'
 		)
 	});
-	
+
 	var colModelAcuerdo = new Ext.grid.ColumnModel({
 		columns:[
 			gridAcuerdoExpander,
@@ -62,7 +64,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			,width:100
 		}
 	});
-		
+
 	var tbAcuerdo = new Ext.Toolbar({
 		items:[{
 			text: Ext.ux.lang.buttons.add
@@ -126,7 +128,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 				,align:'right'
 				,position:top
 				,disableIndexes:[]
-			}) 
+			})
 			,gridAcuerdoAction
 			,gridAcuerdoExpander
 		]
@@ -174,10 +176,10 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridAcuerdo.getItemId());
-	
-	return panelAcuerdo;	
+
+	return panelAcuerdo;
 	/*********************************************** Start functions***********************************************/
-	
+
 	function fnReport(record){
 		var key   = record.get('acuerdo_id');
 		var title = record.get('acuerdo_nombre');

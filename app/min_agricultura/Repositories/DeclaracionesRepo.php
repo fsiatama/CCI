@@ -3075,7 +3075,47 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
 
-		return $rsDeclaraciones;
+		$arrData = $rsDeclaraciones['data'];
+
+		//si el reporte no es anual y no encuentra informacion en algun periodo,
+		//debe rrellenar con una fila en ceros
+		$numberPeriods = (12 / $this->period);
+		if (count($arrData) < $numberPeriods && $numberPeriods > 1) {
+
+			$arrFinal = [];
+			$rangePeriods  = Helpers::getPeriodRange($this->period);
+
+			foreach ($rangePeriods as $number => $range) {
+
+				$findId = false;
+				foreach ($arrData as $row) {
+
+					if (in_array($row['id'], $range)) {
+						$findId = true;
+						$arrFinal[$number] = $row;
+					}
+				}
+
+				if ( ! $findId ) {
+
+					$periodName = Helpers::getPeriodName($this->period, $number);
+					$arrFinal[$number] = [
+						'id'         => array_shift($range),
+						'periodo'    => $this->year . ' ' . $periodName,
+						'peso_neto'  => 0,
+					];
+				}
+
+			}
+			$arrData = $arrFinal;
+		}
+
+		return [
+			'success' => true,
+			'data'    => $arrData,
+			'total'   => count($arrData)
+		];
+
 	}
 
 	public function executeAcumuladoContingente()

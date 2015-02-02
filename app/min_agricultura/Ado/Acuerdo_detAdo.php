@@ -135,6 +135,7 @@ class Acuerdo_detAdo extends BaseAdo {
 			acuerdo_det_productos_desc,
 			acuerdo_det_nperiodos,
 			acuerdo_det_contingente_acumulado_pais,
+			contingente_id,
 			contingente_id_pais,
 			contingente_mcontingente,
 			contingente_msalvaguardia,

@@ -3,6 +3,7 @@ return [
 	'table_name'   => 'Contingente Arancelario',
 	'salvaguardia' => 'Salvaguardia',
 	'contingente'  => 'Contingente',
+	'analyze_quota'  => 'Analizar Contingente',
 	'contingente_mcontingente' => [
 		'0' => 'No',
 		'1' => 'Si'

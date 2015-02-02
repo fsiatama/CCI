@@ -30,6 +30,8 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		}
 		,id:module+'storeAcuerdo_det'
 		,fields:[
+			{name:'contingente_id', type:'float'},
+			{name:'acuerdo_id', type:'float'},
 			{name:'acuerdo_det_id', type:'float'},
 			{name:'acuerdo_det_productos', type:'string'},
 			{name:'acuerdo_det_productos_desc', type:'string'},
@@ -47,17 +49,19 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 	});
 
 	gridAcuerdo_detAction = new Ext.ux.grid.RowActions({
-		header: '% <?= Lang::get('contingente_det.estado'); ?>'
+		header: Ext.ux.lang.grid.options
 		,keepSelection:true
 		,autoWidth:false
+		,width:30
+		,resizable:false
 		,actions:[{
-			iconIndex:'estado'
-			,qtipIndex: 'estado_tt'
-			,text:'Open'
+			iconCls:'silk-graph-line'
+			,qtip: '<?= Lang::get('contingente.analyze_quota'); ?>'
+			,align:'left'
 		}]
 		,callbacks:{
-			'silk-delete':function(grid, record, action, row, col) {
-				//fnOpenDetail(record);
+			'silk-graph-line':function(grid, record, action, row, col) {
+				fnOpenDetail(record);
 			}
 		}
 	});
@@ -94,7 +98,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			{header:'% <?= Lang::get('contingente_det.valor_ejecutado'); ?>', dataIndex:'ejecutado' ,'renderer':rateFormat , align:'right'},
 			{header:'<?= Lang::get('contingente_det.estado_contingente'); ?>', dataIndex:'estado_ctg_tt', xtype: 'templatecolumn', tpl: columnTplEstadoCtg },
 			{header:'<?= Lang::get('contingente_det.estado_salvaguardia'); ?>', dataIndex:'estado_svg_tt', xtype: 'templatecolumn', tpl: columnTplEstadoSvg, hidden:true },
-			//gridAcuerdo_detAction
+			gridAcuerdo_detAction
 		]
 	});
 
@@ -110,7 +114,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			forceFit:true
 			,scrollOffset:2
 		}
-		//,enableColumnMove:false
+		,enableColumnMove:false
 		,id:module+'gridAcuerdo_det'
 		,title: '<?= Lang::get('acuerdo_det.table_name') . " - " . Lang::get('update_info.table_name') . " " . Lang::get('update_info.columns_title.update_info_to') . " " . $updateInfo; ?>'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
@@ -194,7 +198,37 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 	return panelAcuerdo_det;
 	/*********************************************** Start functions***********************************************/
 
-	
+	function fnOpenDetail (record) {
+		var contingente_id = record.get('contingente_id');
+		var acuerdo_id     = record.get('acuerdo_id');
+		var acuerdo_det_id = record.get('acuerdo_det_id');
+		if(Ext.getCmp('tab-detail_'+module)){
+			Ext.Msg.show({
+				 title:Ext.ux.lang.messages.warning
+				,msg:Ext.ux.lang.error.close_tab
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+		}
+		else{
+			var data = {
+				id:'detail_' + module
+				,iconCls:'silk-graph-line'
+				,titleTab:'<?= $title; ?> - ' + Ext.ux.lang.buttons.detail
+				,url: 'contingente/jscodeExecute'
+				,params:{
+					id:'<?= $id; ?>'
+					,title: '<?= $title; ?> - ' + Ext.ux.lang.buttons.detail
+					,module: 'detail_' + module
+					,parent: module
+					,contingente_id: contingente_id
+					,acuerdo_id: acuerdo_id
+					,acuerdo_det_id: acuerdo_det_id
+				}
+			};
+			Ext.getCmp('oeste').addTab(this,this,data);
+		}
+	}
 
 	/*********************************************** End functions***********************************************/
 })()

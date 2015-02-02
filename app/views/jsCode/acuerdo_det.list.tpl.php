@@ -6,7 +6,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module."_".$acuerdo_id; ?>';
 	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
-	
+
 	var storeAcuerdo_det = new Ext.data.JsonStore({
 		url:'acuerdo_det/list'
 		,root:'data'
@@ -153,7 +153,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 				,align:'right'
 				,position:top
 				,disableIndexes:[]
-			}) 
+			})
 			,gridAcuerdo_detAction
 			,gridAcuerdo_detExpander
 		]
@@ -195,10 +195,10 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 			]
 		}]
 	});
-	
+
 	return panelAcuerdo_det;
 	/*********************************************** Start functions***********************************************/
-	
+
 	function fnEditItm(record){
 		var key = record.get('acuerdo_det_id');
 		var pkey = record.get('acuerdo_det_acuerdo_id');
@@ -244,7 +244,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 				if(btn == 'yes'){
 					var gridMask = new Ext.LoadMask(gridAcuerdo_det.getEl(), { msg: 'Erasing .....' });
 					gridMask.show();
-					
+
 					var key = record.get('acuerdo_det_id');
 					var pkey = record.get('acuerdo_det_acuerdo_id');
 
