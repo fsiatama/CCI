@@ -5,7 +5,7 @@ jQuery(function($) {
 		$btn.button('loading');
 		$.ajax({
 			type:"POST"
-			,url:"auth/login"
+			,url:$form.attr('action')
 			,data:{
 				email: $("#inputEmail").val(),
 				password: $.md5($("#inputPassword").val())

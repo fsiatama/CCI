@@ -15,110 +15,128 @@
 		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/main.css">
 		<script src="<?= URL_RAIZ; ?>js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 	</head>
-    <body>
-		<!--[if lt IE 7]>
-			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-		<![endif]-->
-    	<!-- <nav class="navbar navbar-default navbar-static-top">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">Project name</a>
+        <!--[if lt IE 7]>
+                <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Fixed navbar -->
+
+        <div class="container">
+            <div class="navbar navbar-default navbar-block">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="<?= URL_RAIZ ?>">
+                        <img src="<?= URL_RAIZ ?>img/logo.png" />
+                        <!--<span class="glyphicon glyphicon-home" aria-hidden="true"></span>-->
+                    </a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a class="navbar-brand" href="<?= URL_RAIZ ?>informacion-general">
+                                <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
+                                <span>Información general sobre tlcs</span>
+                            </a></li>
+                        <li>
+                            <a class="navbar-brand" href="<?= URL_RAIZ ?>guia-basica-exportar">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                <span>Guia básica para exportar</span>
+                            </a></li>
+                        <li>
+                            <a class="navbar-brand" href="<?= URL_RAIZ ?>herramientas">
+                                <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+                                <span>Herramientas</span>
+                            </a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a class="navbar-brand" href="<?= URL_RAIZ ?>auth">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                <span>Inicio de sesión</span>
+                            </a></li>
+                        <!--
+                        <li><a class="navbar-brand" href="#">
+                                <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                                <span>Acerca de</span>
+                            </a></li>
+                        <li><a class="navbar-brand" href="#">
+                                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                                <span>Contacto</span>
+                            </a></li>
+                        -->
+                    </ul>
+                </div><!--/.nav-collapse -->
             </div>
-            <div id="navbar" class="navbar-collapse collapse">
-              <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="/home/gia-exportar">Guía básica para exportar</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li class="divider"></li>
-                    <li class="dropdown-header">Nav header</li>
-                    <li><a href="#">Separated link</a></li>
-                    <li><a href="#">One more separated link</a></li>
-                  </ul>
-                </li>
-              </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li><a href="../navbar/">Default</a></li>
-                <li class="active"><a href="./">Static top <span class="sr-only">(current)</span></a></li>
-                <li><a href="../navbar-fixed-top/">Fixed top</a></li>
-              </ul>
+        </div>
+
+        <div class="container">
+            <div class="main main-block">
+                <?= $tpl_content; ?>
             </div>
-          </div>
-        </nav> -->
+        </div><!-- /container -->
+        
+        <div class="container">
+            <div class="footer-block">
+                <div class="row">
+                    <p>&copy; Company 2014</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
 
-		<div class="container">
-			<?= $tpl_content; ?>
-		</div>
-		<!-- /container -->
-		<div class="footer">
-			<hr>
-			<div class="container">
-				<div class="row">
-					<p>&copy; Company 2014</p>
-				</div>
-			</div>
-		</div>
-		<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
+                    <div class="modal-header"><!-- modal header -->
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="errorModalLabel"><i class="fa fa-warning"></i>  Error!</h4>
+                    </div><!-- /modal header -->
 
-					<div class="modal-header"><!-- modal header -->
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="errorModalLabel"><i class="fa fa-warning"></i>  Error!</h4>
-					</div><!-- /modal header -->
+                    <!-- modal body -->
+                    <div class="modal-body">
+                        <div id="modal-error-msg" class="alert alert-danger margin-bottom0">
+                        </div>
+                    </div>
+                    <!-- /modal body -->
 
-					<!-- modal body -->
-					<div class="modal-body">
-						<div id="modal-error-msg" class="alert alert-danger margin-bottom0">
-						</div>
-					</div>
-					<!-- /modal body -->
+                    <div class="modal-footer margin-top0"><!-- modal footer -->
+                        <button class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div><!-- /modal footer -->
 
-					<div class="modal-footer margin-top0"><!-- modal footer -->
-						<button class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					</div><!-- /modal footer -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="sucessModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
 
-				</div>
-			</div>
-		</div>
-		<div class="modal fade" id="sucessModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
+                    <div class="modal-header"><!-- modal header -->
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="successModalLabel"><i class="fa fa-check"></i>  Success!</h4>
+                    </div><!-- /modal header -->
 
-					<div class="modal-header"><!-- modal header -->
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="successModalLabel"><i class="fa fa-check"></i>  Success!</h4>
-					</div><!-- /modal header -->
+                    <div class="modal-body"><!-- modal body -->
+                        <div id="modal-success-msg" class="alert alert-success margin-bottom0">
+                        </div>
+                    </div><!-- /modal body -->
 
-					<!-- modal body -->
-					<div class="modal-body">
-						<div id="modal-success-msg" class="alert alert-success margin-bottom0">
-						</div>
-					</div>
-					<!-- /modal body -->
+                    <div class="modal-footer margin-top0"><!-- modal footer -->
+                        <button class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div><!-- /modal footer -->
 
-					<div class="modal-footer margin-top0"><!-- modal footer -->
-						<button class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					</div><!-- /modal footer -->
-
-				</div>
-			</div>
-		</div>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
-		<script src="<?= URL_RAIZ; ?>js/vendor/bootstrap.min.js"></script>
-		<script src="<?= URL_RAIZ; ?>js/plugins.js"></script>
-		<script src="<?= URL_RAIZ; ?>js/main.js"></script>		
+                </div>
+            </div>
+        </div>
+        
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+        <script src="/js/vendor/bootstrap.min.js"></script>
+        <script src="/js/plugins.js"></script>
+        <script src="/js/main.js"></script>		
     </body>
 </html>

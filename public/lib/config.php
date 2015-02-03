@@ -8,7 +8,7 @@ date_default_timezone_set('America/Bogota');
 
 //header("Content-Type: text/html; charset=iso-8859-1");
 
-define("URL_RAIZ", "https://".$_SERVER['HTTP_HOST']."/");
+define("URL_RAIZ", "http://".$_SERVER['HTTP_HOST']."/");
 define("URL_INGRESO", URL_RAIZ."main");
 
 define("URL_EXT", URL_RAIZ."js/ext-3.4.0/");

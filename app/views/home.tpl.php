@@ -1,36 +1,69 @@
-<div class="row">
-	<div class="col-md-4 col-md-offset-4">
-		<img src="<?= URL_RAIZ ?>img/logo-330_106.png" class="img-responsive center-block" alt="Responsive image">
-		<div class="panel panel-default">
-			<div class="panel-heading"> <strong class="">Login</strong>
-
-			</div>
-			<div class="panel-body">
-
-				<form class="form-horizontal" role="form" method="POST" id="loginForm">
-					<div class="form-group">
-						<label for="inputEmail" class="col-sm-3 control-label">Email</label>
-						<div class="col-sm-9">
-							<input type="email" class="form-control" id="inputEmail" name="email" placeholder="Correo Electrónico" required autofocus>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="inputPassword" class="col-sm-3 control-label">Password</label>
-						<div class="col-sm-9">
-							<input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password" required="">
-						</div>
-					</div>
-					<div class="form-group last">
-						<div class="col-sm-offset-6 col-sm-6">
-							<button id="loginFormSubmit" type="submit" class="btn btn-success btn-sm btn-block">Ingresar</button>
-						</div>
-					</div>
-				</form>
-
-			</div>
-			<!-- <div class="panel-footer">
-				<a href="#" class="">Olvido su contraseña?</a>
-			</div> -->
-		</div>
-	</div>
-</div>
+<!-- Carousel
+================================================== -->
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="3"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        <div class="item active">
+            <div class="text-center">
+                <img style="width: 100%;" src="<?= URL_RAIZ ?>img/carousel/agricultor.jpg" alt="First slide">
+            </div>
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>Bienvenido</h1>
+                    <p>En este sitio encontraras toda la información necesaria para que puedas llevar tus productos a otros lugares del mundo</p>
+                    <!--<p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>-->
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="text-center">
+                <img style="width: 100%;" src="<?= URL_RAIZ ?>img/carousel/mundo1.jpg" alt="Third slide">
+            </div>
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>Información general</h1>
+                    <p>Conozca la información mas importante sobre los tratados de libre comercio (TLC) vigentes entre Colombia y otros paises alrededor del mundo</p>
+                    <!--<p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>-->
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="text-center">
+                <img style="width: 100%;" src="<?= URL_RAIZ ?>img/carousel/barco.jpg" alt="Second slide">
+            </div>
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>Guia básica para exportar</h1>
+                    <p>Consulte todos los pasos necesarios para comercializar sus productos en otros paises del mundo, de una manera rápida y sencilla</p>
+                    <!--<p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>-->
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="text-center">
+                <img style="width: 100%;" src="<?= URL_RAIZ ?>img/carousel/cafe.jpg" alt="Four slide">
+            </div>
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>Herramientas</h1>
+                    <p>Encuentre aqui las herramientas mas sofisticadas para llevar a cabo estimaciones de costos de transporte y recomendaciones de expertos en la materia</p>
+                    <!--<p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>-->
+                </div>
+            </div> l
+        </div>
+    </div>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div><!-- /.carousel -->

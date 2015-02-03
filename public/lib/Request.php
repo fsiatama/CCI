@@ -114,9 +114,19 @@ class Request {
 			exit(json_encode($return));
 		}
 
+
 		require $controllerFileName;
 
 		$controller = new $controllerClassName();
+
+		if ( ! method_exists($controller, $actionMethodName) ) {
+			//deberia regresar un (404 not found)
+			$return = [
+				'success' => false,
+				'error'   => 'metodo no existe '. $controllerClassName
+			];
+			exit(json_encode($return));
+		}
 
 		$response = call_user_func_array([$controller, $actionMethodName], $params);
 
