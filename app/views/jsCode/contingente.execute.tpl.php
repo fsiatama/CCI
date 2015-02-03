@@ -162,6 +162,14 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 				'</div>'
 			}]
 		},{
+			height:140
+			,html:'<div id="' + module + 'AreaChart"></div>'
+			,items:[{
+				xtype:'panel'
+				,id: module + 'AreaChart'
+				,plain:true
+			}]
+		},{
 			defaults:{anchor:'100%'}
 			,items:[{
 				style:{padding:'0px'}
@@ -213,14 +221,6 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridContingente]
-		},{
-			height:140
-			,html:'<div id="' + module + 'AreaChart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'AreaChart'
-				,plain:true
-			}]
 		}]
 		,listeners:{
 			beforedestroy: {
@@ -231,13 +231,13 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		}
 	});
 
-	/*Ext.getCmp('tab-' + module).on('deactivate', function(p){
+	Ext.getCmp('tab-<?= $module; ?>').on('deactivate', function(p){
 		disposeCharts();
 	});
 
-	Ext.getCmp('tab-' + module).on('activate', function(p){
-		storeAcuerdo_det.load();
-	});*/
+	Ext.getCmp('tab-<?= $module; ?>').on('activate', function(p){
+		storeContingente.load();
+	});
 
 	return contingenteContainer;
 

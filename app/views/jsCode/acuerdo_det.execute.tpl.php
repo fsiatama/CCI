@@ -48,6 +48,14 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		]
 	});
 
+	storeAcuerdo_det.on('beforeload', function(){
+		Ext.ux.bodyMask.show();
+	});
+	
+	storeAcuerdo_det.on('load', function(store){
+		Ext.ux.bodyMask.hide();
+	});
+
 	gridAcuerdo_detAction = new Ext.ux.grid.RowActions({
 		header: Ext.ux.lang.grid.options
 		,keepSelection:true
