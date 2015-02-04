@@ -1,4 +1,3 @@
-<br />
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <div class="panel panel-default">
@@ -8,7 +7,7 @@
             <div class="panel-body">
                 <table class="table">
                     <tr>
-                        <td class="bg-success" colspan="4"><h4 class="text-center">Acceso a mercados</h4></td>
+                        <td class="bg-success" colspan="4"><h4 class="text-center">Acceso a <strong>mercados</strong></h4></td>
                     </tr>
                     <tr>
                         <td class="bg-success" style="min-width: 75px;"><p>Paso 1</p></td>
@@ -35,7 +34,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td class="bg-info" colspan="4"><h4 class="text-center">Condiciones de venta</h4></td>
+                        <td class="bg-info" colspan="4"><h4 class="text-center">Condiciones de <strong>venta</strong></h4></td>
                     </tr>
                     <tr>
                         <td class="bg-info"><p>Paso 5</p></td>
@@ -56,7 +55,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td class="bg-danger" colspan="4"><h4 class="text-center">Tramites y documentación</h4></td>
+                        <td class="bg-danger" colspan="4"><h4 class="text-center">Tramites y <strong>documentación</strong></h4></td>
                     </tr>
                     <tr>
                         <td class="bg-danger"><p>Paso 8</p></td>

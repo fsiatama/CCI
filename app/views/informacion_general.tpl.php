@@ -1,19 +1,23 @@
 <script src="https://maps.googleapis.com/maps/api/js?v=3" type="text/javascript"></script>
 <script src="/js/google.maps.countrypoints.js" type="text/javascript"></script>
 
-<br />
-<div class="row">
-    <div class="col-md-10 col-md-offset-1">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <strong class="">Información general de los Tratados de Libre Comercio (TLC)</strong>
-            </div>
-            <div class="panel-body">
-                <div id="map-canvas" style="height: 600px;"></div>
+    <div class="">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong class="">Información general de los Tratados de Libre Comercio (TLC)</strong>
+                        </div>
+                        <div class="panel-body">
+                            <div id="map-canvas" style="height: 600px;"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <script type="text/javascript">
     (function () {

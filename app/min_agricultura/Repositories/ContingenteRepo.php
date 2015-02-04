@@ -683,24 +683,24 @@ class ContingenteRepo extends BaseRepo {
 			$upperLimit = ($dial > $upperLimit) ? ($dial + 5) : $upperLimit ;
 			$arr = [
 				'chart' => [
-					'lowerLimit'    => '0',
-					'upperLimit'    => $upperLimit,
-					'caption'       => $title,
-					'showValue'     => '1',
-					'exportenabled' => '1',
-					'numberSuffix'  => '%',
-					'theme'  => 'fint',
-					'majorTMColor'  => '333333',
-					'majorTMAlpha'  => '100',
-					'majorTMHeight'  => '10',
+					'lowerLimit'        => '0',
+					'upperLimit'        => $upperLimit,
+					'caption'           => $title,
+					'showValue'         => '1',
+					'exportenabled'     => '1',
+					'numberSuffix'      => '%',
+					'theme'             => 'fint',
+					'majorTMColor'      => '333333',
+					'majorTMAlpha'      => '100',
+					'majorTMHeight'     => '10',
 					'majorTMThickness'  => '2',
-					'minorTMColor'  => '666666',
-					'minorTMAlpha'  => '100',
-					'minorTMHeight'  => '7',
+					'minorTMColor'      => '666666',
+					'minorTMAlpha'      => '100',
+					'minorTMHeight'     => '7',
 					'minorTMThickness'  => '7',
 					'tickMarkDistance'  => '10',
-					'tickValueDistance'  => '10',
-					'majorTMNumber'  => '14',
+					'tickValueDistance' => '10',
+					'majorTMNumber'     => '14',
 				],
 				'colorRange' => [
 					'color' => $colors
@@ -713,47 +713,47 @@ class ContingenteRepo extends BaseRepo {
 				'trendPoints' => [
 					'point' => [
 						[
-							'startValue'  => 0,
+							'startValue'   => 0,
 							'displayValue' => ' ',
-							'showValues' => 0,
-							'color'       => '#0075c2',
-							'useMarker' => '1',
+							'showValues'   => 0,
+							'color'        => '#0075c2',
+							'useMarker'    => '1',
 						],[
-							'startValue'  => $row['alerta_contingente_roja'],
+							'startValue'   => $row['alerta_contingente_roja'],
 							'displayValue' => ' ',
-							'showValues' => 0,
-							'color'       => '#0075c2',
-							'useMarker' => '1',
+							'showValues'   => 0,
+							'color'        => '#0075c2',
+							'useMarker'    => '1',
 						],[
-							'startValue'  => 0,
-							'endValue'    => $row['alerta_contingente_roja'],
-							'displayValue' => ' ',
-							'alpha' => 1,
+							'startValue'     => 0,
+							'endValue'       => $row['alerta_contingente_roja'],
+							'displayValue'   => ' ',
+							'alpha'          => 1,
 							'markerTooltext' => Lang::get('contingente.contingente'),
-							'displayValue' => Lang::get('contingente.contingente')
-							//'color'       => '#0075c2'
+							'displayValue'   => Lang::get('contingente.contingente')
+							//'color'        => '#0075c2'
 						],[
-							'startValue'  => $row['alerta_contingente_roja'],
-							//'dashed'      => 1,
+							'startValue'   => $row['alerta_contingente_roja'],
+							//'dashed'     => 1,
 							'displayValue' => ' ',
-							'showValues' => 0,
-							'color'       => '#0075c2',
-							'useMarker' => '1',
+							'showValues'   => 0,
+							'color'        => '#0075c2',
+							'useMarker'    => '1',
 						],[
-							'startValue'  => $upperLimit,
-							//'dashed'      => 1,
+							'startValue'   => $upperLimit,
+							//'dashed'     => 1,
 							'displayValue' => ' ',
-							'showValues' => 0,
-							'color'       => '#0075c2',
-							'useMarker' => '1',
+							'showValues'   => 0,
+							'color'        => '#0075c2',
+							'useMarker'    => '1',
 						],[
-							'startValue'  => $row['alerta_contingente_roja'],
-							'endValue'    => $upperLimit,
-							'displayValue' => ' ',
-							'alpha' => 50,
+							'startValue'     => $row['alerta_contingente_roja'],
+							'endValue'       => $upperLimit,
+							'displayValue'   => ' ',
+							'alpha'          => 50,
 							'markerTooltext' => Lang::get('contingente.salvaguardia'),
-							'displayValue' => Lang::get('contingente.salvaguardia')
-							//'color'       => '#0075c2'
+							'displayValue'   => Lang::get('contingente.salvaguardia')
+							//'color'        => '#0075c2'
 						]
 					]
 				],

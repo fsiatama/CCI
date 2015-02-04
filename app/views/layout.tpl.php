@@ -11,132 +11,132 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="google" content="notranslate" />
 
-		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/bootstrap-theme.min.css">
-		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/main.css">
+		<link  href="http://fonts.googleapis.com/css?family=Dosis:300,400,700" />
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800" rel="stylesheet" type="text/css" />
+
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/layout.css" />
+
 		<script src="<?= URL_RAIZ; ?>js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 	</head>
-        <!--[if lt IE 7]>
-                <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+		<!--[if lt IE 7]>
+				<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
 
-        <!-- Fixed navbar -->
+		<header id="header">
 
-        <div class="container">
-            <div class="navbar navbar-default navbar-block">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a href="<?= URL_RAIZ ?>">
-                        <img src="<?= URL_RAIZ ?>img/logo.png" />
-                        <!--<span class="glyphicon glyphicon-home" aria-hidden="true"></span>-->
-                    </a>
-                </div>
-                <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a class="navbar-brand" href="<?= URL_RAIZ ?>informacion-general">
-                                <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
-                                <span>Información general sobre tlcs</span>
-                            </a></li>
-                        <li>
-                            <a class="navbar-brand" href="<?= URL_RAIZ ?>guia-basica-exportar">
-                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                <span>Guia básica para exportar</span>
-                            </a></li>
-                        <li>
-                            <a class="navbar-brand" href="<?= URL_RAIZ ?>herramientas">
-                                <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
-                                <span>Herramientas</span>
-                            </a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a class="navbar-brand" href="<?= URL_RAIZ ?>auth">
-                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                <span>Inicio de sesión</span>
-                            </a></li>
-                        <!--
-                        <li><a class="navbar-brand" href="#">
-                                <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
-                                <span>Acerca de</span>
-                            </a></li>
-                        <li><a class="navbar-brand" href="#">
-                                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-                                <span>Contacto</span>
-                            </a></li>
-                        -->
-                    </ul>
-                </div><!--/.nav-collapse -->
-            </div>
-        </div>
+			<nav class="navbar navbar-inverse" role="navigation"><!-- add "white" class for white nav bar -->
+				<div class="container">
 
-        <div class="container">
-            <div class="main main-block">
-                <?= $tpl_content; ?>
-            </div>
-        </div><!-- /container -->
-        
-        <div class="container">
-            <div class="footer-block">
-                <div class="row">
-                    <p>&copy; Company 2014</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
+					<!-- Mobile Menu Button -->
+					<button id="mobileMenu" class="fa fa-bars" type="button" data-toggle="collapse" data-target=".navbar-collapse"></button>
 
-                    <div class="modal-header"><!-- modal header -->
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="errorModalLabel"><i class="fa fa-warning"></i>  Error!</h4>
-                    </div><!-- /modal header -->
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<a class="navbar-brand" href="<?= URL_RAIZ; ?>">
+							<img class="img-responsive hidden-lg" src="<?= URL_RAIZ; ?>/img/logo_xs.png" alt="www.minagricultura.gov.co" width="186" height="60" />
+							<img class="img-responsive visible-lg" src="<?= URL_RAIZ; ?>img/logo_home.png" alt="www.minagricultura.gov.co" width="248" height="80" /> 
+						</a>
+					</div>
 
-                    <!-- modal body -->
-                    <div class="modal-body">
-                        <div id="modal-error-msg" class="alert alert-danger margin-bottom0">
-                        </div>
-                    </div>
-                    <!-- /modal body -->
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-                    <div class="modal-footer margin-top0"><!-- modal footer -->
-                        <button class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    </div><!-- /modal footer -->
+						<ul class="nav navbar-nav navbar-right">
+							<li class="active"><a href="<?= URL_RAIZ; ?>">Inicio</a></li>
+							<li><a href="<?= URL_RAIZ ?>informacion-general">Información General tlcs</a></li>
+							<li><a href="<?= URL_RAIZ ?>guia-basica-exportar">Guia Básica Exportar</a></li>
+							<li><a href="<?= URL_RAIZ ?>herramientas">Herramientas</a></li>
+							<li><a href="<?= URL_RAIZ ?>auth">Inicio de Sesión</a></li>
+						</ul>
 
-                </div>
-            </div>
-        </div>
-        
-        <div class="modal fade" id="sucessModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
+					</div><!-- /.navbar-collapse -->
 
-                    <div class="modal-header"><!-- modal header -->
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="successModalLabel"><i class="fa fa-check"></i>  Success!</h4>
-                    </div><!-- /modal header -->
+				</div>
+			</nav>
 
-                    <div class="modal-body"><!-- modal body -->
-                        <div id="modal-success-msg" class="alert alert-success margin-bottom0">
-                        </div>
-                    </div><!-- /modal body -->
+		</header>
 
-                    <div class="modal-footer margin-top0"><!-- modal footer -->
-                        <button class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    </div><!-- /modal footer -->
+		<!-- Fixed navbar -->
 
-                </div>
-            </div>
-        </div>
-        
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
-        <script src="/js/vendor/bootstrap.min.js"></script>
-        <script src="/js/plugins.js"></script>
-        <script src="/js/main.js"></script>		
-    </body>
+		<!-- MIDDLE -->
+		<section id="middle">
+			<?= $tpl_content; ?>
+		</section>
+
+		</section>
+		<!-- /MIDDLE -->
+
+
+		<!-- FOOTER -->
+		<footer>
+			<div class="container">
+				<p class="copyright">
+					Ministerio de Agricultura y Desarrollo Rural. República de Colombia. Bogotá D.C<br />
+					2014 &copy; All Rights Reserved.
+				</p>
+			</div>
+		</footer>
+		<!-- /FOOTER -->
+
+
+		
+
+
+		
+		
+		<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<div class="modal-header"><!-- modal header -->
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="errorModalLabel"><i class="fa fa-warning"></i>  Error!</h4>
+					</div><!-- /modal header -->
+
+					<!-- modal body -->
+					<div class="modal-body">
+						<div id="modal-error-msg" class="alert alert-danger margin-bottom0">
+						</div>
+					</div>
+					<!-- /modal body -->
+
+					<div class="modal-footer margin-top0"><!-- modal footer -->
+						<button class="btn btn-default" data-dismiss="modal">Cerrar</button>
+					</div><!-- /modal footer -->
+
+				</div>
+			</div>
+		</div>
+		
+		<div class="modal fade" id="sucessModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<div class="modal-header"><!-- modal header -->
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="successModalLabel"><i class="fa fa-check"></i>  Success!</h4>
+					</div><!-- /modal header -->
+
+					<div class="modal-body"><!-- modal body -->
+						<div id="modal-success-msg" class="alert alert-success margin-bottom0">
+						</div>
+					</div><!-- /modal body -->
+
+					<div class="modal-footer margin-top0"><!-- modal footer -->
+						<button class="btn btn-default" data-dismiss="modal">Cerrar</button>
+					</div><!-- /modal footer -->
+
+				</div>
+			</div>
+		</div>
+		
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+		<script src="/js/vendor/bootstrap.min.js"></script>
+		<script src="/js/plugins.js"></script>
+		<script src="/js/main.js"></script>		
+	</body>
 </html>
