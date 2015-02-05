@@ -1017,6 +1017,42 @@ div.maximage-controls #slider_prev:hover {
 	margin-bottom:-120px;
 }
 
+#middle .white {
+	display:block;
+	position:relative;
+	background-color:#fff;
+	padding:15px;
+}
+#middle .page-header {
+	padding: 0;
+	margin: 0 0 15px 0;
+}
+	#middle  .page-header h1 {
+		padding: 0;
+		margin: 0 0 10px 0;
+		font-size:36px;
+		line-height: 43px;
+	}
+
+#middle .page-header.image {
+	position:relative;
+}
+	#middle .page-header.image .absolute {
+		position:absolute;
+		color:#fff;
+		top:20%;
+		margin-left:30px;
+	}
+	#middle .page-header.image .absolute h1,
+	#middle .page-header.image .absolute p {
+		color:#fff;
+		font-weight:300;
+	}
+	#middle .page-header.image .absolute h1 {
+		text-shadow:#fff 0 0 20px;
+		font-size:50px;
+	}
+
 
 
 

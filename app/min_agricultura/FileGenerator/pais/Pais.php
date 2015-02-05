@@ -3,6 +3,7 @@ class Pais {
 
 	private $id_pais;
 	private $pais;
+	private $pais_iata;
 
 	public function setId_pais($id_pais){
 		$this->id_pais = $id_pais;
@@ -18,6 +19,14 @@ class Pais {
 
 	public function getPais(){
 		return $this->pais;
+	}
+
+	public function setPais_iata($pais_iata){
+		$this->pais_iata = $pais_iata;
+	}
+
+	public function getPais_iata(){
+		return $this->pais_iata;
 	}
 
 }

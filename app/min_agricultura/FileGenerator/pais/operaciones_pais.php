@@ -12,6 +12,7 @@ if(isset($accion)){
 		case "act":
 			$pais->setId_pais($id_pais);
 			$pais->setPais($pais);
+			$pais->setPais_iata($pais_iata);
 			$rs_pais = $paisAdo->actualizar($pais);
 			if($rs_pais !== true){
 				$success = false;
@@ -45,6 +46,7 @@ if(isset($accion)){
 		case "crea":
 			$pais->setId_pais($id_pais);
 			$pais->setPais($pais);
+			$pais->setPais_iata($pais_iata);
 			$rs_pais = $paisAdo->insertar($pais);
 			if($rs_pais["success"] !== true){
 				$respuesta = array(
@@ -66,6 +68,7 @@ if(isset($accion)){
 			$arr = array();
 			$pais->setId_pais($id_pais);
 			$pais->setPais($pais);
+			$pais->setPais_iata($pais_iata);
 			$rs_pais = $paisAdo->lista($pais);
 			if(!is_array($rs_pais)){
 				$respuesta = array(

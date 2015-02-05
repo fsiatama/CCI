@@ -1,7 +1,7 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Pais.php';
-require PATH_APP.'min_agricultura/Ado/PaisAdo.php';
+require PATH_MODELS.'Entities/Pais.php';
+require PATH_MODELS.'Ado/PaisAdo.php';
 require_once ('BaseRepo.php');
 
 class PaisRepo extends BaseRepo {
@@ -57,25 +57,49 @@ class PaisRepo extends BaseRepo {
 
 		if (
 			empty($id_pais) ||
-			empty($pais)
+			empty($pais) ||
+			empty($pais_iata)
 		) {
-			$result = array(
+			$result = [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
-			);
+			];
 			return $result;
 		}
-			$this->model->setId_pais($id_pais);
-			$this->model->setPais($pais);
-		
+		$this->model->setId_pais($id_pais);
+		$this->model->setPais($pais);
+		$this->model->setPais_iata($pais_iata);
 
 		if ($action == 'create') {
+		} elseif ($action == 'modify') {
 		}
-		elseif ($action == 'modify') {
-		}
-		$result = array('success' => true);
+		$result = ['success' => true];
 		return $result;
 	}
 
-}	
+	public function listAll($params)
+	{
+		extract($params);
+		$start = ( isset($start) ) ? $start : 0;
+		$limit = ( isset($limit) ) ? $limit : MAXREGEXCEL;
+		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
 
+		if (!empty($valuesqry) && $valuesqry) {
+			$query = explode('|',$query);
+			$this->model->setId_pais(implode('", "', $query));
+			$this->model->setPais(implode('", "', $query));
+			$this->model->setPais_iata(implode('", "', $query));
+
+			return $this->modelAdo->inSearch($this->model);
+		}
+		else {
+			$this->model->setId_pais($query);
+			$this->model->setPais($query);
+			$this->model->setPais_iata($query);
+
+			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
+		}
+
+	}
+
+}

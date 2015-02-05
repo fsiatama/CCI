@@ -1,11 +1,12 @@
 <?php
 
-require PATH_APP.'min_agricultura/Repositories/PaisRepo.php';
-require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
+require PATH_MODELS.'Repositories/PaisRepo.php';
+require PATH_MODELS.'Repositories/UserRepo.php';
 
 class PaisController {
 	
 	protected $paisRepo;
+	protected $userRepo;
 
 	public function __construct()
 	{

@@ -1,4 +1,4 @@
-LOAD DATA LOCAL INFILE 'C:/wamp/www/CCI/sql/old/Imp2009.csv'
+LOAD DATA LOCAL INFILE 'C:/Users/fsiatama.RTQHDOMAIN/Downloads/data minagricultura/Imp2009.csv'
 INTO TABLE declaraimp
 FIELDS TERMINATED BY '|'
 OPTIONALLY ENCLOSED BY '"'

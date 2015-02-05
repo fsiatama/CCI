@@ -11,13 +11,14 @@ var storePais = new Ext.data.JsonStore({
 	,baseParams:{id:'<?= $id; ?>'}
 	,fields:[
 		{name:'id_pais', type:'float'},
-		{name:'pais', type:'string'}
+		{name:'pais', type:'string'},
+		{name:'pais_iata', type:'string'}
 	]
 });
 var comboPais = new Ext.form.ComboBox({
 	hiddenName:'pais'
 	,id:module+'comboPais'
-	,fieldLabel:'<?= Lang::get('pais.columns_title.pais'); ?>'
+	,fieldLabel:'<?= Lang::get('pais.columns_title.pais_iata'); ?>'
 	,store:storePais
 	,valueField:'id_pais'
 	,displayField:'pais_name'
@@ -37,7 +38,8 @@ var comboPais = new Ext.form.ComboBox({
 var cmPais = new Ext.grid.ColumnModel({
 	columns:[
 		{xtype:'numbercolumn', header:'<?= Lang::get('pais.columns_title.id_pais'); ?>', align:'right', hidden:false, dataIndex:'id_pais'},
-		{header:'<?= Lang::get('pais.columns_title.pais'); ?>', align:'left', hidden:false, dataIndex:'pais'}
+		{header:'<?= Lang::get('pais.columns_title.pais'); ?>', align:'left', hidden:false, dataIndex:'pais'},
+		{header:'<?= Lang::get('pais.columns_title.pais_iata'); ?>', align:'left', hidden:false, dataIndex:'pais_iata'}
 	]
 	,defaults:{
 		sortable:true
@@ -77,7 +79,8 @@ var formPais = new Ext.FormPanel({
 		,totalProperty:'total'
 		,fields:[
 			{name:'id_pais', mapping:'id_pais', type:'float'},
-			{name:'pais', mapping:'pais', type:'string'}
+			{name:'pais', mapping:'pais', type:'string'},
+			{name:'pais_iata', mapping:'pais_iata', type:'string'}
 		]
 	})
 	,items:[{
@@ -108,6 +111,15 @@ var formPais = new Ext.FormPanel({
 				,name:'pais'
 				,fieldLabel:'<?= Lang::get('pais.columns_title.pais'); ?>'
 				,id:module+'pais'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'pais_iata'
+				,fieldLabel:'<?= Lang::get('pais.columns_title.pais_iata'); ?>'
+				,id:module+'pais_iata'
 				,allowBlank:false
 			}]
 		}]

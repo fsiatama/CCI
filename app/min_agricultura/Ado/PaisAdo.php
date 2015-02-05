@@ -21,11 +21,13 @@ class PaisAdo extends BaseAdo {
 		$pais = $this->getModel();
 
 		$id_pais = $pais->getId_pais();
+		$pais_iata = $pais->getPais_iata();
 		$pais = $pais->getPais();
 
 		$this->data = compact(
 			'id_pais',
-			'pais'
+			'pais',
+			'pais_iata'
 		);
 	}
 
@@ -48,11 +50,13 @@ class PaisAdo extends BaseAdo {
 		$sql = '
 			INSERT INTO pais (
 				id_pais,
-				pais
+				pais,
+				pais_iata
 			)
 			VALUES (
 				"'.$this->data['id_pais'].'",
-				"'.$this->data['pais'].'"
+				"'.$this->data['pais'].'",
+				"'.$this->data['pais_iata'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -63,41 +67,50 @@ class PaisAdo extends BaseAdo {
 
 	public function buildSelect()
 	{
-		$filter = array();
-		$operator = $this->getOperator();
-		$joinOperator = ' AND ';
+		$filter        = [];
+		$primaryFilter = [];
+		$operator      = $this->getOperator();
+		$joinOperator  = ' AND ';
+
 		foreach($this->data as $key => $data){
 			if ($data <> ''){
-				if ($operator == '=') {
-					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
-				}
-				elseif ($operator == 'IN') {
-					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
-				}
-				else {
-					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
-					$joinOperator = ' OR ';
+				if ($key == 'id_pais') {
+					$primaryFilter[] = $key . ' IN ("' . $data . '")';
+				} else {
+					if ($operator == '=') {
+						$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
+					}
+					elseif ($operator == 'IN') {
+						$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+					}
+					else {
+						$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+						$joinOperator = ' OR ';
+					}
 				}
 			}
 		}
 
 		$sql = 'SELECT
 			 id_pais,
-			 pais
+			 pais,
+			 pais_iata
 			FROM pais
 		';
-		$sqlFilter = '';
-		if (!empty($selectedValues)) {
-			$sqlFilter = '
-			WHERE ( NOT '.$this->primaryKey.' IN ('.$selectedValues.'))';
-			if (!empty($filter)) {
-				$sqlFilter .= ' AND ('. implode( $joinOperator, $filter ).')';
-			}
-		} elseif (!empty($filter)) {
-			$sqlFilter  = ' WHERE ('. implode( $joinOperator, $filter ).')';
+
+		$whereAssignment = false;
+
+		if(!empty($primaryFilter)){
+			$sql            .= ' WHERE ('. implode( ' AND ', $primaryFilter ).')';
+			$whereAssignment = true;
 		}
-		$sql .= $sqlFilter;
-		
+		if(!empty($filter)){
+			$sql .= ($whereAssignment) ? ' AND ' : ' WHERE ' ;
+			$sql .= '  ('. implode( $joinOperator, $filter ).')';
+		}
+
+		//var_dump($sql);
+
 		return $sql;
 	}
 

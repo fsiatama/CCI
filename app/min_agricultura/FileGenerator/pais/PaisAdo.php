@@ -20,10 +20,12 @@ class PaisAdo extends BaseAdo {
 
 		$id_pais = $pais->getId_pais();
 		$pais = $pais->getPais();
+		$pais_iata = $pais->getPais_iata();
 
 		$this->data = compact(
 			'id_pais',
-			'pais'
+			'pais',
+			'pais_iata'
 		);
 	}
 
@@ -36,11 +38,13 @@ class PaisAdo extends BaseAdo {
 		$sql = '
 			INSERT INTO pais (
 				id_pais,
-				pais
+				pais,
+				pais_iata
 			)
 			VALUES (
 				"'.$this->data['id_pais'].'",
-				"'.$this->data['pais'].'"
+				"'.$this->data['pais'].'",
+				"'.$this->data['pais_iata'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -51,31 +55,46 @@ class PaisAdo extends BaseAdo {
 
 	public function buildSelect()
 	{
-		$filter = array();
-		$operator = $this->getOperator();
-		$joinOperator = ' AND ';
+		$filter        = [];
+		$primaryFilter = [];
+		$operator      = $this->getOperator();
+		$joinOperator  = ' AND ';
+
 		foreach($this->data as $key => $data){
 			if ($data <> ''){
-				if ($operator == '=') {
-					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
-				}
-				elseif ($operator == 'IN') {
-					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
-				}
-				else {
-					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
-					$joinOperator = ' OR ';
+				if ($key == 'id_pais') {
+					$primaryFilter[] = $key . ' = "' . $data . '"';
+				} else {
+					if ($operator == '=') {
+						$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
+					}
+					elseif ($operator == 'IN') {
+						$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+					}
+					else {
+						$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+						$joinOperator = ' OR ';
+					}
 				}
 			}
 		}
 
 		$sql = 'SELECT
 			 id_pais,
-			 pais
+			 pais,
+			 pais_iata
 			FROM pais
 		';
+
+		$whereAssignment = false;
+
+		if(!empty($primaryFilter)){
+			$sql            .= ' WHERE ('. implode( ' AND ', $primaryFilter ).')';
+			$whereAssignment = true;
+		}
 		if(!empty($filter)){
-			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+			$sql .= ($whereAssignment) ? ' AND ' : ' WHERE ' ;
+			$sql .= '  ('. implode( $joinOperator, $filter ).')';
 		}
 
 		return $sql;
