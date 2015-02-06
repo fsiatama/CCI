@@ -102,4 +102,18 @@ class PaisRepo extends BaseRepo {
 
 	}
 
+	public function listInAgreement($params)
+	{
+		extract($params);
+
+		$query = (empty($query)) ? '' : $query ;
+
+		$this->model->setPais($query);
+		$this->model->setPais_iata($query);
+		
+		return $this->modelAdo->listInAgreement($this->model);
+
+
+	}
+
 }

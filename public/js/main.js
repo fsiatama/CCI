@@ -1,3 +1,29 @@
+var mapOptionsLoc = {
+    lineColor: "#FF0000", // Contorno del pais
+    lineWidth: 1, // Tamaño la linea de contorno
+    lineOpacity: 1, // Opacidad de la linea de contorno
+    backgroundColor: "#FF0000", // Color del fondo
+    backgroundOpacity: 0.2 // Opacidad del fondo.
+};
+var mapOptionsAso = {
+    lineColor: "#0000FF",
+    lineWidth: 1,
+    lineOpacity: 1,
+    backgroundColor: "#0000FF",
+    backgroundOpacity: 0.2
+};
+var mapOptionsPen = {
+    lineColor: "#FFA500",
+    lineWidth: 1,
+    lineOpacity: 1,
+    backgroundColor: "#FFA500",
+    backgroundOpacity: 0.2
+};
+var mapOptions = {
+    zoom: 2,
+    center: new google.maps.LatLng(35, 0)
+};
+
 jQuery(function($) {
 
 	var is_msie = (navigator.appVersion.indexOf("MSIE")!=-1) ? true : false;
@@ -70,23 +96,63 @@ jQuery(function($) {
 
 	if ( $('#map-canvas').length > 0 ) {
 
-		$("#menu-toggle").click(function(e) {
-	        e.preventDefault();
-	        $("#wrapper").toggleClass("toggled");
-	    });
+		var msProduct = $('#ms-filter-product').magicSuggest({
+            data: 'pais/listInAgreement'
+            ,resultsField: 'data'
+            ,placeholder: 'Select...'
+            //,mode: 'remote'
+            ,valueField: 'id_pais'
+            ,displayField: 'pais'
+            ,allowFreeEntries: false
+            //,highlight:false
+            //,useZebraStyle: true
+            ,maxSelection: 5
+            ,typeDelay: 600
+            //,minChars:2
+            ,selectionPosition: 'bottom'
+            ,selectionStacked: true
+            ,selectionRenderer: function(data){
+                //console.log(data);
+                return data.pais + ' (<b>' + data.pais_iata + '</b>)';
+            }
+        });
+        var msCountry = $('#ms-filter-country').magicSuggest({
+            data: 'pais/listInAgreement'
+            ,resultsField: 'data'
+            ,placeholder: 'Select...'
+            //,mode: 'remote'
+            ,valueField: 'id_pais'
+            ,displayField: 'pais'
+            ,allowFreeEntries: false
+            //,highlight:false
+            ,useZebraStyle: true
+            ,maxSelection: 5
+            ,typeDelay: 600
+            //,minChars:2
+            ,selectionPosition: 'bottom'
+            ,selectionStacked: true
+            ,selectionRenderer: function(data){
+                //console.log(data);
+                return data.pais + ' (<b>' + data.pais_iata + '</b>)';
+            }
+        });
 
-        google.maps.event.addDomListener(window, 'load', initialize);
+        $(msCountry).on('selectionchange', function(e,ms,records) {
+            initialize(mapOptions);
+            $.each(records, function( key, row ) {
+                paintCountry(row.pais_iata, mapOptionsLoc, null, null);
+            });
+        });
+
+        initialize(mapOptions);
 
 	}
 
 });
 
 
-function initialize() {
-    var mapOptions = {
-        zoom: 2,
-        center: new google.maps.LatLng(35, 0)
-    };
+function initialize(mapOptions) {
+    
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
     var styles = [
@@ -141,34 +207,9 @@ function initialize() {
     map.setOptions({styles: styles});
 
 
-    var mapOptionsLoc = {
-        lineColor: "#FF0000", // Contorno del pais
-        lineWidth: 1, // Tamaño la linea de contorno
-        lineOpacity: 1, // Opacidad de la linea de contorno
-        backgroundColor: "#FF0000", // Color del fondo
-        backgroundOpacity: 0.2 // Opacidad del fondo.
-    };
-    var mapOptionsAso = {
-        lineColor: "#0000FF",
-        lineWidth: 1,
-        lineOpacity: 1,
-        backgroundColor: "#0000FF",
-        backgroundOpacity: 0.2
-    };
-    var mapOptionsPen = {
-        lineColor: "#FFA500",
-        lineWidth: 1,
-        lineOpacity: 1,
-        backgroundColor: "#FFA500",
-        backgroundOpacity: 0.2
-    };
+    
 
-    paintCountry('CO', mapOptionsLoc, '/img/flag_colombia.png', new google.maps.LatLng(0,-85));
-    paintCountry('VE', mapOptionsAso, null, null);
-    paintCountry('CL', mapOptionsAso, null, null);
-    paintCountry('US', mapOptionsAso, null, null);
-    paintCountry('MX', mapOptionsPen, '/img/flag_mexico.png', new google.maps.LatLng(19.2600029,-116.5110027,7));
-    paintCountry('ES', mapOptionsPen, null, null);
+    /*paintCountry('CO', mapOptionsLoc, '/img/flag_colombia.png', new google.maps.LatLng(0,-85));*/
 }
 
 function paintCountry(countryCode, countryOptions, countryIcon, countryPosition) {

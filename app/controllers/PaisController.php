@@ -18,6 +18,11 @@ class PaisController {
         return $this->paisRepo->listAll($postParams);
     }
 
+    public function listInAgreementAction($urlParams, $postParams)
+    {
+        return $this->paisRepo->listInAgreement($postParams);
+    }
+
 }
 	
 

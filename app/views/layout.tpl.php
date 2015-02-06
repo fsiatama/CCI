@@ -36,7 +36,7 @@
 					<!-- Brand and toggle get grouped for better mobile display -->
 					<div class="navbar-header">
 						<a class="navbar-brand" href="<?= URL_RAIZ; ?>">
-							<img class="img-responsive hidden-lg" src="<?= URL_RAIZ; ?>/img/logo_xs.png" alt="www.minagricultura.gov.co" width="186" height="60" />
+							<img class="img-responsive hidden-lg" src="<?= URL_RAIZ; ?>/img/logo_xs.png" alt="www.minagricultura.gov.co" width="175" height="60" />
 							<img class="img-responsive visible-lg" src="<?= URL_RAIZ; ?>img/logo_home.png" alt="www.minagricultura.gov.co" width="248" height="80" /> 
 						</a>
 					</div>

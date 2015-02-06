@@ -7,7 +7,21 @@
 
         <aside class="col-md-3">
 
-            <h3>CATEGORIES</h3>
+            <form action="#" method="POST" role="form">
+                <legend>Filtros</legend>
+            
+                <div class="form-group">
+                    <label for="ms-filter-product">Productos</label>
+                    <input type="text" class="form-control" id="ms-filter-product">
+                </div>
+
+                <div class="form-group">
+                    <label for="ms-filter-country">Socio Comercial</label>
+                    <input type="text" class="form-control" id="ms-filter-country">
+                </div>
+            
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
             
         </aside>
 
@@ -22,12 +36,6 @@
                 </div>
             </div>
 
-        </div>
-    </div>
-</div>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
         </div>
     </div>
 </div>

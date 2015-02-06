@@ -10,6 +10,8 @@ abstract class BaseAdo extends Connection {
 	protected $table;
 	protected $primaryKey;
 	protected $columns = null;
+	protected $whereAssignment = null;
+
 	
 	public function __construct()
 	{
@@ -21,11 +23,24 @@ abstract class BaseAdo extends Connection {
 	abstract protected function setData();
 	abstract protected function buildSelect();
 
-	public function setColumns($columns){
+	public function setWhereAssignment($value)
+	{
+		$value = ($value === true) ? true : false ;
+		$this->whereAssignment = $value;
+	}
+
+	public function getWhereAssignment()
+	{
+		return $this->whereAssignment;
+	}
+
+	public function setColumns($columns)
+	{
 		$this->columns = $columns;
 	}
 
-	public function getColumns(){
+	public function getColumns()
+	{
 		return $this->columns;
 	}
 

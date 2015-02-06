@@ -55,6 +55,22 @@ class PaisAdo extends BaseAdo {
 
 	public function buildSelect()
 	{
+
+		$sql = 'SELECT
+			 id_pais,
+			 pais,
+			 pais_iata
+			FROM pais
+		';
+
+		$sql .= $this->buildSelectWhere();
+
+		return $sql;
+	}
+
+
+	public function buildSelectWhere()
+	{
 		$filter        = [];
 		$primaryFilter = [];
 		$operator      = $this->getOperator();
@@ -79,21 +95,15 @@ class PaisAdo extends BaseAdo {
 			}
 		}
 
-		$sql = 'SELECT
-			 id_pais,
-			 pais,
-			 pais_iata
-			FROM pais
-		';
-
-		$whereAssignment = false;
+		$sql             = '';
 
 		if(!empty($primaryFilter)){
-			$sql            .= ' WHERE ('. implode( ' AND ', $primaryFilter ).')';
-			$whereAssignment = true;
+			$sql            .= ($this->getWhereAssignment()) ? ' AND ' : ' WHERE ' ;
+			$sql            .= ' ('. implode( ' AND ', $primaryFilter ).')';
+			$this->setWhereAssignment( true );
 		}
 		if(!empty($filter)){
-			$sql .= ($whereAssignment) ? ' AND ' : ' WHERE ' ;
+			$sql .= ($this->getWhereAssignment()) ? ' AND ' : ' WHERE ' ;
 			$sql .= '  ('. implode( $joinOperator, $filter ).')';
 		}
 
