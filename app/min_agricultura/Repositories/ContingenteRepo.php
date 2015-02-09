@@ -550,33 +550,34 @@ class ContingenteRepo extends BaseRepo {
 		if ($result['total'] == 0) {
 			
 			$arrData[] = [
-				'id'              => $arrContingente['contingente_id'],
-				'periodo'         => $year,
-				'quotaWeight'     => $quotaWeight,
-				'safeguardWeight' => $safeguardWeight,
-				'executedWeight'  => 0,
-				'rate'            => 0,
+				'id'               => $arrContingente['contingente_id'],
+				'periodo'          => $year,
+				'executedWeight'   => 0,
+				'executedRate'     => 0,
+				'cumulativeWeight' => 0,
+				'cumulativeRate'   => 0,
 			];
 
 		} else {
 
 			$arrDeclaraciones = $result['data'];
+			$cumulativeRate   = 0;
+			$cumulativeWeight = 0;
 
-			$cumulativeRate = 0;
 			foreach ($arrDeclaraciones as $data) {
 
-				$executedWeight     = ( $data['peso_neto'] / 1000 );
-				$rate               = ($quotaWeight == 0) ? 0 : ( $executedWeight / $quotaWeight ) * 100 ;
-				$cumulativeRate    += $rate;
+				$executedWeight    = ( $data['peso_neto'] / 1000 );
+				$executedRate      = ($quotaWeight == 0) ? 0 : ( $executedWeight / $quotaWeight ) * 100 ;
+				$cumulativeWeight += $executedWeight;
+				$cumulativeRate   += $executedRate;
 
 				$arrData[] = [
-					'id'              => $arrContingente['contingente_id'],
-					'periodo'         => $data['periodo'],
-					'quotaWeight'     => $quotaWeight,
-					'safeguardWeight' => $safeguardWeight,
-					'executedWeight'  => $executedWeight,
-					'cumulativeRate'  => $cumulativeRate,
-					'rate'            => $rate,
+					'id'               => $arrContingente['contingente_id'],
+					'periodo'          => $data['periodo'],
+					'executedWeight'   => $executedWeight,
+					'executedRate'     => $executedRate,
+					'cumulativeWeight' => $cumulativeWeight,
+					'cumulativeRate'   => $cumulativeRate,
 				];
 
 			}
@@ -586,10 +587,12 @@ class ContingenteRepo extends BaseRepo {
 
 
 		$result = [
-			'success'        => true,
-			'data'           => $arrData,
-			'gaugeChartData' => $gaugeChart,
-			'total'          => count($arrData)
+			'success'         => true,
+			'data'            => $arrData,
+			'gaugeChartData'  => $gaugeChart,
+			'quotaWeight'     => $quotaWeight,
+			'safeguardWeight' => $safeguardWeight,
+			'total'           => count($arrData)
 		];
 
 		if ($format !== false && !empty($fields) && $result['total'] > 0) {
@@ -644,7 +647,40 @@ class ContingenteRepo extends BaseRepo {
 				]
 			];
 
-			$colorsSalvag = [];
+			$trendPoints = [
+				[
+					'startValue'   => 0,
+					'displayValue' => ' ',
+					'showValues'   => 0,
+					'color'        => '#0075c2',
+					'useMarker'    => '1',
+				],[
+					'startValue'   => $row['alerta_contingente_roja'],
+					'displayValue' => ' ',
+					'showValues'   => 0,
+					'color'        => '#0075c2',
+					'useMarker'    => '1',
+				],[
+					'startValue'     => 0,
+					'endValue'       => $row['alerta_contingente_roja'],
+					'displayValue'   => ' ',
+					'alpha'          => 1,
+					'markerTooltext' => Lang::get('contingente.contingente'),
+					'displayValue'   => Lang::get('contingente.contingente')
+					//'color'        => '#0075c2'
+				],[
+					'startValue'   => $row['alerta_contingente_roja'],
+					//'dashed'     => 1,
+					'displayValue' => ' ',
+					'showValues'   => 0,
+					'color'        => '#0075c2',
+					'useMarker'    => '1',
+				
+				]
+			];
+
+			$colorsSalvag      = [];
+			$trendPointsSalvag = [];
 			if ($row['contingente_msalvaguardia'] == '1') {
 				$sobretasa   = (float)$row['contingente_salvaguardia_sobretasa'];
 				$upperLimit += $sobretasa;
@@ -676,20 +712,44 @@ class ContingenteRepo extends BaseRepo {
 						'code'     => '#b41527',
 					]
 				];
+
+				$trendPointsSalvag = [
+					[
+						'startValue'   => $upperLimit,
+						//'dashed'     => 1,
+						'displayValue' => ' ',
+						'showValues'   => 0,
+						'color'        => '#0075c2',
+						'useMarker'    => '1',
+					],[
+						'startValue'     => $row['alerta_contingente_roja'],
+						'endValue'       => $upperLimit,
+						'displayValue'   => ' ',
+						'alpha'          => 50,
+						'markerTooltext' => Lang::get('contingente.salvaguardia'),
+						'displayValue'   => Lang::get('contingente.salvaguardia')
+						//'color'        => '#0075c2'
+					]
+				];
 			}
 
-			$colors = array_merge($colors, $colorsSalvag);
+			$colors      = array_merge($colors, $colorsSalvag);
+			$trendPoints = array_merge($trendPoints, $trendPointsSalvag);
 
 			$upperLimit = ($dial > $upperLimit) ? ($dial + 5) : $upperLimit ;
 			$arr = [
 				'chart' => [
+					'theme'             => 'fint',
 					'lowerLimit'        => '0',
 					'upperLimit'        => $upperLimit,
 					'caption'           => $title,
+					'subcaption'        => '',
 					'showValue'         => '1',
 					'exportenabled'     => '1',
 					'numberSuffix'      => '%',
-					'theme'             => 'fint',
+					'valueFontSize'     => '11',
+					'valueFontBold'     => '0',
+					'captionPadding'    => '20',
 					'majorTMColor'      => '333333',
 					'majorTMAlpha'      => '100',
 					'majorTMHeight'     => '10',
@@ -698,8 +758,8 @@ class ContingenteRepo extends BaseRepo {
 					'minorTMAlpha'      => '100',
 					'minorTMHeight'     => '7',
 					'minorTMThickness'  => '7',
-					'tickMarkDistance'  => '10',
-					'tickValueDistance' => '10',
+					/*'tickMarkDistance'  => '10',
+					'tickValueDistance' => '10',*/
 					'majorTMNumber'     => '14',
 				],
 				'colorRange' => [
@@ -711,51 +771,7 @@ class ContingenteRepo extends BaseRepo {
 					]
 				],
 				'trendPoints' => [
-					'point' => [
-						[
-							'startValue'   => 0,
-							'displayValue' => ' ',
-							'showValues'   => 0,
-							'color'        => '#0075c2',
-							'useMarker'    => '1',
-						],[
-							'startValue'   => $row['alerta_contingente_roja'],
-							'displayValue' => ' ',
-							'showValues'   => 0,
-							'color'        => '#0075c2',
-							'useMarker'    => '1',
-						],[
-							'startValue'     => 0,
-							'endValue'       => $row['alerta_contingente_roja'],
-							'displayValue'   => ' ',
-							'alpha'          => 1,
-							'markerTooltext' => Lang::get('contingente.contingente'),
-							'displayValue'   => Lang::get('contingente.contingente')
-							//'color'        => '#0075c2'
-						],[
-							'startValue'   => $row['alerta_contingente_roja'],
-							//'dashed'     => 1,
-							'displayValue' => ' ',
-							'showValues'   => 0,
-							'color'        => '#0075c2',
-							'useMarker'    => '1',
-						],[
-							'startValue'   => $upperLimit,
-							//'dashed'     => 1,
-							'displayValue' => ' ',
-							'showValues'   => 0,
-							'color'        => '#0075c2',
-							'useMarker'    => '1',
-						],[
-							'startValue'     => $row['alerta_contingente_roja'],
-							'endValue'       => $upperLimit,
-							'displayValue'   => ' ',
-							'alpha'          => 50,
-							'markerTooltext' => Lang::get('contingente.salvaguardia'),
-							'displayValue'   => Lang::get('contingente.salvaguardia')
-							//'color'        => '#0075c2'
-						]
-					]
+					'point' => $trendPoints
 				],
 				'tickValues' => [
 					['value' => $dial]

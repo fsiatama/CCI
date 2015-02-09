@@ -34,11 +34,10 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		,fields:[
 			{name:'id', type:'float'},
 			{name:'periodo', type:'string'},
-			{name:'quotaWeight', type:'float'},
-			{name:'safeguardWeight', type:'float'},
 			{name:'executedWeight', type:'float'},
+			{name:'executedRate', type:'float'},
+			{name:'cumulativeWeight', type:'float'},
 			{name:'cumulativeRate', type:'float'},
-			{name:'rate', type:'float'},
 		]
 	});
 
@@ -54,6 +53,14 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 	});
 	
 	storeContingente.on('load', function(store){
+		var el = Ext.Element.get(module + 'quotaWeight');
+		var average = numberFormat(store.reader.jsonData.quotaWeight);
+		el.update(average);
+		
+		el = Ext.Element.get(module + 'safeguardWeight');
+		average = numberFormat(store.reader.jsonData.safeguardWeight);
+		el.update(average);
+
 		if (typeof(store.reader.jsonData.gaugeChartData) === 'object') {
 			FusionCharts.setCurrentRenderer('javascript');
 			disposeCharts();
@@ -69,11 +76,10 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		defaultSortable: true
 		,columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
-			{header:'<?= Lang::get('contingente_det.peso_contingente'); ?>', dataIndex:'quotaWeight' ,'renderer':numberFormat , align:'right'},
-			{header:'<?= Lang::get('contingente_det.peso_salvaguardia'); ?>', dataIndex:'safeguardWeight' ,'renderer':numberFormat , align:'right'},
 			{header:'<?= Lang::get('contingente_det.peso_ejecutado'); ?>', dataIndex:'executedWeight' ,'renderer':numberFormat , align:'right'},
-			{header:'<?= Lang::get('contingente_det.valor_ejecutado'); ?>', dataIndex:'cumulativeRate' ,'renderer':rateFormat , align:'right'},
-			{header:'<?= Lang::get('indicador.reports.variation'); ?> (%)', dataIndex:'rate' ,'renderer':rateFormat , align:'right', hidden: true}
+			{header:'<?= Lang::get('contingente_det.valor_ejecutado'); ?>', dataIndex:'executedRate' ,'renderer':rateFormat , align:'right'},
+			{header:'<?= Lang::get('contingente_det.peso_acumulado'); ?>', dataIndex:'cumulativeWeight' ,'renderer':numberFormat , align:'right'},
+			{header:'<?= Lang::get('contingente_det.valor_acumulado'); ?>', dataIndex:'cumulativeRate' ,'renderer':rateFormat , align:'right'},
 		]
 	});
 
@@ -218,6 +224,20 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 					}
 				}]
 			}]
+		},{
+			style:{padding:'0px'}
+			,html: '<div class="bootstrap-styles">' +
+				'<div class="row text-center countTo">' +
+					'<div class="col-md-4 col-md-offset-2">' +
+						'<label><?= Lang::get('contingente_det.peso_contingente'); ?></label>' +
+						'<strong id="' + module + 'quotaWeight">0</strong>' +
+					'</div>' +
+					'<div class="col-md-4">' +
+						'<label><?= Lang::get('contingente_det.peso_salvaguardia'); ?></label>' +
+						'<strong id="' + module + 'safeguardWeight">0</strong>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridContingente]
