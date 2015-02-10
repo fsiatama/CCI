@@ -89,9 +89,8 @@ class Helpers
 	 *
 	 * @return mixed Value.
 	 */
-	public static function jsonChart($arr_data, $eje_x, $series, $typeChart, $serie_adicional = false)
+	public static function jsonChart($arr_data, $eje_x, $series, $typeChart, $xAxisname = '', $pYAxisName = '')
 	{
-
 		$arrCategories = [];
 		$rowData       = [];
 		$arr_cols      = [];
@@ -103,9 +102,12 @@ class Helpers
 		$arr_chart['chart'] = [
 			'decimalprecision'     => '4'
 			,'palette'             => '4'
-			/*,'formatnumberscale' => '0'
-			,'numberscalevalue'    => '1000000'
+			,'formatnumberscale'   => '0'
+			/*,'numberscalevalue'    => '1000000'
 			,'numberscaleunit'     => 'M'*/
+			,'theme'               => 'fint'
+			,'xAxisname'           => $xAxisname
+			,'yaxisname'           => $pYAxisName
 			,'theme'               => 'fint'
 			,'rotatevalues'        => '1'
 			,'divlineisdashed'     => '1'

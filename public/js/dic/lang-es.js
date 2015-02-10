@@ -24,6 +24,7 @@ Ext.ux.lang.reports = {
 	,maxRows: 65000
 	,filters: 'Filtros'
 	,selectScope: 'Seleccione el Ambito'
+	,selectScale: 'Seleccione la escala'
 	,selectYear: 'Seleccione el Año'
 	,selectYearFrom: 'Año desde'
 	,selectYearTo: 'Año Hasta'

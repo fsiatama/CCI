@@ -23,20 +23,25 @@ class DeclaracionesRepo extends BaseRepo {
 	protected $tipo_indicador_activador;
 	protected $linesConfig;
 	protected $scope;
+	private $scale;
+	private $divisor;
+	private $pYAxisName;
 
-	public function __construct($rowIndicador, $filtersConfig, $year, $period, $scope)
+	public function __construct($rowIndicador, $filtersConfig, $year, $period, $scope, $scale = '1')
 	{
 		$this->rowIndicador  = $rowIndicador;
 		$this->filtersConfig = $filtersConfig;
 		$this->year          = $year;
 		$this->period        = $period;
 		$this->scope         = $scope;
+		$this->scale         = $scale;
 
 		extract($rowIndicador);
 
 		$this->arrFiltersValues         = Helpers::filterValuesToArray($indicador_filtros);
 		$this->tipo_indicador_activador = $tipo_indicador_activador;
 		$this->setColumnValue();
+		$this->setDivisor();
 		$this->linesConfig = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 	}
 
@@ -83,6 +88,35 @@ class DeclaracionesRepo extends BaseRepo {
 		} else {
 			$this->columnValueImpo = 'peso_neto';
 			$this->columnValueExpo = 'peso_neto';
+		}
+
+
+		if ($this->scale == '2') {
+			//escala de miles
+			//$this->xAxisname   = '';
+			$this->pYAxisName  = Lang::get('indicador.reports.priceThousands');
+		} elseif ($this->scale == '3') {
+			//escala de millones
+			//$this->xAxisname   = '';
+			$this->pYAxisName  = Lang::get('indicador.reports.priceMillions');
+		} else {
+			//escala de unidades
+			//$this->xAxisname   = '';
+			$this->pYAxisName  = Lang::get('indicador.reports.priceUnit');
+		}
+	}
+
+	private function setDivisor()
+	{
+		if ($this->scale == 2) {
+			//escala de miles
+			$this->divisor  = 1000;
+		} elseif ($this->scale == 3) {
+			//escala de millones
+			$this->divisor  = 1000000;
+		} else {
+			//escala de unidades
+			$this->divisor  = 1;
 		}
 	}
 
@@ -219,9 +253,10 @@ class DeclaracionesRepo extends BaseRepo {
 
 	public function findBalanzaData()
 	{
-		$year   = $this->year;
-		$period = $this->period;
-		$range  = $this->range;
+		$year    = $this->year;
+		$period  = $this->period;
+		$range   = $this->range;
+		$divisor = $this->divisor;
 
 		$this->setTrade('impo');
 
@@ -308,8 +343,8 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData[] = [
 				'id'         => $rowExpo['id'],
 				'periodo'    => $rowExpo['periodo'],
-				'valor_expo' => $rowExpo[$this->columnValueExpo],
-				'valor_impo' => $valor_impo,
+				'valor_expo' => ( (float)$rowExpo[$this->columnValueExpo] / $divisor ),
+				'valor_impo' => ( (float)$valor_impo / $divisor ),
 			];
 		}
 
@@ -320,7 +355,7 @@ class DeclaracionesRepo extends BaseRepo {
 					'id'         => $rowImpo['id'],
 					'periodo'    => $rowImpo['periodo'],
 					'valor_expo' => 0,
-					'valor_impo' => $rowImpo[$this->columnValueImpo],
+					'valor_impo' => ( (float)$rowImpo[$this->columnValueImpo] / $divisor ),
 				];
 			}
 
@@ -400,7 +435,9 @@ class DeclaracionesRepo extends BaseRepo {
 				$arrData,
 				'periodo',
 				$arrSeries,
-				COLUMNAS
+				COLUMNAS,
+				'',
+				$this->pYAxisName
 			);
 
 			$arrSeries = [
@@ -411,7 +448,9 @@ class DeclaracionesRepo extends BaseRepo {
 				$arrData,
 				'periodo',
 				$arrSeries,
-				AREA
+				AREA,
+				'',
+				$this->pYAxisName
 			);
 
 			$result = [

@@ -129,11 +129,12 @@ class IndicadorController {
 			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
 			$periods        = Helpers::arrayGet($lines, 'periods');
 			$scopes         = Helpers::arrayGet($lines, 'scopes');
+			$scales         = Helpers::arrayGet($lines, 'scales');
 
 			$updateInfo     = Helpers::getUpdateInfo('aduanas', 'impo');
 			$yearsAvailable = ($updateInfo !== false) ? $updateInfo['yearsAvailable'] : $yearsAvailable ;
 
-			$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action', 'yearsAvailable', 'periods', 'scopes'));
+			$params = array_merge($postParams, $rowTipoIndicador, $rowIndicador, compact('action', 'yearsAvailable', 'periods', 'scopes', 'scales'));
 
 			//var_dump($params);
 

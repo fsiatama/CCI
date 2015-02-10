@@ -64,8 +64,8 @@ $htmlDescription .= '</ol>';
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
+			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat},
 			{header:'% <?= Lang::get('indicador.reports.relation'); ?>', dataIndex:'valor_balanza' ,'renderer':rateFormat}
 		]
 		,defaults: {

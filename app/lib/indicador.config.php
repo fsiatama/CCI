@@ -870,6 +870,11 @@ return [
 		['2', Lang::get('indicador.reports.regional')],
 		['3', Lang::get('indicador.reports.departmental')],
 	],
+	'scales' => [
+		['1', Lang::get('indicador.reports.scaleUnit')],
+		['2', Lang::get('indicador.reports.scaleThousands')],
+		['3', Lang::get('indicador.reports.scaleMillions')],
+	],
 	'sectorIdAgriculture'  => 2,
 	'sectorIdTraditional'  => 3,
 	'sectorIdMiningSector' => 1,
