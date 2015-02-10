@@ -97,12 +97,12 @@ jQuery(function($) {
 	if ( $('#map-canvas').length > 0 ) {
 
 		var msProduct = $('#ms-filter-product').magicSuggest({
-            data: 'pais/listInAgreement'
+            data: 'posicion/listInAgreement'
             ,resultsField: 'data'
             ,placeholder: 'Select...'
             //,mode: 'remote'
-            ,valueField: 'id_pais'
-            ,displayField: 'pais'
+            ,valueField: 'id_posicion'
+            ,displayField: 'posicion'
             ,allowFreeEntries: false
             //,highlight:false
             //,useZebraStyle: true
@@ -113,7 +113,7 @@ jQuery(function($) {
             ,selectionStacked: true
             ,selectionRenderer: function(data){
                 //console.log(data);
-                return data.pais + ' (<b>' + data.pais_iata + '</b>)';
+                return data.posicion + ' (<b>' + data.id_posicion + '</b>)';
             }
         });
         var msCountry = $('#ms-filter-country').magicSuggest({

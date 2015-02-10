@@ -11,13 +11,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="google" content="notranslate" />
 
-		<link  href="http://fonts.googleapis.com/css?family=Dosis:300,400,700" />
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800" rel="stylesheet" type="text/css" />
 
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
-		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/bootstrap-theme.min.css" />
-		<link rel="stylesheet" href="<?= URL_RAIZ; ?>/css/layout.css" />
+		<link rel="stylesheet" href="<?= URL_RAIZ; ?>css/bootstrap.min.css" />
+		<link rel="stylesheet" href="<?= URL_RAIZ; ?>css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="<?= URL_RAIZ; ?>css/layout.css" />
 
 		<script src="<?= URL_RAIZ; ?>js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 	</head>
@@ -36,8 +35,8 @@
 					<!-- Brand and toggle get grouped for better mobile display -->
 					<div class="navbar-header">
 						<a class="navbar-brand" href="<?= URL_RAIZ; ?>">
-							<img class="img-responsive hidden-lg" src="<?= URL_RAIZ; ?>/img/logo_xs.png" alt="www.minagricultura.gov.co" width="175" height="60" />
-							<img class="img-responsive visible-lg" src="<?= URL_RAIZ; ?>img/logo_home.png" alt="www.minagricultura.gov.co" width="248" height="80" /> 
+							<img class="img-responsive hidden-lg" src="<?= URL_RAIZ; ?>img/logo_xs.png" alt="www.minagricultura.gov.co" width="175" height="60" />
+							<img class="img-responsive visible-lg" src="<?= URL_RAIZ; ?>img/logo_home.png" alt="www.minagricultura.gov.co" width="248" height="80" />
 						</a>
 					</div>
 
@@ -82,11 +81,11 @@
 		<!-- /FOOTER -->
 
 
-		
 
 
-		
-		
+
+
+
 		<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -110,7 +109,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="modal fade" id="sucessModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -132,12 +131,12 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
-		<script src="/js/vendor/bootstrap.min.js"></script>
+		<script>window.jQuery || document.write('<script src="<?= URL_RAIZ; ?>js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+		<script src="<?= URL_RAIZ; ?>js/vendor/bootstrap.min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?v=3"></script>
-		<script src="/js/plugins.js"></script>
-		<script src="/js/main.js"></script>		
+		<script src="<?= URL_RAIZ; ?>js/plugins.js"></script>
+		<script src="<?= URL_RAIZ; ?>js/main.js"></script>
 	</body>
 </html>

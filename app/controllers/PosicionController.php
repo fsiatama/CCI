@@ -16,6 +16,11 @@ class PosicionController {
         return $this->posicionRepo->listAll($postParams);
     }
 
+    public function listInAgreementAction($urlParams, $postParams)
+    {
+        return $this->posicionRepo->listInAgreement($postParams);
+    }
+
 }
 	
 

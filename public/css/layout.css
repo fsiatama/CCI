@@ -1137,6 +1137,12 @@ div.maximage-controls #slider_prev:hover {
 
 /** --. Responsive
  **************************************************************** **/
+ @media only screen and (max-width: 1200px) {
+ 	header .navbar-inverse .navbar-nav>li>a {
+ 		font-size:12px;
+ 		font-weight: 300;
+ 	}
+ }
 @media only screen and (max-width: 1000px) {
 
 	.navbar-header {
