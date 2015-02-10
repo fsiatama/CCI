@@ -1,4 +1,4 @@
 vendor/*
 
-public/lib/config.php
-app/lib/config.php
+/public/lib/config.php
+/app/lib/config.php
