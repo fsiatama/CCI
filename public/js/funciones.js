@@ -1,15 +1,15 @@
 Ext.onReady(function(){
-	
+
 	new Ext.ux.inactivityMonitor({
 		 inactivityTimeout: 1200000 // 1200000 = 20min / 1 min = 60000
 	});
 
 	Ext.ns('Ext.ux', 'Ext.ux.bodyMask');
 	Ext.ux.bodyMask = new Ext.LoadMask(Ext.getBody(), {msg: Ext.ux.lang.messages.please_wait});
-	
+
 	document.oncontextmenu = function(){return false;}
 	Ext.Ajax.timeout = 120000;
-	
+
 	Ext.apply(Ext.form.VTypes, {
 		togetherField:function(val, field) {
 			var cnt1 = field.getValue().length;
@@ -38,7 +38,7 @@ Ext.onReady(function(){
 				start.setMaxValue(date);
 				this.dateRangeMax = date;
 				start.validate();
-			} 
+			}
 			else if (field.endDateField && (!this.dateRangeMin || (date.getTime() != this.dateRangeMin.getTime()))) {
 				var end = Ext.getCmp(field.endDateField);
 				end.setMinValue(date);
@@ -49,7 +49,7 @@ Ext.onReady(function(){
 		}
 		,confirmVal:function(val,field) {
 			if (field.initialField) {
-				var pwd = Ext.getCmp(field.initialField); 
+				var pwd = Ext.getCmp(field.initialField);
 				return (val == pwd.getValue());
 			}
 			return true;
@@ -57,7 +57,7 @@ Ext.onReady(function(){
 		,confirmValText:'The value should be the same'
 		,confirmValPass: function(val, field) {
 			if (field.initialField) {
-				var pwd = Ext.getCmp(field.initialField); 
+				var pwd = Ext.getCmp(field.initialField);
 				return (val == pwd.getValue());
 			}
 			return true;
@@ -65,7 +65,7 @@ Ext.onReady(function(){
 		,confirmValPassText: 'Passwords do not match'
 		,confirmValEmail: function(val, field) {
 			if (field.initialField) {
-				var pwd = Ext.getCmp(field.initialField); 
+				var pwd = Ext.getCmp(field.initialField);
 				return (val == pwd.getValue());
 			}
 			return true;
@@ -84,7 +84,7 @@ Ext.onReady(function(){
 			else{
 				return true
 			}
-			
+
 		}
 		,passwordText: 'Not a valid Password. Must contain at least one uppercase letter, one lowercase letter and at least one number.'
 	});
@@ -96,8 +96,8 @@ Ext.onReady(function(){
 			this.purgeListeners();
 		}
 	});
-	
-	
+
+
 	//resuelve el problema de los itemselector con jsonstore el cual no dejaba cargar los datos en el segundo dataview y tampoco permitia ordenar los items
 	Ext.override( Ext.ux.ItemSelector, {
 		getValue: function() {
@@ -130,23 +130,23 @@ Ext.onReady(function(){
 				var vf = this.fromMultiselect.valueField;
 				var df = this.fromMultiselect.displayField;
 				id = val[i];
-				idx = this.toMultiselect.view.store.findBy(function(record){                
+				idx = this.toMultiselect.view.store.findBy(function(record){
 					return record.data[vf] == id;
 				});
-				if (idx != -1) continue;            
+				if (idx != -1) continue;
 				idx = this.fromMultiselect.view.store.findBy(function(record){
 					return record.data[vf] == id;
 				});
 				rec = this.fromMultiselect.view.store.getAt(idx);
 				if (rec) {
 					this.toMultiselect.view.store.add(rec);
-					this.fromMultiselect.view.store.remove(rec);                                
+					this.fromMultiselect.view.store.remove(rec);
 				}
 			}
-		},		
+		},
 		onRender: function(ct, position){
 			Ext.ux.form.ItemSelector.superclass.onRender.call(this, ct, position);
-	
+
 			// Internal default configuration for both multiselects
 			var msConfig = [{
 				legend: 'Available',
@@ -161,30 +161,30 @@ Ext.onReady(function(){
 				width: 100,
 				height: 100
 			}];
-	
+
 			this.fromMultiselect = new Ext.ux.form.MultiSelect(Ext.applyIf(this.multiselects[0], msConfig[0]));
 			this.fromMultiselect.on('dblclick', this.onRowDblClick, this);
-	
+
 			this.toMultiselect = new Ext.ux.form.MultiSelect(Ext.applyIf(this.multiselects[1], msConfig[1]));
 			this.toMultiselect.on('dblclick', this.onRowDblClick, this);
-			
+
 			this.toMultiselect.displayField = this.fromMultiselect.displayField; // FIX
 			this.toMultiselect.valueField = this.fromMultiselect.valueField;     // FIX
-	
+
 			var p = new Ext.Panel({
 				bodyStyle:this.bodyStyle,
 				border:this.border,
 				layout:"table",
 				layoutConfig:{columns:3}
 			});
-	
+
 			p.add(this.fromMultiselect);
 			var icons = new Ext.Panel({header:false});
 			p.add(icons);
 			p.add(this.toMultiselect);
 			p.render(this.el);
 			icons.el.down('.'+icons.bwrapCls).remove();
-	
+
 			// ICON HELL!!!
 			if (this.imagePath!="" && this.imagePath.charAt(this.imagePath.length-1)!="/")
 				this.imagePath+="/";
@@ -218,36 +218,42 @@ Ext.onReady(function(){
 			if (!this.drawRightIcon || this.hideNavIcons) { this.removeIcon.dom.style.display='none'; }
 			if (!this.drawTopIcon || this.hideNavIcons) { this.toTopIcon.dom.style.display='none'; }
 			if (!this.drawBotIcon || this.hideNavIcons) { this.toBottomIcon.dom.style.display='none'; }
-	
+
 			var tb = p.body.first();
 			this.el.setWidth(p.body.first().getWidth());
 			p.body.removeClass();
-	
+
 			this.hiddenName = this.name;
 			var hiddenTag = {tag: "input", type: "hidden", value: "", name: this.name};
 			this.hiddenField = this.el.createChild(hiddenTag);
-		} 
+		}
 	});
-	
+
 	Ext.override(Ext.data.Store, {
 		listeners:{
 			'loadexception': function(proxy, options, response){
 				Ext.ux.bodyMask.hide();
-				//console.log(proxy, options, response);		
+				//console.log(proxy, options, response);
+				var msg = '';
+				if (response.isTimeout) {
+					msg = Ext.ux.lang.error.ajaxTimeOut
+				} else {
+					msg = Ext.decode(response.responseText).error;
+				}
 				Ext.MessageBox.show({
 					title: '',
-					msg: Ext.decode(response.responseText).error,
+					msg: msg,
 					buttons: Ext.Msg.OK,
 					closable:false,
 					icon: Ext.MessageBox.ERROR
 				});
 			}
-			,'exception': function(a,b,c,d,e,f,g){ 	
+			,'exception': function(a,b,c,d,e,f,g){
 				//console.log(a,b,c,d,e,f,g);
 			}
 		}
 	});
-	
+
 	Ext.override(Ext.data.Connection,{
 		listeners:{
 			'requestexception': function(conn, response, options){
@@ -255,7 +261,7 @@ Ext.onReady(function(){
 			}
 		}
 	});
-	
+
 	Ext.override(Ext.ux.Plugin.RemoteComponent, {
 		listeners:{
 			'success': function(response, options){
@@ -270,7 +276,7 @@ Ext.onReady(function(){
 					if(response.closeTab && response.tab){
 						var tabPanel = Ext.getCmp('tabpanel');
 						tabPanel.remove(response.tab, true);
-					}					
+					}
 				}
 				/*;*/
 			}
