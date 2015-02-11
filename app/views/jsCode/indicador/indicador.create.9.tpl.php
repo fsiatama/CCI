@@ -29,26 +29,27 @@
 		,baseParams:{id:'<?= $id; ?>'}
 		,fields:[
 			{name:'id_pais', type:'float'},
-			{name:'pais', type:'string'}
+			{name:'pais', type:'string'},
+			{name:'pais_iata', type:'string'},
 		]
 	});
 	var resultTplPais = new Ext.XTemplate(
 		'<tpl for=".">' +
-			'<div class="search-item x-combo-list-item" ext:qtip="{id_pais}">' +
-				'<span><b>{id_pais}</b>&nbsp;-&nbsp;{pais}</span>' +
+			'<div class="search-item x-combo-list-item" ext:qtip="{pais_iata}">' +
+				'<span><b>{pais_iata}</b>&nbsp;-&nbsp;{pais}</span>' +
 			'</div>' +
 		'</tpl>'
 	);
 	var comboPais = new Combo({
 		id:module+'comboPais'
 		//,singleMode:true
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
+		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>'
 		,name:'id_pais[]'
 		,store:storePais
 		,displayField:'pais'
 		,valueField:'id_pais'
 		,tpl: resultTplPais
-		,displayFieldTpl:'({id_pais}) - {pais}'
+		,displayFieldTpl:'({pais_iata}) - {pais}'
 	});
 
 	var storeMercado = new Ext.data.JsonStore({
@@ -84,21 +85,6 @@
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 
-	var arrMonths = [
-		[1, Date.monthNames[0]],
-		[2, Date.monthNames[1]],
-		[3, Date.monthNames[2]],
-		[4, Date.monthNames[3]],
-		[5, Date.monthNames[4]],
-		[6, Date.monthNames[5]],
-		[7, Date.monthNames[6]],
-		[8, Date.monthNames[7]],
-		[9, Date.monthNames[8]],
-		[10, Date.monthNames[9]],
-		[11, Date.monthNames[10]],
-		[12, Date.monthNames[11]]
-	];
-
 	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
 		typeAhead:false
 		,forceSelection:true
@@ -114,17 +100,12 @@
 		,store:arrYears
 		,fieldLabel:Ext.ux.lang.reports.selectYearFrom
 	});
-	var comboDesde_ini = new simpleCombo({
-		hiddenName:'desde_ini'
-		,id:module+'comboDesde_ini'
-		,store:arrMonths
-		,fieldLabel:Ext.ux.lang.reports.selectMonthFrom
-	});
-	var comboHasta_ini = new simpleCombo({
-		hiddenName:'hasta_ini'
-		,id:module+'comboHasta_ini'
-		,store:arrMonths
-		,fieldLabel:Ext.ux.lang.reports.selectMonthTo
+
+	var comboAnio_fin = new simpleCombo({
+		hiddenName:'anio_fin'
+		,id:module+'comboAnio_fin'
+		,store:arrYears
+		,fieldLabel:Ext.ux.lang.reports.selectYearTo
 	});
 	
 	var formIndicador = new Ext.FormPanel({
@@ -147,8 +128,7 @@
 				{name:'id_pais', mapping:'id_pais', type:'string'},
 				{name:'mercado_id', mapping:'mercado_id', type:'string'},
 				{name:'anio_ini', mapping:'anio_ini', type:'float'},
-				{name:'desde_ini', mapping:'desde_ini', type:'float'},
-				{name:'hasta_ini', mapping:'hasta_ini', type:'float'},
+				{name:'anio_fin', mapping:'anio_fin', type:'float'}
 			]
 		})
 		,defaults: {anchor:'97%'}
@@ -193,28 +173,38 @@
 				,items:[comboAnio_ini]
 			},{
 				defaults:{anchor:'100%'}
-				,items:[comboDesde_ini]
-			},{
+				,columnWidth:.2
+				,items:[comboAnio_fin]
+			}]
+		},{
+			xtype:'fieldset'
+			,title: Ext.ux.lang.reports.filters
+			,layout:'column'
+			,flex: 1
+			,defaults:{
+				columnWidth:1
+				,layout:'form'
+				,labelAlign:'top'
+				,border:false
+				,xtype:'panel'
+				,bodyStyle:'padding:0 18px 0 0'
+			}
+			,items:[{
 				defaults:{anchor:'100%'}
-				,items:[comboHasta_ini]
-			},{
-				defaults:{anchor:'100%'}
-				,columnWidth:1
 				,items:[comboPais]
 			},{
 				defaults:{anchor:'100%'}
-				,columnWidth:1
 				,items:[comboMercado]
+			},{
+				xtype:'hidden'
+				,name:'indicador_tipo_indicador_id'
+				,id:module+'indicador_tipo_indicador_id'
+				,value: '<?= $tipo_indicador_id; ?>'
+			},{
+				xtype:'hidden'
+				,name:'indicador_id'
+				,id:module+'indicador_id'
 			}]
-		},{
-			xtype:'hidden'
-			,name:'indicador_tipo_indicador_id'
-			,id:module+'indicador_tipo_indicador_id'
-			,value: '<?= $tipo_indicador_id; ?>'
-		},{
-			xtype:'hidden'
-			,name:'indicador_id'
-			,id:module+'indicador_id'
 		}]
 		,buttons: [{
 			text:Ext.ux.lang.buttons.cancel
@@ -291,11 +281,11 @@
 			});
 		};
 		arrValues     = [];
-		var year      = Ext.getCmp(module+'comboAnio_ini').getValue();
-		var perIni    = Ext.getCmp(module+'comboDesde_ini').getRawValue();
-		var perFin    = Ext.getCmp(module+'comboHasta_ini').getRawValue();
+		var yearIni      = Ext.getCmp(module+'comboAnio_ini').getValue();
+		var yearFin      = Ext.getCmp(module+'comboAnio_fin').getValue();
+		arrValues     = [];
 
-		arrValues.push(year + ' ' + perIni + ' - ' + perFin);
+		arrValues.push(yearIni + ' - ' + yearFin);
 		
 		arrDescription.push({
 			label: Ext.ux.lang.reports.period

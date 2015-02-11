@@ -32,7 +32,7 @@ return [
 		'valor_balanza'           => 'Balanza (US$)',
 		'valorarancel'            => 'Valor Arancel (US$)',
 		'arancel_pagado'          => 'Arancel Pagado (US$)',
-		'IHH'                     => 'IHH',
+		'IHH'                     => 'Indice de concentración IHH',
 		'PI'                      => 'Coeficiente penetración Impo',
 		'AE'                      => 'Coeficiente apertura Expo',
 		'CA'                      => 'Consumo Aparente',

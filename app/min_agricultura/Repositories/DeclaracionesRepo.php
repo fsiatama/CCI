@@ -1236,7 +1236,9 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData,
 			'periodo',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			Lang::get('indicador.columns_title.IHH')
 		);
 
 		$result = [
@@ -1253,13 +1255,21 @@ class DeclaracionesRepo extends BaseRepo {
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
 		$this->setTrade('expo');
-		$this->setRange('ini');
+		//$this->setRange('ini');
 
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
 		$columnValue      = $this->columnValueExpo;
 
 		$this->setFiltersValues();
+
+
+		$row = 'anio AS id';
+		//si el periodo es diferente a anual debe filtrar por año
+		if ($this->period != 12 && !empty($this->year)) {
+			$this->model->setAnio($this->year);
+			$row = 'periodo AS id';
+		}
 
 		if (!empty($arrFiltersValues['mercado_id'])) {
 			$result = $this->findCountriesByMarket($arrFiltersValues['mercado_id']);
@@ -1290,7 +1300,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->model->setId_posicion($energeticMiningSector);
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
-		$row = 'periodo AS id';
+		//$row = 'periodo AS id';
 
 		$arrRowField   = [$row, $rowField];
 

@@ -343,19 +343,13 @@ return [
 				'field_expo' => 'anio',
 				'field_impo' => 'anio',
 				'required'   => true,
-				'dateRange'  => ['desde_ini', 'hasta_ini'],
+				'yearRange'  => ['anio_fin'],
 			],[
-				'field'      => 'desde_ini',
-				'field_expo' => 'periodo',
-				'field_impo' => 'periodo',
-				'required'   => true,
-				'itComplements' => true, //son complemento del filtro anio
-			],[
-				'field'      => 'hasta_ini',
-				'field_expo' => 'periodo',
-				'field_impo' => 'periodo',
-				'required'   => true,
-				'itComplements' => true, //son complemento del filtro anio
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
 			]
 		],
 		'10' => [

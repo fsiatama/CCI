@@ -93,7 +93,7 @@
 		,tpl: resultTplPais
 		,displayFieldTpl:'({pais_iata}) - {pais}'
 	});
-	
+
 	var storeMercado = new Ext.data.JsonStore({
 		url:'mercado/list'
 		,id:module+'storeMercado'
@@ -251,7 +251,6 @@
 				xtype:'hidden'
 				,name:'indicador_id'
 				,id:module+'indicador_id'
-
 			}]
 		}]
 		,buttons: [{
@@ -302,7 +301,6 @@
 
 	function getDescription () {
 		var arrDescription = [];
-		
 		var arrValues      = [];
 		var selection      = Ext.getCmp(module+'comboPais').getSelectedRecords();
 		var label          = Ext.getCmp(module+'comboPais').fieldLabel;
