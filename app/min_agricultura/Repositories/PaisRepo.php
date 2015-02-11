@@ -93,7 +93,7 @@ class PaisRepo extends BaseRepo {
 			return $this->modelAdo->inSearch($this->model);
 		}
 		else {
-			$this->model->setId_pais($query);
+			//$this->model->setId_pais($query);
 			$this->model->setPais($query);
 			$this->model->setPais_iata($query);
 

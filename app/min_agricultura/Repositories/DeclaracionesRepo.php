@@ -491,7 +491,9 @@ class DeclaracionesRepo extends BaseRepo {
 				$arrData,
 				'periodo',
 				$arrSeries,
-				AREA
+				AREA,
+				'',
+				Lang::get('indicador.reports.BCR')
 			);
 
 			$result = [

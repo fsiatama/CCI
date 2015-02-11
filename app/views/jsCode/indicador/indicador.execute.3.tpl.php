@@ -46,10 +46,12 @@ $htmlDescription .= '</ol>';
 
 	storeBalanza.on('beforeload', function(){
 		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		if (!period) {
+		var scale  = Ext.getCmp(module + 'comboScale').getValue();
+		if (!year || !scale) {
 			return false;
 		};
 		this.setBaseParam('period', period);
+		this.setBaseParam('scale', scale);
 		Ext.ux.bodyMask.show();
 	});
 	
@@ -115,6 +117,7 @@ $htmlDescription .= '</ol>';
 	Ext.state.Manager.clear(gridBalanza.getItemId());
 	
 	var arrPeriods = <?= json_encode($periods); ?>;
+	var arrScales = <?= json_encode($scales); ?>;
 
 	/******************************************************************************************************************************************************************************/
 	
@@ -159,6 +162,19 @@ $htmlDescription .= '</ol>';
 				,selectOnFocus:true
 				,value: 12
 				,width: 100
+			},'-',{
+				xtype: 'label'
+				,text: Ext.ux.lang.reports.selectScale + ': '
+			},{
+				xtype: 'combo'
+				,store: arrScales
+				,id: module + 'comboScale'
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: 1
+				,width: 150
 			},'-',{
 				text: Ext.ux.lang.buttons.generate
 				,iconCls: 'icon-refresh'
