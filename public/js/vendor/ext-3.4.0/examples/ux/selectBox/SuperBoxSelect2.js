@@ -1613,7 +1613,11 @@ Ext.ux.form.SuperBoxSelectItem = Ext.extend(Ext.ux.form.SuperBoxSelectItem, Ext.
         if (btnEl === 'a') {
             cfg.href = '#';
         }
-        this.lnk = el.createChild(cfg);
+
+        //this.lnk = el.createChild(cfg, '', true);
+        var link = Ext.DomHelper.createDom(cfg);
+        el.appendChild(link);
+        this.lnk = Ext.get(link);
 
         if (!this.disabled) {
             this.enableLnkListeners();

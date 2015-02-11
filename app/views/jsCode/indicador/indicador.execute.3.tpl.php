@@ -47,7 +47,7 @@ $htmlDescription .= '</ol>';
 	storeBalanza.on('beforeload', function(){
 		var period = Ext.getCmp(module + 'comboPeriod').getValue();
 		var scale  = Ext.getCmp(module + 'comboScale').getValue();
-		if (!year || !scale) {
+		if (!period || !scale) {
 			return false;
 		};
 		this.setBaseParam('period', period);
