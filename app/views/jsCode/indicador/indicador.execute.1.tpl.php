@@ -42,11 +42,13 @@ $htmlDescription .= '</ol>';
 	storeBalanza.on('beforeload', function(){
 		var year   = Ext.getCmp(module + 'comboYear').getValue();
 		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		if (!year || !period) {
+		var scale  = Ext.getCmp(module + 'comboScale').getValue();
+		if (!year || !period || !scale) {
 			return false;
 		};
 		this.setBaseParam('year', year);
 		this.setBaseParam('period', period);
+		this.setBaseParam('scale', scale);
 		Ext.ux.bodyMask.show();
 	});
 	
@@ -86,9 +88,9 @@ $htmlDescription .= '</ol>';
 			forceFit:true
 		}
 		,enableColumnMove:false
-		,id:module+'gridBalanza'			
+		,id:module+'gridBalanza'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar: new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
@@ -103,9 +105,10 @@ $htmlDescription .= '</ol>';
 	var defaultYear = <?= end($yearsAvailable); ?>;
 	
 	var arrPeriods = <?= json_encode($periods); ?>;
+	var arrScales = <?= json_encode($scales); ?>;
 
 	/******************************************************************************************************************************************************************************/
-	
+
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
 		,id:module + 'excuteIndicadorContainer'
@@ -168,6 +171,19 @@ $htmlDescription .= '</ol>';
 				,value: defaultYear
 				,disabled: true
 				,width: 100
+			},'-',{
+				xtype: 'label'
+				,text: Ext.ux.lang.reports.selectScale + ': '
+			},{
+				xtype: 'combo'
+				,store: arrScales
+				,id: module + 'comboScale'
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: 1
+				,width: 150
 			},'-',{
 				text: Ext.ux.lang.buttons.generate
 				,iconCls: 'icon-refresh'

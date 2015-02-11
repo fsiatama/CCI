@@ -33,21 +33,27 @@ $htmlDescription .= '</ol>';
 		}
 		,fields:[
 			{name:'id', type:'float'},
+			{name:'numero', type:'string'},
 			{name:'id_posicion', type:'string'},
 			{name:'posicion', type:'string'},
 			{name:'valor_expo', type:'float'},
-			{name:'participacion', type:'float'}
+			{name:'participacion', type:'float'},
 		]
 	});
 
 
 	storeBalanza.on('beforeload', function(){
+		var scale  = Ext.getCmp(module + 'comboScale').getValue();
+		if (!scale) {
+			return false;
+		};
+		this.setBaseParam('scale', scale);
 		/*var scope = Ext.getCmp(module + 'comboScope').getValue();
 		if (!scope) {
 			return false;
 		};
-		this.setBaseParam('scope', scope);
-		Ext.ux.bodyMask.show();*/
+		this.setBaseParam('scope', scope);*/
+		Ext.ux.bodyMask.show();
 	});
 
 	storeBalanza.on('load', function(store){
@@ -67,14 +73,14 @@ $htmlDescription .= '</ol>';
 	});
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
+			{header:'<?= Lang::get('indicador.columns_title.numero'); ?>', dataIndex:'numero', align: 'left', width: 25},
 			{header:'<?= Lang::get('indicador.columns_title.posicion'); ?>', dataIndex:'id_posicion', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.desc_posicion'); ?>', dataIndex:'posicion', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat},
+			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat,align: 'right'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat,align: 'right'},
 		]
 		,defaults: {
-			sortable: true
-			,align: 'right'
+			sortable: false
 		}
 	});
 
@@ -105,6 +111,7 @@ $htmlDescription .= '</ol>';
 
 	var arrPeriods = <?= json_encode($periods); ?>;
 	var arrScopes  = <?= json_encode($scopes); ?>;
+	var arrScales = <?= json_encode($scales); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -132,11 +139,24 @@ $htmlDescription .= '</ol>';
 					'<div class="clearfix"></div><?= $htmlDescription; ?>' +
 				'</div>' +
 			'</div>'
-		/*},{
+		},{
 			style:{padding:'0px'}
 			,border:true
 			,html: ''
 			,tbar:[{
+				xtype: 'label'
+				,text: Ext.ux.lang.reports.selectScale + ': '
+			},{
+				xtype: 'combo'
+				,store: arrScales
+				,id: module + 'comboScale'
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: 1
+				,width: 150
+			/*},'-',{
 				xtype: 'label'
 				,text: Ext.ux.lang.reports.selectScope + ': '
 			},{
@@ -148,14 +168,14 @@ $htmlDescription .= '</ol>';
 				,triggerAction: 'all'
 				,selectOnFocus:true
 				,value: 1
-				,width: 100
+				,width: 100*/
 			},'-',{
 				text: Ext.ux.lang.buttons.generate
 				,iconCls: 'icon-refresh'
 				,handler: function () {
 					storeBalanza.load();
 				}
-			}]*/
+			}]
 		},{
 			height:430
 			,html:'<div id="' + module + 'PieChart"></div>'

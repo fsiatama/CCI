@@ -36,7 +36,8 @@ $htmlDescription .= '</ol>';
 			{name:'impoValue', type:'float'},
 			{name:'expoPeriod', type:'string'},
 			{name:'expoValue', type:'float'},
-			{name:'variation', type:'float'}
+			{name:'variation', type:'float'},
+			{name:'rateVariation', type:'float'},
 		]
 	});
 
@@ -64,7 +65,7 @@ $htmlDescription .= '</ol>';
 	var titles = [
 		{header: Ext.ux.lang.reports.initialRange, colspan: 2, align: 'center'},
 		{header: Ext.ux.lang.reports.finalRange, colspan: 2, align: 'center'},
-		{header: '', colspan: 1, align: 'center'}
+		{header: '', colspan: 2, align: 'center'}
 	];
 
 	var group = new Ext.ux.grid.ColumnHeaderGroup({
@@ -77,7 +78,8 @@ $htmlDescription .= '</ol>';
 			{header:'<?= Lang::get('indicador.columns_title.numero_productos_impo'); ?>', dataIndex:'impoValue' ,'renderer':integerFormat},
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'expoPeriod', align:'left'},
 			{header:'<?= Lang::get('indicador.columns_title.numero_productos_expo'); ?>', dataIndex:'expoValue' ,'renderer':integerFormat},
-			{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat}
+			{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat},
+			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':unsignedFormat}
 		]
 		,defaults: {
 			sortable: true

@@ -42,6 +42,7 @@ return [
 		'numero_productos_expo'   => 'Número Productos Exportados',
 		'numero_productos_impo'   => 'Número Productos Importados',
 		'numero_productos'        => 'Número Productos',
+		'numero'                  => 'Número',
     ],
     'reports' => [
 		'annual'            => 'Anual',

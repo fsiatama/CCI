@@ -24,7 +24,7 @@ class DeclaracionesRepo extends BaseRepo {
 	protected $linesConfig;
 	protected $scope;
 	private $scale;
-	private $divisor;
+	private $divisor = 1;
 	private $pYAxisName;
 
 	public function __construct($rowIndicador, $filtersConfig, $year, $period, $scope, $scale = '1')
@@ -624,7 +624,9 @@ class DeclaracionesRepo extends BaseRepo {
 					$arrData,
 					'rowIndex',
 					$arrSeries,
-					COLUMNAS
+					COLUMNAS,
+					'',
+					$this->pYAxisName
 				);
 
 				$result = [
@@ -684,41 +686,65 @@ class DeclaracionesRepo extends BaseRepo {
 		$totalValue = 0;
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
-			$totalValue += (float)$rowExpo[$this->columnValueExpo];
+			$totalValue += ( (float)$rowExpo[$this->columnValueExpo] / $this->divisor );
 		}
 
 		$arrData           = [];
+		$arrChartData      = [];
 		$othersValue       = 0;
-		$othersId          = 0;
+		$indexId           = 0;
 		$othersRate        = 0;
 		$cumulativeRate    = 0;
 		$ConcentrationRate = Helpers::arrayGet($this->linesConfig, 'ConcentrationExportableSupply');
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
 
-			$rate = round( ($rowExpo[$this->columnValueExpo] / $totalValue ) * 100 , 2 );
+			$valueExpo = ( (float)$rowExpo[$this->columnValueExpo] / $this->divisor );
+			$indexId  += 1;
+
+			$rate = round( ( $valueExpo / $totalValue ) * 100 , 2 );
 			$cumulativeRate += $rate;
 			if ($cumulativeRate <= 80) {
 				$arrData[] = [
-					'id'            => $keyExpo,
+					'id'            => $indexId,
+					'numero'        => $indexId,
 					'id_posicion'   => $rowExpo['id_posicion'],
 					'posicion'      => $rowExpo['posicion'],
-					'valor_expo'    => $rowExpo[$this->columnValueExpo],
+					'valor_expo'    => $valueExpo,
+					'participacion' => $rate
+				];
+				$arrChartData[] = [
+					'posicion'      => '(' . $rowExpo['id_posicion'] . ') ' . $rowExpo['posicion'],
+					'valor_expo'    => $valueExpo,
 					'participacion' => $rate
 				];
 			} else {
 				$othersRate  += $rate;
-				$othersValue += $rowExpo[$this->columnValueExpo];
-				$othersId     = $keyExpo;
+				$othersValue += $valueExpo;
 			}
 		}
 
-
 		//agrega la fila con el registro acumulado de las demas posiciones
+		$indexId  += 1;
 		$arrData[] = [
-			'id'            => $othersId,
-			'id_posicion'   => Lang::get('indicador.reports.others'),
-			'posicion'      => '*************************',
+			'id'            => $indexId,
+			'numero'        => '',
+			'id_posicion'   => '*************************',
+			'posicion'      => Lang::get('indicador.reports.others'),
+			'valor_expo'    => $othersValue,
+			'participacion' => $othersRate
+		];
+		$indexId  += 1;
+		$arrData[] = [
+			'id'            => $indexId,
+			'numero'        => '',
+			'id_posicion'   => '*************************',
+			'posicion'      => Lang::get('indicador.columns_title.valor_expo'),
+			'valor_expo'    => $totalValue,
+			'participacion' => 100
+		];
+		$arrChartData[] = [
+			'posicion'      => Lang::get('indicador.reports.others'),
 			'valor_expo'    => $othersValue,
 			'participacion' => $othersRate
 		];
@@ -728,8 +754,8 @@ class DeclaracionesRepo extends BaseRepo {
 		];
 
 		$pieChart = Helpers::jsonChart(
-			$arrData,
-			'id_posicion',
+			$arrChartData,
+			'posicion',
 			$arrSeries,
 			PIE
 		);
@@ -827,17 +853,19 @@ class DeclaracionesRepo extends BaseRepo {
 
 			}
 
-			$variation = $rowImpo[$columnValue] - $expoValue;
+			$variation     = $rowImpo[$columnValue] - $expoValue;
+			$rateVariation = ( $rowImpo[$columnValue] == 0 ) ? 0: ( $variation / $rowImpo[$columnValue] );
 			$rowIndex     += 1;
 
 			$arrData[] = [
-				'id'         => $rowImpo['id'],
-				'rowIndex'   => 'Q'.$rowIndex,
-				'impoPeriod' => $rowImpo['periodo'],
-				'impoValue'  => $rowImpo[$columnValue],
-				'expoPeriod' => $expoPeriod,
-				'expoValue'  => $expoValue,
-				'variation'  => $variation
+				'id'            => $rowImpo['id'],
+				'rowIndex'      => 'Q'.$rowIndex,
+				'impoPeriod'    => $rowImpo['periodo'],
+				'impoValue'     => $rowImpo[$columnValue],
+				'expoPeriod'    => $expoPeriod,
+				'expoValue'     => $expoValue,
+				'variation'     => $variation,
+				'rateVariation' => $rateVariation,
 			];
 
 		}
@@ -858,15 +886,18 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		$arrSeries = [
-			'impoValue' => Lang::get('indicador.reports.imports'),
-			'expoValue'  => Lang::get('indicador.reports.exports'),
+			'impoValue' => Lang::get('indicador.columns_title.numero_productos_impo'),
+			'expoValue' => Lang::get('indicador.columns_title.numero_productos_expo'),
+			'variation' => Lang::get('indicador.reports.diferencia'),
 		];
 
 		$columnChart = Helpers::jsonChart(
 			$arrData,
 			'rowIndex',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			Lang::get('indicador.columns_title.numero_productos')
 		);
 
 		$result = [
@@ -971,7 +1002,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 			}
 
-			$variation  = ($valueLast == 0) ? 0 : (($rowFirst[$columnValue] - $valueLast) / $valueLast);
+			$variation  = ($rowFirst[$columnValue] == 0) ? 0 : ( ( $valueLast - $rowFirst[$columnValue] ) / $rowFirst[$columnValue]);
 			$rowIndex  += 1;
 
 			$arrData[] = [

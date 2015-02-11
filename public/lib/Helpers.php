@@ -113,6 +113,7 @@ class Helpers
 			,'divlineisdashed'     => '1'
 			,'placevaluesinside'   => '1'
 			,'exportenabled'       => '1'
+			,'showPercentValues'   => '1'
 			,'areaovercolumns'     => '0'
 			,'showaboutmenuitem'   => '0'
 			,'showlabels'          => '1'
