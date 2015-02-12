@@ -39,6 +39,7 @@ return [
 		'CAA'                     => 'Coeficiente de Autosuficiencia Alimentaria',
 		'IEI'                     => 'Coeficiente de Penetración de Mercado',
 		'numero_empresas'         => 'Número Empresas',
+		'numero_empresas_expo'    => 'Número Empresas Exportadoras',
 		'numero_productos_expo'   => 'Número Productos Exportados',
 		'numero_productos_impo'   => 'Número Productos Importados',
 		'numero_productos'        => 'Número Productos',

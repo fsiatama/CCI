@@ -29,26 +29,27 @@
 		,baseParams:{id:'<?= $id; ?>'}
 		,fields:[
 			{name:'id_pais', type:'float'},
-			{name:'pais', type:'string'}
+			{name:'pais', type:'string'},
+			{name:'pais_iata', type:'string'},
 		]
 	});
 	var resultTplPais = new Ext.XTemplate(
 		'<tpl for=".">' +
-			'<div class="search-item x-combo-list-item" ext:qtip="{id_pais}">' +
-				'<span><b>{id_pais}</b>&nbsp;-&nbsp;{pais}</span>' +
+			'<div class="search-item x-combo-list-item" ext:qtip="{pais_iata}">' +
+				'<span><b>{pais_iata}</b>&nbsp;-&nbsp;{pais}</span>' +
 			'</div>' +
 		'</tpl>'
 	);
 	var comboPais = new Combo({
 		id:module+'comboPais'
 		//,singleMode:true
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
+		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>'
 		,name:'id_pais[]'
 		,store:storePais
 		,displayField:'pais'
 		,valueField:'id_pais'
 		,tpl: resultTplPais
-		,displayFieldTpl:'({id_pais}) - {pais}'
+		,displayFieldTpl:'({pais_iata}) - {pais}'
 	});
 
 	var storeMercado = new Ext.data.JsonStore({
@@ -316,7 +317,6 @@
 				xtype:'hidden'
 				,name:'indicador_id'
 				,id:module+'indicador_id'
-
 			}]
 		}]
 		,buttons: [{

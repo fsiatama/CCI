@@ -1514,9 +1514,14 @@ class DeclaracionesRepo extends BaseRepo {
 		$columnValue      = $this->columnValueExpo;
 		$this->setFiltersValues();
 
+		$row = 'anio AS id';
+		//si el periodo es diferente a anual debe filtrar por año
+		if ($this->period != 12 && !empty($this->year)) {
+			$this->model->setAnio($this->year);
+			$row = 'periodo AS id';
+		}
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
-		$row = 'periodo AS id';
 
 		$arrRowField   = [$row, $rowField];
 
@@ -1537,8 +1542,14 @@ class DeclaracionesRepo extends BaseRepo {
 			}
 			$arrProduct = $result['data'];
 
-			//busca los datos del total de exportaciones
-			$this->model->setId_posicion('');
+			//busca los datos del total de exportaciones del sector agricola
+			$result = $this->findProductsBySector('sectorIdAgriculture');
+			if (!$result['success']) {
+				return $result;
+			}
+			$productsAgriculture = $result['data'];
+			$this->model->setId_posicion($productsAgriculture);
+			//$this->model->setId_posicion('');
 			$result = $this->modelAdo->pivotSearch($this->model);
 
 			if ($result['success']) {
@@ -1554,9 +1565,9 @@ class DeclaracionesRepo extends BaseRepo {
 						$rowTotal['periodo']
 					);
 
-					$totalProduct = ($rowProduct !== false) ? $rowProduct[$columnValue] : 0 ;
+					$totalProduct = ($rowProduct !== false) ? ( $rowProduct[$columnValue] / $this->divisor ) : 0 ;
 
-					$total = ($rowTotal[$columnValue] == 0) ? 1 : $rowTotal[$columnValue] ;
+					$total = ($rowTotal[$columnValue] == 0) ? 1 : ( $rowTotal[$columnValue] / $this->divisor ) ;
 					$rate  = round( ($totalProduct / $total ) * 100 , 2 );
 
 					$arrData[] = [
@@ -1577,7 +1588,9 @@ class DeclaracionesRepo extends BaseRepo {
 					$arrData,
 					'periodo',
 					$arrSeries,
-					COLUMNAS
+					COLUMNAS,
+					'',
+					$this->pYAxisName
 				);
 
 				$result = [
@@ -1696,7 +1709,9 @@ class DeclaracionesRepo extends BaseRepo {
 					$arrData,
 					'rowIndex',
 					$arrSeries,
-					COLUMNAS
+					COLUMNAS,
+					'',
+					Lang::get('indicador.columns_title.numero_empresas_expo')
 				);
 
 				$result = [

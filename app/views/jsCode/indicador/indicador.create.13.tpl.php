@@ -11,7 +11,7 @@
 		,forceSelection:true
 		,allowNewData:true
 		,extraItemCls:'x-tag'
-		//,allowBlank:false
+		,allowBlank:true
 		,extraItemStyle:'border-width:2px'
 		,stackItems:true
 		,mode:'remote'
@@ -20,7 +20,7 @@
 		,itemSelector:'.search-item'
 		,pageSize:10
 	});
-	/*var storePais = new Ext.data.JsonStore({
+	var storePais = new Ext.data.JsonStore({
 		url:'pais/list'
 		,id:module+'storePais'
 		,root:'data'
@@ -29,26 +29,59 @@
 		,baseParams:{id:'<?= $id; ?>'}
 		,fields:[
 			{name:'id_pais', type:'float'},
-			{name:'pais', type:'string'}
+			{name:'pais', type:'string'},
+			{name:'pais_iata', type:'string'},
 		]
 	});
 	var resultTplPais = new Ext.XTemplate(
 		'<tpl for=".">' +
-			'<div class="search-item x-combo-list-item" ext:qtip="{id_pais}">' +
-				'<span><b>{id_pais}</b>&nbsp;-&nbsp;{pais}</span>' +
+			'<div class="search-item x-combo-list-item" ext:qtip="{pais_iata}">' +
+				'<span><b>{pais_iata}</b>&nbsp;-&nbsp;{pais}</span>' +
 			'</div>' +
 		'</tpl>'
 	);
 	var comboPais = new Combo({
 		id:module+'comboPais'
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
+		//,singleMode:true
+		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>'
 		,name:'id_pais[]'
 		,store:storePais
 		,displayField:'pais'
 		,valueField:'id_pais'
 		,tpl: resultTplPais
-		,displayFieldTpl:'({id_pais}) - {pais}'
-	});*/
+		,displayFieldTpl:'({pais_iata}) - {pais}'
+	});
+
+	var storeMercado = new Ext.data.JsonStore({
+		url:'mercado/list'
+		,id:module+'storeMercado'
+		,root:'data'
+		,sortInfo:{field:'mercado_id',direction:'ASC'}
+		,totalProperty:'total'
+		,baseParams:{id:'<?= $id; ?>'}
+		,fields:[
+			{name:'mercado_id', type:'float'},
+			{name:'mercado_nombre', type:'string'}
+		]
+	});
+	var resultTplMercado = new Ext.XTemplate(
+		'<tpl for=".">' +
+			'<div class="search-item x-combo-list-item">' +
+				'<span>{mercado_nombre}</span>' +
+			'</div>' +
+		'</tpl>'
+	);
+	var comboMercado = new Combo({
+		id:module+'comboMercado'
+		,singleMode:true
+		,fieldLabel:'<?= Lang::get('mercado.columns_title.mercado_nombre'); ?>'
+		,name:'mercado_id[]'
+		,store:storeMercado
+		,displayField:'mercado_nombre'
+		,valueField:'mercado_id'
+		,tpl: resultTplMercado
+		,displayFieldTpl:'{mercado_nombre}'
+	});
 
 	var configStorePosicion = {
 		url:'posicion/list'
@@ -151,7 +184,8 @@
 				{name:'indicador_id', mapping:'indicador_id', type:'float'},
 				{name:'indicador_tipo_indicador_id', mapping:'indicador_tipo_indicador_id', type:'float'},
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
-				/*{name:'id_pais', mapping:'id_pais', type:'string'},*/
+				{name:'id_pais', mapping:'id_pais', type:'string'},
+				{name:'mercado_id', mapping:'mercado_id', type:'string'},
 				{name:'id_posicion', mapping:'id_posicion', type:'string'},
 				{name:'anio_ini', mapping:'anio_ini', type:'float'},
 				{name:'desde_ini', mapping:'desde_ini', type:'float'},
@@ -204,10 +238,27 @@
 			},{
 				defaults:{anchor:'100%'}
 				,items:[comboHasta_ini]
-			/*},{
+			}]
+		},{
+			xtype:'fieldset'
+			,title: Ext.ux.lang.reports.filters
+			,layout:'column'
+			,flex: 1
+			,defaults:{
+				columnWidth:1
+				,layout:'form'
+				,labelAlign:'top'
+				,border:false
+				,xtype:'panel'
+				,bodyStyle:'padding:0 18px 0 0'
+			}
+			,items:[{
 				defaults:{anchor:'100%'}
-				,columnWidth:1
-				,items:[comboPais]*/
+				,items:[comboPais]
+			},{
+				defaults:{anchor:'100%'}
+				,items:[comboMercado]
+			},{
 			},{
 				defaults:{anchor:'100%'}
 				,columnWidth:1
@@ -256,7 +307,8 @@
 			,waitMsg: 'Loading......'
 			,success: function(formulario, response) {
 				Ext.getCmp(module+'comboPosicion').setValue(response.result.data.id_posicion);
-				/*Ext.getCmp(module+'comboPais').setValue(response.result.data.id_pais);*/
+				Ext.getCmp(module+'comboPais').setValue(response.result.data.id_pais);
+				Ext.getCmp(module+'comboMercado').setValue(response.result.data.mercado_id);
 			}
 		});
 	});";
@@ -271,16 +323,32 @@
 	function getDescription () {
 		var arrDescription = [];
 		var arrValues      = [];
-		/*var selection      = Ext.getCmp(module+'comboPais').getSelectedRecords();
+		var selection      = Ext.getCmp(module+'comboPais').getSelectedRecords();
 		var label          = Ext.getCmp(module+'comboPais').fieldLabel;
 		
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('pais'));
 		});
-		arrDescription.push({
-			label: label
-			,values: arrValues
-		});*/
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
+
+		arrValues      = [];
+		selection      = Ext.getCmp(module+'comboMercado').getSelectedRecords();
+		label          = Ext.getCmp(module+'comboMercado').fieldLabel;
+		
+		Ext.each(selection,function(row){
+			arrValues.push(row.get('mercado_nombre'));
+		});
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
 
 		arrValues      = [];
 		selection      = Ext.getCmp(module+'comboPosicion').getSelectedRecords();
@@ -304,7 +372,6 @@
 			label: Ext.ux.lang.reports.period
 			,values: arrValues
 		});
-
 		return arrDescription;
 	}
 	function fnCloseTab(){

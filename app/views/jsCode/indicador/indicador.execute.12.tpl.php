@@ -74,9 +74,9 @@ $htmlDescription .= '</ol>';
 	var colModelBalanza = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'firstPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_empresas'); ?>', dataIndex:'firstValue' ,'renderer':integerFormat},
+			{header:'<?= Lang::get('indicador.columns_title.numero_empresas_expo'); ?>', dataIndex:'firstValue' ,'renderer':integerFormat},
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'lastPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_empresas'); ?>', dataIndex:'lastValue' ,'renderer':integerFormat},
+			{header:'<?= Lang::get('indicador.columns_title.numero_empresas_expo'); ?>', dataIndex:'lastValue' ,'renderer':integerFormat},
 			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':rateFormat}
 		]
 		,defaults: {
