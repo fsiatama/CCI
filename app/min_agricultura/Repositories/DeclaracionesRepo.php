@@ -1342,11 +1342,11 @@ class DeclaracionesRepo extends BaseRepo {
 							$rowTotal['periodo']
 						);
 
-						$totalProductsAgriculture   = ($rowProductsAgriculture   !== false) ? $rowProductsAgriculture[$columnValue]   : 0 ;
-						$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? $rowEnergeticMiningSector[$columnValue] : 0 ;
+						$totalProductsAgriculture   = ($rowProductsAgriculture   !== false) ? ( $rowProductsAgriculture[$columnValue] / $this->divisor )   : 0 ;
+						$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? ( $rowEnergeticMiningSector[$columnValue] / $this->divisor ) : 0 ;
 
-						$total = $rowTotal[$columnValue] - $totalEnergeticMiningSector;
-						$total = ($total == 0) ? 1 : $total ;
+						$total = ( $rowTotal[$columnValue]  / $this->divisor ) - $totalEnergeticMiningSector;
+						$total = ( $total == 0 ) ? 1 : $total ;
 						$rate  = round( ($totalProductsAgriculture / $total ) * 100 , 2 );
 
 						$arrData[] = [
@@ -1367,7 +1367,9 @@ class DeclaracionesRepo extends BaseRepo {
 						$arrData,
 						'periodo',
 						$arrSeries,
-						COLUMNAS
+						COLUMNAS,
+						'',
+						$this->pYAxisName
 					);
 
 					$result = [
@@ -1388,12 +1390,19 @@ class DeclaracionesRepo extends BaseRepo {
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
 		$this->setTrade('expo');
-		$this->setRange('ini');
+		//$this->setRange('ini');
 
 		$this->model      = $this->getModelExpo();
 		$this->modelAdo   = $this->getModelExpoAdo();
 		$columnValue      = $this->columnValueExpo;
 		$this->setFiltersValues();
+
+		$row = 'anio AS id';
+		//si el periodo es diferente a anual debe filtrar por año
+		if ($this->period != 12 && !empty($this->year)) {
+			$this->model->setAnio($this->year);
+			$row = 'periodo AS id';
+		}
 
 		if (!empty($arrFiltersValues['mercado_id'])) {
 			$result = $this->findCountriesByMarket($arrFiltersValues['mercado_id']);
@@ -1422,7 +1431,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->model->setId_posicion($productsTraditional);
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
-		$row = 'periodo AS id';
+		//$row = 'periodo AS id';
 
 		$arrRowField   = [$row, $rowField];
 
@@ -1453,10 +1462,10 @@ class DeclaracionesRepo extends BaseRepo {
 						$rowTotal['periodo']
 					);
 
-					$totalProductsTraditional    = ($rowProductsTraditional !== false) ? $rowProductsTraditional[$columnValue] : 0 ;
-					$totalProductsNonTraditional = $rowTotal[$columnValue] - $totalProductsTraditional;
+					$totalProductsTraditional    = ( $rowProductsTraditional !== false ) ? ( $rowProductsTraditional[$columnValue] / $this->divisor ) : 0 ;
+					$totalProductsNonTraditional = ( $rowTotal[$columnValue] / $this->divisor ) - $totalProductsTraditional;
 
-					$total = ($rowTotal[$columnValue] == 0) ? 1 : $rowTotal[$columnValue] ;
+					$total = ($rowTotal[$columnValue] == 0) ? 1 : ( $rowTotal[$columnValue] / $this->divisor ) ;
 					$rate  = round( ($totalProductsNonTraditional / $total ) * 100 , 2 );
 
 					$arrData[] = [
@@ -1477,7 +1486,9 @@ class DeclaracionesRepo extends BaseRepo {
 					$arrData,
 					'periodo',
 					$arrSeries,
-					COLUMNAS
+					COLUMNAS,
+					'',
+					$this->pYAxisName
 				);
 
 				$result = [
