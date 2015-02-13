@@ -1737,6 +1737,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$columnValue1 = 'valorarancel';
 		$columnValue2 = 'arancel_pagado';
+		$columnValue3 = 'valor_pesos';
 
 		if (!array_key_exists('id_posicion', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
@@ -1754,7 +1755,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$arrRowField = ['id', 'decl.id_posicion', 'posicion', 'pais'];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields([$columnValue1, $columnValue2]);
+		$this->modelAdo->setPivotTotalFields([$columnValue1, $columnValue2/*, $columnValue3*/]);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 		$this->modelAdo->setPivotSortColumn($columnValue1 . ' DESC');
 
@@ -1784,13 +1785,25 @@ class DeclaracionesRepo extends BaseRepo {
 					'pais'           => $rowImpo['pais'],
 					'arancel_pagado' => (float)$rowImpo[$columnValue2],
 					'valorarancel'   => (float)$rowImpo[$columnValue1],
+					//'valor_impo'     => (float)$rowImpo[$columnValue3],
 					'participacion'  => ( $rate * 100 )
 				];
 			}
+			$arrSeries = [
+				'valorarancel' => Lang::get('indicador.columns_title.participacion_arancel')
+			];
+
+			$pieChart = Helpers::jsonChart(
+				$arrData,
+				'posicion',
+				$arrSeries,
+				PIE
+			);
 			$result = [
 				'success'         => true,
 				'data'            => $arrData,
 				'average'         => $average,
+				'pieChartData'    => $pieChart,
 				'total'           => count($arrData)
 			];
 		}

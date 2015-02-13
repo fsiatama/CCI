@@ -54,6 +54,12 @@ $htmlDescription .= '</ol>';
 		el.update(average);
 		var height = (store.reader.jsonData.total * 33) + 50;
 		Ext.getCmp(module+'gridIndicador').setHeight(height);
+		if (typeof(store.reader.jsonData.pieChartData) === 'object') {
+			var chart = new FusionCharts('<?= PIE; ?>', module + 'PieChartId', '100%', '100%', '0', '1');
+			chart.setTransparent(true);
+			chart.setJSONData(store.reader.jsonData.pieChartData);
+			chart.render(module + 'PieChart');
+		}
 		Ext.ux.bodyMask.hide();
 
 	});
@@ -124,6 +130,14 @@ $htmlDescription .= '</ol>';
 					'<div class="clearfix"></div><?= $htmlDescription; ?>' +
 				'</div>' +
 			'</div>'
+		},{
+			height:430
+			,html:'<div id="' + module + 'PieChart"></div>'
+			,items:[{
+				xtype:'panel'
+				,id: module + 'PieChart'
+				,plain:true
+			}]
 		},{
 			style:{padding:'0px'}
 			,html: '<div class="bootstrap-styles">' +

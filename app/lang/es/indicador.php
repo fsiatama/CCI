@@ -31,6 +31,7 @@ return [
 		'valor_expo_sector'       => 'Sector Expo FOB (US$)',
 		'valor_balanza'           => 'Balanza (US$)',
 		'valorarancel'            => 'Valor Arancel (US$)',
+		'participacion_arancel'   => 'Participación % Valor Arancel',
 		'arancel_pagado'          => 'Arancel Pagado (US$)',
 		'IHH'                     => 'Indice de concentración IHH',
 		'PI'                      => 'Coeficiente penetración Impo',
