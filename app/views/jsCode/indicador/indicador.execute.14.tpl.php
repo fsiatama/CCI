@@ -34,8 +34,8 @@ $htmlDescription .= '</ol>';
 		,fields:[
 			{name:'id', type:'float'},
 			{name:'periodo', type:'string'},
-			{name:'valor_impo', type:'float'},
-			{name:'valor_expo', type:'float'},
+			{name:'valor_impo_colombia', type:'float'},
+			{name:'valor_impo_world', type:'float'},
 		]
 	});
 
@@ -48,17 +48,17 @@ $htmlDescription .= '</ol>';
 		var height = (store.reader.jsonData.total * 33) + 50;
 		Ext.getCmp(module+'gridIndicador').setHeight(height);
 
-		var el         = Ext.Element.get(module + 'growthRateExpo');
-		var growthRate = rateFormat(store.reader.jsonData.growthRateExpo);
+		var el         = Ext.Element.get(module + 'growthRateColombia');
+		var growthRate = rateFormat(store.reader.jsonData.growthRateColombia);
 		el.update(growthRate);
 
-		el         = Ext.Element.get(module + 'growthRateImpo');
-		growthRate = rateFormat(store.reader.jsonData.growthRateImpo);
+		el         = Ext.Element.get(module + 'growthRateWorld');
+		growthRate = rateFormat(store.reader.jsonData.growthRateWorld);
 		el.update(growthRate);
 
-		el         = Ext.Element.get(module + 'rateVariation');
+		/*el         = Ext.Element.get(module + 'rateVariation');
 		growthRate = rateFormat(store.reader.jsonData.rateVariation);
-		el.update(growthRate);
+		el.update(growthRate);*/
 
 		Ext.ux.bodyMask.hide();
 
@@ -66,8 +66,8 @@ $htmlDescription .= '</ol>';
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat, align:'right'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.comtrade_columns_title.valor_impo_desde_col'); ?>', dataIndex:'valor_impo_colombia' ,'renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.comtrade_columns_title.valor_impo'); ?>', dataIndex:'valor_impo_world' ,'renderer':numberFormat, align:'right'},
 		]
 		,defaults: {
 		}
@@ -130,18 +130,18 @@ $htmlDescription .= '</ol>';
 			style:{padding:'0px'}
 			,html: '<div class="bootstrap-styles">' +
 				'<div class="row text-center countTo">' +
-					'<div class="col-md-4">' +
-						'<label>' + Ext.ux.lang.reports.growthRateExpo + '</label>' +
-						'<strong id="' + module + 'growthRateExpo">0</strong>' +
+					'<div class="col-md-4 col-md-offset-2">' +
+						'<label>' + Ext.ux.lang.reports.growthRateColombia + '</label>' +
+						'<strong id="' + module + 'growthRateColombia">0</strong>' +
 					'</div>' +
 					'<div class="col-md-4">' +
-						'<label>' + Ext.ux.lang.reports.growthRateImpo + '</label>' +
-						'<strong id="' + module + 'growthRateImpo">0</strong>' +
+						'<label>' + Ext.ux.lang.reports.growthRateWorld + '</label>' +
+						'<strong id="' + module + 'growthRateWorld">0</strong>' +
 					'</div>' +
-					'<div class="col-md-4">' +
+					/*'<div class="col-md-4">' +
 						'<label><?= Lang::get('indicador.reports.growVariation'); ?></label>' +
 						'<strong id="' + module + 'rateVariation">0</strong>' +
-					'</div>' +
+					'</div>' +*/
 				'</div>' +
 			'</div>'
 		},{

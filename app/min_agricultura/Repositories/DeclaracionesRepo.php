@@ -1811,7 +1811,160 @@ class DeclaracionesRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function executeRelacionCrecimientoImpoExpo()
+	public function executeComtradeRelacionCrecimientoExpoColombiaImpoPais()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setRange('ini');
+		$yearFirst = $arrFiltersValues['anio_ini'];
+		$yearLast  = $arrFiltersValues['anio_fin'];
+		$rangeYear = range($yearFirst, $yearLast);
+
+		$id_pais_destino = $arrFiltersValues['id_pais_destino'];
+		$id_subpartida   = $arrFiltersValues['id_subpartida'];
+
+		if (
+			empty($yearFirst) ||
+			empty($yearLast) ||
+			empty($id_pais_destino) ||
+			empty($id_subpartida)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+		
+		$baseUrl = Helpers::arrayGet($this->linesConfig, 'urlApiComtrade');
+		$colombiaIdComtrade = Helpers::arrayGet($this->linesConfig, 'colombiaIdComtrade');
+
+		//curl 'http://comtrade.un.org/api/get?max=500&type=C&freq=A&px=HS&ps=2013%2C2010%2C2011%2C2012&r=170%2C218&p=0&rg=1%2C2&cc=01&token=56233621927079056ea4d1e49ecf8f11' -H 'Host: comtrade.un.org' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:34.0) Gecko/20100101 Firefox/34.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: es-MX,es-ES;q=0.8,es-AR;q=0.7,es;q=0.5,en-US;q=0.3,en;q=0.2' -H 'Accept-Encoding: gzip, deflate' -H 'X-Requested-With: XMLHttpRequest' -H 'Referer: http://comtrade.un.org/data/' -H 'Cookie: _ga=GA1.2.2137246786.1419954195; ASPSESSIONIDAACRDDSB=HGLJBMEDNOAGEKOAKDFCLCBC; _gat=1; _gali=preview'
+
+		$parameters = [
+			'max'  => 5000,
+			'type' => 'C',
+			'freq' => 'A', //frecuancia anual
+			'px'   => 'HS',
+			'rg'   => '1', //impo y expo
+			'ps'   => implode(',', $rangeYear),
+			'r'    => $id_pais_destino,
+			'p'    => '0,' . $colombiaIdComtrade, //0 = world; 
+			'cc'   => $id_subpartida,
+		];
+
+		$url = $baseUrl . '?' . http_build_query($parameters);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		$result = json_decode(curl_exec($ch), true);
+
+		$validation = ( empty($result['validation']['status']['name']) ) ? 'ok' : $result['validation']['status']['name'] ;
+		$message = ( empty($result['validation']['message']) ) ? '' : $result['validation']['message'] ;
+
+		if ( $validation != 'ok' && ! empty( $message ) ) {
+			$result = [
+				'success' => false,
+				'error'   => $message
+			];
+			return $result;
+		}
+
+		if (empty($result['dataset'])) {
+			$result = [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found_comtrade')
+			];
+			return $result;
+		}
+
+		$arrDataColombia    = [];
+		$arrDataWorld       = [];
+		$arrData            = [];
+		$columnValue        = 'TradeValue';
+		$valueColombiaFirst = 1;
+		$valueWorldFirst    = 1;
+		$valueColombiaLast  = 0;
+		$valueWorldLast     = 0;
+
+		usort($result['dataset'], Helpers::arraySortByValue('yr'));
+
+		foreach ($result['dataset'] as $key => $row) {				
+			if ($row['ptCode'] == $colombiaIdComtrade) { //datos de importaciones acumuladas de colombia
+				$arrDataColombia[] = [
+					'id'         => $row['yr'],
+					'periodo'    => $row['period'],
+					'valor_impo' => (float)$row[$columnValue],
+				];
+
+				if ($row['yr'] == $yearFirst) {
+					$valueColombiaFirst = (float)$row[$columnValue];
+				}
+				
+				$valueColombiaLast = (float)$row[$columnValue];
+
+			} else { //datos de importaciones acumuladas del mundo
+				$arrDataWorld[] = [
+					'id'         => $row['yr'],
+					'periodo'    => $row['period'],
+					'valor_impo' => (float)$row[$columnValue],
+				];
+
+				if ($row['yr'] == $yearFirst) {
+					$valueWorldFirst = (float)$row[$columnValue];
+				}
+				
+				$valueWorldLast = (float)$row[$columnValue];
+			}
+		}
+
+		$rangeYear     = range($yearFirst, $yearLast);
+		$numberPeriods = count($rangeYear);
+
+		$growthRateColombia = ( pow(($valueColombiaLast / $valueColombiaFirst), (1 / $numberPeriods)) - 1);
+		$growthRateWorld    = ( pow(($valueWorldLast / $valueWorldFirst), (1 / $numberPeriods)) - 1);
+
+
+		foreach ($arrDataWorld as $key => $rowImpo) {
+			
+			$rowImpoColombia = Helpers::findKeyInArrayMulti(
+				$arrDataColombia,
+				'periodo',
+				$rowImpo['periodo']
+			);
+
+			$totalImpoColombia = ($rowImpoColombia !== false) ? $rowImpoColombia['valor_impo'] : 0 ;
+			
+			$arrData[] = [
+				'id'                  => $rowImpo['id'],
+				'periodo'             => $rowImpo['periodo'],
+				'valor_impo_colombia' => $totalImpoColombia,
+				'valor_impo_world'    => $rowImpo['valor_impo'],
+			];
+		}
+
+		if (count($arrData) == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		$result = [
+			'success'            => true,
+			'data'               => $arrData,
+			'growthRateColombia' => ($growthRateColombia * 100),
+			'growthRateWorld'    => ($growthRateWorld * 100),
+			'total'              => count($arrData)
+		];
+
+		return $result;
+
+	}
+
+	/*public function executeRelacionCrecimientoImpoExpo()
 	{
 		$result = $this->findBalanzaData();
 
@@ -1850,7 +2003,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		return $result;
 
-	}
+	}*/
 
 	public function executeRelacionCrecimientoExpoAgroExpoTot()
 	{

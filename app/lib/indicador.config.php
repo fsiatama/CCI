@@ -472,6 +472,17 @@ return [
 		],
 		'13' => [
 			[
+				'field'      => 'id_pais',
+				'field_expo' => 'id_paisdestino',
+				'field_impo' => 'id_paisprocedencia',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'mercado_id',
+				'field_expo' => 'mercado_id',
+				'field_impo' => 'mercado_id',
+				'required'   => false,
+			],[
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',
 				'field_impo' => 'id_posicion',
@@ -497,7 +508,7 @@ return [
 				'itComplements' => true, //son complemento del filtro anio
 			]
 		],
-		'14' => [
+		/*'14' => [
 			[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
@@ -530,25 +541,21 @@ return [
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
-		],
-		'15' => [
+		],*/
+
+		'14' => [
 			[
-				'field'      => 'id_pais',
-				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
-				'required'   => false,
+				'field'      => 'id_subpartida',
+				'field_expo' => 'id_subpartida',
+				'field_impo' => 'id_subpartida',
+				'required'   => true,
 				'multivalue' => true,
 			],[
-				'field'      => 'mercado_id',
-				'field_expo' => 'mercado_id',
-				'field_impo' => 'mercado_id',
+				'field'      => 'id_pais_destino',
+				'field_expo' => 'id_pais_destino',
+				'field_impo' => 'id_pais_destino',
 				'required'   => false,
-			],[
-				'field'      => 'id_posicion',
-				'field_expo' => 'id_posicion',
-				'field_impo' => 'id_posicion',
-				'required'   => false,
-				'multivalue' => true,
+				'multivalue' => false,
 			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
@@ -563,6 +570,7 @@ return [
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
 		],
+
 		'15' => [
 			[
 				'field'      => 'id_pais',
@@ -823,7 +831,7 @@ return [
 		'11' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ParticipacionExpoPorProducto'],
 		'12' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'CrecimientoExportadores'],
 		'13' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'PromedioPonderadoArancel'],
-		'14' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'RelacionCrecimientoImpoExpo'],
+		'14' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ComtradeRelacionCrecimientoExpoColombiaImpoPais'],
 		'15' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'RelacionCrecimientoExpoAgroExpoTot'],
 		'16' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ParticipacionExpoSectorAgricolaPib'],
 		'17' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ParticipacionExpoSectorAgricolaPibAgricola'],

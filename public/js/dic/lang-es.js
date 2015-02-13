@@ -40,6 +40,8 @@ Ext.ux.lang.reports = {
 	,weighted_average: 'Promedio Ponderado'
 	,growthRateExpo: 'Indice de crecimiento Expo'
 	,growthRateImpo: 'Indice de crecimiento Impo'
+	,growthRateColombia: 'Tasa de crec. Impo desde Colombia'
+	,growthRateWorld: 'Tasa de crec. Impo'
 	,growthRateAgriculture: 'Indice de crecimiento Agro.'
 	,growthRateAgricultureNonTraditional: 'Indice de crecimiento Agro. No Tradi'
 	,growthRate: 'Indice de crecimiento'
