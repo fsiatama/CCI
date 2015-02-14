@@ -18,7 +18,18 @@ class PosicionController {
 
     public function listInAgreementAction($urlParams, $postParams)
     {
-        return $this->posicionRepo->listInAgreement($postParams);
+        $result = array(
+            'success' => true,
+            'total' => 1,
+            'data' => array(
+                array(
+                'id_posicion' => 1,
+                'posicion' => 'listInAgreementAction not implemented'
+                )
+            )
+        );
+        
+        return $result; //$this->posicionRepo->listInAgreement($postParams);
     }
 
 }

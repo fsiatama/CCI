@@ -2,3 +2,4 @@ vendor/*
 
 /public/lib/config.php
 /app/lib/config.php
+/.gitconsole.lnk
