@@ -42,7 +42,7 @@
 	var comboPais = new Combo({
 		id:module+'comboPais'
 		//,singleMode:true
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
+		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>'
 		,name:'id_pais[]'
 		,store:storePais
 		,displayField:'pais'
@@ -295,11 +295,15 @@
 	return formIndicador;
 
 
-	/*********************************************** Start functions***********************************************/
+	/*********************************************** Start functions ***********************************************/
 
 	function getDescription () {
 		var arrDescription = [];
 		var arrValues      = [];
+		arrDescription.push({
+			label: '<?= Lang::get('indicador.reports.convention'); ?>'
+			,values: '<?= Lang::get('indicador.reports.ESME'); ?>'
+		});
 		var selection      = Ext.getCmp(module+'comboPais').getSelectedRecords();
 		var label          = Ext.getCmp(module+'comboPais').fieldLabel;
 		

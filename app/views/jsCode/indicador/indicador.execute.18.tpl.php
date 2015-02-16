@@ -42,6 +42,11 @@ $htmlDescription .= '</ol>';
 	});
 
 	storeIndicador.on('beforeload', function(){
+		var scale  = Ext.getCmp(module + 'comboScale').getValue();
+		if (!scale) {
+			return false;
+		};
+		this.setBaseParam('scale', scale);
 		Ext.ux.bodyMask.show();
 	});
 
@@ -96,6 +101,8 @@ $htmlDescription .= '</ol>';
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
+
+	var arrScales = <?= json_encode($scales); ?>;
 	
 	/******************************************************************************************************************************************************************************/
 
@@ -124,43 +131,22 @@ $htmlDescription .= '</ol>';
 				'</div>' +
 			'</div>'
 		},{
-			/*style:{padding:'0px'}
+			style:{padding:'0px'}
 			,border:true
 			,html: ''
 			,tbar:[{
 				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
+				,text: Ext.ux.lang.reports.selectScale + ': '
 			},{
 				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
+				,store: arrScales
+				,id: module + 'comboScale'
 				,typeAhead: true
 				,forceSelection: true
 				,triggerAction: 'all'
 				,selectOnFocus:true
-				,value: 12
-				,width: 100
-				,listeners:{
-					select: {
-						fn: function(combo,reg){
-							Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
-						}
-					}
-				}
-			},'-',{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectYear + ': '
-			},{
-				xtype: 'combo'
-				,store: arrYears
-				,id: module + 'comboYear'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: defaultYear
-				,disabled: true
-				,width: 100
+				,value: 1
+				,width: 150
 			},'-',{
 				text: Ext.ux.lang.buttons.generate
 				,iconCls: 'icon-refresh'
@@ -168,7 +154,7 @@ $htmlDescription .= '</ol>';
 					storeIndicador.load();
 				}
 			}]
-		},{*/
+		},{
 			height:430
 			,html:'<div id="' + module + 'ColumnChart"></div>'
 			,items:[{

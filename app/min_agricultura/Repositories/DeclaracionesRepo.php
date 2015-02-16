@@ -1845,7 +1845,7 @@ class DeclaracionesRepo extends BaseRepo {
 			'type' => 'C',
 			'freq' => 'A', //frecuancia anual
 			'px'   => 'HS',
-			'rg'   => '1', //impo y expo
+			'rg'   => '1', //impo
 			'ps'   => implode(',', $rangeYear),
 			'r'    => $id_pais_destino,
 			'p'    => '0,' . $colombiaIdComtrade, //0 = world; 
@@ -1891,32 +1891,33 @@ class DeclaracionesRepo extends BaseRepo {
 
 		usort($result['dataset'], Helpers::arraySortByValue('yr'));
 
-		foreach ($result['dataset'] as $key => $row) {				
+		foreach ($result['dataset'] as $key => $row) {
+			$totalValue = ( (float)$row[$columnValue] / $this->divisor );
 			if ($row['ptCode'] == $colombiaIdComtrade) { //datos de importaciones acumuladas de colombia
 				$arrDataColombia[] = [
 					'id'         => $row['yr'],
 					'periodo'    => $row['period'],
-					'valor_impo' => (float)$row[$columnValue],
+					'valor_impo' => $totalValue,
 				];
 
 				if ($row['yr'] == $yearFirst) {
-					$valueColombiaFirst = (float)$row[$columnValue];
+					$valueColombiaFirst = $totalValue;
 				}
 				
-				$valueColombiaLast = (float)$row[$columnValue];
+				$valueColombiaLast = $totalValue;
 
 			} else { //datos de importaciones acumuladas del mundo
 				$arrDataWorld[] = [
 					'id'         => $row['yr'],
 					'periodo'    => $row['period'],
-					'valor_impo' => (float)$row[$columnValue],
+					'valor_impo' => $totalValue,
 				];
 
 				if ($row['yr'] == $yearFirst) {
-					$valueWorldFirst = (float)$row[$columnValue];
+					$valueWorldFirst = $totalValue;
 				}
 				
-				$valueWorldLast = (float)$row[$columnValue];
+				$valueWorldLast = $totalValue;
 			}
 		}
 
@@ -2081,6 +2082,10 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$yearFirst = $arrFiltersValues['anio_ini'];
 
+		$valueAgricultureFirst        = 0;
+		$valueFirstTotal              = 0;
+		$valueFirstTotalWithoutMining = 0;
+
 		foreach ($arrDataTotal as $rowTotal) {
 
 			$rowProductsAgriculture = Helpers::findKeyInArrayMulti(
@@ -2094,33 +2099,38 @@ class DeclaracionesRepo extends BaseRepo {
 				$rowTotal['periodo']
 			);
 
-			$yearLast                   = $rowTotal['periodo'];
-			$valueLastAgriculture       = ($rowProductsAgriculture   !== false) ? (float)$rowProductsAgriculture[$columnValue]   : 0 ;
-			$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? (float)$rowEnergeticMiningSector[$columnValue] : 0 ;
-			$valueLastTotal             = (float)$rowTotal[$columnValue] - $totalEnergeticMiningSector;
-			$valueLastTotal             = ($valueLastTotal == 0) ? 1 : $valueLastTotal ;
+			$yearLast                    = $rowTotal['periodo'];
+			$valueLastTotal              = ( (float)$rowTotal[$columnValue] / $this->divisor );
+			$valueLastAgriculture        = ( $rowProductsAgriculture   !== false ) ? ( (float)$rowProductsAgriculture[$columnValue] / $this->divisor ) : 0 ;
+			$totalEnergeticMiningSector  = ( $rowEnergeticMiningSector !== false ) ? ( (float)$rowEnergeticMiningSector[$columnValue] / $this->divisor ) : 0 ;
+			$valueLastTotalWithoutMining = ( $valueLastTotal - $totalEnergeticMiningSector );
+			$valueLastTotalWithoutMining = ( $valueLastTotalWithoutMining == 0 ) ? 1 : $valueLastTotalWithoutMining ;
 
 			if ($rowTotal['periodo'] == $yearFirst) {
-				$valueAgricultureFirst = $valueLastAgriculture;
-				$valueFirstTotal       = $valueLastTotal;
+				$valueAgricultureFirst        = $valueLastAgriculture;
+				$valueFirstTotalWithoutMining = $valueLastTotalWithoutMining;
+				$valueFirstTotal              = $valueLastTotal;
 			}
 
 			$arrData[] = [
-				'id'                  => $rowTotal['id'],
-				'periodo'             => $rowTotal['periodo'],
-				'valor_expo_agricola' => $valueLastAgriculture,
-				'valor_expo'          => $valueLastTotal
+				'id'                    => $rowTotal['id'],
+				'periodo'               => $rowTotal['periodo'],
+				'valor_expo_agricola'   => $valueLastAgriculture,
+				'valor_expo_sin_minero' => $valueLastTotalWithoutMining,
+				'valor_expo'            => $valueLastTotal,
 			];
 		}
 
 		$rangeYear     = range($yearFirst, $yearLast);
 		$numberPeriods = count($rangeYear);
 
-		$growthRateAgriculture = ( pow(($valueLastAgriculture / $valueAgricultureFirst), (1 / $numberPeriods)) - 1);
-		$growthRateExpo        = ( pow(($valueLastTotal / $valueFirstTotal), (1 / $numberPeriods)) - 1);
+		$growthRateAgriculture       = ( pow(($valueLastAgriculture / $valueAgricultureFirst), (1 / $numberPeriods)) - 1);
+		$growthRateExpoWithoutMining = ( pow(($valueLastTotalWithoutMining / $valueFirstTotalWithoutMining), (1 / $numberPeriods)) - 1);
+		$growthRateExpo              = ( pow(($valueLastTotal / $valueFirstTotal), (1 / $numberPeriods)) - 1);
 
 		$arrSeries = [
 			'valor_expo_agricola' => Lang::get('indicador.columns_title.valor_expo_agricola'),
+			'valor_expo_sin_minero' => Lang::get('indicador.columns_title.valor_expo_sin_minero'),
 			'valor_expo'          => Lang::get('indicador.columns_title.valor_expo'),
 		];
 
@@ -2128,17 +2138,20 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData,
 			'periodo',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			$this->pYAxisName
 		);
 
 		$result = [
-			'success'               => true,
-			'data'                  => $arrData,
-			'growthRateAgriculture' => ($growthRateAgriculture * 100),
-			'growthRateExpo'        => ($growthRateExpo * 100),
-			'rateVariation'         => ($growthRateAgriculture / $growthRateExpo),
-			'columnChartData'       => $columnChart,
-			'total'                 => count($arrData)
+			'success'                     => true,
+			'data'                        => $arrData,
+			'growthRateAgriculture'       => ( $growthRateAgriculture * 100 ),
+			'growthRateExpo'              => ( $growthRateExpo * 100 ),
+			'growthRateExpoWithoutMining' => ( $growthRateExpoWithoutMining * 100 ),
+			'rateVariation'               => ( $growthRateAgriculture / $growthRateExpo ),
+			'columnChartData'             => $columnChart,
+			'total'                       => count($arrData)
 		];
 
 		return $result;
@@ -2340,14 +2353,17 @@ class DeclaracionesRepo extends BaseRepo {
 			);
 
 			//el pib vienen en miles de millones por eso hay que multiplicar por 1000000000
-			$pib_nacional = ($rowPib['pib_nacional'] == 0) ? 0 : ($rowPib['pib_nacional'] * 100000000);
+			$pib_nacional = ($rowPib['pib_nacional'] == 0) ? 0 : (float)( $rowPib['pib_nacional'] * 100000000 );
+			$pib_nacional = ( $pib_nacional / $this->divisor );
 
-			$rate = ($pib_nacional == 0) ? 0 : ($row[$columnValue] / $pib_nacional) ;
+			$totalValue   = ( (float)$row[$columnValue] / $this->divisor );
+
+			$rate = ($pib_nacional == 0) ? 0 : ( $totalValue / $pib_nacional ) ;
 
 			$arrData[] = [
 				'id'                      => $row['id'],
 				'periodo'                 => $row['periodo'],
-				'valor_expo_agricola_cop' => $row[$columnValue],
+				'valor_expo_agricola_cop' => $totalValue,
 				'pib_nacional'            => $pib_nacional,
 				'participacion'           => ( $rate * 100 )
 			];
@@ -2363,7 +2379,9 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData,
 			'periodo',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			$this->pYAxisName
 		);
 
 		$result = [
@@ -2442,13 +2460,16 @@ class DeclaracionesRepo extends BaseRepo {
 
 			//el pib vienen en miles de millones por eso hay que multiplicar por 1000000000
 			$pib_agricultura = ($rowPib['pib_agricultura'] == 0) ? 0 : ($rowPib['pib_agricultura'] * 100000000);
+			$pib_agricultura = ( $pib_agricultura / $this->divisor );
 
-			$rate = ($pib_agricultura == 0) ? 0 : ($row[$columnValue] / $pib_agricultura) ;
+			$totalValue   = ( (float)$row[$columnValue] / $this->divisor );
+
+			$rate = ($pib_agricultura == 0) ? 0 : ( $totalValue / $pib_agricultura ) ;
 
 			$arrData[] = [
 				'id'                      => $row['id'],
 				'periodo'                 => $row['periodo'],
-				'valor_expo_agricola_cop' => $row[$columnValue],
+				'valor_expo_agricola_cop' => $totalValue,
 				'pib_agricultura'         => $pib_agricultura,
 				'participacion'           => ( $rate * 100 )
 			];
@@ -2466,7 +2487,9 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData,
 			'periodo',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			$this->pYAxisName
 		);
 
 		$result = [
@@ -2632,7 +2655,9 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData,
 			'periodo',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			Lang::get('indicador.columns_title.PI')
 		);
 
 		$result = [
@@ -3050,7 +3075,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		foreach ($result['dataset'] as $key => $row) {
 			//var_dump($row['rgCode'], $row['rtCode'], $colombiaIdComtrade);
-			if ($row['rgCode'] == 1) {
+			if ($row['rgCode'] == 1) { //Importaciones
 				
 				if ($row['rtCode'] == $colombiaIdComtrade) {
 					$arrDataColImp[] = [
@@ -3066,7 +3091,7 @@ class DeclaracionesRepo extends BaseRepo {
 					];
 				}
 				
-			} elseif ($row['rgCode'] == 2) {
+			} elseif ($row['rgCode'] == 2) { //Exportaciones
 				
 				if ($row['rtCode'] == $colombiaIdComtrade) {
 					$arrDataColExp[] = [
@@ -3083,6 +3108,8 @@ class DeclaracionesRepo extends BaseRepo {
 				}
 			}
 		}
+
+		//var_dump($arrDataImp, $arrDataExp, $arrDataColExp);
 
 		foreach ($arrDataImp as $key => $rowImpo) {
 			$rowExpo = Helpers::findKeyInArrayMulti(
@@ -3103,7 +3130,8 @@ class DeclaracionesRepo extends BaseRepo {
 
 			$totalExpo    = ($rowExpo    !== false) ? $rowExpo['valor_expo']    : 0 ;
 			$totalImpoCol = ($rowImpoCol !== false) ? $rowImpoCol['valor_impo'] : 0 ;
-			$totalExpoCol = ($rowExpoCol !== false) ? $rowExpoCol['valor_expo'] : 0 ;
+			$totalExpoCol = ($rowExpoCol !== false) ? $rowExpoCol['valor_expo'] : 1 ;
+
 
 			$rate = ($totalExpoCol == 0) ? 0 : (($totalExpo - $rowImpo['valor_impo']) / $totalExpoCol) ;
 

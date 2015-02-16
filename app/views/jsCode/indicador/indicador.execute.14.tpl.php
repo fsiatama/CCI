@@ -5,8 +5,8 @@ $arrDescription  = explode('||', $indicador_campos);
 $htmlDescription = '<ol class="breadcrumb">';
 
 foreach ($arrDescription as $value) {
-	$arr = explode(':', $value);
-	$text = (empty($arr[1])) ? '' : $arr[1] ;
+	$arr              = explode(':', $value);
+	$text             = (empty($arr[1])) ? '' : $arr[1] ;
 	$htmlDescription .= '<li class="active">'.$text.'</li>';
 }
 
@@ -40,6 +40,11 @@ $htmlDescription .= '</ol>';
 	});
 
 	storeIndicador.on('beforeload', function(){
+		var scale  = Ext.getCmp(module + 'comboScale').getValue();
+		if (!scale) {
+			return false;
+		};
+		this.setBaseParam('scale', scale);
 		Ext.ux.bodyMask.show();
 	});
 
@@ -99,6 +104,7 @@ $htmlDescription .= '</ol>';
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
 	var arrPeriods = <?= json_encode($periods); ?>;
+	var arrScales = <?= json_encode($scales); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -144,6 +150,30 @@ $htmlDescription .= '</ol>';
 					'</div>' +*/
 				'</div>' +
 			'</div>'
+		},{
+			style:{padding:'0px'}
+			,border:true
+			,html: ''
+			,tbar:[{
+				xtype: 'label'
+				,text: Ext.ux.lang.reports.selectScale + ': '
+			},{
+				xtype: 'combo'
+				,store: arrScales
+				,id: module + 'comboScale'
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: 1
+				,width: 150
+			},'-',{
+				text: Ext.ux.lang.buttons.generate
+				,iconCls: 'icon-refresh'
+				,handler: function () {
+					storeIndicador.load();
+				}
+			}]
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridIndicador]

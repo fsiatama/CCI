@@ -2,11 +2,14 @@
 
 $arrDescription  = explode('||', $indicador_campos);
 
-$htmlDescription = '<ol class="breadcrumb">';
+//var_dump($arrDescription);
+
+$htmlDescription  = '<ol class="breadcrumb">';
+//$htmlDescription .= '<li class="">' . Lang::get('indicador.reports.ESME') . '</li>';
 
 foreach ($arrDescription as $value) {
-	$arr = explode(':', $value);
-	$text = (empty($arr[1])) ? '' : $arr[1] ;
+	$arr              = explode(':', $value);
+	$text             = (empty($arr[1])) ? '' : $arr[1] ;
 	$htmlDescription .= '<li class="active">'.$text.'</li>';
 }
 
@@ -36,10 +39,16 @@ $htmlDescription .= '</ol>';
 			{name:'periodo', type:'string'},
 			{name:'valor_expo_agricola', type:'float'},
 			{name:'valor_expo', type:'float'},
+			{name:'valor_expo_sin_minero', type:'float'},
 		]
 	});
 
 	storeIndicador.on('beforeload', function(){
+		var scale  = Ext.getCmp(module + 'comboScale').getValue();
+		if (!scale) {
+			return false;
+		};
+		this.setBaseParam('scale', scale);
 		Ext.ux.bodyMask.show();
 	});
 
@@ -54,6 +63,10 @@ $htmlDescription .= '</ol>';
 
 		el         = Ext.Element.get(module + 'growthRateAgriculture');
 		growthRate = rateFormat(store.reader.jsonData.growthRateAgriculture);
+		el.update(growthRate);
+
+		el         = Ext.Element.get(module + 'growthRateExpoWithoutMining');
+		growthRate = rateFormat(store.reader.jsonData.growthRateExpoWithoutMining);
 		el.update(growthRate);
 
 		el         = Ext.Element.get(module + 'rateVariation');
@@ -76,6 +89,7 @@ $htmlDescription .= '</ol>';
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo_agricola'); ?>', dataIndex:'valor_expo_agricola' ,'renderer':numberFormat, align: 'right'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_expo_sin_minero'); ?>', dataIndex:'valor_expo_sin_minero' ,'renderer':numberFormat, align: 'right'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat, align: 'right'},
 		]
 	});
@@ -104,6 +118,8 @@ $htmlDescription .= '</ol>';
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
+
+	var arrScales = <?= json_encode($scales); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -135,20 +151,48 @@ $htmlDescription .= '</ol>';
 			style:{padding:'0px'}
 			,html: '<div class="bootstrap-styles">' +
 				'<div class="row text-center countTo">' +
-					'<div class="col-md-4">' +
+					'<div class="col-lg-3 col-md-6">' +
 						'<label>' + Ext.ux.lang.reports.growthRateAgriculture + '</label>' +
 						'<strong id="' + module + 'growthRateAgriculture">0</strong>' +
 					'</div>' +
-					'<div class="col-md-4">' +
+					'<div class="col-lg-3 col-md-6">' +
+						'<label>' + Ext.ux.lang.reports.growthRateExpoWithoutMining + '</label>' +
+						'<strong id="' + module + 'growthRateExpoWithoutMining">0</strong>' +
+					'</div>' +
+					'<div class="col-lg-3 col-md-6">' +
 						'<label>' + Ext.ux.lang.reports.growthRateExpo + '</label>' +
 						'<strong id="' + module + 'growthRateExpo">0</strong>' +
 					'</div>' +
-					'<div class="col-md-4">' +
+					'<div class="col-lg-3 col-md-6">' +
 						'<label><?= Lang::get('indicador.reports.growVariation'); ?></label>' +
 						'<strong id="' + module + 'rateVariation">0</strong>' +
 					'</div>' +
 				'</div>' +
 			'</div>'
+		},{
+			style:{padding:'0px'}
+			,border:true
+			,html: ''
+			,tbar:[{
+				xtype: 'label'
+				,text: Ext.ux.lang.reports.selectScale + ': '
+			},{
+				xtype: 'combo'
+				,store: arrScales
+				,id: module + 'comboScale'
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: 1
+				,width: 150
+			},'-',{
+				text: Ext.ux.lang.buttons.generate
+				,iconCls: 'icon-refresh'
+				,handler: function () {
+					storeIndicador.load();
+				}
+			}]
 		},{
 			height:430
 			,html:'<div id="' + module + 'ColumnChart"></div>'

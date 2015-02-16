@@ -39,6 +39,7 @@ Ext.ux.lang.reports = {
 	,total_records: 'Total de Registros'
 	,weighted_average: 'Promedio Ponderado'
 	,growthRateExpo: 'Indice de crecimiento Expo'
+	,growthRateExpoWithoutMining: 'Indice de crecimiento *ESME'
 	,growthRateImpo: 'Indice de crecimiento Impo'
 	,growthRateColombia: 'Tasa de crec. Impo desde Colombia'
 	,growthRateWorld: 'Tasa de crec. Impo'
@@ -51,6 +52,7 @@ Ext.ux.lang.reports = {
 	,hsCode: 'Clasificación mundial de la mercancía a 6 dígitos'
 	,detail: 'Detalle'
 	,charts: 'Graficas'
+	,convention: 'Convención'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');

@@ -374,8 +374,9 @@ class IndicadorRepo extends BaseRepo {
 		$arrDescription = json_decode(stripslashes($description), true);
 		if (!empty($arrDescription)) {
 			foreach ($arrDescription as $key => $value) {
-				$label = (empty($value['label'])) ? '' : Inflector::cleanInputString($value['label']) ;
-				$values = (empty($value['values'])) ? '' : Inflector::cleanInputString(implode(',', $value['values'])) ;
+				$label  = ( empty($value['label']) ) ? '' : Inflector::cleanInputString($value['label']) ;
+				$values = ( is_array($value['values']) ) ? implode(',', $value['values']) : $value['values'] ;
+				$values = Inflector::cleanInputString( $values ) ;
 
 				$arr[] = $label . ': ' . $values;
 			}
