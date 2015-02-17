@@ -433,9 +433,9 @@ class Helpers
 
 	public static function getUpdateInfo($product, $trade)
 	{
-		//require_once PATH_MODELS.'Repositories/Update_infoRepo.php';
+		require_once PATH_MODELS.'Repositories/Update_infoRepo.php';
 
-		self::getRequire(PATH_MODELS.'Repositories/Update_infoRepo.php');
+		//self::getRequire(PATH_MODELS.'Repositories/Update_infoRepo.php');
 		$update_infoRepo = new Update_infoRepo;
 
 		$result = $update_infoRepo->updateInfo(compact('product', 'trade'));

@@ -1,8 +1,20 @@
+<?php 
+$updateInfoExpo = ( $updateInfoExpo !== false ) ? Lang::get('shared.months.'.$updateInfoExpo['dateTo']->format('m')).' - '.$updateInfoExpo['dateTo']->format('Y') : '' ;
+$updateInfoImpo = ( $updateInfoImpo !== false ) ? Lang::get('shared.months.'.$updateInfoImpo['dateTo']->format('m')).' - '.$updateInfoImpo['dateTo']->format('Y') : '' ;
+
+$updateInfo = '
+	' . Lang::get('indicador.reports.impo') . ' ' . Lang::get('update_info.columns_title.update_info_to') . ': ' . $updateInfoImpo . '
+	<br>
+	' . Lang::get('indicador.reports.expo') . ' ' . Lang::get('update_info.columns_title.update_info_to') . ': ' . $updateInfoExpo . '
+';
+
+$updateInfo = Inflector::compress($updateInfo);
+?>
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module; ?>';
-	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
+	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 280)/22);
 
 	Ext.getCmp('tab-'+module+'_<?= $id; ?>').on('beforeclose', function(){
 		/*elimiar cualquier estado de la grilla guardado con anterioridad */
@@ -72,25 +84,28 @@
 	var tbTipo_indicador = new Ext.Toolbar();
 
 	var gridTipo_indicador = new Ext.grid.GridPanel({
-		store:storeTipo_indicador
-		,id:module+'gridTipo_indicador'
-		,colModel:cmTipo_indicador
-		,viewConfig: {
-			forceFit: true
-			,scrollOffset:2
-		}
-		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
+		autoHeight:true //
+		,autoWidth:true //
 		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeTipo_indicador, displayInfo:true})
+		,border:true //
+		,buttonAlign:'center'
+		,colModel:cmTipo_indicador
+		,columnLines:true //
 		,enableColumnMove:false
 		,enableColumnResize:false
-		,tbar:tbTipo_indicador
+		,iconCls:'silk-grid' //
+		,id:module+'gridTipo_indicador'
+		,layout:'fit' //
 		,loadMask:true
-		,border:false
-		,frame: false
-		,baseCls: 'x-panel-mc'
-		,buttonAlign:'center'
-		,title:''
-		,iconCls:'icon-grid'
+		,margins:'10 15 5 0' //
+		,monitorResize:true //
+		,sm:new Ext.grid.RowSelectionModel({singleSelect:true}) //
+		,stateful:true //
+		,store:storeTipo_indicador
+		,stripeRows:true //
+		,tbar:tbTipo_indicador
+		,title:'' //
+		,viewConfig: { forceFit:true } //
 		,plugins:[
 			new Ext.ux.grid.Search({
 				iconCls:'silk-zoom'
@@ -109,10 +124,50 @@
 		]
 	});
 
+	var panelTipo_indicador = new Ext.Panel({
+		xtype:'panel'
+		,id:module+'panelTipo_indicador'
+		,layout:'column'
+		,border:false
+		,baseCls:'x-plain'
+		,autoWidth:true
+		,autoScroll:true
+		,bodyStyle:	'padding:15px;position:relative;'
+		,defaults:{
+			columnWidth:1
+			,border:false
+			,xtype:'panel'
+			,style:{padding:'10px'}
+			,layout:'fit'
+		}
+		,items:[{
+			defaults:{anchor:'100%'}
+			,items:[{
+				style:{padding:'0px'}
+				,autoHeight:true
+				,border:false
+				,margins:'10 15 5 0'
+				,html: '<div class="bootstrap-styles">' +
+					'<div class="panel panel-default">' +
+						'<div class="panel-heading">' +
+							'<?= Lang::get('update_info.table_name'); ?>' +
+						'</div>' +
+						'<div class="panel-body">' +
+								'<?= $updateInfo; ?>' +
+						'</div>' +
+					'</div>' +
+				'</div>'
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[gridTipo_indicador]
+		}]
+	});
+
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridTipo_indicador.getItemId());
 	
-	return gridTipo_indicador;	
+	return panelTipo_indicador;	
 	/*********************************************** Start functions***********************************************/
 	
 	function fnReport(record){

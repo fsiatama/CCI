@@ -1048,7 +1048,9 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData,
 			'rowIndex',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			Lang::get('indicador.columns_title.numero_productos')
 		);
 
 		$result = [

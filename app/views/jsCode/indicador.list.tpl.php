@@ -1,22 +1,16 @@
 <?php
-//var_dump($_REQUEST);
-/*
-Parametros que llegan
-  'id' => string '4' (length=1)
-  'title' => string '%BCt' (length=4)
-  'module' => string 'indicator_3' (length=11)
-  'parent' => string 'analisis_de_indicadores' (length=23)
-  'tipo_indicador_id' => string '3' (length=1)
-  'is_template' => boolean true
-  'tipo_indicador_nombre' => string 'Variación de la Balanza Comercial' (length=34)
-  'tipo_indicador_abrev' => string '%BCt' (length=4)
-  'tipo_indicador_activador' => string 'precio' (length=6)
-  'tipo_indicador_calculo' => string '%BCt= (Xijt-Mijtp2) - (Xijt-Mijt-p1) /(Xijt-Mijt-p1)
+$updateInfoExpo = ( $updateInfoExpo !== false ) ? Lang::get('shared.months.'.$updateInfoExpo['dateTo']->format('m')).' - '.$updateInfoExpo['dateTo']->format('Y') : '' ;
+$updateInfoImpo = ( $updateInfoImpo !== false ) ? Lang::get('shared.months.'.$updateInfoImpo['dateTo']->format('m')).' - '.$updateInfoImpo['dateTo']->format('Y') : '' ;
 
-Donde Xijt = Exportaciones de un producto i por un país j en un periodo t+1, Mij = Importaciones de un producto i a un país j en un periodo t.' (length=216)
-  'tipo_indicador_definicion' => string 'Se define como indicador para establecer el crecimiento o decrecimiento del la balanza comercial antes y después de la firma de un TLC o en cualquier periodo de tiempo.' (length=169)
-  'action' => string 'list' (length=4)
-*/
+$updateInfo = Lang::get('update_info.table_name') . '
+	<br>
+	' . Lang::get('indicador.reports.impo') . ' ' . Lang::get('update_info.columns_title.update_info_to') . ': ' . $updateInfoImpo . '
+	<br>
+	' . Lang::get('indicador.reports.expo') . ' ' . Lang::get('update_info.columns_title.update_info_to') . ': ' . $updateInfoExpo . '
+';
+
+//$tipo_indicador_html = str_replace('%update_info_html%', $updateInfo, $tipo_indicador_html);
+
 $tipo_indicador_html = Inflector::compress($tipo_indicador_html);
 ?>
 /*<script>*/

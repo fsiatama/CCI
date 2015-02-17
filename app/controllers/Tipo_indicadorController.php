@@ -39,8 +39,12 @@ class Tipo_indicadorController {
 			}
 
 			$postParams['is_template'] = true;
-			$params = array_merge($postParams, $result, compact('action'));
 			
+			$updateInfoImpo = Helpers::getUpdateInfo('aduanas', 'impo');
+			$updateInfoExpo = Helpers::getUpdateInfo('aduanas', 'expo');
+
+			$params = array_merge($postParams, $result, compact('action', 'updateInfoImpo', 'updateInfoExpo'));
+
 			//el template de adicionar y editar son los mismos
 			$action = ($action == 'modify') ? 'create' : $action;
 

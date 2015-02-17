@@ -52,7 +52,6 @@ Ext.ux.lang.reports = {
 	,hsCode: 'Clasificación mundial de la mercancía a 6 dígitos'
 	,detail: 'Detalle'
 	,charts: 'Graficas'
-	,convention: 'Convención'
 }
 
 Ext.ns('Ext.ux', 'Ext.ux.lang.menu');

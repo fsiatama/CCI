@@ -5,7 +5,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module; ?>';
-	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
+	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 280)/22);
 
 	var storeAcuerdo = new Ext.data.JsonStore({
 		url:'acuerdo/list'
