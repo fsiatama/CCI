@@ -179,7 +179,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 						'<div class="panel-heading">' +
 							'<?= $title; ?>' +
 						'</div>' +
-						'<div class="panel-body"><p><?= $updateInfo; ?></p></div>' +
+						'<div class="panel-body"><p><?= Lang::get('update_info.table_name') . " " . Lang::get('update_info.columns_title.update_info_to') . ": " . $updateInfo; ?></p></div>' +
 					'</div>' +
 				'</div>'
 			}]

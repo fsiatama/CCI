@@ -54,7 +54,10 @@ class IndicadorController {
 			}
 			$row = array_shift($result['data']);
 			$postParams['is_template'] = true;
-			$params = array_merge($postParams, $row, compact('action'));
+
+			$updateInfo = Helpers::getUpdateInfo('aduanas', 'impo');
+
+			$params = array_merge($postParams, $row, compact('action', 'updateInfo'));
 
 			//var_dump($params);
 			return new View('jsCode/indicador.'.$action, $params);

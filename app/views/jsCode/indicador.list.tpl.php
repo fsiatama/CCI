@@ -280,20 +280,30 @@ $tipo_indicador_html = Inflector::compress($tipo_indicador_html);
 				,autoScroll: false
 				,layout: 'fit'
 				,items:[{
-					border:false
-					,xtype:'panel'
+					defaults:{anchor:'100%'}
 					,autoWidth:true
 					,autoScroll:true
+					,items:[{
+						style:{padding:'0px'}
+						,autoHeight:true
+						,border:false
+						//,margins:'10 15 5 0'
+						,html: '<div class="bootstrap-styles">' +
+							'<?= $tipo_indicador_html; ?>' +
+						'</div>'
+					}]
+					/*border:false
+					,xtype:'panel'
 					,border: false
 					,baseCls:'bootstrap-styles'
 					,layout:'column'
 					,items: [{
 						style:{padding:'0px'}
-						,columnWidth:1
+						,columnWidth:.98
 						,border: false
 						//,layout:'fit'
 						,html: '<?= $tipo_indicador_html; ?>'
-					}]
+					}]*/
 				}]
 			}
 			Ext.getCmp(module+'lpIndicador').add(initialPanel);

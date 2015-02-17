@@ -42,7 +42,7 @@
 	var comboPais = new Combo({
 		id:module+'comboPais'
 		//,singleMode:true
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
+		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>'
 		,name:'id_pais[]'
 		,store:storePais
 		,displayField:'pais'

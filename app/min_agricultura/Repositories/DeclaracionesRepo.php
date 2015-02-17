@@ -2822,7 +2822,9 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData,
 			'periodo',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			Lang::get('indicador.columns_title.AE')
 		);
 
 		$result = [
@@ -3164,7 +3166,9 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData,
 			'periodo',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			Lang::get('indicador.columns_title.IEI')
 		);
 
 		$result = [
