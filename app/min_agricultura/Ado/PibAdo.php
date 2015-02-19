@@ -112,7 +112,7 @@ class PibAdo extends BaseAdo {
 	{
 		$this->setModel($model);
 		$this->setOperator('IN');
-		
+
 		$conn = $this->getConnection();
 		$this->setData();
 
@@ -126,11 +126,11 @@ class PibAdo extends BaseAdo {
 
 	public function buildPivotSelect()
 	{
-		require_once PATH_APP.'adodb5/pivottable.inc.php';
-		
+		require_once PATH_APP.'lib/pivottable.inc.php';
+
 		$conn  = $this->getConnection();
 		$table = $this->getTable();
-		
+
 		$where = $this->buildSelectWhere();
 
 		$sql = PivotTableSQL(

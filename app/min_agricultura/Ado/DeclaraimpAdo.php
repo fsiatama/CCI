@@ -1,7 +1,7 @@
 <?php
 
 /*include_once(PATH_APP.'adodb5/toexport.inc.php');
-include_once(PATH_APP.'adodb5/pivottable.inc.php'); */
+include_once(PATH_APP.'lib/pivottable.inc.php'); */
 
 require_once ('BaseAdo.php');
 
@@ -153,7 +153,7 @@ class DeclaraimpAdo extends BaseAdo {
 	{
 		$this->setModel($model);
 		$this->setOperator('IN');
-		
+
 		$conn = $this->getConnection();
 		$this->setData();
 
@@ -167,8 +167,8 @@ class DeclaraimpAdo extends BaseAdo {
 
 	public function buildPivotSelect()
 	{
-		require_once PATH_APP.'adodb5/pivottable.inc.php';
-		
+		require_once PATH_APP.'lib/pivottable.inc.php';
+
 		$conn  = $this->getConnection();
 		$table = $this->getTable();
 		$where = $this->buildSelectWhere();
@@ -213,7 +213,7 @@ class DeclaraimpAdo extends BaseAdo {
 			 decl.peso_neto
 			FROM declaraimp AS decl
 		';
-		
+
 		$sql .= $this->buildSelectWhere();
 
 		return $sql;

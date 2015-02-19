@@ -4,8 +4,54 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eaabb704d086ee0f9758f1a56edba4e7",
+    "hash": "7496a56509469f6689a72969ec548417",
     "packages": [
+        {
+            "name": "adodb/adodb-php",
+            "version": "v5.19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ADOdb/ADOdb.git",
+                "reference": "773bb9b7ccd81b403bf75f7ef476c3f2d7ee04de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ADOdb/ADOdb/zipball/773bb9b7ccd81b403bf75f7ef476c3f2d7ee04de",
+                "reference": "773bb9b7ccd81b403bf75f7ef476c3f2d7ee04de",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "adodb.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1",
+                " BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "John Lim",
+                    "email": "jlim@natsoft.com",
+                    "role": "Author"
+                },
+                {
+                    "name": "Damien Regad",
+                    "role": "Current maintainer"
+                }
+            ],
+            "description": "ADOdb is a PHP database abstraction layer library",
+            "homepage": "http://adodb.sourceforge.net/",
+            "keywords": [
+                "database"
+            ],
+            "time": "2014-04-23 14:37:03"
+        },
         {
             "name": "apfelbox/php-file-download",
             "version": "v2.1",
@@ -192,16 +238,16 @@
         },
         {
             "name": "phpoffice/phpexcel",
-            "version": "dev-master",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PHPExcel.git",
-                "reference": "c40bb233bfa59fe8aadc6f3714cf500ec2c38e0f"
+                "reference": "e69a5e4d0ffa7fb6f171859e0a04346e580df30b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/c40bb233bfa59fe8aadc6f3714cf500ec2c38e0f",
-                "reference": "c40bb233bfa59fe8aadc6f3714cf500ec2c38e0f",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/e69a5e4d0ffa7fb6f171859e0a04346e580df30b",
+                "reference": "e69a5e4d0ffa7fb6f171859e0a04346e580df30b",
                 "shasum": ""
             },
             "require": {
@@ -245,7 +291,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2014-12-18 21:56:47"
+            "time": "2014-03-02 15:22:49"
         },
         {
             "name": "skyzyx/mimetypes",
@@ -304,11 +350,9 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "phpoffice/phpexcel": 20,
         "paquettg/string-encode": 20
     },
     "prefer-stable": false,
-    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3"
     },

@@ -4,7 +4,9 @@
 *clase base para la coneccion a una base de datos
 */
 
-include(PATH_APP.'adodb5/adodb.inc.php');
+//include(PATH_APP.'adodb5/adodb.inc.php');
+
+//include('adodb/adodb.inc.php');
 
 class Connection
 {
@@ -33,6 +35,12 @@ class Connection
     		$this->password,
     		$this->database
     	);
+
+    	/*
+    	//ADOdb Performance Monitoring Library
+    	$perf =& NewPerfMonitor($this->connection);
+		$perf->UI($pollsecs=5);
+		*/
 
     	$this->connection->SetCharSet('utf8');
     	$this->connection->SetFetchMode(ADODB_FETCH_ASSOC);

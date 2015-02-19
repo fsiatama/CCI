@@ -156,7 +156,7 @@ class DeclaraexpAdo extends BaseAdo {
 
 	public function buildPivotSelect()
 	{
-		require_once PATH_APP.'adodb5/pivottable.inc.php';
+		require_once PATH_APP.'lib/pivottable.inc.php';
 		
 		$conn  = $this->getConnection();
 		$table = $this->getTable();
