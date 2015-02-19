@@ -25,7 +25,7 @@ class Connection
 			//PARA TOMAR LOS VALUES CON CADENA 'null' como NULL de mysql
 			define('ADODB_FORCE_VALUE',3);
 		}
-		
+
 		$this->setConnection($database);
 		
 		$this->connection = ADONewConnection($this->driver);
@@ -48,19 +48,19 @@ class Connection
 	}
 	public function setConnection($database)
 	{
-		$linesConfig = Helpers::getRequire(PATH_APP.'lib/config.php');
-		$connections = Helpers::arrayGet($linesConfig, 'connections');
-		//var_dump($connections);
 
-		if (empty($connections[$database])) {
-			$database = $connections['default'];
+		$linesConfig = file_get_contents(PATH_APP.'lib/config.php');
+		$connections = unserialize(base64_decode(str_rot13($linesConfig)));
+		
+		if (empty($connections->$database)) {
+			$database = $connections->default;
 		}
 
-		$this->driver   = $connections[$database]['driver'];
-		$this->host     = $connections[$database]['host'];
-		$this->database = $connections[$database]['database'];
-		$this->username = $connections[$database]['username'];
-		$this->password = $connections[$database]['password'];
+		$this->driver   = $connections->$database->driver;
+		$this->host     = $connections->$database->host;
+		$this->database = $connections->$database->database;
+		$this->username = $connections->$database->username;
+		$this->password = $connections->$database->password;
 	}
 
 	public function getConnection()
