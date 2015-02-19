@@ -40,7 +40,9 @@ class Connection
 	}
 	public function setConnection($database)
 	{
-		require PATH_APP.'lib/config.php';
+		$linesConfig = Helpers::getRequire(PATH_APP.'lib/config.php');
+		$connections = Helpers::arrayGet($linesConfig, 'connections');
+		//var_dump($connections);
 
 		if (empty($connections[$database])) {
 			$database = $connections['default'];

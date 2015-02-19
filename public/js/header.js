@@ -77,7 +77,7 @@ Header = function(){
 	var toolbar = new Ext.Toolbar({
 		height: 65
 		,items:[
-			'<img src="img/logo.png" alt="Logo" width="190" height="61" border="0" align="middle" style="vertical-align:middle;margin:0;" />'
+			'<img src="img/logo_new.png" alt="Logo" width="265" height="52" border="0" align="middle" style="vertical-align:middle;margin:0;" />'
 		,'->'
 		,{
 			text: ''
