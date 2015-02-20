@@ -7,7 +7,7 @@
 
         <aside class="col-md-3">
 
-            <form action="#" method="POST" role="form">
+            <form action="#" method="POST" role="form" id="searchAgreementForm">
                 <legend>Filtros</legend>
             
                 <div class="form-group">
@@ -20,7 +20,7 @@
                     <input type="text" class="form-control" id="ms-filter-country">
                 </div>
             
-                <button type="submit" class="btn btn-primary">Buscar</button>
+                <button type="submit" class="btn btn-primary" id="searchAgreementSubmit">Buscar</button>
             </form>
             
         </aside>

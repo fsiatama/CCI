@@ -105,7 +105,7 @@ jQuery(function($) {
             ,displayField: 'posicion'
             ,allowFreeEntries: false
             //,highlight:false
-            //,useZebraStyle: true
+            ,useZebraStyle: true
             ,maxSelection: 5
             ,typeDelay: 600
             //,minChars:2
@@ -137,14 +137,46 @@ jQuery(function($) {
             }
         });
 
-        $(msCountry).on('selectionchange', function(e,ms,records) {
+       /* $(msCountry).on('selectionchange', function(e,ms,records) {
             initialize(mapOptions);
             $.each(records, function( key, row ) {
                 paintCountry(row.pais_iata, mapOptionsLoc, null, null);
             });
-        });
+        });*/
 
         initialize(mapOptions);
+
+
+        $('#searchAgreementForm').on('submit', function(event){
+            var $form = $(this);
+            var $btn = $('#searchAgreementSubmit');
+            $btn.button('loading');
+
+            console.log(msCountry.getValue(), msProduct.getValue());
+            $.ajax({
+                type:"POST"
+                ,url:'acuerdo/'
+                ,data:{
+                    products: msProduct.getValue(),
+                    countries: msCountry.getValue()
+                }
+                ,dataType:"json"
+                ,success:function(data){
+                    if(data.success){
+                        $form[0].reset();
+                        window.location.replace(data.url);
+                    }
+                    else{
+                        $("#modal-error-msg").html(data.error);
+                        $('#errorModal').modal('show');
+                    }
+                }
+            }).always(function(){
+                $btn.button('reset');
+            });
+        
+            event.preventDefault();
+        });
 
 	}
 

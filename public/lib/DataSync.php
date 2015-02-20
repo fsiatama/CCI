@@ -5,8 +5,9 @@ require '../../vendor/autoload.php';
 
 use stringEncode\Encode;
 
-$myFile = 'C:/Users/FabianAndres/Downloads/data_madr/Exp2014.csv';
-$fp = fopen($myFile, "r");
+$path = 'C:/Users/fsiatama.RTQHDOMAIN/Downloads/data_madr/';
+$file = $path . 'Exp2014.csv';
+$fp = fopen($file, "r");
 
 while(!feof($fp)) {
     $linea = fgets($fp);
@@ -23,9 +24,10 @@ fclose($fp);
 
 function write_log($cadena)
 {
-    $arch = fopen("C:/Users/FabianAndres/Downloads/data_madr/Exp2014-new.csv", "a+"); 
+    $path = 'C:/Users/fsiatama.RTQHDOMAIN/Downloads/data_madr/';
+    $arch = fopen($path."Exp2014-new.csv", "a+"); 
 
-    fwrite($arch, $cadena.'\n');
+    fwrite($arch, $cadena.chr(10));
     fclose($arch);
 }
 
@@ -33,7 +35,7 @@ exit();
 
 $connection=mysql_connect ("localhost","root","");
 mysql_select_db ('min_agricultura', $connection);
-$str = file_get_contents($myFile);
+$str = file_get_contents($file);
 
 //$output = mb_convert_encoding( $myFile, 'UTF-8' );
 $output = iconv(mb_detect_encoding($myFile, mb_detect_order(), true), "UTF-8", $myFile);

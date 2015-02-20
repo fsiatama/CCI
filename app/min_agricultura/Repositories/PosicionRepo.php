@@ -56,5 +56,19 @@ class PosicionRepo extends BaseRepo {
 
 	}
 
+	public function listInAgreement($params)
+	{
+		extract($params);
+
+		$query = (empty($query)) ? '' : $query ;
+
+		$this->model->setId_posicion($query);
+		$this->model->setPosicion($query);
+		
+		return $this->modelAdo->listInAgreement($this->model);
+
+
+	}
+
 }	
 
