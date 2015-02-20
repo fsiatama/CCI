@@ -1,4 +1,4 @@
-LOAD DATA LOCAL INFILE 'C:/wamp/www/CCI/sql/Exp2014.csv'
+LOAD DATA LOCAL INFILE 'C:/Users/FabianAndres/Downloads/data_madr/Exp2014-new.csv'
 INTO TABLE declaraexp_load
 CHARACTER SET utf8
 FIELDS TERMINATED BY '|'

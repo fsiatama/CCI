@@ -1,8 +1,40 @@
 <?php
 
+ini_set('display_errors', true);
+require '../../vendor/autoload.php';
+
+use stringEncode\Encode;
+
+$myFile = 'C:/Users/FabianAndres/Downloads/data_madr/Exp2014.csv';
+$fp = fopen($myFile, "r");
+
+while(!feof($fp)) {
+    $linea = fgets($fp);
+
+    $encode = new Encode;
+    $encode->detect($linea);
+    $newstr = $encode->convert($linea);
+    $newstr = preg_replace('/[^a-zA-Z0-9_\.\,\|-]/', '', $newstr);
+    //$newstr = filter_var($newstr,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    write_log($newstr);
+    //echo $linea . "<br />";
+}
+fclose($fp);
+
+function write_log($cadena)
+{
+    $arch = fopen("C:/Users/FabianAndres/Downloads/data_madr/Exp2014-new.csv", "a+"); 
+
+    fwrite($arch, $cadena.'\n');
+    fclose($arch);
+}
+
+exit();
+
 $connection=mysql_connect ("localhost","root","");
 mysql_select_db ('min_agricultura', $connection);
-$myFile = 'C:/Users/FabianAndres/Downloads/data_madr/Exp2014.csv';
+$str = file_get_contents($myFile);
+
 //$output = mb_convert_encoding( $myFile, 'UTF-8' );
 $output = iconv(mb_detect_encoding($myFile, mb_detect_order(), true), "UTF-8", $myFile);
 $sql = "
@@ -24,7 +56,6 @@ if (mysql_affected_rows() == 1) {
 
 echo $message;
 
-exit();
 
 
 
