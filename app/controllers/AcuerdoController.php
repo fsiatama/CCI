@@ -23,6 +23,11 @@ class AcuerdoController {
 		return $result;
 	}
 
+	public function publicSearchAction($urlParams, $postParams)
+	{
+		return $this->acuerdoRepo->publicSearch($postParams);
+	}
+
 	public function listIdAction($urlParams, $postParams)
 	{
 		return $this->acuerdoRepo->validateModify($postParams);

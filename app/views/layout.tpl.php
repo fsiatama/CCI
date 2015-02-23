@@ -14,8 +14,8 @@
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800" rel="stylesheet" type="text/css" />
 
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
-		<link rel="stylesheet" href="<?= URL_RAIZ; ?>css/bootstrap.min.css" />
-		<link rel="stylesheet" href="<?= URL_RAIZ; ?>css/bootstrap-theme.min.css" />
+		<!-- <link rel="stylesheet" href="<?= URL_RAIZ; ?>css/bootstrap-theme.min.css" /> -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 		<link rel="stylesheet" href="<?= URL_RAIZ; ?>css/layout.css" />
 
 		<script src="<?= URL_RAIZ; ?>js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -81,11 +81,6 @@
 		<!-- /FOOTER -->
 
 
-
-
-
-
-
 		<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -134,7 +129,8 @@
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="<?= URL_RAIZ; ?>js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
-		<script src="<?= URL_RAIZ; ?>js/vendor/bootstrap.min.js"></script>
+		
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?v=3"></script>
 		<script src="<?= URL_RAIZ; ?>js/plugins.js"></script>
 		<script src="<?= URL_RAIZ; ?>js/main.js"></script>

@@ -148,32 +148,39 @@ jQuery(function($) {
 
 
         $('#searchAgreementForm').on('submit', function(event){
-            var $form = $(this);
-            var $btn = $('#searchAgreementSubmit');
-            $btn.button('loading');
+            
+            var countries = msCountry.getValue();
+            var products  = msProduct.getValue();
 
-            console.log(msCountry.getValue(), msProduct.getValue());
-            $.ajax({
-                type:"POST"
-                ,url:'acuerdo/'
-                ,data:{
-                    products: msProduct.getValue(),
-                    countries: msCountry.getValue()
-                }
-                ,dataType:"json"
-                ,success:function(data){
-                    if(data.success){
-                        $form[0].reset();
-                        window.location.replace(data.url);
+            if ( countries.length > 0 || products.length > 0) {
+
+                var form = $(this);
+                var btn = $('#searchAgreementSubmit');
+                btn.button('loading');
+
+                $.ajax({
+                    type:"POST"
+                    ,url:'acuerdo/publicSearch'
+                    ,data:{
+                        products: products,
+                        countries: countries
                     }
-                    else{
-                        $("#modal-error-msg").html(data.error);
-                        $('#errorModal').modal('show');
+                    ,dataType:"json"
+                    ,success:function(data){
+                        if(data.success){
+                            console.log(data);
+                            form[0].reset();
+                            window.location.replace(data.url);
+                        }
+                        else{
+                            $("#modal-error-msg").html(data.error);
+                            $('#errorModal').modal('show');
+                        }
                     }
-                }
-            }).always(function(){
-                $btn.button('reset');
-            });
+                }).always(function(){
+                    btn.button('reset');
+                });
+            }
         
             event.preventDefault();
         });
