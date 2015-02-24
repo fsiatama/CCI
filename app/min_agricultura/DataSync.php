@@ -5,12 +5,10 @@
  * Description: Actualiza la información de las tablas de importaciones y exportaciones
  *
  * @author Julian Hernández R.
- */
-$dataSync = new DataSync("190.60.211.98", 21, "fs1atam4", "fsagr1");
-$dataSync->Syncronize("declaraexp");
-$dataSync->Syncronize("declaraimp");
+ **/
 
-require './../lib/config.php';
+define("PATH_RAIZ", "C:/wamp/www/CCI/public/");
+define("PATH_APP", "C:/wamp/www/CCI/app/");
 
 class DataSync {
 
@@ -18,12 +16,26 @@ class DataSync {
     private $FtpPort;
     private $FtpUsername;
     private $FtpPassword;
+    private $driver;
+    private $host;
+    private $database;
+    private $username;
+    private $password;
 
     function __construct($ftpHost, $ftpPort, $ftpUsername, $ftpPassword) {
+
         $this->FtpHost = $ftpHost;
         $this->FtpPort = $ftpPort;
         $this->FtpUsername = $ftpUsername;
         $this->FtpPassword = $ftpPassword;
+
+        require PATH_APP . 'lib/config.php';
+        $database = $connections['default'];
+        $this->driver = $connections[$database]['driver'];
+        $this->host = $connections[$database]['host'];
+        $this->database = $connections[$database]['database'];
+        $this->username = $connections[$database]['username'];
+        $this->password = $connections[$database]['password'];
     }
 
     public function Syncronize($table) {
@@ -75,10 +87,10 @@ class DataSync {
 
         $files = $this->dirToArray($localFolderName);
         foreach ($files as $file) {
-            $this->LoadData($table, $file);
+            $this->LoadData($table, $file, $localFolderName);
         }
 
-        //$this->DeleteTemps($arrayTemps);
+        $this->DeleteTemps($arrayTemps);
 
         echo "Cerrando conexión con el servidor FTP" . "\xA";
         $flag = ftp_close($ftpSession);
@@ -108,18 +120,50 @@ class DataSync {
         return TRUE;
     }
 
-    protected function LoadData($table, $file) {
-        
-        $file = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, $file);
+    protected function LoadData($table, $file, $tempFolder) {
+
+        $tempfile = tempnam($tempFolder, $file);
+        for ($i = -1; $i < filesize($file); $i += 1048576) {
+            $cont = file_get_contents($file, FALSE, NULL, $i, 1048576);
+            $cont = utf8_encode($cont);
+            $cont = preg_replace('/[^a-zA-Z0-9_\n\r\.\,\|-]/', '', $cont);
+
+            $arch = fopen($tempfile, "a+");
+            fwrite($arch, $cont);
+            fclose($arch);
+        }
+
+        $tempfile = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, $tempfile);
         $sqlString = file_get_contents("./../../sql/load data template.sql");
         $sqlString = str_replace("@<table>@", $table, $sqlString);
-        $sqlString = str_replace("@<file>@", $file, $sqlString);
-        
+        $sqlString = str_replace("@<file>@", $tempfile, $sqlString);
+
         $sqlFile = fopen($file . ".sql", "w");
         fwrite($sqlFile, $sqlString);
         fclose($sqlFile);
-        
+
+        $this->MySqlExecuteScript($sqlString);
+
         return TRUE;
+    }
+
+    protected function MySqlExecuteScript($sql) {
+
+        $mysqli = mysqli_connect($this->host, $this->username, $this->password, $this->database);
+
+        /* comprobar la conexión */
+        if ($mysqli->connect_errno) {
+            echo "Falló la conexión a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+
+        echo 'processing file <br />';
+        echo $sql;
+        if (!$mysqli->multi_query($sql)) {
+            echo "Falló la multiconsulta: (" . $mysqli->errno . ") " . $mysqli->error;
+        }
+
+        echo 'done.';
+        $mysqli->close();
     }
 
     protected function DeleteTemps($arrayTemps) {
@@ -170,3 +214,7 @@ class DataSync {
     }
 
 }
+
+$dataSync = new DataSync("190.60.211.98", 21, "fs1atam4", "fsagr1");
+$dataSync->Syncronize("declaraexp");
+//$dataSync->Syncronize("declaraimp");
