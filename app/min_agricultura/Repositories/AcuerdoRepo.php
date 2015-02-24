@@ -311,6 +311,9 @@ class AcuerdoRepo extends BaseRepo {
 
 		extract($params);
 
+		$products  = (is_array($products)) ? $products : [] ;
+		$countries = (is_array($countries)) ? $countries : [] ;
+
 		if (empty($products) && empty($countries)) {
 			$result = [
 				'success' => false,
@@ -318,6 +321,14 @@ class AcuerdoRepo extends BaseRepo {
 			];
 			return $result;
 		}
+
+		$this->acuerdo_detRepo = new Acuerdo_detRepo;
+
+		foreach ($products as $value) {
+			
+		}
+
+		
 
 		var_dump($params);
 		exit();

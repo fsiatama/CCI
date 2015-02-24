@@ -1,82 +1,19 @@
 <?php
 
-ini_set('display_errors', true);
-require '../../vendor/autoload.php';
-
-use stringEncode\Encode;
-
-$path = 'C:/Users/fsiatama.RTQHDOMAIN/Downloads/data_madr/';
-$file = $path . 'Exp2014.csv';
-$fp = fopen($file, "r");
-
-while(!feof($fp)) {
-    $linea = fgets($fp);
-
-    $encode = new Encode;
-    $encode->detect($linea);
-    $newstr = $encode->convert($linea);
-    $newstr = preg_replace('/[^a-zA-Z0-9_\.\,\|-]/', '', $newstr);
-    //$newstr = filter_var($newstr,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    write_log($newstr);
-    //echo $linea . "<br />";
-}
-fclose($fp);
-
-function write_log($cadena)
-{
-    $path = 'C:/Users/fsiatama.RTQHDOMAIN/Downloads/data_madr/';
-    $arch = fopen($path."Exp2014-new.csv", "a+"); 
-
-    fwrite($arch, $cadena.chr(10));
-    fclose($arch);
-}
-
-exit();
-
-$connection=mysql_connect ("localhost","root","");
-mysql_select_db ('min_agricultura', $connection);
-$str = file_get_contents($file);
-
-//$output = mb_convert_encoding( $myFile, 'UTF-8' );
-$output = iconv(mb_detect_encoding($myFile, mb_detect_order(), true), "UTF-8", $myFile);
-$sql = "
-LOAD DATA LOCAL INFILE '$output'
-INTO TABLE declaraexp_load
-FIELDS TERMINATED BY '|'
-OPTIONALLY ENCLOSED BY '\"'
-LINES TERMINATED BY '\n' STARTING BY ''
-";
-
-$result = mysql_query($sql, $connection);
-
-if (mysql_affected_rows() == 1) {
-    $message = "The user was successfully updated!";
-} else {
-    $message = "The user update failed: ";
-    $message .= mysql_error(); 
-}
-
-echo $message;
-
-
-
-
-
-
-
 /**
  * Name: DataSync
  * Description: Actualiza la información de las tablas de importaciones y exportaciones
  *
  * @author Julian Hernández R.
- */
-$dataSync = new DataSync("190.60.211.98", 21, "fs1atam4", "fsagr1");
-$dataSync->Syncronize("declaraexp");
-//$dataSync->Syncronize("declaraimp");
+ **/
 
-require './../lib/config.php';
+include "../../public/lib/config.php";
+require '../../vendor/autoload.php';
+require PATH_APP.'lib/connection/Connection.php';
 
-class DataSync {
+use stringEncode\Encode;
+
+class DataSync extends Connection {
 
     private $FtpHost;
     private $FtpPort;
@@ -84,10 +21,14 @@ class DataSync {
     private $FtpPassword;
 
     function __construct($ftpHost, $ftpPort, $ftpUsername, $ftpPassword) {
+
+        parent::__construct('min_agricultura');
+
         $this->FtpHost = $ftpHost;
         $this->FtpPort = $ftpPort;
         $this->FtpUsername = $ftpUsername;
         $this->FtpPassword = $ftpPassword;
+
     }
 
     public function Syncronize($table) {
@@ -110,10 +51,6 @@ class DataSync {
 
         $ftpFileName = $table . ".zip";
         $localFileName = $this->TempFileName = tempnam(sys_get_temp_dir(), $table);
-        
-        $contents = ftp_nlist($ftpSession);
-        var_dump($localFileName, $ftpFileName, $contents);
-
         $arrayTemps = array($localFileName);
 
         echo "Inicia descarga de archivo " . $ftpFileName . "\xA";
@@ -143,10 +80,10 @@ class DataSync {
 
         $files = $this->dirToArray($localFolderName);
         foreach ($files as $file) {
-            $this->LoadData($table, $file);
+            $this->LoadData($table, $file, $localFolderName);
         }
 
-        //$this->DeleteTemps($arrayTemps);
+        $this->DeleteTemps($arrayTemps);
 
         echo "Cerrando conexión con el servidor FTP" . "\xA";
         $flag = ftp_close($ftpSession);
@@ -176,18 +113,140 @@ class DataSync {
         return TRUE;
     }
 
-    protected function LoadData($table, $file) {
-        
-        $file = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, $file);
-        $sqlString = file_get_contents("./../../sql/load data template.sql");
+    protected function LoadData($table, $file, $tempFolder) {
+
+        /*$tempfile = tempnam($tempFolder, $file);
+        $fp = fopen($tempfile, "r");
+
+        while(!feof($fp)) {
+            $line = fgets($fp);
+
+            $encode = new Encode;
+            $encode->detect($line);
+            $newstr = $encode->convert($line);
+            $newstr = preg_replace('/[^a-zA-Z0-9_\.\,\|-]/', '', $newstr);
+            
+
+            $arch = fopen($tempfile, "a+");
+            fwrite($arch, $cont);
+            fclose($arch);
+        }
+        fclose($fp);*/
+
+        $tempfile = tempnam($tempFolder, $file);
+        for ($i = -1; $i < filesize($file); $i += 1048576) {
+            $cont = file_get_contents($file, FALSE, NULL, $i, 1048576);
+            $cont = utf8_encode($cont);
+            $cont = preg_replace('/[^a-zA-Z0-9_\n\r\.\,\|-]/', '', $cont);
+
+            $arch = fopen($tempfile, "a+");
+            fwrite($arch, $cont);
+            fclose($arch);
+        }
+
+        $tempfile = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, $tempfile);
+        /*$sqlString = file_get_contents("./../../sql/load data template.sql");
         $sqlString = str_replace("@<table>@", $table, $sqlString);
-        $sqlString = str_replace("@<file>@", $file, $sqlString);
-        
+        $sqlString = str_replace("@<file>@", $tempfile, $sqlString);
+
         $sqlFile = fopen($file . ".sql", "w");
         fwrite($sqlFile, $sqlString);
-        fclose($sqlFile);
-        
+        fclose($sqlFile);*/
+
+        $this->MySqlExecuteScript($table, $tempfile);
+
         return TRUE;
+    }
+
+    protected function MySqlExecuteScript($table, $tempfile) {
+
+        $conn = $this->getConnection();
+
+        $conn->debug = true;
+
+        $conn->BeginTrans();
+
+        $sql = "
+            DROP TEMPORARY TABLE IF EXISTS ".$table."_TEMP;
+        ";
+        
+        $ok = $conn->Execute($sql);
+
+        if ($ok) {
+
+            $sql = "
+                CREATE TEMPORARY TABLE ".$table."_TEMP LIKE ".$table.";
+            ";
+            
+            $ok = $conn->Execute($sql);
+
+            if ($ok) {
+                $sql = "
+                    LOAD DATA LOCAL INFILE '".$tempfile."'
+                    INTO TABLE ".$table."_TEMP
+                    CHARACTER SET utf8
+                    FIELDS TERMINATED BY '|'
+                    OPTIONALLY ENCLOSED BY '\"'
+                    LINES TERMINATED BY '\n' STARTING BY '';
+                ";
+                $ok = $conn->Execute($sql);
+
+                if ($ok) {
+                    $sql = "
+                        DELETE tbl FROM ".$table." tbl
+                        INNER JOIN ".$table."_TEMP inn on inn.id = tbl.id;
+                    ";
+                    $ok = $conn->Execute($sql);
+
+                    if ($ok) {
+                        $sql = "
+                            INSERT INTO ".$table."_load SELECT * FROM ".$table."_TEMP;
+                        ";
+                        $ok = $conn->Execute($sql);
+
+                        if ($ok) {
+                            $sql = "
+                                DROP TEMPORARY TABLE IF EXISTS ".$table."_TEMP;
+                            ";
+                            $ok = $conn->Execute($sql);
+
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        if ($ok) {
+            $conn->CommitTrans();
+        } else {
+            $conn->RollbackTrans();
+        }
+
+        /*echo "<pre>$sql</pre>";
+
+        
+        $conn->debug = true;
+        $resultSet = $conn->Execute($sql);
+
+        var_dump($resultSet);
+
+        $mysqli = mysqli_connect($this->host, $this->username, $this->password, $this->database);
+
+         comprobar la conexión 
+        if ($mysqli->connect_errno) {
+            echo "Falló la conexión a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+
+        echo 'processing file <br />';
+        echo $sql;
+        if (!$mysqli->multi_query($sql)) {
+            echo "Falló la multiconsulta: (" . $mysqli->errno . ") " . $mysqli->error;
+        }
+
+        echo 'done.';
+        $mysqli->close();*/
     }
 
     protected function DeleteTemps($arrayTemps) {
@@ -238,3 +297,7 @@ class DataSync {
     }
 
 }
+
+$dataSync = new DataSync("190.60.211.98", 21, "fs1atam4", "fsagr1");
+$dataSync->Syncronize("declaraexp");
+//$dataSync->Syncronize("declaraimp");
