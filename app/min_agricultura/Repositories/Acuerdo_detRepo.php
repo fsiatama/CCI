@@ -321,6 +321,25 @@ class Acuerdo_detRepo extends BaseRepo {
 
 	}
 
+	public function listByProduct($params)
+	{
+		extract($params);
+
+		if (empty($product)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+
+		
+		$this->model->setAcuerdo_det_productos($product);
+		
+		return $this->modelAdo->exactSearch($this->model);
+		
+	}
+
 	public function grid($params)
 	{
 		extract($params);

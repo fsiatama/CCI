@@ -190,6 +190,26 @@ class Acuerdo_detAdo extends BaseAdo {
 			if ($data <> ''){
 				if ($key == 'acuerdo_det_acuerdo_id' || $key == 'acuerdo_det_id') {
 					$primaryFilter[] = $key . ' = "' . $data . '"';
+				} elseif ($key == 'acuerdo_det_productos') {
+					//construye una expesion regular con la data que llega (capitulo, partida, subpartida o posicion)
+
+					$arrRegexp   = [];
+					$arrRegexp[] = '^' . $data . '.*';
+
+					if ( strlen($data) > 2 ) {
+						$arrRegexp[] = substr($data, 0 ,2);
+					}
+					if ( strlen($data) > 4 ) {
+						$arrRegexp[] = substr($data, 0 ,4);
+					}
+					if ( strlen($data) > 6 ) {
+						$arrRegexp[] = substr($data, 0 ,6);
+					}
+
+					$regexp = implode('|', $arrRegexp);
+
+					$filter[] = $key . ' REGEXP "' . $regexp . '"';
+
 				} else {
 					if ($operator == '=') {
 						$filter[] = $key . ' ' . $operator . ' "' . $data . '"';

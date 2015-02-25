@@ -306,13 +306,34 @@ class AcuerdoRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function listByCountry($params)
+	{
+		extract($params);
+
+		$countries = ( !empty($countries) && is_array($countries) ) ? $countries : [] ;
+
+		if (empty($countries)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+
+		$countries = implode(',', $countries);
+		
+		$this->model->setAcuerdo_mercado_id($countries);
+		return $this->modelAdo->inSearch($this->model);
+		
+	}
+
 	public function publicSearch($params)
 	{
 
 		extract($params);
 
-		$products  = (is_array($products)) ? $products : [] ;
-		$countries = (is_array($countries)) ? $countries : [] ;
+		$products  = ( !empty($products) && is_array($products) ) ? $products : [] ;
+		$countries = ( !empty($countries) && is_array($countries) ) ? $countries : [] ;
 
 		if (empty($products) && empty($countries)) {
 			$result = [
@@ -322,73 +343,60 @@ class AcuerdoRepo extends BaseRepo {
 			return $result;
 		}
 
-		$this->acuerdo_detRepo = new Acuerdo_detRepo;
+		$arrAgreement = [];
 
-		foreach ($products as $value) {
-			
+		if ( ! empty($products) ) {
+
+			$this->acuerdo_detRepo = new Acuerdo_detRepo;
+
+			//productos solo deberia venir uno
+			$product = array_shift($products);
+
+			$result = $this->acuerdo_detRepo->listByProduct(compact('product'));
+
+			if (!$result['success']) {
+				return $result;
+			}
+
+			$arrAgreement = array_column( $result['data'], 'acuerdo_det_acuerdo_id' );
 		}
 
-		
+		if ( ! empty($countries) ) {
 
-		var_dump($params);
-		exit();
+			$result = $this->listByCountry(compact('countries'));
+
+			if (!$result['success']) {
+				return $result;
+			}
+
+			$arrAgreement = array_column( $result['data'],  $this->primaryKey);
+
+		}
+
+		if ( empty($arrAgreement) ) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+			return $result;
+		}
+
+		$model = $this->getModel();
+		$model->setAcuerdo_id( implode(',', $arrAgreement) );
 
 		$this->modelAdo->setColumns([
 			'acuerdo_id',
 			'acuerdo_nombre',
 			'acuerdo_descripcion',
-			'acuerdo_intercambio',
 			'acuerdo_intercambio_title',
 			'acuerdo_fvigente',
 			'acuerdo_fvigente_title',
-			'acuerdo_mercado_id',
-			'acuerdo_id_pais',
-			'pais',
-			'mercado_nombre',
+			'paises_iata',
+			'pais_iata',
 		]);
 
-		$result = $this->findPrimaryKey($acuerdo_id);
+		return $this->modelAdo->inSearch($this->model);
 
-		if (!$result['success']) {
-			return $result;
-		}
-
-		$row = array_shift($result['data']);
-
-		$paisRepo = new PaisRepo;
-		$params   = [
-			'valuesqry' => true
-		];
-
-		if (empty($row['acuerdo_mercado_id'])) {
-			$params['query'] = $row['acuerdo_id_pais'];
-			
-		} else {
-			$mercadoRepo = new MercadoRepo;
-			$result      = $mercadoRepo->findPrimaryKey($row['acuerdo_mercado_id']);
-
-			if (!$result['success']) {
-				return $result;
-			}
-			$rowMercado      = array_shift($result['data']);
-			$params['query'] = str_replace(',', '|', $rowMercado['mercado_paises']);
-		}
-
-
-		
-		$result = $paisRepo->listAll($params);
-
-		if (!$result['success']) {
-			return $result;
-		}
-
-		$result = [
-			'success'      => true,
-			'country_data' => $result['data'],
-			'data'         => [$row]
-		];
-
-		return $result;
 	}
 
 }

@@ -106,7 +106,7 @@ jQuery(function($) {
             ,allowFreeEntries: false
             //,highlight:false
             ,useZebraStyle: true
-            ,maxSelection: 5
+            ,maxSelection: 1
             ,typeDelay: 600
             //,minChars:2
             ,selectionPosition: 'bottom'
@@ -168,11 +168,19 @@ jQuery(function($) {
                     ,dataType:"json"
                     ,success:function(data){
                         if(data.success){
-                            console.log(data);
-                            form[0].reset();
-                            window.location.replace(data.url);
-                        }
-                        else{
+                            var records = data.data;
+                            $.each(records, function( key, row ) {
+
+                                var countriesIata = row.paises_iata.split(',');
+
+                                $.each(countriesIata, function( i, iataCode ) {
+                                    console.log(iataCode);
+                                    paintCountry(iataCode, mapOptionsLoc, null, null);
+                                });
+
+                            });
+                            
+                        } else {
                             $("#modal-error-msg").html(data.error);
                             $('#errorModal').modal('show');
                         }

@@ -90,20 +90,40 @@ class AcuerdoAdo extends BaseAdo {
 		$filter = [];
 		$operator = $this->getOperator();
 		$joinOperator = ' AND ';
-		foreach($this->data as $key => $data){
-			if ($data <> ''){
+		foreach( $this->data as $key => $data) {
+			if ($data <> '') {
 				if ($operator == '=') {
 					$filter[] = $key . ' ' . $operator . ' "' . $data . '"';
 				}
 				elseif ($operator == 'IN') {
-					$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+					//si el operador es in, utilizo acuerdo_mercado_id para buscar un id de pais
+					if ( $key == 'acuerdo_mercado_id' ) {
+
+						$regexp = str_replace(',', '|', $data);
+						$filter[] = '( mercado_paises REGEXP "' . $regexp . '" OR FIND_IN_SET(acuerdo_id_pais, "' . $data . '") )';
+
+					} else {
+
+						$filter[] = $key . ' ' . $operator . '("' . $data . '")';
+					}
 				}
 				else {
-					$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+					//si el operador es like, utilizo acuerdo_mercado_id para buscar por nombre de pais
+					if ( $key == 'acuerdo_mercado_id' ) {
+
+						$filter[] = 'paises_nombre ' . $operator . ' "%' . $data . '%"';
+						$filter[] = 'pais ' . $operator . ' "%' . $data . '%"';
+
+					} else {
+
+						$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+
+					}
 					$joinOperator = ' OR ';
 				}
 			}
 		}
+
 
 		$sql = 'SELECT
 			 acuerdo_id,
@@ -118,14 +138,23 @@ class AcuerdoAdo extends BaseAdo {
 			 acuerdo_mercado_id,
 			 acuerdo_id_pais,
 			 mercado_nombre,
-			 pais
+			 pais,
+			 paises_iata,
+			 pais_iata
 			FROM acuerdo 
-			LEFT JOIN mercado ON acuerdo_mercado_id = mercado_id
+			LEFT JOIN (
+				SELECT mercado_id, mercado_nombre, mercado_paises, GROUP_CONCAT(DISTINCT pais) AS paises_nombre , GROUP_CONCAT(DISTINCT pais_iata) AS paises_iata
+				FROM mercado
+				LEFT JOIN pais ON  FIND_IN_SET(id_pais, mercado_paises)
+				GROUP BY mercado_id
+			) AS mercado ON acuerdo_mercado_id = mercado_id
 			LEFT JOIN pais ON acuerdo_id_pais = id_pais
 		';
 		if(!empty($filter)){
 			$sql .= ' WHERE ('. implode( $joinOperator, $filter ).')';
 		}
+
+		//echo '<pre>'.$sql.'</pre>';
 
 		return $sql;
 	}
