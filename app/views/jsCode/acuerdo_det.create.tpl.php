@@ -56,7 +56,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 		,valueField:'id_posicion'
 		,tpl: resultTplPosicion
 		,displayFieldTpl:'({id_posicion}) - {posicion}'
-		,allowBlank:true
+		//,allowBlank:true
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {
