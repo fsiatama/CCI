@@ -117,30 +117,24 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 	});
 
 	var gridAcuerdo_det = new Ext.grid.GridPanel({
-		store:storeAcuerdo_det
-		,id:module + 'gridAcuerdo_det'
+		autoHeight:true
+		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeAcuerdo_det, displayInfo:true})
+		,border:true
 		,colModel:cmAcuerdo_det
-		,viewConfig: {
-			forceFit: true
-			,scrollOffset:2
-		}
-		,sm: new Ext.grid.RowSelectionModel({
-			singleSelect: true
-		})
-		//,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeAcuerdo_det, displayInfo:true})
-		,enableColumnMove:false
-		//,enableColumnResize:false
-		,tbar:tbAcuerdo_det
+		,columnLines:true
+		,iconCls:'silk-grid'
+		,id:module+'gridAcuerdo_det'
+		,layout:'fit'
+		,margins:'10 15 5 0'
+		,monitorResize:true
 		,loadMask:true
-		,border:false
-		,frame: false
-		,baseCls: 'x-panel-mc'
-		,buttonAlign:'center'
+		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
+		,stateful:true
+		,store:storeAcuerdo_det
+		,stripeRows:true
+		,tbar:tbAcuerdo_det
 		,title:''
-		,iconCls:'icon-grid'
-		,stripeRows: true
-		,autoHeight:true
-		,autoWidth:true
+		,viewConfig: { forceFit:true }
 		,plugins:[
 			new Ext.ux.grid.Search({
 				iconCls:'silk-zoom'
@@ -165,34 +159,38 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 	var panelAcuerdo_det = new Ext.Panel({
 		xtype:'panel'
 		,id:module+'panelAcuerdo_det'
-		,layout:'border'
+		,layout:'column'
 		,border:false
-		,bodyCssClass:'x-plain'
-		,bodyStyle:	'padding:15px;position:relative;'
+		,baseCls:'x-plain'
 		,autoWidth:true
 		,autoScroll:true
+		,bodyStyle:	'padding:15px;position:relative;'
+		,defaults:{
+			columnWidth:1
+			,border:false
+			,xtype:'panel'
+			,style:{padding:'10px'}
+			,layout:'fit'
+		}
 		,items:[{
-			region:'north'
-			,border:false
-			,bodyStyle:'padding:15px;'
-			,html: '<div class="bootstrap-styles">' +
-				'<div class="page-head">' +
-					'<h4 class="nopadding"><i class="styleColor fa fa-cubes"></i> <?= $acuerdo_nombre; ?></h4>' +
-					'<div class="clearfix"></div><p><?= $acuerdo_descripcion; ?></p>' +
-				'</div>' +
-			'</div>'
+			defaults:{anchor:'100%'}
+			,items:[{
+				style:{padding:'0px'}
+				,autoHeight:true
+				,border:false
+				,margins:'10 15 5 0'
+				,html: '<div class="bootstrap-styles">' +
+					'<div class="panel panel-default">' +
+						'<div class="panel-heading">' +
+							'<?= Lang::get('acuerdo_det.table_name'); ?>' +
+						'</div>' +
+						'<div class="panel-body"><h2><?= $acuerdo_nombre; ?></h2><p><?= $acuerdo_descripcion; ?></p></div>' +
+					'</div>' +
+				'</div>'
+			}]
 		},{
-			layout:'column'
-			,region:'center'
-			,border:false
-			,defaults:{columnWidth:1,border:false}
-			,bodyStyle:'padding:10px;'
-			,items:[
-			{
-				html:'<div class="bootstrap-styles"><h4 class="text-center"><?= Lang::get('acuerdo_det.table_name'); ?></h4></div>'
-			},
-				gridAcuerdo_det
-			]
+			defaults:{anchor:'100%'}
+			,items:[gridAcuerdo_det]
 		}]
 	});
 

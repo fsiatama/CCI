@@ -115,6 +115,14 @@ jQuery(function($) {
                 //console.log(data);
                 return data.posicion + ' (<b>' + data.id_posicion + '</b>)';
             }
+            ,renderer: function(data){
+                return '<div style="padding: 5px; overflow:hidden;">' +
+                    '<div style="float: left; margin-left: 5px">' +
+                        '<div style="font-weight: bold; color: #333; font-size: 11px; line-height: 11px">' + data.id_posicion + '</div>' +
+                        '<div style="color: #999; font-size: 10px">' + data.posicion + '</div>' +
+                    '</div>' +
+                '</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
+            }
         });
         var msCountry = $('#ms-filter-country').magicSuggest({
             data: 'pais/listInAgreement'
@@ -137,15 +145,7 @@ jQuery(function($) {
             }
         });
 
-       /* $(msCountry).on('selectionchange', function(e,ms,records) {
-            initialize(mapOptions);
-            $.each(records, function( key, row ) {
-                paintCountry(row.pais_iata, mapOptionsLoc, null, null);
-            });
-        });*/
-
         initialize(mapOptions);
-
 
         $('#searchAgreementForm').on('submit', function(event){
             
@@ -172,15 +172,16 @@ jQuery(function($) {
                             var records = data.data;
                             $.each(records, function( key, row ) {
 
+                                var agreement = row.acuerdo_id;
+
                                 if (row.paises_iata) {
                                     var countriesIata = row.paises_iata.split(',');
                                     
                                     $.each(countriesIata, function( i, iataCode ) {
-                                        console.log(iataCode);
-                                        paintCountry(iataCode, mapOptionsLoc, null, null);
+                                        paintCountry(iataCode, mapOptionsLoc, null, null, agreement);
                                     });
                                 } else {
-                                    paintCountry(row.pais_iata, mapOptionsLoc, null, null);
+                                    paintCountry(row.pais_iata, mapOptionsLoc, null, null, agreement);
                                 }
 
 
@@ -265,7 +266,7 @@ function initialize(mapOptions) {
     /*paintCountry('CO', mapOptionsLoc, '/img/flag_colombia.png', new google.maps.LatLng(0,-85));*/
 }
 
-function paintCountry(countryCode, countryOptions, countryIcon, countryPosition) {
+function paintCountry(countryCode, countryOptions, countryIcon, countryPosition, agreement) {
     
     var countryObj = country[countryCode];
 
@@ -292,8 +293,24 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition)
         }
 
         google.maps.event.addListener(polygonObj, 'click', function (event) {
-            //alert the index of the polygon
-            alert("PAIS: " + countryObj.desc);
+            $.ajax({
+                type:"POST"
+                ,url:'acuerdo/listId'
+                ,data:{
+                    acuerdo_id: agreement
+                }
+                ,dataType:"json"
+                ,success:function(data){
+                    if(data.success){
+
+                        console.log(data);
+                        
+                    } else {
+                        $("#modal-error-msg").html(data.error);
+                        $('#errorModal').modal('show');
+                    }
+                }
+            });
         });
     }
 }

@@ -386,11 +386,6 @@ class AcuerdoRepo extends BaseRepo {
 
 		$this->modelAdo->setColumns([
 			'acuerdo_id',
-			'acuerdo_nombre',
-			'acuerdo_descripcion',
-			'acuerdo_intercambio_title',
-			'acuerdo_fvigente',
-			'acuerdo_fvigente_title',
 			'paises_iata',
 			'pais_iata',
 		]);

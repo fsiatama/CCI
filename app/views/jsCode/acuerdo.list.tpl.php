@@ -106,26 +106,24 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		}]
 	});
 	var gridAcuerdo = new Ext.grid.GridPanel({
-		border:true
-		,monitorResize:true
-		,store:storeAcuerdo
+		autoHeight:true
+		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeAcuerdo, displayInfo:true})
+		,border:true
 		,colModel:colModelAcuerdo
-		,stateful:true
 		,columnLines:true
-		,stripeRows:true
-		,viewConfig: {
-			forceFit:true
-		}
-		,id:module+'gridAcuerdo'
-		,title:''
-		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar: ['->']
 		,iconCls:'silk-grid'
-		,plugins:[new Ext.ux.grid.Excel()]
+		,id:module+'gridAcuerdo'
 		,layout:'fit'
-		,autoHeight:true
-		//,autoWidth:true
 		,margins:'10 15 5 0'
+		,monitorResize:true
+		,loadMask:true
+		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
+		,stateful:true
+		,store:storeAcuerdo
+		,stripeRows:true
+		,tbar:tbAcuerdo
+		,title:''
+		,viewConfig: { forceFit:true }
 		,plugins:[
 			new Ext.ux.grid.Search({
 				iconCls:'silk-zoom'
@@ -142,11 +140,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			,gridAcuerdoAction
 			,gridAcuerdoExpander
 		]
-		,bbar:new Ext.PagingToolbar({pageSize:numberRecords, store:storeAcuerdo, displayInfo:true})
-		,tbar:tbAcuerdo
 	});
-
-
 
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridAcuerdo.getItemId());
