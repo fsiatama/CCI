@@ -61,11 +61,12 @@ class PosicionRepo extends BaseRepo {
 		extract($params);
 
 		$query = (empty($query)) ? '' : $query ;
+		$trade = (empty($trade)) ? 'impo' : $trade ;
 
 		$this->model->setId_posicion($query);
 		$this->model->setPosicion($query);
 		
-		return $this->modelAdo->listInAgreement($this->model);
+		return $this->modelAdo->listInAgreement( $this->model, $trade );
 
 
 	}

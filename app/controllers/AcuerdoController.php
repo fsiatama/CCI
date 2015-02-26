@@ -33,6 +33,11 @@ class AcuerdoController {
 		return $this->acuerdoRepo->validateModify($postParams);
 	}
 
+	public function listIdPublicAction($urlParams, $postParams)
+	{
+		return $this->acuerdoRepo->listId($postParams);
+	}
+
 	public function createAction($urlParams, $postParams)
 	{
 		$result = $this->userRepo->validateMenu('create', $postParams);

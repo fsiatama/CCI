@@ -100,7 +100,7 @@ jQuery(function($) {
             data: 'posicion/listInAgreement'
             ,resultsField: 'data'
             ,placeholder: 'Select...'
-            //,mode: 'remote'
+            ,mode: 'remote'
             ,valueField: 'id_posicion'
             ,displayField: 'posicion'
             ,allowFreeEntries: false
@@ -112,7 +112,6 @@ jQuery(function($) {
             ,selectionPosition: 'bottom'
             ,selectionStacked: true
             ,selectionRenderer: function(data){
-                //console.log(data);
                 return data.posicion + ' (<b>' + data.id_posicion + '</b>)';
             }
             ,renderer: function(data){
@@ -124,11 +123,17 @@ jQuery(function($) {
                 '</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
             }
         });
+        
+        $(msProduct).on('beforeload', function(c){
+            var trade = $("#searchAgreementForm input[name=agreementTrade]:checked").val();
+            this.setDataUrlParams({trade: trade});
+        });
+        
         var msCountry = $('#ms-filter-country').magicSuggest({
             data: 'pais/listInAgreement'
             ,resultsField: 'data'
             ,placeholder: 'Select...'
-            //,mode: 'remote'
+            ,mode: 'remote'
             ,valueField: 'id_pais'
             ,displayField: 'pais'
             ,allowFreeEntries: false
@@ -145,15 +150,22 @@ jQuery(function($) {
             }
         });
 
+        $(msCountry).on('beforeload', function(c){
+            var trade = $("#searchAgreementForm input[name=agreementTrade]:checked").val();
+            this.setDataUrlParams({trade: trade});
+        });
+
         initialize(mapOptions);
 
         $('#searchAgreementForm').on('submit', function(event){
             
             var countries = msCountry.getValue();
             var products  = msProduct.getValue();
-            initialize(mapOptions);
-
+            var trade     = $("#searchAgreementForm input[name=agreementTrade]:checked").val();
+            
             if ( countries.length > 0 || products.length > 0) {
+                
+                initialize(mapOptions);
 
                 var form = $(this);
                 var btn = $('#searchAgreementSubmit');
@@ -164,7 +176,8 @@ jQuery(function($) {
                     ,url:'acuerdo/publicSearch'
                     ,data:{
                         products: products,
-                        countries: countries
+                        countries: countries,
+                        trade: trade
                     }
                     ,dataType:"json"
                     ,success:function(data){
@@ -295,7 +308,7 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
         google.maps.event.addListener(polygonObj, 'click', function (event) {
             $.ajax({
                 type:"POST"
-                ,url:'acuerdo/listId'
+                ,url:'acuerdo/listIdPublic'
                 ,data:{
                     acuerdo_id: agreement
                 }
@@ -303,7 +316,16 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
                 ,success:function(data){
                     if(data.success){
 
-                        console.log(data);
+                        var record  = data.data[0];
+                        var partner = ( record.mercado_nombre ) ? record.mercado_nombre : record.pais ;
+                        var html    = '';
+                        
+                        $("#agreementTitle").html(partner);
+                        $("#agreementName").html(record.acuerdo_nombre);
+                        $("#agreementDescription").html(record.acuerdo_descripcion);
+                        $("#agreementValidity").html(record.acuerdo_fvigente_title);
+                        //$("#modal-agreement-msg").html(record.acuerdo_nombre);
+                        $('#agreementModal').modal('show');
                         
                     } else {
                         $("#modal-error-msg").html(data.error);

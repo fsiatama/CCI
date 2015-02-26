@@ -107,11 +107,12 @@ class PaisRepo extends BaseRepo {
 		extract($params);
 
 		$query = (empty($query)) ? '' : $query ;
+		$trade = (empty($trade)) ? 'impo' : $trade ;
 
 		$this->model->setPais($query);
 		$this->model->setPais_iata($query);
 		
-		return $this->modelAdo->listInAgreement($this->model);
+		return $this->modelAdo->listInAgreement($this->model, $trade);
 
 
 	}

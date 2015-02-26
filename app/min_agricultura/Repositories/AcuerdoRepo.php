@@ -31,6 +31,7 @@ class AcuerdoRepo extends BaseRepo {
 	{
 		extract($params);
 		$result = $this->findPrimaryKey($acuerdo_id);
+		$module = (empty($module)) ? '' : $module ;
 
 		if (!$result['success']) {
 			$result = [
@@ -106,6 +107,7 @@ class AcuerdoRepo extends BaseRepo {
 			$this->acuerdo_detRepo = new Acuerdo_detRepo;
 
 			$result = $this->findPrimaryKey($acuerdo_id);
+			$module = (empty($module)) ? '' : $module ;
 
 			if (!$result['success']) {
 				$result = [

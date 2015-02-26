@@ -26,6 +26,19 @@
 
 			<form action="#" method="POST" role="form" id="searchAgreementForm">
 				<legend>Filtros</legend>
+
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="agreementTrade" id="optionsRadios1" value="impo" checked="checked">
+				    Soy un importador
+				  </label>
+				</div>
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="agreementTrade" id="optionsRadios2" value="expo">
+				    Soy un exportador
+				  </label>
+				</div>
 			
 				<div class="form-group">
 					<label for="ms-filter-product">Productos</label>
@@ -52,6 +65,37 @@
 					<div id="map-canvas" style="height: 600px;"></div>
 				</div>
 			</div>
+
+		</div>
+	</div>
+</div>
+
+
+
+<div class="modal fade" id="agreementModal" tabindex="-1" role="dialog" aria-labelledby="agreementModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header"><!-- modal header -->
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="agreementModalLabel"><i class="fa fa-globe"></i>  <span id="agreementTitle"></span></h4>
+			</div><!-- /modal header -->
+
+			<div class="modal-body"><!-- modal body -->
+
+				<dl>
+					<dt><?= Lang::get('acuerdo.columns_title.acuerdo_nombre'); ?></dt>
+					<dd id="agreementName"></dd>
+					<dt><?= Lang::get('acuerdo.columns_title.acuerdo_descripcion'); ?></dt>
+					<dd id="agreementDescription"></dd>
+					<dt><?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?></dt>
+					<dd id="agreementValidity"></dd>
+				</dl>
+			</div><!-- /modal body -->
+
+			<div class="modal-footer margin-top0"><!-- modal footer -->
+				<button class="btn btn-default" data-dismiss="modal">Cerrar</button>
+			</div><!-- /modal footer -->
 
 		</div>
 	</div>

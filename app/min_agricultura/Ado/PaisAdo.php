@@ -80,14 +80,15 @@ class PaisAdo extends BaseAdo {
 		return $sql;
 	}
 
-	public function buildInAgreementSelect()
+	public function buildInAgreementSelect($trade)
 	{
 
 		$sql = 'SELECT DISTINCT id_pais, pais, pais_iata FROM pais
 			  	WHERE EXISTS (SELECT 1
 								FROM acuerdo 
 								LEFT JOIN mercado ON acuerdo_mercado_id = mercado_id
-								WHERE FIND_IN_SET(pais.id_pais, mercado_paises) OR pais.id_pais = acuerdo_id_pais)
+								WHERE acuerdo_intercambio = "' . $trade . '"
+					  			  AND ( FIND_IN_SET(pais.id_pais, mercado_paises) OR pais.id_pais = acuerdo_id_pais) )
 		';
 		$this->setWhereAssignment( true );
 		$sql .= $this->buildSelectWhere();
@@ -136,14 +137,14 @@ class PaisAdo extends BaseAdo {
 		return $sql;
 	}
 
-	public function listInAgreement($model)
+	public function listInAgreement($model, $trade)
 	{
 		$this->setModel($model);
 		$this->setOperator('LIKE');
 		$conn = $this->getConnection();
 		$this->setData();
 
-		$sql       = $this->buildInAgreementSelect();
+		$sql       = $this->buildInAgreementSelect($trade);
 
 		$resultSet = $conn->Execute($sql);
 		$result    = $this->buildResult($resultSet);

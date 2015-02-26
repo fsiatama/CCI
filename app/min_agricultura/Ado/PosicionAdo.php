@@ -176,7 +176,7 @@ class PosicionAdo extends BaseAdo {
 		return $sql;
 	}
 
-	public function buildInAgreementSelect()
+	public function buildInAgreementSelect($trade)
 	{
 		$filter = array();
 		$operator = $this->getOperator();
@@ -212,10 +212,12 @@ class PosicionAdo extends BaseAdo {
 						FROM posicion 
 			WHERE EXISTS (SELECT 1
 					FROM acuerdo_det
-					WHERE FIND_IN_SET(id_posicion, acuerdo_det_productos) 
+					LEFT JOIN acuerdo ON acuerdo_det_acuerdo_id = acuerdo_id
+					WHERE acuerdo_intercambio = "' . $trade . '"
+					  AND (FIND_IN_SET(id_posicion, acuerdo_det_productos) 
 					   OR FIND_IN_SET(id_capitulo, acuerdo_det_productos)
 					   OR FIND_IN_SET(id_partida, acuerdo_det_productos)
-					   OR FIND_IN_SET(id_subpartida, acuerdo_det_productos))
+					   OR FIND_IN_SET(id_subpartida, acuerdo_det_productos)))
 		';
 
 		$sqlFilter = '';
@@ -288,14 +290,14 @@ class PosicionAdo extends BaseAdo {
 		return $sql;
 	}
 
-	public function listInAgreement($model)
+	public function listInAgreement($model, $trade)
 	{
 		$this->setModel($model);
 		$this->setOperator('LIKE');
 		$conn = $this->getConnection();
 		$this->setData();
 
-		$sql       = $this->buildInAgreementSelect();
+		$sql       = $this->buildInAgreementSelect($trade);
 
 		$resultSet = $conn->Execute($sql);
 		$result    = $this->buildResult($resultSet);
