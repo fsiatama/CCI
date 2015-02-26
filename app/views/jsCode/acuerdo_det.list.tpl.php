@@ -5,7 +5,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module."_".$acuerdo_id; ?>';
-	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
+	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 280)/22);
 
 	var storeAcuerdo_det = new Ext.data.JsonStore({
 		url:'acuerdo_det/list'
