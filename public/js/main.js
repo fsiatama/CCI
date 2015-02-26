@@ -151,6 +151,7 @@ jQuery(function($) {
             
             var countries = msCountry.getValue();
             var products  = msProduct.getValue();
+            initialize(mapOptions);
 
             if ( countries.length > 0 || products.length > 0) {
 
@@ -171,12 +172,17 @@ jQuery(function($) {
                             var records = data.data;
                             $.each(records, function( key, row ) {
 
-                                var countriesIata = row.paises_iata.split(',');
+                                if (row.paises_iata) {
+                                    var countriesIata = row.paises_iata.split(',');
+                                    
+                                    $.each(countriesIata, function( i, iataCode ) {
+                                        console.log(iataCode);
+                                        paintCountry(iataCode, mapOptionsLoc, null, null);
+                                    });
+                                } else {
+                                    paintCountry(row.pais_iata, mapOptionsLoc, null, null);
+                                }
 
-                                $.each(countriesIata, function( i, iataCode ) {
-                                    console.log(iataCode);
-                                    paintCountry(iataCode, mapOptionsLoc, null, null);
-                                });
 
                             });
                             
@@ -262,29 +268,32 @@ function initialize(mapOptions) {
 function paintCountry(countryCode, countryOptions, countryIcon, countryPosition) {
     
     var countryObj = country[countryCode];
-    
-    //Area pintada del país
-    var polygonObj = new google.maps.Polygon({
-        paths: countryObj.coord,
-        strokeColor: countryOptions.lineColor,
-        strokeOpacity: countryOptions.lineOpacity,
-        strokeWeight: countryOptions.lineWidth,
-        fillColor: countryOptions.backgroundColor,
-        fillOpacity: countryOptions.backgroundOpacity
-    });
-    polygonObj.setMap(map);
-    
-    //Icono del pais
-    if (countryPosition) {
-        var beachMarker = new google.maps.Marker({
-            position: countryPosition,
-            map: map,
-            icon: countryIcon
+
+    if (countryObj) {
+
+        //Area pintada del país
+        var polygonObj = new google.maps.Polygon({
+            paths: countryObj.coord,
+            strokeColor: countryOptions.lineColor,
+            strokeOpacity: countryOptions.lineOpacity,
+            strokeWeight: countryOptions.lineWidth,
+            fillColor: countryOptions.backgroundColor,
+            fillOpacity: countryOptions.backgroundOpacity
+        });
+        polygonObj.setMap(map);
+        
+        //Icono del pais
+        if (countryPosition) {
+            var beachMarker = new google.maps.Marker({
+                position: countryPosition,
+                map: map,
+                icon: countryIcon
+            });
+        }
+
+        google.maps.event.addListener(polygonObj, 'click', function (event) {
+            //alert the index of the polygon
+            alert("PAIS: " + countryObj.desc);
         });
     }
-
-    google.maps.event.addListener(polygonObj, 'click', function (event) {
-        //alert the index of the polygon
-        alert("PAIS: " + countryObj.desc);
-    });
 }
