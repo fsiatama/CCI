@@ -15,6 +15,11 @@ var storeAcuerdo = new Ext.data.JsonStore({
 		{name:'acuerdo_descripcion', type:'string'},
 		{name:'acuerdo_intercambio', type:'string'},
 		{name:'acuerdo_fvigente', type:'string', dateFormat:'Y-m-d'},
+		{name:'acuerdo_ffirma', type:'string', dateFormat:'Y-m-d'},
+		{name:'acuerdo_ley', type:'string'},
+		{name:'acuerdo_decreto', type:'string'},
+		{name:'acuerdo_url', type:'string'},
+		{name:'acuerdo_tipo_acuerdo', type:'string'},
 		{name:'acuerdo_uinsert', type:'float'},
 		{name:'acuerdo_finsert', type:'date', dateFormat:'Y-m-d H:i:s'},
 		{name:'acuerdo_uupdate', type:'float'},
@@ -50,6 +55,11 @@ var cmAcuerdo = new Ext.grid.ColumnModel({
 		{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_descripcion'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_descripcion'},
 		{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_intercambio'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_intercambio'},
 		{xtype:'datecolumn', header:'<?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_fvigente', format:'Y-m-d'},
+		{xtype:'datecolumn', header:'<?= Lang::get('acuerdo.columns_title.acuerdo_ffirma'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_ffirma', format:'Y-m-d'},
+		{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_ley'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_ley'},
+		{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_decreto'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_decreto'},
+		{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_url'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_url'},
+		{header:'<?= Lang::get('acuerdo.columns_title.acuerdo_tipo_acuerdo'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_tipo_acuerdo'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('acuerdo.columns_title.acuerdo_uinsert'); ?>', align:'right', hidden:false, dataIndex:'acuerdo_uinsert'},
 		{xtype:'datecolumn', header:'<?= Lang::get('acuerdo.columns_title.acuerdo_finsert'); ?>', align:'left', hidden:false, dataIndex:'acuerdo_finsert', format:'Y-m-d, g:i a'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('acuerdo.columns_title.acuerdo_uupdate'); ?>', align:'right', hidden:false, dataIndex:'acuerdo_uupdate'},
@@ -99,6 +109,11 @@ var formAcuerdo = new Ext.FormPanel({
 			{name:'acuerdo_descripcion', mapping:'acuerdo_descripcion', type:'string'},
 			{name:'acuerdo_intercambio', mapping:'acuerdo_intercambio', type:'string'},
 			{name:'acuerdo_fvigente', mapping:'acuerdo_fvigente', type:'string'},
+			{name:'acuerdo_ffirma', mapping:'acuerdo_ffirma', type:'string'},
+			{name:'acuerdo_ley', mapping:'acuerdo_ley', type:'string'},
+			{name:'acuerdo_decreto', mapping:'acuerdo_decreto', type:'string'},
+			{name:'acuerdo_url', mapping:'acuerdo_url', type:'string'},
+			{name:'acuerdo_tipo_acuerdo', mapping:'acuerdo_tipo_acuerdo', type:'string'},
 			{name:'acuerdo_uinsert', mapping:'acuerdo_uinsert', type:'float'},
 			{name:'acuerdo_finsert', mapping:'acuerdo_finsert', type:'date'},
 			{name:'acuerdo_uupdate', mapping:'acuerdo_uupdate', type:'float'},
@@ -162,6 +177,51 @@ var formAcuerdo = new Ext.FormPanel({
 				,name:'acuerdo_fvigente'
 				,fieldLabel:'<?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?>'
 				,id:module+'acuerdo_fvigente'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'datefield'
+				,name:'acuerdo_ffirma'
+				,fieldLabel:'<?= Lang::get('acuerdo.columns_title.acuerdo_ffirma'); ?>'
+				,id:module+'acuerdo_ffirma'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'acuerdo_ley'
+				,fieldLabel:'<?= Lang::get('acuerdo.columns_title.acuerdo_ley'); ?>'
+				,id:module+'acuerdo_ley'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'acuerdo_decreto'
+				,fieldLabel:'<?= Lang::get('acuerdo.columns_title.acuerdo_decreto'); ?>'
+				,id:module+'acuerdo_decreto'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'acuerdo_url'
+				,fieldLabel:'<?= Lang::get('acuerdo.columns_title.acuerdo_url'); ?>'
+				,id:module+'acuerdo_url'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'acuerdo_tipo_acuerdo'
+				,fieldLabel:'<?= Lang::get('acuerdo.columns_title.acuerdo_tipo_acuerdo'); ?>'
+				,id:module+'acuerdo_tipo_acuerdo'
 				,allowBlank:false
 			}]
 		},{

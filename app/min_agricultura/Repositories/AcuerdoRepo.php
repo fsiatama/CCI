@@ -143,6 +143,11 @@ class AcuerdoRepo extends BaseRepo {
 		$this->model->setAcuerdo_descripcion($acuerdo_descripcion);
 		$this->model->setAcuerdo_intercambio($acuerdo_intercambio);
 		$this->model->setAcuerdo_fvigente($acuerdo_fvigente);
+		$this->model->setAcuerdo_ffirma($acuerdo_ffirma);
+		$this->model->setAcuerdo_ley($acuerdo_ley);
+		$this->model->setAcuerdo_decreto($acuerdo_decreto);
+		$this->model->setAcuerdo_url($acuerdo_url);
+		$this->model->setAcuerdo_tipo_acuerdo($acuerdo_tipo_acuerdo);
 		$this->model->setAcuerdo_mercado_id($acuerdo_mercado_id);
 		$this->model->setAcuerdo_id_pais($acuerdo_id_pais);
 
@@ -171,6 +176,11 @@ class AcuerdoRepo extends BaseRepo {
 			$this->model->setAcuerdo_descripcion(implode('", "', $query));
 			$this->model->setAcuerdo_intercambio(implode('", "', $query));
 			$this->model->setAcuerdo_fvigente(implode('", "', $query));
+			$this->model->setAcuerdo_ffirma(implode('", "', $query));
+			$this->model->setAcuerdo_ley(implode('", "', $query));
+			$this->model->setAcuerdo_decreto(implode('", "', $query));
+			$this->model->setAcuerdo_url(implode('", "', $query));
+			$this->model->setAcuerdo_tipo_acuerdo(implode('", "', $query));
 			$this->model->setAcuerdo_uinsert(implode('", "', $query));
 			$this->model->setAcuerdo_finsert(implode('", "', $query));
 			$this->model->setAcuerdo_uupdate(implode('", "', $query));
@@ -186,6 +196,11 @@ class AcuerdoRepo extends BaseRepo {
 			$this->model->setAcuerdo_descripcion($query);
 			$this->model->setAcuerdo_intercambio($query);
 			$this->model->setAcuerdo_fvigente($query);
+			$this->model->setAcuerdo_ffirma($query);
+			$this->model->setAcuerdo_ley($query);
+			$this->model->setAcuerdo_decreto($query);
+			$this->model->setAcuerdo_url($query);
+			$this->model->setAcuerdo_tipo_acuerdo($query);
 			$this->model->setAcuerdo_uinsert($query);
 			$this->model->setAcuerdo_finsert($query);
 			$this->model->setAcuerdo_uupdate($query);
@@ -261,7 +276,9 @@ class AcuerdoRepo extends BaseRepo {
 			'acuerdo_mercado_id',
 			'acuerdo_id_pais',
 			'pais',
+			'pais_iata',
 			'mercado_nombre',
+			'mercado_bandera',
 		]);
 
 		$result = $this->findPrimaryKey($acuerdo_id);
@@ -277,8 +294,11 @@ class AcuerdoRepo extends BaseRepo {
 			'valuesqry' => true
 		];
 
+		$flag = '';
+
 		if (empty($row['acuerdo_mercado_id'])) {
 			$params['query'] = $row['acuerdo_id_pais'];
+			$flag = 'img/flags/64/'.$row['pais_iata'].'.png';
 			
 		} else {
 			$mercadoRepo = new MercadoRepo;
@@ -289,10 +309,10 @@ class AcuerdoRepo extends BaseRepo {
 			}
 			$rowMercado      = array_shift($result['data']);
 			$params['query'] = str_replace(',', '|', $rowMercado['mercado_paises']);
+			$flag = 'img/flags/markets/'.$row['mercado_bandera'].'.png';
 		}
 
-
-		
+		$flag   = ( file_exists(PATH_RAIZ.$flag) ) ? URL_RAIZ.$flag : '' ;
 		$result = $paisRepo->listAll($params);
 
 		if (!$result['success']) {
@@ -302,6 +322,7 @@ class AcuerdoRepo extends BaseRepo {
 		$result = [
 			'success'      => true,
 			'country_data' => $result['data'],
+			'flag'         => $flag,
 			'data'         => [$row]
 		];
 

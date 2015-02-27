@@ -1,7 +1,7 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Acuerdo.php';
-require PATH_APP.'min_agricultura/Ado/AcuerdoAdo.php';
+require PATH_MODELS.'Entities/Acuerdo.php';
+require PATH_MODELS.'Ado/AcuerdoAdo.php';
 require_once ('BaseRepo.php');
 
 class AcuerdoRepo extends BaseRepo {
@@ -61,6 +61,11 @@ class AcuerdoRepo extends BaseRepo {
 			empty($acuerdo_descripcion) ||
 			empty($acuerdo_intercambio) ||
 			empty($acuerdo_fvigente) ||
+			empty($acuerdo_ffirma) ||
+			empty($acuerdo_ley) ||
+			empty($acuerdo_decreto) ||
+			empty($acuerdo_url) ||
+			empty($acuerdo_tipo_acuerdo) ||
 			empty($acuerdo_uinsert) ||
 			empty($acuerdo_finsert) ||
 			empty($acuerdo_uupdate) ||
@@ -79,6 +84,11 @@ class AcuerdoRepo extends BaseRepo {
 		$this->model->setAcuerdo_descripcion($acuerdo_descripcion);
 		$this->model->setAcuerdo_intercambio($acuerdo_intercambio);
 		$this->model->setAcuerdo_fvigente($acuerdo_fvigente);
+		$this->model->setAcuerdo_ffirma($acuerdo_ffirma);
+		$this->model->setAcuerdo_ley($acuerdo_ley);
+		$this->model->setAcuerdo_decreto($acuerdo_decreto);
+		$this->model->setAcuerdo_url($acuerdo_url);
+		$this->model->setAcuerdo_tipo_acuerdo($acuerdo_tipo_acuerdo);
 		$this->model->setAcuerdo_mercado_id($acuerdo_mercado_id);
 		$this->model->setAcuerdo_id_pais($acuerdo_id_pais);
 
@@ -107,6 +117,11 @@ class AcuerdoRepo extends BaseRepo {
 			$this->model->setAcuerdo_descripcion(implode('", "', $query));
 			$this->model->setAcuerdo_intercambio(implode('", "', $query));
 			$this->model->setAcuerdo_fvigente(implode('", "', $query));
+			$this->model->setAcuerdo_ffirma(implode('", "', $query));
+			$this->model->setAcuerdo_ley(implode('", "', $query));
+			$this->model->setAcuerdo_decreto(implode('", "', $query));
+			$this->model->setAcuerdo_url(implode('", "', $query));
+			$this->model->setAcuerdo_tipo_acuerdo(implode('", "', $query));
 			$this->model->setAcuerdo_uinsert(implode('", "', $query));
 			$this->model->setAcuerdo_finsert(implode('", "', $query));
 			$this->model->setAcuerdo_uupdate(implode('", "', $query));
@@ -122,6 +137,11 @@ class AcuerdoRepo extends BaseRepo {
 			$this->model->setAcuerdo_descripcion($query);
 			$this->model->setAcuerdo_intercambio($query);
 			$this->model->setAcuerdo_fvigente($query);
+			$this->model->setAcuerdo_ffirma($query);
+			$this->model->setAcuerdo_ley($query);
+			$this->model->setAcuerdo_decreto($query);
+			$this->model->setAcuerdo_url($query);
+			$this->model->setAcuerdo_tipo_acuerdo($query);
 			$this->model->setAcuerdo_uinsert($query);
 			$this->model->setAcuerdo_finsert($query);
 			$this->model->setAcuerdo_uupdate($query);

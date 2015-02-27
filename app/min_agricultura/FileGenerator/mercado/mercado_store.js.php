@@ -13,6 +13,7 @@ var storeMercado = new Ext.data.JsonStore({
 		{name:'mercado_id', type:'float'},
 		{name:'mercado_nombre', type:'string'},
 		{name:'mercado_paises', type:'string'},
+		{name:'mercado_bandera', type:'string'},
 		{name:'mercado_uinsert', type:'float'},
 		{name:'mercado_finsert', type:'date', dateFormat:'Y-m-d H:i:s'},
 		{name:'mercado_uupdate', type:'float'},
@@ -44,6 +45,7 @@ var cmMercado = new Ext.grid.ColumnModel({
 		{xtype:'numbercolumn', header:'<?= Lang::get('mercado.columns_title.mercado_id'); ?>', align:'right', hidden:false, dataIndex:'mercado_id'},
 		{header:'<?= Lang::get('mercado.columns_title.mercado_nombre'); ?>', align:'left', hidden:false, dataIndex:'mercado_nombre'},
 		{header:'<?= Lang::get('mercado.columns_title.mercado_paises'); ?>', align:'left', hidden:false, dataIndex:'mercado_paises'},
+		{header:'<?= Lang::get('mercado.columns_title.mercado_bandera'); ?>', align:'left', hidden:false, dataIndex:'mercado_bandera'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('mercado.columns_title.mercado_uinsert'); ?>', align:'right', hidden:false, dataIndex:'mercado_uinsert'},
 		{xtype:'datecolumn', header:'<?= Lang::get('mercado.columns_title.mercado_finsert'); ?>', align:'left', hidden:false, dataIndex:'mercado_finsert', format:'Y-m-d, g:i a'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('mercado.columns_title.mercado_uupdate'); ?>', align:'right', hidden:false, dataIndex:'mercado_uupdate'},
@@ -89,6 +91,7 @@ var formMercado = new Ext.FormPanel({
 			{name:'mercado_id', mapping:'mercado_id', type:'float'},
 			{name:'mercado_nombre', mapping:'mercado_nombre', type:'string'},
 			{name:'mercado_paises', mapping:'mercado_paises', type:'string'},
+			{name:'mercado_bandera', mapping:'mercado_bandera', type:'string'},
 			{name:'mercado_uinsert', mapping:'mercado_uinsert', type:'float'},
 			{name:'mercado_finsert', mapping:'mercado_finsert', type:'date'},
 			{name:'mercado_uupdate', mapping:'mercado_uupdate', type:'float'},
@@ -132,6 +135,15 @@ var formMercado = new Ext.FormPanel({
 				,name:'mercado_paises'
 				,fieldLabel:'<?= Lang::get('mercado.columns_title.mercado_paises'); ?>'
 				,id:module+'mercado_paises'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'mercado_bandera'
+				,fieldLabel:'<?= Lang::get('mercado.columns_title.mercado_bandera'); ?>'
+				,id:module+'mercado_bandera'
 				,allowBlank:false
 			}]
 		},{

@@ -21,6 +21,7 @@ class MercadoAdo extends BaseAdo {
 		$mercado_id = $mercado->getMercado_id();
 		$mercado_nombre = $mercado->getMercado_nombre();
 		$mercado_paises = $mercado->getMercado_paises();
+		$mercado_bandera = $mercado->getMercado_bandera();
 		$mercado_uinsert = $mercado->getMercado_uinsert();
 		$mercado_finsert = $mercado->getMercado_finsert();
 		$mercado_uupdate = $mercado->getMercado_uupdate();
@@ -30,6 +31,7 @@ class MercadoAdo extends BaseAdo {
 			'mercado_id',
 			'mercado_nombre',
 			'mercado_paises',
+			'mercado_bandera',
 			'mercado_uinsert',
 			'mercado_finsert',
 			'mercado_uupdate',
@@ -48,6 +50,7 @@ class MercadoAdo extends BaseAdo {
 				mercado_id,
 				mercado_nombre,
 				mercado_paises,
+				mercado_bandera,
 				mercado_uinsert,
 				mercado_finsert,
 				mercado_uupdate,
@@ -57,6 +60,7 @@ class MercadoAdo extends BaseAdo {
 				"'.$this->data['mercado_id'].'",
 				"'.$this->data['mercado_nombre'].'",
 				"'.$this->data['mercado_paises'].'",
+				"'.$this->data['mercado_bandera'].'",
 				"'.$this->data['mercado_uinsert'].'",
 				"'.$this->data['mercado_finsert'].'",
 				"'.$this->data['mercado_uupdate'].'",
@@ -93,6 +97,7 @@ class MercadoAdo extends BaseAdo {
 			 mercado_id,
 			 mercado_nombre,
 			 mercado_paises,
+			 mercado_bandera,
 			 mercado_uinsert,
 			 mercado_finsert,
 			 mercado_uupdate,

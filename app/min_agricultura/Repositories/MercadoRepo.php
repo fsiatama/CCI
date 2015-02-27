@@ -1,7 +1,7 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Mercado.php';
-require PATH_APP.'min_agricultura/Ado/MercadoAdo.php';
+require PATH_MODELS.'Entities/Mercado.php';
+require PATH_MODELS.'Ado/MercadoAdo.php';
 require_once ('BaseRepo.php');
 
 class MercadoRepo extends BaseRepo {
@@ -104,11 +104,14 @@ class MercadoRepo extends BaseRepo {
 			];
 			return $result;
 		}
+
+		$mercado_bandera = ( empty($mercado_bandera) ) ? '' : $mercado_bandera ;
 		
-		$this->model->setMercado_id($mercado_id);
+		//$this->model->setMercado_id($mercado_id);
 		$this->model->setMercado_nombre($mercado_nombre);
 		$this->model->setMercado_paises(implode(',', $mercado_paises));
-		
+		$this->model->setMercado_bandera($mercado_bandera);
+
 		if ($action == 'create') {
 			$this->model->setMercado_uinsert($_SESSION['user_id']);
 			$this->model->setMercado_finsert(Helpers::getDateTimeNow());

@@ -119,6 +119,11 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 				{name:'acuerdo_descripcion', mapping:'acuerdo_descripcion', type:'string'},
 				{name:'acuerdo_intercambio', mapping:'acuerdo_intercambio', type:'string'},
 				{name:'acuerdo_fvigente', mapping:'acuerdo_fvigente', type:'string'},
+				{name:'acuerdo_ffirma', mapping:'acuerdo_ffirma', type:'string'},
+				{name:'acuerdo_ley', mapping:'acuerdo_ley', type:'string'},
+				{name:'acuerdo_decreto', mapping:'acuerdo_decreto', type:'string'},
+				{name:'acuerdo_url', mapping:'acuerdo_url', type:'string'},
+				{name:'acuerdo_tipo_acuerdo', mapping:'acuerdo_tipo_acuerdo', type:'string'},
 				{name:'acuerdo_mercado_id', mapping:'acuerdo_mercado_id', type:'float'},
 				{name:'acuerdo_id_pais', mapping:'acuerdo_id_pais', type:'float'}
 			]
@@ -146,8 +151,32 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 					,allowBlank:false
 				}]
 			},{
-				defaults:{anchor:'93%'}
-				,columnWidth:.3
+				defaults:{anchor:'96%'}
+				,columnWidth:.5
+				,items:[{
+					xtype: 'textfield'
+					,name: 'acuerdo_ley'
+					,fieldLabel: '<?= Lang::get('acuerdo.columns_title.acuerdo_ley'); ?>'
+					,id: module+'acuerdo_ley'
+					,allowBlank: true
+				}]
+			},{
+				defaults:{anchor:'96%'}
+				,columnWidth:.5
+				,items:[{
+					xtype: 'textfield'
+					,name: 'acuerdo_decreto'
+					,fieldLabel: '<?= Lang::get('acuerdo.columns_title.acuerdo_decreto'); ?>'
+					,id: module+'acuerdo_decreto'
+					,allowBlank: true
+				}]
+			},{
+				defaults:{anchor:'97%'}
+				,columnWidth:.33
+				,items:[comboIntercambio]
+			},{
+				defaults:{anchor:'97%'}
+				,columnWidth:.33
 				,items:[{
 					xtype:'datefield'
 					,name:'acuerdo_fvigente'
@@ -158,9 +187,27 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 					,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.form.dateFieldHelp)]
 				}]
 			},{
-				defaults:{anchor:'93%'}
-				,columnWidth:.3
-				,items:[comboIntercambio]
+				defaults:{anchor:'97%'}
+				,columnWidth:.33
+				,items:[{
+					xtype:'datefield'
+					,name:'acuerdo_ffirma'
+					,fieldLabel:'<?= Lang::get('acuerdo.columns_title.acuerdo_ffirma'); ?>'
+					,id:module+'acuerdo_ffirma'
+					,allowBlank:true
+					,format:'Y-m-d'
+					,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.form.dateFieldHelp)]
+				}]
+			},{
+				defaults:{anchor:'98%'}
+				,items:[{
+					xtype: 'textfield'
+					,name: 'acuerdo_url'
+					,fieldLabel: '<?= Lang::get('acuerdo.columns_title.acuerdo_url'); ?>'
+					,id: module+'acuerdo_url'
+					,allowBlank: true
+					,vtype:'url'
+				}]
 			},{
 				defaults:{anchor:'98%'}
 				,items:[{
@@ -207,6 +254,10 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 				xtype:'hidden'
 				,name:'acuerdo_id'
 				,id:module+'acuerdo_id'
+			},{
+				xtype:'hidden'
+				,name:'acuerdo_tipo_acuerdo'
+				,id:module+'acuerdo_tipo_acuerdo'
 			}]
 		/*},{
 			xtype:'fieldset'

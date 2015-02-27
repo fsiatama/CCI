@@ -1,11 +1,12 @@
 <?php
 
-require PATH_APP.'min_agricultura/Repositories/MercadoRepo.php';
-require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
+require PATH_MODELS.'Repositories/MercadoRepo.php';
+require PATH_MODELS.'Repositories/UserRepo.php';
 
 class MercadoController {
 	
 	protected $mercadoRepo;
+	protected $userRepo;
 
 	public function __construct()
 	{

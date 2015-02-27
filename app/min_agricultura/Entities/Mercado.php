@@ -4,6 +4,7 @@ class Mercado {
 	private $mercado_id;
 	private $mercado_nombre;
 	private $mercado_paises;
+	private $mercado_bandera;
 	private $mercado_uinsert;
 	private $mercado_finsert;
 	private $mercado_uupdate;
@@ -31,6 +32,14 @@ class Mercado {
 
 	public function getMercado_paises(){
 		return $this->mercado_paises;
+	}
+
+	public function setMercado_bandera($mercado_bandera){
+		$this->mercado_bandera = $mercado_bandera;
+	}
+
+	public function getMercado_bandera(){
+		return $this->mercado_bandera;
 	}
 
 	public function setMercado_uinsert($mercado_uinsert){

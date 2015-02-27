@@ -13,6 +13,7 @@ if(isset($accion)){
 			$mercado->setMercado_id($mercado_id);
 			$mercado->setMercado_nombre($mercado_nombre);
 			$mercado->setMercado_paises($mercado_paises);
+			$mercado->setMercado_bandera($mercado_bandera);
 			$mercado->setMercado_uinsert($mercado_uinsert);
 			$mercado->setMercado_finsert($mercado_finsert);
 			$mercado->setMercado_uupdate($mercado_uupdate);
@@ -51,6 +52,7 @@ if(isset($accion)){
 			$mercado->setMercado_id($mercado_id);
 			$mercado->setMercado_nombre($mercado_nombre);
 			$mercado->setMercado_paises($mercado_paises);
+			$mercado->setMercado_bandera($mercado_bandera);
 			$mercado->setMercado_uinsert($mercado_uinsert);
 			$mercado->setMercado_finsert($mercado_finsert);
 			$mercado->setMercado_uupdate($mercado_uupdate);
@@ -77,6 +79,7 @@ if(isset($accion)){
 			$mercado->setMercado_id($mercado_id);
 			$mercado->setMercado_nombre($mercado_nombre);
 			$mercado->setMercado_paises($mercado_paises);
+			$mercado->setMercado_bandera($mercado_bandera);
 			$mercado->setMercado_uinsert($mercado_uinsert);
 			$mercado->setMercado_finsert($mercado_finsert);
 			$mercado->setMercado_uupdate($mercado_uupdate);

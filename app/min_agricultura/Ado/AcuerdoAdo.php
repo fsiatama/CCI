@@ -23,6 +23,11 @@ class AcuerdoAdo extends BaseAdo {
 		$acuerdo_descripcion = $acuerdo->getAcuerdo_descripcion();
 		$acuerdo_intercambio = $acuerdo->getAcuerdo_intercambio();
 		$acuerdo_fvigente = $acuerdo->getAcuerdo_fvigente();
+		$acuerdo_ffirma = $acuerdo->getAcuerdo_ffirma();
+		$acuerdo_ley = $acuerdo->getAcuerdo_ley();
+		$acuerdo_decreto = $acuerdo->getAcuerdo_decreto();
+		$acuerdo_url = $acuerdo->getAcuerdo_url();
+		$acuerdo_tipo_acuerdo = $acuerdo->getAcuerdo_tipo_acuerdo();
 		$acuerdo_uinsert = $acuerdo->getAcuerdo_uinsert();
 		$acuerdo_finsert = $acuerdo->getAcuerdo_finsert();
 		$acuerdo_uupdate = $acuerdo->getAcuerdo_uupdate();
@@ -36,6 +41,11 @@ class AcuerdoAdo extends BaseAdo {
 			'acuerdo_descripcion',
 			'acuerdo_intercambio',
 			'acuerdo_fvigente',
+			'acuerdo_ffirma',
+			'acuerdo_ley',
+			'acuerdo_decreto',
+			'acuerdo_url',
+			'acuerdo_tipo_acuerdo',
 			'acuerdo_uinsert',
 			'acuerdo_finsert',
 			'acuerdo_uupdate',
@@ -58,6 +68,11 @@ class AcuerdoAdo extends BaseAdo {
 				acuerdo_descripcion,
 				acuerdo_intercambio,
 				acuerdo_fvigente,
+				acuerdo_ffirma,
+				acuerdo_ley,
+				acuerdo_decreto,
+				acuerdo_url,
+				acuerdo_tipo_acuerdo,
 				acuerdo_uinsert,
 				acuerdo_finsert,
 				acuerdo_uupdate,
@@ -71,6 +86,11 @@ class AcuerdoAdo extends BaseAdo {
 				"'.$this->data['acuerdo_descripcion'].'",
 				"'.$this->data['acuerdo_intercambio'].'",
 				"'.$this->data['acuerdo_fvigente'].'",
+				"'.$this->data['acuerdo_ffirma'].'",
+				"'.$this->data['acuerdo_ley'].'",
+				"'.$this->data['acuerdo_decreto'].'",
+				"'.$this->data['acuerdo_url'].'",
+				"'.$this->data['acuerdo_tipo_acuerdo'].'",
 				"'.$this->data['acuerdo_uinsert'].'",
 				"'.$this->data['acuerdo_finsert'].'",
 				"'.$this->data['acuerdo_uupdate'].'",
@@ -130,7 +150,12 @@ class AcuerdoAdo extends BaseAdo {
 			 acuerdo_nombre,
 			 acuerdo_descripcion,
 			 acuerdo_intercambio,
-			 acuerdo_fvigente,
+			 IF (acuerdo_fvigente = "0000-00-00","", acuerdo_fvigente) AS acuerdo_fvigente,
+			 IF (acuerdo_ffirma = "0000-00-00","", acuerdo_ffirma) AS acuerdo_ffirma,
+			 acuerdo_ley,
+			 acuerdo_decreto,
+			 acuerdo_url,
+			 acuerdo_tipo_acuerdo,
 			 acuerdo_uinsert,
 			 acuerdo_finsert,
 			 acuerdo_uupdate,
@@ -138,12 +163,13 @@ class AcuerdoAdo extends BaseAdo {
 			 acuerdo_mercado_id,
 			 acuerdo_id_pais,
 			 mercado_nombre,
+			 mercado_bandera,
 			 pais,
 			 paises_iata,
 			 pais_iata
 			FROM acuerdo 
 			LEFT JOIN (
-				SELECT mercado_id, mercado_nombre, mercado_paises, GROUP_CONCAT(DISTINCT pais) AS paises_nombre , GROUP_CONCAT(DISTINCT pais_iata) AS paises_iata
+				SELECT mercado_id, mercado_nombre, mercado_paises, mercado_bandera, GROUP_CONCAT(DISTINCT pais) AS paises_nombre , GROUP_CONCAT(DISTINCT pais_iata) AS paises_iata
 				FROM mercado
 				LEFT JOIN pais ON  FIND_IN_SET(id_pais, mercado_paises)
 				GROUP BY mercado_id

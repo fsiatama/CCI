@@ -15,6 +15,11 @@ if(isset($accion)){
 			$acuerdo->setAcuerdo_descripcion($acuerdo_descripcion);
 			$acuerdo->setAcuerdo_intercambio($acuerdo_intercambio);
 			$acuerdo->setAcuerdo_fvigente($acuerdo_fvigente);
+			$acuerdo->setAcuerdo_ffirma($acuerdo_ffirma);
+			$acuerdo->setAcuerdo_ley($acuerdo_ley);
+			$acuerdo->setAcuerdo_decreto($acuerdo_decreto);
+			$acuerdo->setAcuerdo_url($acuerdo_url);
+			$acuerdo->setAcuerdo_tipo_acuerdo($acuerdo_tipo_acuerdo);
 			$acuerdo->setAcuerdo_uinsert($acuerdo_uinsert);
 			$acuerdo->setAcuerdo_finsert($acuerdo_finsert);
 			$acuerdo->setAcuerdo_uupdate($acuerdo_uupdate);
@@ -57,6 +62,11 @@ if(isset($accion)){
 			$acuerdo->setAcuerdo_descripcion($acuerdo_descripcion);
 			$acuerdo->setAcuerdo_intercambio($acuerdo_intercambio);
 			$acuerdo->setAcuerdo_fvigente($acuerdo_fvigente);
+			$acuerdo->setAcuerdo_ffirma($acuerdo_ffirma);
+			$acuerdo->setAcuerdo_ley($acuerdo_ley);
+			$acuerdo->setAcuerdo_decreto($acuerdo_decreto);
+			$acuerdo->setAcuerdo_url($acuerdo_url);
+			$acuerdo->setAcuerdo_tipo_acuerdo($acuerdo_tipo_acuerdo);
 			$acuerdo->setAcuerdo_uinsert($acuerdo_uinsert);
 			$acuerdo->setAcuerdo_finsert($acuerdo_finsert);
 			$acuerdo->setAcuerdo_uupdate($acuerdo_uupdate);
@@ -87,6 +97,11 @@ if(isset($accion)){
 			$acuerdo->setAcuerdo_descripcion($acuerdo_descripcion);
 			$acuerdo->setAcuerdo_intercambio($acuerdo_intercambio);
 			$acuerdo->setAcuerdo_fvigente($acuerdo_fvigente);
+			$acuerdo->setAcuerdo_ffirma($acuerdo_ffirma);
+			$acuerdo->setAcuerdo_ley($acuerdo_ley);
+			$acuerdo->setAcuerdo_decreto($acuerdo_decreto);
+			$acuerdo->setAcuerdo_url($acuerdo_url);
+			$acuerdo->setAcuerdo_tipo_acuerdo($acuerdo_tipo_acuerdo);
 			$acuerdo->setAcuerdo_uinsert($acuerdo_uinsert);
 			$acuerdo->setAcuerdo_finsert($acuerdo_finsert);
 			$acuerdo->setAcuerdo_uupdate($acuerdo_uupdate);

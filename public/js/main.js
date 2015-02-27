@@ -318,6 +318,7 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
 
                         var record  = data.data[0];
                         var partner = ( record.mercado_nombre ) ? record.mercado_nombre : record.pais ;
+                        var flagImg = ( data.flag == '' ) ? '' : '<img src="..." alt="..." class="img-thumbnail">' ;
                         var html    = '';
                         
                         $("#agreementTitle").html(partner);

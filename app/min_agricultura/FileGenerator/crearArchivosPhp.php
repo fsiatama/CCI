@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 
 $base         = "min_agricultura"; //$_GET["db"];
-$nombre_tabla = "pais"; //$_GET["tabla"];
+$nombre_tabla = "mercado"; //$_GET["tabla"];
 
 if($base == "" || $nombre_tabla == ""){
 	print "no hay datos";
@@ -13,7 +13,7 @@ if(!file_exists($nombre_tabla)){
 	mkdir($nombre_tabla);
 }
 
-include('../../adodb5/adodb.inc.php');	   # Carga el codigo comun de ADOdb
+require '../../../vendor/autoload.php';
 
 
 $conn = &ADONewConnection('mysqli');  # crea la conexion

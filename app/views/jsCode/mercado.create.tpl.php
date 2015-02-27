@@ -51,22 +51,24 @@
 	});
 
 	var formMercado = new Ext.FormPanel({
-		baseCls:'x-plain'
+		autoScroll:true
+		,autoWidth:true
+		,baseCls:'x-plain'
+		,bodyStyle:	'padding:15px;position:relative;'
+		,buttonAlign:'center'
+		,fileUpload:true
 		,id:module + 'formMercado'
 		,method:'POST'
-		,autoWidth:true
-		,autoScroll:true
-		,buttonAlign:'center'
-		,trackResetOnLoad:true
 		,monitorValid:true
-		,bodyStyle:	'padding:15px;position:relative;'
+		,trackResetOnLoad:true
 		,reader: new Ext.data.JsonReader({
 			root:'data'
 			,totalProperty:'total'
 			,fields:[
 				{name:'mercado_id', mapping:'mercado_id', type:'float'},
 				{name:'mercado_nombre', mapping:'mercado_nombre', type:'string'},
-				{name:'mercado_paises', mapping:'mercado_paises', type:'string'}
+				{name:'mercado_paises', mapping:'mercado_paises', type:'string'},
+				{name:'mercado_bandera', mapping:'mercado_bandera', type:'string'},
 			]
 		})
 		,items:[{
@@ -94,6 +96,51 @@
 			},{
 				defaults:{anchor:'100%'}
 				,items:[comboPais]
+			},{
+				items:[{
+					xtype:'panel'
+					,frame:true
+					,title:'<?= Lang::get('mercado.columns_title.mercado_bandera'); ?>'
+					,items:[{
+						bodyStyle: 'padding: 10px 10px 0 10px;'
+						,html:'<div id="firma-button-msg1" style="display:none;"></div>'+
+							 '<p style="text-align:center;">'+
+							 '<img class="img-polaroid" id="firma" src="" '+
+							 'width="300" height="100" />'+
+							 '</p>'
+					},{
+						xtype:'panel'
+						,layout:'fit'
+						,bodyStyle:'padding: 5px 20px 0 10px;'
+						,plugins:[new Ext.ux.FieldHelp('<?= '.......'; ?>')]
+						,items:[{
+							xtype:'fileuploadfield'
+							,emptyText:'<?= '........'; ?>'
+							,hideLabel:true
+							,name:'usuario_firma'
+							,id:module+'usuario_firma'
+							,allowBlank:false
+							,listeners: {
+								'fileselected':function(fb, v){
+									var el = Ext.fly('firma-button-msg1');
+									el.update('<b><?= '.....'; ?>:</b> '+v);
+									if(!el.isVisible()){
+										el.slideIn('t', {
+											duration: .2,
+											easing: 'easeIn',
+											callback: function(){
+												var el = Ext.fly('firma-button-msg1');
+												el.highlight();
+											}
+										});
+									}else{
+										el.highlight();
+									}
+								}
+							}
+					   }]
+					}]
+				}]
 			},{
 				xtype:'hidden'
 				,name:'mercado_id'

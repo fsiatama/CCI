@@ -6,6 +6,11 @@ class Acuerdo {
 	private $acuerdo_descripcion;
 	private $acuerdo_intercambio;
 	private $acuerdo_fvigente;
+	private $acuerdo_ffirma;
+	private $acuerdo_ley;
+	private $acuerdo_decreto;
+	private $acuerdo_url;
+	private $acuerdo_tipo_acuerdo;
 	private $acuerdo_uinsert;
 	private $acuerdo_finsert;
 	private $acuerdo_uupdate;
@@ -51,6 +56,46 @@ class Acuerdo {
 
 	public function getAcuerdo_fvigente(){
 		return $this->acuerdo_fvigente;
+	}
+
+	public function setAcuerdo_ffirma($acuerdo_ffirma){
+		$this->acuerdo_ffirma = $acuerdo_ffirma;
+	}
+
+	public function getAcuerdo_ffirma(){
+		return $this->acuerdo_ffirma;
+	}
+
+	public function setAcuerdo_ley($acuerdo_ley){
+		$this->acuerdo_ley = $acuerdo_ley;
+	}
+
+	public function getAcuerdo_ley(){
+		return $this->acuerdo_ley;
+	}
+
+	public function setAcuerdo_decreto($acuerdo_decreto){
+		$this->acuerdo_decreto = $acuerdo_decreto;
+	}
+
+	public function getAcuerdo_decreto(){
+		return $this->acuerdo_decreto;
+	}
+
+	public function setAcuerdo_url($acuerdo_url){
+		$this->acuerdo_url = $acuerdo_url;
+	}
+
+	public function getAcuerdo_url(){
+		return $this->acuerdo_url;
+	}
+
+	public function setAcuerdo_tipo_acuerdo($acuerdo_tipo_acuerdo){
+		$this->acuerdo_tipo_acuerdo = $acuerdo_tipo_acuerdo;
+	}
+
+	public function getAcuerdo_tipo_acuerdo(){
+		return $this->acuerdo_tipo_acuerdo;
 	}
 
 	public function setAcuerdo_uinsert($acuerdo_uinsert){
