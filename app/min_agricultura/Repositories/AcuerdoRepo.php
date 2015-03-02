@@ -273,6 +273,9 @@ class AcuerdoRepo extends BaseRepo {
 			'acuerdo_intercambio_title',
 			'acuerdo_fvigente',
 			'acuerdo_fvigente_title',
+			'acuerdo_ffirma_title',
+			'acuerdo_ley',
+			'acuerdo_decreto',
 			'acuerdo_mercado_id',
 			'acuerdo_id_pais',
 			'pais',
@@ -294,11 +297,8 @@ class AcuerdoRepo extends BaseRepo {
 			'valuesqry' => true
 		];
 
-		$flag = '';
-
 		if (empty($row['acuerdo_mercado_id'])) {
 			$params['query'] = $row['acuerdo_id_pais'];
-			$flag = 'img/flags/64/'.$row['pais_iata'].'.png';
 			
 		} else {
 			$mercadoRepo = new MercadoRepo;
@@ -309,10 +309,8 @@ class AcuerdoRepo extends BaseRepo {
 			}
 			$rowMercado      = array_shift($result['data']);
 			$params['query'] = str_replace(',', '|', $rowMercado['mercado_paises']);
-			$flag = 'img/flags/markets/'.$row['mercado_bandera'].'.png';
 		}
 
-		$flag   = ( file_exists(PATH_RAIZ.$flag) ) ? URL_RAIZ.$flag : '' ;
 		$result = $paisRepo->listAll($params);
 
 		if (!$result['success']) {
@@ -322,7 +320,6 @@ class AcuerdoRepo extends BaseRepo {
 		$result = [
 			'success'      => true,
 			'country_data' => $result['data'],
-			'flag'         => $flag,
 			'data'         => [$row]
 		];
 

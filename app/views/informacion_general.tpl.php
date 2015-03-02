@@ -39,7 +39,7 @@
 				    Soy un exportador
 				  </label>
 				</div>
-			
+
 				<div class="form-group">
 					<label for="ms-filter-product">Productos</label>
 					<input type="text" class="form-control" id="ms-filter-product">
@@ -49,17 +49,17 @@
 					<label for="ms-filter-country">Socio Comercial</label>
 					<input type="text" class="form-control" id="ms-filter-country">
 				</div>
-			
+
 				<button type="submit" class="btn btn-primary" id="searchAgreementSubmit">Buscar</button>
 			</form>
-			
+
 		</aside>
 
 		<div class="col-md-9">
 
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					
+
 				</div>
 				<div class="panel-body">
 					<div id="map-canvas" style="height: 600px;"></div>
@@ -76,26 +76,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 
-			<div class="modal-header"><!-- modal header -->
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="agreementModalLabel"><i class="fa fa-globe"></i>  <span id="agreementTitle"></span></h4>
-			</div><!-- /modal header -->
-
-			<div class="modal-body"><!-- modal body -->
-
-				<dl>
-					<dt><?= Lang::get('acuerdo.columns_title.acuerdo_nombre'); ?></dt>
-					<dd id="agreementName"></dd>
-					<dt><?= Lang::get('acuerdo.columns_title.acuerdo_descripcion'); ?></dt>
-					<dd id="agreementDescription"></dd>
-					<dt><?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?></dt>
-					<dd id="agreementValidity"></dd>
-				</dl>
-			</div><!-- /modal body -->
-
-			<div class="modal-footer margin-top0"><!-- modal footer -->
-				<button class="btn btn-default" data-dismiss="modal">Cerrar</button>
-			</div><!-- /modal footer -->
+			
 
 		</div>
 	</div>

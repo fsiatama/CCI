@@ -316,16 +316,7 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
                 ,success:function(data){
                     if(data.success){
 
-                        var record  = data.data[0];
-                        var partner = ( record.mercado_nombre ) ? record.mercado_nombre : record.pais ;
-                        var flagImg = ( data.flag == '' ) ? '' : '<img src="..." alt="..." class="img-thumbnail">' ;
-                        var html    = '';
-                        
-                        $("#agreementTitle").html(partner);
-                        $("#agreementName").html(record.acuerdo_nombre);
-                        $("#agreementDescription").html(record.acuerdo_descripcion);
-                        $("#agreementValidity").html(record.acuerdo_fvigente_title);
-                        //$("#modal-agreement-msg").html(record.acuerdo_nombre);
+                        $("#agreementModal .modal-content").html(data.html);
                         $('#agreementModal').modal('show');
                         
                     } else {

@@ -35,7 +35,28 @@ class AcuerdoController {
 
 	public function listIdPublicAction($urlParams, $postParams)
 	{
-		return $this->acuerdoRepo->listId($postParams);
+		$result = $this->acuerdoRepo->listId($postParams);
+		if ($result['success']) {
+			$is_template = true;
+
+			$row = array_shift($result['data']);
+
+			$params = compact('is_template', 'row');
+
+			$view = new View('descripcion_acuerdo', $params);
+
+			ob_start();
+
+			$view->execute();
+			$html = ob_get_clean();
+
+			$result = [
+				'success' => true,
+				'html'    => $html
+			];
+		}
+		return $result;
+
 	}
 
 	public function createAction($urlParams, $postParams)
