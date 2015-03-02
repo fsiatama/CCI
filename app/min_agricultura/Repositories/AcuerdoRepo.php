@@ -378,7 +378,7 @@ class AcuerdoRepo extends BaseRepo {
 				return $result;
 			}
 
-			$arrAgreement = array_column( $result['data'], 'acuerdo_det_acuerdo_id' );
+			$arrAgreement = Helpers::arrayColumn( $result['data'], 'acuerdo_det_acuerdo_id' );
 		}
 
 		if ( ! empty($countries) ) {
@@ -389,7 +389,7 @@ class AcuerdoRepo extends BaseRepo {
 				return $result;
 			}
 
-			$arrAgreement = array_column( $result['data'],  $this->primaryKey);
+			$arrAgreement = Helpers::arrayColumn( $result['data'],  $this->primaryKey );
 
 		}
 

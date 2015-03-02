@@ -13,6 +13,11 @@ $acuerdo_ffirma_title = ( empty($row['acuerdo_ffirma_title']) ) ? '' : $row['acu
 
 $partner = ( empty($row['mercado_nombre']) ) ? $row['pais'] : $row['mercado_nombre'] ;
 
+$link = '';
+if ( ! empty($row['acuerdo_url']) ) {
+	$link = '<a href="' . $row['acuerdo_url'] . '" target="_blank"><i class="fa fa-link"></i> Conozca aquí el texto original del acuerdo</a>';
+}
+
 ?>
 
 
@@ -39,8 +44,10 @@ $partner = ( empty($row['mercado_nombre']) ) ? $row['pais'] : $row['mercado_nomb
 				<dt><?= Lang::get('acuerdo.columns_title.acuerdo_decreto'); ?></dt>
 				<dd><?= $row['acuerdo_decreto']; ?></dd>
 			</dl>
+
+			<?= $link; ?>
 		</div>
-		<a href="#" target="_blank"><i class="fa fa-link"></i> Conozca aquí el texto original del acuerdo</a>
+		
 	</div>
 
 

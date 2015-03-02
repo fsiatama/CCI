@@ -315,10 +315,8 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
                 ,dataType:"json"
                 ,success:function(data){
                     if(data.success){
-
                         $("#agreementModal .modal-content").html(data.html);
                         $('#agreementModal').modal('show');
-                        
                     } else {
                         $("#modal-error-msg").html(data.error);
                         $('#errorModal').modal('show');

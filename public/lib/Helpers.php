@@ -417,6 +417,19 @@ class Helpers
 		return false;
 	}
 
+	public static function arrayColumn( array $array, $column_key, $index_key = null )
+	{
+		$result = [];
+		foreach ($array as $key => $row) {
+			if ( isset($row[$column_key]) ) {
+
+				$result[ $index_key ? $v[$index_key] : $key ] = $row[$column_key];
+
+			}
+		}
+		return $result;
+	}
+
 	public static function download($fileName, $deleteFile = true)
 	{
 		$filePath = PATH_REPORTS . $fileName;
