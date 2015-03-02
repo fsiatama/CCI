@@ -60,7 +60,15 @@ class PosicionRepo extends BaseRepo {
 	{
 		extract($params);
 
-		$query = (empty($query)) ? '' : $query ;
+		if ( empty($query) ) {
+			return [
+				'success' => true,
+				'data'    => [],
+				'total'   => 0,
+			];
+		}
+
+		//$query = (empty($query)) ? '' : $query ;
 		$trade = (empty($trade)) ? 'impo' : $trade ;
 
 		$this->model->setId_posicion($query);

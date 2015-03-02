@@ -72,7 +72,7 @@
 
 
 
-<div class="modal fade" id="agreementModal" tabindex="-1" role="dialog" aria-labelledby="agreementModalLabel" aria-hidden="true">
+<div class="modal" id="agreementModal" tabindex="-1" role="dialog" aria-labelledby="agreementModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 

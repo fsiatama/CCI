@@ -1133,7 +1133,10 @@ div.maximage-controls #slider_prev:hover {
 .ms-ctn .ms-sel-ctn{margin-left:-7px}
 .ms-ctn .ms-trigger:hover{width:24px;right:1px;border-radius:0 3px 3px 0}
 
-
+body.modal-open { 
+  overflow:inherit;
+  padding-right:inherit !important;
+}
 
 /** --. Responsive
  **************************************************************** **/

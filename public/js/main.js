@@ -1,24 +1,48 @@
-var mapOptionsLoc = {
-    lineColor: "#FF0000", // Contorno del pais
-    lineWidth: 1, // Tamaño la linea de contorno
-    lineOpacity: 1, // Opacidad de la linea de contorno
-    backgroundColor: "#FF0000", // Color del fondo
-    backgroundOpacity: 0.2 // Opacidad del fondo.
+var mapStyles = {
+    1: {
+        lineColor: "#FF0000",
+        lineWidth: 1,
+        lineOpacity: 1,
+        backgroundColor: "#FF0000",
+        backgroundOpacity: 0.2
+    },
+    2: {
+        lineColor: "#FFCC99",
+        lineWidth: 1,
+        lineOpacity: 1,
+        backgroundColor: "#FFCC99",
+        backgroundOpacity: 0.2
+    },
+    3: {
+        lineColor: "#0000FF",
+        lineWidth: 1,
+        lineOpacity: 1,
+        backgroundColor: "#0000FF",
+        backgroundOpacity: 0.2
+    },
+    4: {
+        lineColor: "#00FFFF",
+        lineWidth: 1,
+        lineOpacity: 1,
+        backgroundColor: "#00FFFF",
+        backgroundOpacity: 0.2
+    },
+    5: {
+        lineColor: "#996600",
+        lineWidth: 1,
+        lineOpacity: 1,
+        backgroundColor: "#996600",
+        backgroundOpacity: 0.2
+    },
+    6: {
+        lineColor: "#660000",
+        lineWidth: 1,
+        lineOpacity: 1,
+        backgroundColor: "#660000",
+        backgroundOpacity: 0.2
+    }
 };
-var mapOptionsAso = {
-    lineColor: "#0000FF",
-    lineWidth: 1,
-    lineOpacity: 1,
-    backgroundColor: "#0000FF",
-    backgroundOpacity: 0.2
-};
-var mapOptionsPen = {
-    lineColor: "#FFA500",
-    lineWidth: 1,
-    lineOpacity: 1,
-    backgroundColor: "#FFA500",
-    backgroundOpacity: 0.2
-};
+
 var mapOptions = {
     zoom: 2,
     center: new google.maps.LatLng(35, 0)
@@ -97,20 +121,20 @@ jQuery(function($) {
 	if ( $('#map-canvas').length > 0 ) {
 
 		var msProduct = $('#ms-filter-product').magicSuggest({
-            data: 'posicion/listInAgreement'
-            ,resultsField: 'data'
-            ,placeholder: 'Select...'
-            ,mode: 'remote'
-            ,valueField: 'id_posicion'
+            allowFreeEntries: false
+            ,data: 'posicion/listInAgreement'
             ,displayField: 'posicion'
-            ,allowFreeEntries: false
-            //,highlight:false
-            ,useZebraStyle: true
+            ,highlight:true
             ,maxSelection: 1
-            ,typeDelay: 600
-            //,minChars:2
+            ,minChars:2
+            ,mode: 'remote'
+            ,placeholder: 'Select...'
+            ,resultsField: 'data'
             ,selectionPosition: 'bottom'
             ,selectionStacked: true
+            ,typeDelay: 600
+            ,useZebraStyle: true
+            ,valueField: 'id_posicion'
             ,selectionRenderer: function(data){
                 return data.posicion + ' (<b>' + data.id_posicion + '</b>)';
             }
@@ -130,22 +154,20 @@ jQuery(function($) {
         });
         
         var msCountry = $('#ms-filter-country').magicSuggest({
-            data: 'pais/listInAgreement'
-            ,resultsField: 'data'
-            ,placeholder: 'Select...'
-            ,mode: 'remote'
-            ,valueField: 'id_pais'
+            allowFreeEntries: false
+            ,data: 'pais/listInAgreement'
             ,displayField: 'pais'
-            ,allowFreeEntries: false
-            //,highlight:false
-            ,useZebraStyle: true
+            ,highlight:true
             ,maxSelection: 5
-            ,typeDelay: 600
-            //,minChars:2
+            ,mode: 'remote'
+            ,placeholder: 'Select...'
+            ,resultsField: 'data'
             ,selectionPosition: 'bottom'
             ,selectionStacked: true
+            ,typeDelay: 600
+            ,useZebraStyle: true
+            ,valueField: 'id_pais'
             ,selectionRenderer: function(data){
-                //console.log(data);
                 return data.pais + ' (<b>' + data.pais_iata + '</b>)';
             }
         });
@@ -183,23 +205,25 @@ jQuery(function($) {
                     ,success:function(data){
                         if(data.success){
                             var records = data.data;
+                            var index   = 0;
+                            var keys    = Object.keys(mapStyles);
                             $.each(records, function( key, row ) {
 
+                                index = ( (index + 1) > keys.length ) ? (index - keys.length) : (index + 1);
+
                                 var agreement = row.acuerdo_id;
+                                var mapStyle  = mapStyles[index];
 
                                 if (row.paises_iata) {
                                     var countriesIata = row.paises_iata.split(',');
                                     
                                     $.each(countriesIata, function( i, iataCode ) {
-                                        paintCountry(iataCode, mapOptionsLoc, null, null, agreement);
+                                        paintCountry(iataCode, mapStyle, null, null, agreement);
                                     });
                                 } else {
-                                    paintCountry(row.pais_iata, mapOptionsLoc, null, null, agreement);
+                                    paintCountry(row.pais_iata, mapStyle, null, null, agreement);
                                 }
-
-
                             });
-                            
                         } else {
                             $("#modal-error-msg").html(data.error);
                             $('#errorModal').modal('show');
@@ -273,10 +297,6 @@ function initialize(mapOptions) {
     ];
     map.setOptions({styles: styles});
 
-
-    
-
-    /*paintCountry('CO', mapOptionsLoc, '/img/flag_colombia.png', new google.maps.LatLng(0,-85));*/
 }
 
 function paintCountry(countryCode, countryOptions, countryIcon, countryPosition, agreement) {
@@ -317,6 +337,7 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
                     if(data.success){
                         $("#agreementModal .modal-content").html(data.html);
                         $('#agreementModal').modal('show');
+                        Holder.run();
                     } else {
                         $("#modal-error-msg").html(data.error);
                         $('#errorModal').modal('show');

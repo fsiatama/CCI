@@ -6,12 +6,10 @@
  *
  * @author Julian Hernández R.
  **/
-
 include "../../public/lib/config.php";
-require '../../vendor/autoload.php';
-require PATH_APP.'lib/connection/Connection.php';
 
-use stringEncode\Encode;
+require PATH_APP.'../vendor/autoload.php';
+require PATH_APP.'lib/connection/Connection.php';
 
 class DataSync extends Connection {
 
@@ -33,188 +31,169 @@ class DataSync extends Connection {
 
     public function Syncronize($table) {
 
-        echo "Inicia proceso para actualizar datos en la tabla " . $table . "\xA";
-        $flag = $this->IsNullOrEmptyString($table);
-        if ($flag === TRUE) {
-            echo "No se ha proporcionado el nombre de la tabla a actualizar" . "\xA";
+        $this->Log("Inicia proceso para actualizar datos en la tabla " . $table);
+        $ok = $this->IsNullOrEmptyString($table);
+        if ($ok === TRUE) {
+            $this->Log("ERROR. No se ha proporcionado el nombre de la tabla a actualizar");
             return;
         }
 
-        echo "Tratando de establecer conexión con el servidor FTP " . $this->FtpHost . "\xA";
+        $this->Log("Tratando de establecer conexión con el servidor FTP " . $this->FtpHost);
         $ftpSession = ftp_connect($this->FtpHost, $this->FtpPort);
-
-        $flag = ftp_login($ftpSession, $this->FtpUsername, $this->FtpPassword);
-        if ($flag != TRUE) {
-            echo "No se ha podido establecer conexión con el servidor FTP" . "\xA";
+        $ok = ftp_login($ftpSession, $this->FtpUsername, $this->FtpPassword);
+        if ($ok != TRUE) {
+            $this->Log("ERROR. No se ha podido establecer conexión con el servidor FTP");
             return;
         }
 
+        $this->Log("Comprueba si existe un archivo disponible");
         $ftpFileName = $table . ".zip";
-        $localFileName = $this->TempFileName = tempnam(sys_get_temp_dir(), $table);
+        $ok = (ftp_size($ftpSession, $ftpFileName) != -1);
+        if ($ok != TRUE) {
+            $this->Log("No hay archivo disponible");
+            $this->Log("Cerrando conexión con el servidor FTP");
+            ftp_close($ftpSession);
+            return;
+        }
+
+        $localFileName = tempnam(sys_get_temp_dir(), $table);
         $arrayTemps = array($localFileName);
 
-        echo "Inicia descarga de archivo " . $ftpFileName . "\xA";
-        $flag = ftp_get($ftpSession, $localFileName, $ftpFileName, FTP_BINARY);
-        if ($flag != TRUE) {
-            echo "Falló la descarga del archivo" . "\xA";
+        $this->Log("Inicia descarga de archivo " . $ftpFileName);
+        $ok = ftp_get($ftpSession, $localFileName, $ftpFileName, FTP_BINARY);
+        if ($ok != TRUE) {
+            $this->Log("Cerrando conexión con el servidor FTP");
+            ftp_close($ftpSession);
+            
+            $this->Log("ERROR. Falló la descarga del archivo");
             $this->DeleteTemps($arrayTemps);
             return;
         }
+        
+        $this->Log("Cerrando conexión con el servidor FTP");
+        ftp_close($ftpSession);
 
+
+        $this->Log("Preparando carpeta temporal");
         $localFolderName = $localFileName . "FOLDER";
         array_push($arrayTemps, $localFolderName);
-        $flag = mkdir($localFolderName, 0777);
-        if ($flag != TRUE) {
+        $ok = mkdir($localFolderName, 0777);
+        if ($ok != TRUE) {
+            $this->Log("ERROR. Ha ocurrido un error inesperado");
             $this->DeleteTemps($arrayTemps);
             return;
         }
 
-        echo "Descomprimiendo datos" . "\xA";
-        $flag = $this->ExtactData($localFileName, $localFolderName);
-        if ($flag != TRUE) {
-            echo "Fallo durante la descompresión de datos" . "\xA";
+        $this->Log("Descomprimiendo datos");
+        $ok = $this->ExtactData($localFileName, $localFolderName);
+        if ($ok != TRUE) {
+            $this->Log("ERROR. Fallo durante la descompresión de datos");
             $this->DeleteTemps($arrayTemps);
             return;
         }
-        echo "Bien" . "\xA";
 
+        $this->Log("Inicia carga de datos nuevos");
         $files = $this->dirToArray($localFolderName);
         foreach ($files as $file) {
-            $this->LoadData($table, $file, $localFolderName);
+            $ok = $this->LoadData($table, $file, $localFolderName);
+            if ($ok != TRUE) {
+                $this->Log("ERROR. Fallo durante carga de datos nuevos");
+                $this->DeleteTemps($arrayTemps);
+                return;
+            }
         }
 
+        $this->Log("Elimina archivos y carpetas temporales");
         $this->DeleteTemps($arrayTemps);
 
-        echo "Cerrando conexión con el servidor FTP" . "\xA";
-        $flag = ftp_close($ftpSession);
-        if ($flag != TRUE) {
+        
+        $this->Log("Tratando de establecer conexión con el servidor FTP " . $this->FtpHost);
+        $ftpSession = ftp_connect($this->FtpHost, $this->FtpPort);
+        $ok = ftp_login($ftpSession, $this->FtpUsername, $this->FtpPassword);
+        if ($ok != TRUE) {
+            $this->Log("ERROR. No se ha podido establecer conexión con el servidor FTP");
             return;
         }
+        
+        $this->Log("Renombrando archivo el servidor FTP");
+        $ok = ftp_rename($ftpSession, $ftpFileName, $ftpFileName."_".date('YmdHis'));
+        if ($ok != TRUE) {
+            $this->Log("ERROR. No se ha podido renombrar el archivo en el servidor FTP");
+            return;
+        }
+
+        $this->Log("Cerrando conexión con el servidor FTP");
+        $ok = ftp_close($ftpSession);
+        return;
     }
 
     protected function ExtactData($zipFileName, $extractTo) {
+
         $zip = new ZipArchive;
-
-        $flag = $zip->open($zipFileName);
-        if ($flag != TRUE) {
-            return FALSE;
+        $ok = $zip->open($zipFileName);
+        if ($ok != TRUE) {
+            return $ok;
         }
-
-        $flag = $zip->extractTo($extractTo);
-        if ($flag != TRUE) {
-            return FALSE;
+        $ok = $zip->extractTo($extractTo);
+        if ($ok != TRUE) {
+            return $ok;
         }
-
-        $flag = $zip->close();
-        if ($flag != TRUE) {
-            return FALSE;
+        $ok = $zip->close();
+        if ($ok != TRUE) {
+            return $ok;
         }
-
         return TRUE;
+        
     }
 
     protected function LoadData($table, $file, $tempFolder) {
 
-        /*$tempfile = tempnam($tempFolder, $file);
-        $fp = fopen($tempfile, "r");
-
-        while(!feof($fp)) {
-            $line = fgets($fp);
-
-            $encode = new Encode;
-            $encode->detect($line);
-            $newstr = $encode->convert($line);
-            $newstr = preg_replace('/[^a-zA-Z0-9_\.\,\|-]/', '', $newstr);
-            
-
-            $arch = fopen($tempfile, "a+");
-            fwrite($arch, $cont);
-            fclose($arch);
-        }
-        fclose($fp);*/
-
+        //En caso de que el archivo tenga una codificación distinta a UTF-8 es necesario realizar la transformación del archivo
         $tempfile = tempnam($tempFolder, $file);
-        for ($i = -1; $i < filesize($file); $i += 1048576) {
-            $cont = file_get_contents($file, FALSE, NULL, $i, 1048576);
+        for ($i = -1; $i < filesize($file); $i += 2097152) {
+            $cont = file_get_contents($file, FALSE, NULL, $i, 2097152);
             $cont = utf8_encode($cont);
             $cont = preg_replace('/[^a-zA-Z0-9_\n\r\.\,\|-]/', '', $cont);
-
+            //
             $arch = fopen($tempfile, "a+");
             fwrite($arch, $cont);
             fclose($arch);
         }
-
         $tempfile = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, $tempfile);
-        /*$sqlString = file_get_contents("./../../sql/load data template.sql");
-        $sqlString = str_replace("@<table>@", $table, $sqlString);
-        $sqlString = str_replace("@<file>@", $tempfile, $sqlString);
-
-        $sqlFile = fopen($file . ".sql", "w");
-        fwrite($sqlFile, $sqlString);
-        fclose($sqlFile);*/
-
-        $this->MySqlExecuteScript($table, $tempfile);
-
-        return TRUE;
-    }
-
-    protected function MySqlExecuteScript($table, $tempfile) {
 
         $conn = $this->getConnection();
-
         $conn->debug = true;
-
         $conn->BeginTrans();
-
-        $sql = "
-            DROP TEMPORARY TABLE IF EXISTS ".$table."_TEMP;
-        ";
         
-        $ok = $conn->Execute($sql);
+        $sql   = [];
+        $sql[] = 'DROP TEMPORARY TABLE IF EXISTS ".$table."_TEMP;';
+        $sql[] = "CREATE TEMPORARY TABLE ".$table."_TEMP LIKE ".$table.";";
+        $sql[] = "
+            LOAD DATA LOCAL INFILE '".$tempfile."'
+            INTO TABLE ".$table."_TEMP
+            CHARACTER SET utf8
+            FIELDS TERMINATED BY '|'
+            OPTIONALLY ENCLOSED BY '\"'
+            LINES TERMINATED BY '\n' STARTING BY '';
+        ";
+        $sql[] = "
+            DELETE tbl FROM ".$table." tbl
+            INNER JOIN ".$table."_TEMP inn on inn.id = tbl.id;
+        ";
+        $sql[] = "INSERT INTO ".$table." SELECT * FROM ".$table."_TEMP;";
+        $sql[] = "DROP TEMPORARY TABLE IF EXISTS ".$table."_TEMP;";
+        $sql[] = "UPDATE update_info SET update_info_to = CURRENT_DATE() WHERE update_info_product = 'aduanas' AND update_info_trade = 'impo';";
 
-        if ($ok) {
+        $trade = ($table == "declaraimp") ? 'impo' : 'expo' ;
 
-            $sql = "
-                CREATE TEMPORARY TABLE ".$table."_TEMP LIKE ".$table.";
-            ";
+        $sql[] = "
+            UPDATE update_info SET update_info_to = CURRENT_DATE() WHERE update_info_product = 'aduanas' AND update_info_trade = '".$trade."';
+        ";
             
-            $ok = $conn->Execute($sql);
-
+        $ok = TRUE;
+        foreach ($sql as $comm) {
             if ($ok) {
-                $sql = "
-                    LOAD DATA LOCAL INFILE '".$tempfile."'
-                    INTO TABLE ".$table."_TEMP
-                    CHARACTER SET utf8
-                    FIELDS TERMINATED BY '|'
-                    OPTIONALLY ENCLOSED BY '\"'
-                    LINES TERMINATED BY '\n' STARTING BY '';
-                ";
-                $ok = $conn->Execute($sql);
-
-                if ($ok) {
-                    $sql = "
-                        DELETE tbl FROM ".$table." tbl
-                        INNER JOIN ".$table."_TEMP inn on inn.id = tbl.id;
-                    ";
-                    $ok = $conn->Execute($sql);
-
-                    if ($ok) {
-                        $sql = "
-                            INSERT INTO ".$table."_load SELECT * FROM ".$table."_TEMP;
-                        ";
-                        $ok = $conn->Execute($sql);
-
-                        if ($ok) {
-                            $sql = "
-                                DROP TEMPORARY TABLE IF EXISTS ".$table."_TEMP;
-                            ";
-                            $ok = $conn->Execute($sql);
-
-                        }
-                    }
-
-                }
-
+                $ok = $conn->Execute($comm);
             }
         }
 
@@ -223,30 +202,17 @@ class DataSync extends Connection {
         } else {
             $conn->RollbackTrans();
         }
-
-        /*echo "<pre>$sql</pre>";
-
         
-        $conn->debug = true;
-        $resultSet = $conn->Execute($sql);
+        return $ok;
+    }
+    
+    protected function Log($message) {
+        echo date('Y-m-d H:i:s')." -> ".$message."\xA";
+    }
 
-        var_dump($resultSet);
-
-        $mysqli = mysqli_connect($this->host, $this->username, $this->password, $this->database);
-
-         comprobar la conexión 
-        if ($mysqli->connect_errno) {
-            echo "Falló la conexión a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-        }
-
-        echo 'processing file <br />';
-        echo $sql;
-        if (!$mysqli->multi_query($sql)) {
-            echo "Falló la multiconsulta: (" . $mysqli->errno . ") " . $mysqli->error;
-        }
-
-        echo 'done.';
-        $mysqli->close();*/
+    // Function for basic field validation (present and neither empty nor only white space
+    protected function IsNullOrEmptyString($question) {
+        return (!isset($question) || trim($question) === '');
     }
 
     protected function DeleteTemps($arrayTemps) {
@@ -257,11 +223,6 @@ class DataSync extends Connection {
                 unlink($temp);
             }
         }
-    }
-
-    // Function for basic field validation (present and neither empty nor only white space
-    protected function IsNullOrEmptyString($question) {
-        return (!isset($question) || trim($question) === '');
     }
 
     protected function rmdir_recursive($dir) {
@@ -300,4 +261,4 @@ class DataSync extends Connection {
 
 $dataSync = new DataSync("190.60.211.98", 21, "fs1atam4", "fsagr1");
 $dataSync->Syncronize("declaraexp");
-//$dataSync->Syncronize("declaraimp");
+$dataSync->Syncronize("declaraimp");

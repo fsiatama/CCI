@@ -276,6 +276,7 @@ class AcuerdoRepo extends BaseRepo {
 			'acuerdo_ffirma_title',
 			'acuerdo_ley',
 			'acuerdo_decreto',
+			'acuerdo_url',
 			'acuerdo_mercado_id',
 			'acuerdo_id_pais',
 			'pais',

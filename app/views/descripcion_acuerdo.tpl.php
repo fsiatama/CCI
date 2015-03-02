@@ -1,4 +1,9 @@
 <?php 
+
+$acuerdo_ffirma_title = ( empty($row['acuerdo_ffirma_title']) ) ? '' : $row['acuerdo_ffirma_title'] ;
+
+$partner = ( empty($row['mercado_nombre']) ) ? $row['pais'] : $row['mercado_nombre'] ;
+
 $flag = '';
 
 if (empty($row['acuerdo_mercado_id'])) {
@@ -6,16 +11,37 @@ if (empty($row['acuerdo_mercado_id'])) {
 } else {
 	$flag = 'img/flags/markets/'.$row['mercado_bandera'].'.png';
 }
+$flag = ( file_exists(PATH_RAIZ.$flag) ) ? URL_RAIZ.$flag : 'holder.js/64x64/sky/size:7/text:' . $partner ;
 
-$flag = ( file_exists(PATH_RAIZ.$flag) ) ? URL_RAIZ.$flag : '' ;
-
-$acuerdo_ffirma_title = ( empty($row['acuerdo_ffirma_title']) ) ? '' : $row['acuerdo_ffirma_title'] ;
-
-$partner = ( empty($row['mercado_nombre']) ) ? $row['pais'] : $row['mercado_nombre'] ;
-
-$link = '';
+$acuerdo_url = '';
 if ( ! empty($row['acuerdo_url']) ) {
-	$link = '<a href="' . $row['acuerdo_url'] . '" target="_blank"><i class="fa fa-link"></i> Conozca aquí el texto original del acuerdo</a>';
+	$acuerdo_url = '
+		<a href="' . $row['acuerdo_url'] . '" target="_blank"><i class="fa fa-link"></i> Conozca aquí el texto original del acuerdo</a>
+	';
+}
+
+$acuerdo_ffirma = '';
+if ( ! empty($row['acuerdo_ffirma']) ) {
+	$acuerdo_ffirma = '
+		<dt>' . Lang::get('acuerdo.columns_title.acuerdo_ffirma') . '</dt>
+		<dd>' . $acuerdo_ffirma_title . '</dd>
+	';
+}
+
+$acuerdo_ley = '';
+if ( ! empty($row['acuerdo_ley']) ) {
+	$acuerdo_ley = '
+		<dt>' . Lang::get('acuerdo.columns_title.acuerdo_ley') . '</dt>
+		<dd>' . $row['acuerdo_ley'] . '</dd>
+	';
+}
+
+$acuerdo_decreto = '';
+if ( ! empty($row['acuerdo_decreto']) ) {
+	$acuerdo_decreto = '
+		<dt>' . Lang::get('acuerdo.columns_title.acuerdo_decreto') . '</dt>
+		<dd>' . $row['acuerdo_decreto'] . '</dd>
+	';
 }
 
 ?>
@@ -29,23 +55,24 @@ if ( ! empty($row['acuerdo_url']) ) {
 <div class="modal-body"><!-- modal body -->
 
 	<div class="media">
-		<div class="media-left" id="partnerFlag">
-			<!-- <img src="holder.js/300x200"> -->
-			<img src="<?= $flag; ?>">
+		<div class="media-left">
+			<img class="media-object" src="<?= $flag; ?>" alt="<?= $partner; ?>">
 		</div>
 		<div class="media-body">
+			<?= $row['acuerdo_descripcion']; ?>
 			<dl>
 				<dt><?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?></dt>
 				<dd><?= $row['acuerdo_fvigente_title']; ?></dd>
-				<dt><?= Lang::get('acuerdo.columns_title.acuerdo_ffirma'); ?></dt>
-				<dd><?= $acuerdo_ffirma_title; ?></dd>
-				<dt><?= Lang::get('acuerdo.columns_title.acuerdo_ley'); ?></dt>
-				<dd><?= $row['acuerdo_ley']; ?></dd>
-				<dt><?= Lang::get('acuerdo.columns_title.acuerdo_decreto'); ?></dt>
-				<dd><?= $row['acuerdo_decreto']; ?></dd>
+				
+				<?= $acuerdo_ffirma; ?>
+
+				<?= $acuerdo_ley; ?>
+
+				<?= $acuerdo_decreto; ?>
+				
 			</dl>
 
-			<?= $link; ?>
+			<?= $acuerdo_url; ?>
 		</div>
 		
 	</div>
