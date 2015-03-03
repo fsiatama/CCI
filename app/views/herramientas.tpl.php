@@ -6,13 +6,25 @@
                     <strong class="">Herramientas</strong>
                 </div>
                 <div class="panel-body">
+                        <h2>Cronograma de desgravación y contingentes <strong>otorgados</strong></h2>
+                        <p>
+                            El siguiente link te permite consultar Las desgravaciones otorgadas a Colombia 
+                            por producto, por País y con los años proyectados, 
+                            así como los tamaños de los contingentes y la tasa extra contingente.
+                        </p>
+                        <ul>
+                            <li>
+                                <a href="<?= URL_RAIZ; ?>contingentes-desgravaciones">Haz click aqui</a>
+                            </li>
+                        </ul>
+                        <hr class="half-margins">
                         <h2>Protocolos de <strong>exportación</strong></h2>
                         <p>El siguiente link te permite consultar los protocolos de exportación vigentes por país</p>
                         <ul>
                             <li><a target="_blank" href="http://www.ica.gov.co/getdoc/fdcf7ae0-72bd-4b00-a380-0608dc9f6033/Protocolos-Fitosanitarios.aspx">Haz click aqui</a>
                             </li>
                         </ul>
-                        <hr>
+                        <hr class="half-margins">
                         <h2>Requisitos sanitarios y <strong>fitosanitarios</strong></h2>
                         <p>También dispones de los siguientes links para consultar los requisitos sanitarios de paises como Estados Unidos y Canada</p>
                         <ul>
@@ -21,14 +33,14 @@
                             <li><a target="_blank" href="http://www.inspection.gc.ca/food/eng/1299092387033/1299093490225">Canada</a></li>
                             <li><a target="_blank" href="http://exporthelp.europa.eu/thdapp/display.htm?page=rt/rt_RequisitosSanitariosYFitosanitarios.html&docType=main&languageId=ES">Union Europea</a></li>
                         </ul>
-                        <hr>
+                        <hr class="half-margins">
                         <h2>Logística de <strong>transporte</strong></h2>
                         <p>En el siguiente link podras consultar los médios de transporte disponibles y las rutas, además podras estimar el costo de cada uno</p>
                         <ul>
                             <li><a target="_blank" href="http://www.colombiatrade.com.co/herramientas/rutas-y-tarifas-de-transporte">Haz click aqui</a>
                             </li>
                         </ul>
-                        <hr>
+                        <hr class="half-margins">
                         <h2>Utilización de <strong>contingentes</strong></h2>
                         <p>También dispones de los siguientes links para consultar los requisitos sanitarios de paises como Estados Unidos y Canada</p>
                         <ul>
@@ -44,14 +56,14 @@
                             </li>
                                 <li><a target="_blank" href="http://www.ezv.admin.ch/dokumentation/04027/04028/05363/index.html?lang=fr">Efta</a></li>
                         </ul>
-                        <hr>
+                        <hr class="half-margins">
                         <h2>Comercio agropecuario <strong>mundial por producto</strong></h2>
                         <p>Podras acceder a la información del comercio mundial a través del siguiente link</p>
                         <ul>
                             <li><a target="_blank" href="http://www.trademap.org/Index.aspx?lang=es">Haz click aqui</a>
                             </li>
                         </ul>
-                        <hr>
+                        <hr class="half-margins">
                 </div>
             </div>
         </div>

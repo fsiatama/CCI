@@ -50,6 +50,12 @@ var mapOptions = {
 
 jQuery(function($) {
 
+    $(document).ajaxStart(function(){
+        $.blockUI({ message: '<h4 class="margin-top10 margin-bottom10"><i class="fa fa-spinner fa-spin"></i> Un momento por favor</h4 class= "nomargin">' });
+    }).ajaxComplete(function() {
+        $.unblockUI();
+    });
+
 	var is_msie = (navigator.appVersion.indexOf("MSIE")!=-1) ? true : false;
 	var map;
 

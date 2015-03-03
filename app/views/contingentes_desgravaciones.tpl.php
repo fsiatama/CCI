@@ -62,7 +62,7 @@
 
 				</div>
 				<div class="panel-body">
-					<div id="map-canvas" style="height: 600px;"></div>
+					
 				</div>
 			</div>
 
