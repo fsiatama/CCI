@@ -7,6 +7,6 @@
         "phpmailer/phpmailer": "5.*",
         "mpdf/mpdf": "5.*",
         "adodb/adodb-php": "5.19",
-        "paquettg/string-encode": "dev-master"
+        "adldap/adldap": "4.0.*"
     }
 }

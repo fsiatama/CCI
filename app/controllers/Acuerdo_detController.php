@@ -26,6 +26,11 @@ class Acuerdo_detController {
 		}
 		return $result;
 	}
+
+	public function publicSearchAction($urlParams, $postParams)
+	{
+		return $this->acuerdo_detRepo->publicSearch($postParams);
+	}
 	
 	public function executeAction($urlParams, $postParams)
 	{

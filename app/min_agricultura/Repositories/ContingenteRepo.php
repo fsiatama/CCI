@@ -615,6 +615,43 @@ class ContingenteRepo extends BaseRepo {
 
 	}
 
+	public function listDetail($params)
+	{
+		extract($params);
+
+		if (
+			empty($acuerdo_id) ||
+			empty($acuerdo_det_id)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request. contingenteRepo  execute'
+			];
+			return $result;
+		}
+
+		$this->model->setContingente_acuerdo_det_id($acuerdo_det_id);
+		$this->model->setContingente_acuerdo_det_acuerdo_id($acuerdo_id);
+		if ( !empty($country) ) {
+			$this->model->setContingente_id_pais($country);
+		}
+
+		$result = $this->modelAdo->exactSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+		//la consulta solo deberia arrojar un registro
+		$rowContingente = array_shift($result['data']);
+
+		$this->contingente_detRepo = new Contingente_detRepo;
+		$result = $this->contingente_detRepo->listId( compact(varname) );
+
+
+
+
+		var_dump($arrContingente);
+	}
+
 	private function getGaugeData($row, $dial, $quotaWeight, $title)
 	{
 		//var_dump($row);

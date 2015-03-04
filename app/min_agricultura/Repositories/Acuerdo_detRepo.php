@@ -647,4 +647,85 @@ class Acuerdo_detRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function publicSearch($params)
+	{
+
+		extract($params);
+
+		$products  = ( !empty($products) && is_array($products) ) ? $products : [] ;
+		$countries = ( !empty($countries) && is_array($countries) ) ? $countries : [] ;
+		$trade     = ( empty($trade) ) ? 'impo' : $trade ;
+
+		if (empty($products) || empty($countries)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+
+		$arrAgreementId = [];
+
+		$this->acuerdoRepo = new AcuerdoRepo;
+
+		$result = $this->acuerdoRepo->listByCountry( compact('countries', 'trade') );
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$arrAgreementId = Helpers::arrayColumn( $result['data'],  'acuerdo_id' );
+		$rowAgreement   = array_shift($result['data']);
+
+		//productos solo deberia venir uno
+		$product = array_shift($products);
+		$result  = $this->listByProduct(compact('product'));
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$rowAgreementDet = [];
+
+		foreach ($result['data'] as $key => $row) {
+			if ( $row['acuerdo_intercambio'] == $trade && in_array($row['acuerdo_det_acuerdo_id'], $arrAgreementId) ) {
+				$rowAgreementDet = $row;
+			}
+		}
+		if ( empty($rowAgreementDet) ) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+			return $result;
+		}
+		var_dump($rowAgreementDet, $rowAgreement);
+
+		$this->contingenteRepo  = new ContingenteRepo;
+		$this->desgravacionRepo = new DesgravacionRepo;
+
+		$acuerdo_id     = $rowAgreementDet['acuerdo_det_acuerdo_id'];
+		$acuerdo_det_id = $rowAgreementDet[$this->primaryKey];
+		$country        = ( $rowAgreementDet['acuerdo_det_contingente_acumulado_pais'] == '1' ) ? '' : array_shift($countries) ;
+
+
+		$result = $this->contingenteRepo->listDetail( compact('acuerdo_id', 'acuerdo_det_id', 'country') );
+
+		var_dump($result);
+
+
+
+		$model = $this->getModel();
+		$model->setAcuerdo_id( implode('", "', $arrAgreement) );
+
+		$this->modelAdo->setColumns([
+			'acuerdo_id',
+			'paises_iata',
+			'pais_iata',
+		]);
+
+		return $this->modelAdo->inSearch($model);
+
+	}
+
 }

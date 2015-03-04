@@ -4,42 +4,42 @@ var mapStyles = {
 		lineWidth: 1,
 		lineOpacity: 1,
 		backgroundColor: "#FF0000",
-		backgroundOpacity: 0.2
+		backgroundOpacity: 0.5
 	},
 	2: {
 		lineColor: "#996633",
 		lineWidth: 1,
 		lineOpacity: 1,
 		backgroundColor: "#FFCC99",
-		backgroundOpacity: 0.2
+		backgroundOpacity: 0.5
 	},
 	3: {
 		lineColor: "#0000FF",
 		lineWidth: 1,
 		lineOpacity: 1,
 		backgroundColor: "#0000FF",
-		backgroundOpacity: 0.2
+		backgroundOpacity: 0.5
 	},
 	4: {
 		lineColor: "#00FFFF",
 		lineWidth: 1,
 		lineOpacity: 1,
 		backgroundColor: "#00FFFF",
-		backgroundOpacity: 0.2
+		backgroundOpacity: 0.5
 	},
 	5: {
 		lineColor: "#996600",
 		lineWidth: 1,
 		lineOpacity: 1,
 		backgroundColor: "#996600",
-		backgroundOpacity: 0.2
+		backgroundOpacity: 0.5
 	},
 	6: {
 		lineColor: "#660000",
 		lineWidth: 1,
 		lineOpacity: 1,
 		backgroundColor: "#660000",
-		backgroundOpacity: 0.2
+		backgroundOpacity: 0.5
 	}
 };
 
@@ -131,6 +131,7 @@ jQuery(function($) {
 			,maxSelection: 1
 			,minChars:2
 			,placeholder: 'Select...'
+			,mode: 'remote'
 			,resultsField: 'data'
 			,selectionPosition: 'bottom'
 			,selectionStacked: true
@@ -162,6 +163,7 @@ jQuery(function($) {
 			,highlight:true
 			,maxSelection: 5
 			,placeholder: 'Select...'
+			,mode: 'remote'
 			,resultsField: 'data'
 			,selectionPosition: 'bottom'
 			,selectionStacked: true
@@ -248,6 +250,7 @@ jQuery(function($) {
 			,maxSelection: 1
 			,noSuggestionText: 'Cero resultados para mostrar'
 			,placeholder: 'Seleccione un país'
+			,mode: 'remote'
 			,required: true
 			,resultsField: 'data'
 			,selectionPosition: 'bottom'
@@ -275,6 +278,7 @@ jQuery(function($) {
 			//,minChars:2
 			,noSuggestionText: 'Cero resultados para mostrar'
 			,placeholder: 'Seleccione un producto'
+			,mode: 'remote'
 			,required: true
 			,resultsField: 'data'
 			,selectionPosition: 'bottom'
@@ -323,7 +327,7 @@ jQuery(function($) {
 
 				$.ajax({
 					type:"POST"
-					,url:'acuerdo/publicSearch'
+					,url:'acuerdo_det/publicSearch'
 					,data:{
 						products: products,
 						countries: countries,

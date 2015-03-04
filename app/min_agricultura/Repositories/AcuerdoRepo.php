@@ -398,8 +398,6 @@ class AcuerdoRepo extends BaseRepo {
 
 			$arrAgreement = array_merge( $arrAgreement, Helpers::arrayColumn( $result['data'],  $this->primaryKey ) );
 
-			//$arrAgreement = Helpers::arrayColumn( $result['data'],  $this->primaryKey );
-
 		}
 
 		//var_dump($arrAgreement);

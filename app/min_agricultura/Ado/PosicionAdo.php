@@ -182,6 +182,7 @@ class PosicionAdo extends BaseAdo {
 		$operator = $this->getOperator();
 		$joinOperator = ' AND ';
 		$selectedValues = $this->getSelectedValues();
+		$filterText = '';
 		foreach($this->data as $key => $data){
 			if ($data <> ''){
 				if ($operator == '=') {
@@ -196,7 +197,11 @@ class PosicionAdo extends BaseAdo {
 					if (is_numeric($data)) {
 						$filter[] = $key . ' ' . $operator . ' "' . $data . '%"';
 					} else {
-						$filter[] = $key . ' ' . $operator . ' "%' . $data . '%"';
+						//descarta las busquedas textuales no numericas en la llave primaria
+						if ($key != 'id_posicion') {
+							$filter[]   = $key . ' ' . $operator . ' "%' . $data . '%"';
+							$filterText = $data;
+						}
 					}
 					$joinOperator = ' OR ';
 				}

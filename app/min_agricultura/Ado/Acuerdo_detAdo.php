@@ -194,16 +194,16 @@ class Acuerdo_detAdo extends BaseAdo {
 					//construye una expesion regular con la data que llega (capitulo, partida, subpartida o posicion)
 
 					$arrRegexp   = [];
-					$arrRegexp[] = '^' . $data . '.*';
+					$arrRegexp[] = '[[:<:]]' . $data . '.*';
 
 					if ( strlen($data) > 2 ) {
-						$arrRegexp[] = substr($data, 0 ,2);
+						$arrRegexp[] = '[[:<:]]' . substr($data, 0 ,2) . '$';
 					}
 					if ( strlen($data) > 4 ) {
-						$arrRegexp[] = substr($data, 0 ,4);
+						$arrRegexp[] = '[[:<:]]' . substr($data, 0 ,4) . '$';
 					}
 					if ( strlen($data) > 6 ) {
-						$arrRegexp[] = substr($data, 0 ,6);
+						$arrRegexp[] = '[[:<:]]' . substr($data, 0 ,6) . '$';
 					}
 
 					$regexp = implode('|', $arrRegexp);
