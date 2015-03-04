@@ -1,19 +1,24 @@
 
 <div class="container white">
 	<header class="page-header">
-		<h3>Información general de los Tratados de Libre Comercio (TLC)</h3>
+		<h3>Cronograma de desgravación y contingentes otorgados</h3>
 	</header>
 	<div class="row">
 
 		<div class="col-md-12">
 			<p class="lead">
-				Aquí podrá encontrar fácilmente información de los acuerdos comerciales entre Colombia y otros países, para los productos agropecuarios y agroindustriales.
+				Aquí podrá consultar Las desgravaciones otorgadas a Colombia por producto, por País y con los años proyectados, así como los tamaños de los contingentes y la tasa extra contingente.
+				<br>
+				Para la búsqueda se debe seleccionar:
 				<ul>
 					<li>
-						Puede buscar por productos, digitando la descripción o el capítulo, partida, subpartida o posición arancelaria (Es decir según el arancel de aduanas).
+						Primero si desea importar o exportar productos.
 					</li>
 					<li>
-						También puede buscar directamente un socio comercial (país), para ver la información del acuerdo comercial.
+						Segundo, un país con los que existen acuerdos comerciales.
+					</li>
+					<li>
+						Tercero, un producto de la lista, la cual contiene todos los productos del acuerdo comercial con el país seleccionado anteriormente
 					</li>
 				</ul>
 				<hr class="half-margins">
@@ -24,7 +29,7 @@
 
 		<aside class="col-md-3">
 
-			<form action="#" method="POST" role="form" id="searchAgreementForm">
+			<form action="#" method="POST" role="form" id="searchQuotaForm">
 				<legend>Filtros</legend>
 
 				<div class="radio">
@@ -39,18 +44,19 @@
 				    Soy un exportador
 				  </label>
 				</div>
+				
+				<div class="form-group">
+					<label for="ms-filter-country">Socio Comercial</label>
+					<input type="text" class="form-control" id="ms-filter-country">
+				</div>
 
 				<div class="form-group">
 					<label for="ms-filter-product">Productos</label>
 					<input type="text" class="form-control" id="ms-filter-product">
 				</div>
 
-				<div class="form-group">
-					<label for="ms-filter-country">Socio Comercial</label>
-					<input type="text" class="form-control" id="ms-filter-country">
-				</div>
 
-				<button type="submit" class="btn btn-primary" id="searchAgreementSubmit">Buscar</button>
+				<button type="submit" class="btn btn-primary" id="searchQuotaSubmit">Buscar</button>
 			</form>
 
 		</aside>
@@ -62,7 +68,7 @@
 
 				</div>
 				<div class="panel-body">
-					
+					<div id="grid-quota"></div>
 				</div>
 			</div>
 

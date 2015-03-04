@@ -332,6 +332,7 @@ class AcuerdoRepo extends BaseRepo {
 		extract($params);
 
 		$countries = ( !empty($countries) && is_array($countries) ) ? $countries : [] ;
+		$trade     = ( empty($trade) ) ? 'impo' : $trade ;
 
 		if (empty($countries)) {
 			$result = [
@@ -342,7 +343,7 @@ class AcuerdoRepo extends BaseRepo {
 		}
 
 		$countries = implode(',', $countries);
-		
+		$this->model->setAcuerdo_intercambio($trade);
 		$this->model->setAcuerdo_mercado_id($countries);
 		return $this->modelAdo->inSearch($this->model);
 		
@@ -355,6 +356,7 @@ class AcuerdoRepo extends BaseRepo {
 
 		$products  = ( !empty($products) && is_array($products) ) ? $products : [] ;
 		$countries = ( !empty($countries) && is_array($countries) ) ? $countries : [] ;
+		$trade     = ( empty($trade) ) ? 'impo' : $trade ;
 
 		if (empty($products) && empty($countries)) {
 			$result = [
@@ -378,21 +380,29 @@ class AcuerdoRepo extends BaseRepo {
 			if (!$result['success']) {
 				return $result;
 			}
-
-			$arrAgreement = Helpers::arrayColumn( $result['data'], 'acuerdo_det_acuerdo_id' );
+			foreach ($result['data'] as $key => $row) {
+				if ( $row['acuerdo_intercambio'] == $trade ) {
+					$arrAgreement[] = $row['acuerdo_det_acuerdo_id'];
+				}
+				
+			}
 		}
 
 		if ( ! empty($countries) ) {
 
-			$result = $this->listByCountry(compact('countries'));
+			$result = $this->listByCountry( compact('countries', 'trade') );
 
 			if (!$result['success']) {
 				return $result;
 			}
 
-			$arrAgreement = Helpers::arrayColumn( $result['data'],  $this->primaryKey );
+			$arrAgreement = array_merge( $arrAgreement, Helpers::arrayColumn( $result['data'],  $this->primaryKey ) );
+
+			//$arrAgreement = Helpers::arrayColumn( $result['data'],  $this->primaryKey );
 
 		}
+
+		//var_dump($arrAgreement);
 
 		if ( empty($arrAgreement) ) {
 			return [
@@ -403,7 +413,7 @@ class AcuerdoRepo extends BaseRepo {
 		}
 
 		$model = $this->getModel();
-		$model->setAcuerdo_id( implode(',', $arrAgreement) );
+		$model->setAcuerdo_id( implode('", "', $arrAgreement) );
 
 		$this->modelAdo->setColumns([
 			'acuerdo_id',
@@ -411,7 +421,7 @@ class AcuerdoRepo extends BaseRepo {
 			'pais_iata',
 		]);
 
-		return $this->modelAdo->inSearch($this->model);
+		return $this->modelAdo->inSearch($model);
 
 	}
 

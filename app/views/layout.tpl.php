@@ -60,12 +60,10 @@
 		</header>
 
 		<!-- Fixed navbar -->
-
+		
 		<!-- MIDDLE -->
 		<section id="middle">
 			<?= $tpl_content; ?>
-		</section>
-
 		</section>
 		<!-- /MIDDLE -->
 

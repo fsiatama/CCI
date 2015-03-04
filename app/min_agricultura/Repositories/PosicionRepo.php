@@ -60,7 +60,12 @@ class PosicionRepo extends BaseRepo {
 	{
 		extract($params);
 
-		if ( empty($query) ) {
+		$trade     = (empty($trade)) ? 'impo' : $trade ;
+		$countries = ( empty($countries) || ! is_array($countries) ) ? [] : $countries ;
+		//productos solo deberia venir uno
+		$country   = array_shift($countries);
+
+		if ( empty($query) &&  empty($country) ) {
 			return [
 				'success' => true,
 				'data'    => [],
@@ -68,13 +73,11 @@ class PosicionRepo extends BaseRepo {
 			];
 		}
 
-		//$query = (empty($query)) ? '' : $query ;
-		$trade = (empty($trade)) ? 'impo' : $trade ;
 
 		$this->model->setId_posicion($query);
 		$this->model->setPosicion($query);
 		
-		return $this->modelAdo->listInAgreement( $this->model, $trade );
+		return $this->modelAdo->listInAgreement( $this->model, $trade, $country );
 
 
 	}

@@ -176,7 +176,7 @@ class PosicionAdo extends BaseAdo {
 		return $sql;
 	}
 
-	public function buildInAgreementSelect($trade)
+	public function buildInAgreementSelect($trade, $country)
 	{
 		$filter = array();
 		$operator = $this->getOperator();
@@ -210,23 +210,32 @@ class PosicionAdo extends BaseAdo {
 						GROUP_CONCAT(DISTINCT id_subpartida SEPARATOR "\',\'") AS subpartidas, 
 						GROUP_CONCAT(DISTINCT id_posicion SEPARATOR "\',\'") AS posiciones
 						FROM posicion 
-			WHERE EXISTS (SELECT 1
-					FROM acuerdo_det
-					LEFT JOIN acuerdo ON acuerdo_det_acuerdo_id = acuerdo_id
-					WHERE acuerdo_intercambio = "' . $trade . '"
-					  AND (FIND_IN_SET(id_posicion, acuerdo_det_productos) 
-					   OR FIND_IN_SET(id_capitulo, acuerdo_det_productos)
-					   OR FIND_IN_SET(id_partida, acuerdo_det_productos)
-					   OR FIND_IN_SET(id_subpartida, acuerdo_det_productos)))
 		';
 
-		$sqlFilter = '';
+		$whereAssignment = false;
 
 		if (!empty($filter)) {
-			$sqlFilter  = ' AND ('. implode( $joinOperator, $filter ).')';
+			$sql            .= ' WHERE ('. implode( $joinOperator, $filter ).')';
+			$whereAssignment = true;
 		}
 
-		$sql       .= $sqlFilter;
+		$sql .= ($whereAssignment) ? ' AND ' : ' WHERE ' ;
+		$sql .= '
+			EXISTS (SELECT 1
+				FROM acuerdo_det
+				LEFT JOIN acuerdo ON acuerdo_det_acuerdo_id = acuerdo_id
+				LEFT JOIN mercado ON acuerdo_mercado_id = mercado_id
+				WHERE acuerdo_intercambio = "' . $trade . '"
+				  AND (FIND_IN_SET(id_posicion, acuerdo_det_productos) 
+				   OR FIND_IN_SET(id_capitulo, acuerdo_det_productos)
+				   OR FIND_IN_SET(id_partida, acuerdo_det_productos)
+				   OR FIND_IN_SET(id_subpartida, acuerdo_det_productos))
+		';
+		if ( ! empty($country) ) {
+			$sql .= ' AND (FIND_IN_SET ("'.$country.'", mercado_paises) OR acuerdo_id_pais = "'.$country.'")';
+		}
+		$sql .= ')';
+
 		$arrArancel = $conn->getRow($sql);
 
 		//var_dump($arrArancel);
@@ -290,14 +299,14 @@ class PosicionAdo extends BaseAdo {
 		return $sql;
 	}
 
-	public function listInAgreement($model, $trade)
+	public function listInAgreement($model, $trade, $country)
 	{
 		$this->setModel($model);
 		$this->setOperator('LIKE');
 		$conn = $this->getConnection();
 		$this->setData();
 
-		$sql       = $this->buildInAgreementSelect($trade);
+		$sql       = $this->buildInAgreementSelect($trade, $country);
 
 		$resultSet = $conn->Execute($sql);
 		$result    = $this->buildResult($resultSet);
