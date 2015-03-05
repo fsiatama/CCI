@@ -1,7 +1,7 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Contingente_det.php';
-require PATH_APP.'min_agricultura/Ado/Contingente_detAdo.php';
+require PATH_MODELS.'Entities/Contingente_det.php';
+require PATH_MODELS.'Ado/Contingente_detAdo.php';
 require_once PATH_MODELS.'Repositories/Acuerdo_detRepo.php';
 require_once ('BaseRepo.php');
 
@@ -216,9 +216,12 @@ class Contingente_detRepo extends BaseRepo {
 			}
 		}
 
+		$contingente_det_tipo_operacion = (empty($contingente_det_tipo_operacion)) ? 'igual' : $contingente_det_tipo_operacion ;
+
 		if (
 			empty($contingente_det_anio_ini) ||
 			empty($contingente_det_anio_fin) ||
+			//empty($contingente_det_tipo_operacion) ||
 			empty($contingente_det_contingente_id) ||
 			empty($contingente_det_contingente_acuerdo_det_id) ||
 			empty($contingente_det_contingente_acuerdo_det_acuerdo_id)
@@ -233,6 +236,7 @@ class Contingente_detRepo extends BaseRepo {
 		$this->model->setContingente_det_anio_ini($contingente_det_anio_ini);
 		$this->model->setContingente_det_anio_fin($contingente_det_anio_fin);
 		$this->model->setContingente_det_peso_neto($contingente_det_peso_neto);
+		$this->model->setContingente_det_tipo_operacion($contingente_det_tipo_operacion);
 		$this->model->setContingente_det_contingente_id($contingente_det_contingente_id);
 		$this->model->setContingente_det_contingente_acuerdo_det_id($contingente_det_contingente_acuerdo_det_id);
 		$this->model->setContingente_det_contingente_acuerdo_det_acuerdo_id($contingente_det_contingente_acuerdo_det_acuerdo_id);
@@ -257,6 +261,7 @@ class Contingente_detRepo extends BaseRepo {
 			$this->model->setContingente_det_anio_ini(implode('", "', $query));
 			$this->model->setContingente_det_anio_fin(implode('", "', $query));
 			$this->model->setContingente_det_peso_neto(implode('", "', $query));
+			$this->model->setContingente_det_tipo_operacion(implode('", "', $query));
 			$this->model->setContingente_det_contingente_id(implode('", "', $query));
 			$this->model->setContingente_det_contingente_acuerdo_det_id(implode('", "', $query));
 			$this->model->setContingente_det_contingente_acuerdo_det_acuerdo_id(implode('", "', $query));
@@ -268,6 +273,7 @@ class Contingente_detRepo extends BaseRepo {
 			$this->model->setContingente_det_anio_ini($query);
 			$this->model->setContingente_det_anio_fin($query);
 			$this->model->setContingente_det_peso_neto($query);
+			$this->model->setContingente_det_tipo_operacion($query);
 			$this->model->setContingente_det_contingente_id($query);
 			$this->model->setContingente_det_contingente_acuerdo_det_id($query);
 			$this->model->setContingente_det_contingente_acuerdo_det_acuerdo_id($query);

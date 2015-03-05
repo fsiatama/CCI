@@ -10,9 +10,15 @@ return [
 	'valor_acumulado'     => 'Acumulado (%)',
 	'estado_contingente'  => 'Estado Contingente',
 	'estado_salvaguardia' => 'Estado Salvaguardia',
-	'columns_title'    => [
-		'contingente_det_anio_ini'  => 'Año Desde',      
-		'contingente_det_anio_fin'  => 'Año Hasta',      
-		'contingente_det_peso_neto' => 'Toneladas Metricas (Tm)',
-    ]
+	'columns_title'       => [
+		'contingente_det_anio_ini'       => 'Año Desde',      
+		'contingente_det_anio_fin'       => 'Año Hasta',      
+		'contingente_det_peso_neto'      => 'Toneladas Metricas (Tm)',
+		'contingente_det_tipo_operacion' => 'Operador',
+	],
+	'contingente_det_tipo_operacion' => [
+		'igual'              => 'Igual a',
+		'aumento_porcentual' => 'Crecimiento anual en %',
+		'aumento_toneladas'  => 'Crecimiento anual en Tm',
+	]
 ];

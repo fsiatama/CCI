@@ -22,6 +22,7 @@ class Contingente_detAdo extends BaseAdo {
 		$contingente_det_anio_ini = $contingente_det->getContingente_det_anio_ini();
 		$contingente_det_anio_fin = $contingente_det->getContingente_det_anio_fin();
 		$contingente_det_peso_neto = $contingente_det->getContingente_det_peso_neto();
+		$contingente_det_tipo_operacion = $contingente_det->getContingente_det_tipo_operacion();
 		$contingente_det_contingente_id = $contingente_det->getContingente_det_contingente_id();
 		$contingente_det_contingente_acuerdo_det_id = $contingente_det->getContingente_det_contingente_acuerdo_det_id();
 		$contingente_det_contingente_acuerdo_det_acuerdo_id = $contingente_det->getContingente_det_contingente_acuerdo_det_acuerdo_id();
@@ -31,6 +32,7 @@ class Contingente_detAdo extends BaseAdo {
 			'contingente_det_anio_ini',
 			'contingente_det_anio_fin',
 			'contingente_det_peso_neto',
+			'contingente_det_tipo_operacion',
 			'contingente_det_contingente_id',
 			'contingente_det_contingente_acuerdo_det_id',
 			'contingente_det_contingente_acuerdo_det_acuerdo_id'
@@ -49,6 +51,7 @@ class Contingente_detAdo extends BaseAdo {
 				contingente_det_anio_ini,
 				contingente_det_anio_fin,
 				contingente_det_peso_neto,
+				contingente_det_tipo_operacion,
 				contingente_det_contingente_id,
 				contingente_det_contingente_acuerdo_det_id,
 				contingente_det_contingente_acuerdo_det_acuerdo_id
@@ -58,6 +61,7 @@ class Contingente_detAdo extends BaseAdo {
 				"'.$this->data['contingente_det_anio_ini'].'",
 				"'.$this->data['contingente_det_anio_fin'].'",
 				"'.$this->data['contingente_det_peso_neto'].'",
+				"'.$this->data['contingente_det_tipo_operacion'].'",
 				"'.$this->data['contingente_det_contingente_id'].'",
 				"'.$this->data['contingente_det_contingente_acuerdo_det_id'].'",
 				"'.$this->data['contingente_det_contingente_acuerdo_det_acuerdo_id'].'"
@@ -103,6 +107,7 @@ class Contingente_detAdo extends BaseAdo {
 			 contingente_det_anio_ini,
 			 contingente_det_anio_fin,
 			 contingente_det_peso_neto,
+			 contingente_det_tipo_operacion,
 			 contingente_det_contingente_id,
 			 contingente_det_contingente_acuerdo_det_id,
 			 contingente_det_contingente_acuerdo_det_acuerdo_id

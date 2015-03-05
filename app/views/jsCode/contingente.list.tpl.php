@@ -28,6 +28,7 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 			{name:'contingente_det_anio_fin', type:'string'},
 			{name:'contingente_det_anio_fin_title', type:'string'},
 			{name:'contingente_det_peso_neto', type:'float'},
+			{name:'contingente_det_tipo_operacion', type:'string'},
 			{name:'contingente_det_contingente_id', type:'float'},
 			{name:'contingente_det_contingente_acuerdo_det_id', type:'float'},
 			{name:'contingente_det_contingente_acuerdo_det_acuerdo_id', type:'float'}
