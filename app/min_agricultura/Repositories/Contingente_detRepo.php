@@ -332,6 +332,7 @@ class Contingente_detRepo extends BaseRepo {
 			'contingente_det_anio_fin',
 			'contingente_det_anio_fin_title',
 			'contingente_det_peso_neto',
+			'contingente_det_tipo_operacion',
 			'contingente_det_contingente_id',
 			'contingente_det_contingente_acuerdo_det_id',
 			'contingente_det_contingente_acuerdo_det_acuerdo_id'

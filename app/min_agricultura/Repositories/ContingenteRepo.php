@@ -641,15 +641,24 @@ class ContingenteRepo extends BaseRepo {
 			return $result;
 		}
 		//la consulta solo deberia arrojar un registro
-		$rowContingente = array_shift($result['data']);
+		$rowContingente                     = array_shift($result['data']);
+		$contingente_id                     = $rowContingente['contingente_id'];
+		$contingente_acuerdo_det_id         = $rowContingente['contingente_acuerdo_det_id'];
+		$contingente_acuerdo_det_acuerdo_id = $rowContingente['contingente_acuerdo_det_acuerdo_id'];
 
 		$this->contingente_detRepo = new Contingente_detRepo;
-		$result = $this->contingente_detRepo->listId( compact(varname) );
+		$result = $this->contingente_detRepo->listId( compact('contingente_id', 'contingente_acuerdo_det_id', 'contingente_acuerdo_det_acuerdo_id') );
+		if (!$result['success']) {
+			return $result;
+		}
 
+		$result = [
+			'success' => true,
+			'rowContingente' => $rowContingente,
+			'arrContingente_det' => $result['data'],
+		];
 
-
-
-		var_dump($arrContingente);
+		return $result;
 	}
 
 	private function getGaugeData($row, $dial, $quotaWeight, $title)
