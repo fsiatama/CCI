@@ -4,6 +4,7 @@ require PATH_APP.'min_agricultura/Entities/User.php';
 require PATH_APP.'min_agricultura/Ado/UserAdo.php';
 require PATH_APP.'min_agricultura/Repositories/PermissionsRepo.php';
 
+
 require_once ('BaseRepo.php');
 
 class UserRepo extends BaseRepo {
@@ -45,15 +46,44 @@ class UserRepo extends BaseRepo {
 		$user    = $this->model;
 		$userAdo = $this->modelAdo;
 
-		if (empty($email) || empty($password)) {
+		if (empty($userName) || empty($password)) {
 			$result = array(
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
 			);
 			return $result;
 		}
+		try {
+			$adldap = new \adLDAP\adLDAP();
+		}
+		catch (adLDAPException $e) {
+			$result = array(
+				'success' => false,
+				'error'   => $e
+			);
+			return $result;
+		}
 
-		$user->setUser_email($email);
+		$authUser = $adldap->user()->authenticate($userName, $password);
+		if ($authUser !== true) {
+			$result = array(
+				'success' => false,
+				'error'   => $adldap->getLastError()
+			);
+			return $result;
+		}
+
+		$userInfo = $adldap->user()->info($userName);
+		//toma solo el primer registro
+		$userInfo  = $userInfo[0];
+		//print_r($userInfo['displayname'][0]);
+
+		//exit();
+
+		$password = md5($password);
+
+
+		$user->setUser_email($userName);
 		$user->setUser_password($password);
 		$user->setUser_active('1');
 
@@ -61,7 +91,32 @@ class UserRepo extends BaseRepo {
 
 		if ($result['success']) {
 
-			if ($result['total'] > 0) {
+			if ($result['total'] == 0) {
+				//si el usuario no existe, lo crea
+				//$this->model     = $this->getModel();
+				$user_full_name  = $userInfo['displayname'][0];
+				$user_email      = $userName;
+				$user_password   = $password;
+				$user_profile_id = 2;
+				$user_active     = '1';
+				$result = $this->create( compact('user_full_name', 'user_email', 'user_password', 'user_profile_id', 'user_active') );
+
+				if (!$result['success']) {
+					$result = [
+						'success'  => false,
+						'error'    => $result['error']
+					];
+					return $result;
+				}
+				$result = $userAdo->exactSearch($user);
+				if (!$result['success']) {
+					$result = [
+						'success'  => false,
+						'error'    => $result['error']
+					];
+					return $result;
+				}
+			}
 
 				$row = array_shift($result['data']);
 				$permissionsRepo = new PermissionsRepo;
@@ -101,13 +156,13 @@ class UserRepo extends BaseRepo {
 						'error'   => 'You have not enabled products'
 					);
 				}
-			}
+			/*}
 			else {
 				$result = array(
 					'success' => false,
 					'error'   => 'Your email address and password did not match. Please try again.'
 				);
-			}
+			}*/
 		}
 
 		return $result;
@@ -266,13 +321,15 @@ class UserRepo extends BaseRepo {
 		if (!$result['success']) {
 			return $result;
 		}
+		//si no existe datos de session en el user_id es porque se esta creando directamente del Active Directory
+		$user_id = (empty($_SESSION['user_id'])) ? 99999999 : $_SESSION['user_id'] ;
 
 		if ($action == 'create') {
-			$this->model->setUser_uinsert($_SESSION['user_id']);
+			$this->model->setUser_uinsert($user_id);
 			$this->model->setUser_finsert(Helpers::getDateTimeNow());
 		}
 		elseif ($action == 'modify') {
-			$this->model->setUser_uupdate($_SESSION['user_id']);
+			$this->model->setUser_uupdate($user_id);
 			$this->model->setUser_fupdate(Helpers::getDateTimeNow());
 		}
 		$result = array('success' => true);

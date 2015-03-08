@@ -45,7 +45,6 @@ class AuditAdo extends BaseAdo {
 
 		$sql = '
 			INSERT INTO audit (
-				audit_id,
 				audit_table,
 				audit_script,
 				audit_method,
@@ -54,7 +53,6 @@ class AuditAdo extends BaseAdo {
 				audit_finsert
 			)
 			VALUES (
-				"'.$this->data['audit_id'].'",
 				"'.$this->data['audit_table'].'",
 				"'.$this->data['audit_script'].'",
 				"'.$this->data['audit_method'].'",

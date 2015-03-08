@@ -95,13 +95,14 @@ jQuery(function($) {
 	$('#loginForm').on('submit', function(event){
 		var $form = $(this);
 		var $btn = $('#loginFormSubmit');
-		$btn.button('loading');
+		//btn.button('loading');
 		$.ajax({
 			type:"POST"
 			,url:$form.attr('action')
 			,data:{
-				email: $("#inputEmail").val(),
-				password: $.md5($("#inputPassword").val())
+				userName: $("#inputUserName").val(),
+				/*password: $.md5($("#inputPassword").val())*/
+				password: $("#inputPassword").val(),
 			}
 			,dataType:"json"
 			,success:function(data){
@@ -115,7 +116,7 @@ jQuery(function($) {
 				}
 			}
 		}).always(function(){
-			$btn.button('reset');
+			//btn.button('reset');
 		});
  
 		event.preventDefault();
@@ -194,7 +195,7 @@ jQuery(function($) {
 
 				var form = $(this);
 				var btn = $('#searchAgreementSubmit');
-				btn.button('loading');
+				//btn.button('loading');
 
 				$.ajax({
 					type:"POST"
@@ -233,7 +234,7 @@ jQuery(function($) {
 						}
 					}
 				}).always(function(){
-					btn.button('reset');
+					//btn.button('reset');
 				});
 			}
 			event.preventDefault();
@@ -323,7 +324,7 @@ jQuery(function($) {
 				
 				var form = $(this);
 				var btn = $('#searchQuotaSubmit');
-				btn.button('loading');
+				//btn.button('loading');
 
 				$.ajax({
 					type:"POST"
@@ -361,7 +362,7 @@ jQuery(function($) {
 						}
 					}
 				}).always(function(){
-					btn.button('reset');
+					//btn.button('reset');
 				});
 			}
 			event.preventDefault();

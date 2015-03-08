@@ -9,9 +9,9 @@
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" id="loginForm" action="<?= URL_RAIZ ?>auth/login">
                         <div class="form-group">
-                            <label for="inputEmail" class="col-sm-3 control-label">Email</label>
+                            <label for="inputUserName" class="col-sm-3 control-label">Usuario</label>
                             <div class="col-sm-9">
-                                <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Correo Electrónico" required autofocus>
+                                <input type="text" class="form-control" id="inputUserName" name="userName" placeholder=" @minagricultura.gov.co" required autofocus>
                             </div>
                         </div>
                         <div class="form-group">

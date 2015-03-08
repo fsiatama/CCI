@@ -109,10 +109,13 @@ class AuditRepo extends BaseRepo {
 			];
 			return $result;
 		}
+
+		//si no existe datos de session en el user_id es porque se esta creando un usuario directamente del Active Directory
+		$user_id = (empty($_SESSION['user_id'])) ? 99999999 : $_SESSION['user_id'] ;
 		$this->model->setAudit_script($audit_script);
 		$this->model->setAudit_method($audit_method);
 		$this->model->setAudit_parameters($audit_parameters);
-		$this->model->setAudit_uinsert($_SESSION['user_id']);
+		$this->model->setAudit_uinsert($user_id);
 		$this->model->setAudit_finsert(Helpers::getDateTimeNow());
 		
 		$result = ['success' => true];
