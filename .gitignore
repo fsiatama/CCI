@@ -1,4 +1,7 @@
 vendor/*
+Nueva carpeta/*
+Documentacion/*
+sql/*
 
 /public/lib/config.php
 /app/lib/config.php
