@@ -98,7 +98,9 @@ class ContingenteController {
 			}
 
 			$postParams['is_template'] = true;
-			$params = array_merge($postParams, $result, compact('country_data'), $rowAcuerdo, $rowAcuerdo_det, compact('action'));
+			$arrOperatorType = Lang::get('contingente_det.contingente_det_tipo_operacion');
+
+			$params = array_merge($postParams, $result, $rowAcuerdo, $rowAcuerdo_det, compact('action', 'arrOperatorType', 'country_data'));
 			//var_dump($params);
 
 			//el template de adicionar y editar son los mismos

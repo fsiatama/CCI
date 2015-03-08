@@ -157,6 +157,8 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 			parametros[this.paramNames.format] = val;
 			parametros[this.paramNames.limit] = Ext.ux.lang.reports.maxRows;
 		}
+
+		Ext.ux.bodyMask.show();
 		
 		Ext.Ajax.request({
 			url: store.proxy.url
@@ -181,6 +183,7 @@ Ext.extend(Ext.ux.grid.Excel, Ext.util.Observable, {
 						,css: 'display:none;visibility:hidden;height:0px;'
 						,src: 'download/excel/'+results.file
 					});
+					Ext.ux.bodyMask.hide();
 				}
 				else{
 					if (results.error) {

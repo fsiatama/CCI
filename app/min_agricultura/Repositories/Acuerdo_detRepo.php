@@ -699,7 +699,7 @@ class Acuerdo_detRepo extends BaseRepo {
 			];
 			return $result;
 		}
-		var_dump($rowAgreementDet, $rowAgreement);
+		//var_dump($rowAgreementDet, $rowAgreement);
 
 		$this->contingenteRepo  = new ContingenteRepo;
 		$this->desgravacionRepo = new DesgravacionRepo;
@@ -712,6 +712,9 @@ class Acuerdo_detRepo extends BaseRepo {
 		$result = $this->contingenteRepo->listDetail( compact('acuerdo_id', 'acuerdo_det_id', 'country') );
 
 		var_dump($result);
+		//hasta aqui tiene toda la informacion para resumir todo la configuracion del acuerdo
+
+		var_dump($rowAgreementDet, $rowAgreement);
 
 
 
