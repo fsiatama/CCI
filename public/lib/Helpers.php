@@ -435,11 +435,49 @@ class Helpers
 		$filePath = PATH_REPORTS . $fileName;
 
 		$fileDownload = FileDownload::createFromFilePath($filePath);
-		
+
 		$result = $fileDownload->sendDownload($fileName);
 
 		if ($deleteFile) {
 			unlink($filePath);
+		}
+		return $result;
+	}
+
+	public static function uploadImage($name, $fileName, $dir)
+	{
+		$result         = new stdClass();
+		$file           = $_FILES[$name];
+		$tamano         = $file['size'];
+		$info           = getimagesize($file['tmp_name']);
+		$tmp            = $file['name'];
+		$ext            = substr(strrchr($file['name'], '.'), 1);
+		$nombre_archivo = md5($name.$fileName).".".$ext;
+		$contentType    = $info['mime'];
+
+		if ($tamano > 1000000) {
+			$result->reason		= "You can upload images with weights greater than 1Mb";
+			$result->success    = false;
+
+		} elseif ($contentType =='image/jpeg' || $contentType =='image/gif' || $contentType =='image/png' ) {
+
+			if(isset($_FILES[$name]) && move_uploaded_file($file['tmp_name'], $dir.$nombre_archivo)){
+
+				list($width, $height, $type, $attr) = getimagesize($dir.$file['name']);
+				$result->newImage	= $nombre_archivo;
+				$result->imageWidth	= $width;
+				$result->imageHeight= $height;
+				$result->reason		= $dir.$nombre_archivo;
+				$result->success    = true;
+			} else {
+
+				$result->reason		= "Unable to Upload";
+				$result->success    = false;
+			}
+		} else {
+			
+			$result->reason		= "Invalid File in ".$tmp.". Please only upload images files";
+			$result->success    = false;
 		}
 		return $result;
 	}

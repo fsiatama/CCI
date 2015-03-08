@@ -96,7 +96,7 @@
 			},{
 				defaults:{anchor:'100%'}
 				,items:[comboPais]
-			},{
+			/*},{
 				items:[{
 					xtype:'panel'
 					,frame:true
@@ -140,7 +140,7 @@
 							}
 					   }]
 					}]
-				}]
+				}]*/
 			},{
 				xtype:'hidden'
 				,name:'mercado_id'
