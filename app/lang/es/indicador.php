@@ -17,6 +17,7 @@ return [
 		'desc_posicion'           => 'Descripción arancel',
 		'pais_origen'             => 'País Origen',
 		'pais_destino'            => 'País Destino',
+		'pais'                    => 'Socio comercial',
 		'periodo'                 => 'Periodo',
 		'participacion'           => 'Participación %',
 		'peso_impo'               => 'Total Impo (Kg)',

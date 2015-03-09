@@ -85,7 +85,7 @@
 	var comboPais = new Combo({
 		id:module+'comboPais'
 		//,singleMode:true
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
+		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais'); ?>'
 		,name:'id_pais[]'
 		,store:storePais
 		,displayField:'pais'
@@ -149,7 +149,7 @@
 		,store:arrYears
 		,fieldLabel:Ext.ux.lang.reports.selectYearTo
 	});
-	
+
 	var formIndicador = new Ext.FormPanel({
 		baseCls:'x-plain'
 		,id:module + 'formIndicador'
@@ -302,11 +302,11 @@
 
 	function getDescription () {
 		var arrDescription = [];
-		
+
 		var arrValues      = [];
 		var selection      = Ext.getCmp(module+'comboPais').getSelectedRecords();
 		var label          = Ext.getCmp(module+'comboPais').fieldLabel;
-		
+
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('pais'));
 		});
@@ -320,7 +320,7 @@
 		arrValues      = [];
 		selection      = Ext.getCmp(module+'comboMercado').getSelectedRecords();
 		label          = Ext.getCmp(module+'comboMercado').fieldLabel;
-		
+
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('mercado_nombre'));
 		});
@@ -334,7 +334,7 @@
 		arrValues      = [];
 		selection      = Ext.getCmp(module+'comboPosicion').getSelectedRecords();
 		label          = Ext.getCmp(module+'comboPosicion').fieldLabel;
-		
+
 		Ext.each(selection,function(row){
 			arrValues.push('['+row.get('id_posicion')+'] ' + row.get('posicion'));
 		});
@@ -350,7 +350,7 @@
 		arrValues     = [];
 
 		arrValues.push(yearIni + ' - ' + yearFin);
-		
+
 		arrDescription.push({
 			label: Ext.ux.lang.reports.period
 			,values: arrValues

@@ -84,7 +84,7 @@
 	var comboPaisOrigen = new Combo({
 		id:module+'comboPaisOrigen'
 		,singleMode:true
-		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>'
+		,fieldLabel:'<?= Lang::get('indicador.columns_title.pais'); ?>'
 		,name:'id_pais_origen[]'
 		,store:storePaisOrigen
 		,displayField:'country'
@@ -220,11 +220,11 @@
 
 	function getDescription () {
 		var arrDescription = [];
-		
+
 		var arrValues      = [];
 		var selection      = Ext.getCmp(module+'comboPaisOrigen').getSelectedRecords();
 		var label          = Ext.getCmp(module+'comboPaisOrigen').fieldLabel;
-		
+
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('country'));
 		});
@@ -238,7 +238,7 @@
 		arrValues      = [];
 		selection      = Ext.getCmp(module+'comboSubpartida').getSelectedRecords();
 		label          = Ext.getCmp(module+'comboSubpartida').fieldLabel;
-		
+
 		Ext.each(selection,function(row){
 			arrValues.push('['+row.get('id_subpartida')+'] ' + row.get('subpartida'));
 		});

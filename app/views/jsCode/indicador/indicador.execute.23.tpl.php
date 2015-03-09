@@ -52,7 +52,7 @@ $htmlDescription .= '</ol>';
 	storeIndicador.on('load', function(store){
 
 		FusionCharts.setCurrentRenderer('javascript');
-		
+
 		disposeCharts();
 
 		//var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
@@ -66,7 +66,7 @@ $htmlDescription .= '</ol>';
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.reports.position'); ?>', dataIndex:'position', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>', dataIndex:'pais', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.pais'); ?>', dataIndex:'pais', align:'left'},
 			{header:'<?= Lang::get('indicador.comtrade_columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat, align:'right'},
 			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat, align:'right'},
 		]
@@ -103,7 +103,7 @@ $htmlDescription .= '</ol>';
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 	var defaultYear = <?= end($yearsAvailable); ?> - 1;
-	
+
 	/******************************************************************************************************************************************************************************/
 
 	var indicadorContainer = new Ext.Panel({

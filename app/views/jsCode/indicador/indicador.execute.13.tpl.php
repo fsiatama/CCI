@@ -67,7 +67,7 @@ $htmlDescription .= '</ol>';
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.posicion'); ?>', dataIndex:'id_posicion', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.desc_posicion'); ?>', dataIndex:'posicion', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.pais_origen'); ?>', dataIndex:'pais', align: 'left'},
+			{header:'<?= Lang::get('indicador.columns_title.pais'); ?>', dataIndex:'pais', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.arancel_pagado'); ?>', dataIndex:'arancel_pagado' ,'renderer':numberFormat, align:'right'},
 			{header:'<?= Lang::get('indicador.columns_title.valorarancel'); ?>', dataIndex:'valorarancel' ,'renderer':numberFormat, align:'right'},
 			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat, align:'right'},
@@ -167,7 +167,7 @@ $htmlDescription .= '</ol>';
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-		
+
 	}
 
 	/*********************************************** End functions***********************************************/
