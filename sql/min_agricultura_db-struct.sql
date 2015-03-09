@@ -1,5 +1,5 @@
 /*
-SQLyog Community v12.08 (64 bit)
+SQLyog Community v12.09 (64 bit)
 MySQL - 5.6.17 : Database - min_agricultura
 *********************************************************************
 */
@@ -122,7 +122,7 @@ CREATE TABLE `audit` (
   `audit_uinsert` int(10) unsigned NOT NULL,
   `audit_finsert` datetime NOT NULL,
   PRIMARY KEY (`audit_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4909 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `category_menu` */
 
@@ -225,17 +225,20 @@ CREATE TABLE `declaraexp` (
   `id_subpartida` char(6) NOT NULL,
   `id_posicion` char(10) NOT NULL,
   `id_ciiu` smallint(3) unsigned NOT NULL,
-  `valorfob` float(13,2) unsigned NOT NULL,
-  `valorcif` float(13,2) unsigned NOT NULL,
-  `valor_pesos` float(15,2) unsigned NOT NULL,
-  `peso_neto` float(13,2) unsigned NOT NULL,
+  `valorfob` decimal(13,2) unsigned NOT NULL,
+  `valorcif` decimal(13,2) unsigned NOT NULL,
+  `valor_pesos` decimal(15,2) NOT NULL,
+  `peso_neto` decimal(13,2) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_empresa` (`id_empresa`),
   KEY `id_paisdestino` (`id_paisdestino`),
   KEY `id_posicion` (`id_posicion`),
   KEY `anio` (`anio`),
-  KEY `id_deptorigen` (`id_deptorigen`)
-) ENGINE=MyISAM AUTO_INCREMENT=2308373 DEFAULT CHARSET=utf8;
+  KEY `id_deptorigen` (`id_deptorigen`),
+  KEY `id_capitulo` (`id_capitulo`),
+  KEY `id_partida` (`id_partida`),
+  KEY `id_subpartida` (`id_subpartida`)
+) ENGINE=MyISAM AUTO_INCREMENT=3039311 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `declaraimp` */
 
@@ -266,8 +269,11 @@ CREATE TABLE `declaraimp` (
   KEY `id_paisprocedencia` (`id_paisprocedencia`),
   KEY `id_posicion` (`id_posicion`),
   KEY `id_ciiu` (`id_ciiu`),
-  KEY `id_deptorigen` (`id_deptorigen`)
-) ENGINE=MyISAM AUTO_INCREMENT=11811579 DEFAULT CHARSET=utf8;
+  KEY `id_deptorigen` (`id_deptorigen`),
+  KEY `id_capitulo` (`id_capitulo`),
+  KEY `id_partida` (`id_partida`),
+  KEY `id_subpartida` (`id_subpartida`)
+) ENGINE=MyISAM AUTO_INCREMENT=12733341 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `departamento` */
 
@@ -362,7 +368,7 @@ CREATE TABLE `indicador` (
   `indicador_finsert` datetime NOT NULL,
   `indicador_fupdate` datetime NOT NULL,
   PRIMARY KEY (`indicador_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=153 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=151 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `menu` */
 
@@ -559,6 +565,19 @@ CREATE TABLE `tipo_indicador` (
   `tipo_indicador_html` text NOT NULL,
   PRIMARY KEY (`tipo_indicador_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+
+/*Table structure for table `update_info` */
+
+DROP TABLE IF EXISTS `update_info`;
+
+CREATE TABLE `update_info` (
+  `update_info_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `update_info_product` enum('aduanas','sobordos') NOT NULL,
+  `update_info_trade` enum('impo','expo') NOT NULL,
+  `update_info_from` date NOT NULL,
+  `update_info_to` date NOT NULL,
+  PRIMARY KEY (`update_info_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `user` */
 

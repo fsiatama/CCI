@@ -188,7 +188,7 @@ class Excel
 	{
 		foreach ($this->arrHead as $key => $value) {
 			
-			$arr          = array_column($this->data, $value);
+			$arr          = Helpers::arrayColumn($this->data, $value);
 			$firstElement = array_shift($arr);
 			$range        = $key.($this->rowHeaderNumber + 1).':'.$key.($this->rowHeaderNumber + $this->total);
 			

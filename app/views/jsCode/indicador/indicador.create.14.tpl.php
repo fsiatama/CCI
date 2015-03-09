@@ -32,7 +32,7 @@
 		,forceSelection:true
 		,allowNewData:true
 		,extraItemCls:'x-tag'
-		,allowBlank:true
+		,allowBlank:false
 		,extraItemStyle:'border-width:2px'
 		,stackItems:true
 		,mode:'remote'
@@ -51,7 +51,6 @@
 		,valueField:'id_subpartida'
 		,tpl: resultTplSubpartida
 		,displayFieldTpl:'({id_subpartida}) - {subpartida}'
-		,allowBlank:false
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {
@@ -81,11 +80,11 @@
 			'</div>' +
 		'</tpl>'
 	);
-	
+
 	var comboPaisDestino = new Combo({
 		id:module+'comboPaisDestino'
 		,singleMode:true
-		,fieldLabel:'<?= Lang::get('indicador.comtrade_columns_title.pais_destino'); ?>'
+		,fieldLabel:'<?= Lang::get('indicador.comtrade_columns_title.pais'); ?>'
 		,name:'id_pais_destino[]'
 		,store:storePaisDestino
 		,displayField:'country'
@@ -118,7 +117,7 @@
 		,store:arrYears
 		,fieldLabel:Ext.ux.lang.reports.selectYearTo
 	});
-	
+
 	var formIndicador = new Ext.FormPanel({
 		baseCls:'x-plain'
 		,id:module + 'formIndicador'
@@ -268,11 +267,11 @@
 
 	function getDescription () {
 		var arrDescription = [];
-		
+
 		var arrValues      = [];
 		var selection      = Ext.getCmp(module+'comboPaisDestino').getSelectedRecords();
 		var label          = Ext.getCmp(module+'comboPaisDestino').fieldLabel;
-		
+
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('country'));
 		});
@@ -286,7 +285,7 @@
 		arrValues      = [];
 		selection      = Ext.getCmp(module+'comboSubpartida').getSelectedRecords();
 		label          = Ext.getCmp(module+'comboSubpartida').fieldLabel;
-		
+
 		Ext.each(selection,function(row){
 			arrValues.push('['+row.get('id_subpartida')+'] ' + row.get('subpartida'));
 		});
@@ -302,7 +301,7 @@
 		arrValues     = [];
 
 		arrValues.push(yearIni + ' - ' + yearFin);
-		
+
 		arrDescription.push({
 			label: Ext.ux.lang.reports.period
 			,values: arrValues

@@ -94,15 +94,15 @@ class DeclaracionesRepo extends BaseRepo {
 		if ($this->scale == '2') {
 			//escala de miles
 			//$this->xAxisname   = '';
-			$this->pYAxisName  = Lang::get('indicador.reports.priceThousands');
+			$this->pYAxisName  = ($this->tipo_indicador_activador != 'precio') ? Lang::get('indicador.reports.quantityThousands') : Lang::get('indicador.reports.priceThousands') ;
 		} elseif ($this->scale == '3') {
 			//escala de millones
 			//$this->xAxisname   = '';
-			$this->pYAxisName  = Lang::get('indicador.reports.priceMillions');
+			$this->pYAxisName  = ($this->tipo_indicador_activador != 'precio') ? Lang::get('indicador.reports.quantityMillions') : Lang::get('indicador.reports.priceMillions') ;
 		} else {
 			//escala de unidades
 			//$this->xAxisname   = '';
-			$this->pYAxisName  = Lang::get('indicador.reports.priceUnit');
+			$this->pYAxisName  = ($this->tipo_indicador_activador != 'precio') ? Lang::get('indicador.reports.quantityUnit') : Lang::get('indicador.reports.priceUnit') ;
 		}
 	}
 
@@ -1817,12 +1817,12 @@ class DeclaracionesRepo extends BaseRepo {
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
 		$this->setRange('ini');
-		$yearFirst = $arrFiltersValues['anio_ini'];
-		$yearLast  = $arrFiltersValues['anio_fin'];
+		$yearFirst = empty($arrFiltersValues['anio_ini']) ? '' : $arrFiltersValues['anio_ini'];
+		$yearLast  = empty($arrFiltersValues['anio_fin']) ? '' : $arrFiltersValues['anio_fin'];
 		$rangeYear = range($yearFirst, $yearLast);
 
-		$id_pais_destino = $arrFiltersValues['id_pais_destino'];
-		$id_subpartida   = $arrFiltersValues['id_subpartida'];
+		$id_pais_destino = empty($arrFiltersValues['id_pais_destino']) ? '' : $arrFiltersValues['id_pais_destino'];
+		$id_subpartida   = empty($arrFiltersValues['id_subpartida']) ? '' : $arrFiltersValues['id_subpartida'];
 
 		if (
 			empty($yearFirst) ||
@@ -2997,7 +2997,9 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrData,
 			'periodo',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			$this->pYAxisName
 		);
 
 		$result = [

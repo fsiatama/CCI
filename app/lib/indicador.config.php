@@ -554,7 +554,7 @@ return [
 				'field'      => 'id_pais_destino',
 				'field_expo' => 'id_pais_destino',
 				'field_impo' => 'id_pais_destino',
-				'required'   => false,
+				'required'   => true,
 				'multivalue' => false,
 			],[
 				'field'      => 'anio_ini',
