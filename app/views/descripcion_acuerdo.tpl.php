@@ -9,9 +9,9 @@ $flag = '';
 if (empty($row['acuerdo_mercado_id'])) {
 	$flag = 'img/flags/64/'.$row['pais_iata'].'.png';
 } else {
-	$flag = 'img/flags/markets/'.$row['mercado_bandera'].'.png';
+	$flag = 'img/flags/markets/'.$row['mercado_bandera'];
 }
-$flag = ( file_exists(PATH_RAIZ.$flag) ) ? URL_RAIZ.$flag : 'holder.js/64x64/sky/size:7/text:' . $partner ;
+$flag = ( is_file(PATH_RAIZ.$flag) && file_exists(PATH_RAIZ.$flag) ) ? URL_RAIZ.$flag : 'holder.js/64x64/sky/size:7/text:' . $partner ;
 
 $acuerdo_url = '';
 if ( ! empty($row['acuerdo_url']) ) {

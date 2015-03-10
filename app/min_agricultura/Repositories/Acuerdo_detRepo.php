@@ -664,8 +664,6 @@ class Acuerdo_detRepo extends BaseRepo {
 			return $result;
 		}
 
-		$arrAgreementId = [];
-
 		$this->acuerdoRepo = new AcuerdoRepo;
 
 		$result = $this->acuerdoRepo->listByCountry( compact('countries', 'trade') );
@@ -674,8 +672,16 @@ class Acuerdo_detRepo extends BaseRepo {
 			return $result;
 		}
 
-		$arrAgreementId = Helpers::arrayColumn( $result['data'],  'acuerdo_id' );
-		$rowAgreement   = array_shift($result['data']);
+		$this->acuerdoRepo = new AcuerdoRepo;
+
+		$rowAgreement = array_shift($result['data']);
+		$acuerdo_id   = $rowAgreement['acuerdo_id'];
+		$result       = $this->acuerdoRepo->listId( compact('acuerdo_id') );
+
+		if (!$result['success']) {
+			return $result;
+		}
+		$rowAgreement = array_shift($result['data']);
 
 		//productos solo deberia venir uno
 		$product = array_shift($products);
@@ -688,17 +694,25 @@ class Acuerdo_detRepo extends BaseRepo {
 		$rowAgreementDet = [];
 
 		foreach ($result['data'] as $key => $row) {
-			if ( $row['acuerdo_intercambio'] == $trade && in_array($row['acuerdo_det_acuerdo_id'], $arrAgreementId) ) {
-				$rowAgreementDet = $row;
+			if ( $row['acuerdo_intercambio'] == $trade && $row['acuerdo_det_acuerdo_id'] == $acuerdo_id ) {
+				
+				$arrAgreementDet[] = $row;
 			}
 		}
-		if ( empty($rowAgreementDet) ) {
+		if ( empty($arrAgreementDet) ) {
 			return [
 				'success' => false,
 				'error'   => Lang::get('error.no_records_found')
 			];
 			return $result;
 		}
+		$return = [
+			'success'         => true,
+			'rowAgreement'    => $rowAgreement,
+			'arrAgreementDet' => $arrAgreementDet,
+			'total'           => count($arrAgreementDet),
+		];
+		return $return;
 		//var_dump($rowAgreementDet, $rowAgreement);
 
 		$this->contingenteRepo  = new ContingenteRepo;

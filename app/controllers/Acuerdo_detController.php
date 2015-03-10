@@ -29,7 +29,28 @@ class Acuerdo_detController {
 
 	public function publicSearchAction($urlParams, $postParams)
 	{
-		return $this->acuerdo_detRepo->publicSearch($postParams);
+		$result = $this->acuerdo_detRepo->publicSearch($postParams);
+		if ($result['success']) {
+			$is_template = true;
+
+			extract($result);
+
+			$params = compact('is_template', 'rowAgreement', 'arrAgreementDet', 'total');
+
+			$view = new View('descripcion_acuerdo_det', $params);
+
+			ob_start();
+
+			$view->execute();
+			$html = ob_get_clean();
+
+			$result = [
+				'success' => true,
+				'html'    => $html,
+				'total'   => $total,
+			];
+		}
+		return $result;
 	}
 	
 	public function executeAction($urlParams, $postParams)

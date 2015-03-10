@@ -338,23 +338,19 @@ jQuery(function($) {
 						if(data.success){
 							var records = data.data;
 							var index   = 0;
-							$.each(records, function( key, row ) {
+							$("#grid-quota").html(data.html);
+							$('#pagination').twbsPagination({
+						        totalPages: data.total,
+						        visiblePages: 5,
+						        first: '&laquo;',
+						        prev: '&lsaquo;',
+						        next: '&rsaquo;',
+						        last: '&raquo;'
+						        /*onPageClick: function (event, page) {
+						            $('#page-content').text('Page ' + page);
+						        }*/
+						    });
 
-								/*index = ( (index + 1) > keys.length ) ? (index - keys.length) : (index + 1);
-
-								var agreement = row.acuerdo_id;
-								var mapStyle  = mapStyles[index];
-
-								if (row.paises_iata) {
-									var countriesIata = row.paises_iata.split(',');
-									
-									$.each(countriesIata, function( i, iataCode ) {
-										paintCountry(iataCode, mapStyle, null, null, agreement);
-									});
-								} else {
-									paintCountry(row.pais_iata, mapStyle, null, null, agreement);
-								}*/
-							});
 						} else {
 							$("#modal-error-msg").html(data.error);
 							$('#errorModal').modal('show');
