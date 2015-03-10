@@ -12,6 +12,26 @@ foreach ($arrDescription as $value) {
 
 $htmlDescription .= '</ol>';
 
+$htmlExplanation = '
+  <div class="well bs-component">
+    <strong>Sobre una base de 10.000, el nivel de concentración puede ser:</strong>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <span class="badge">Concentración Baja</span>
+        IHH menor a <strong>1.000</strong>
+      </li>
+      <li class="list-group-item">
+        <span class="badge">Concentración Media</span>
+        IHH entre <strong>1.000 y 1.800</strong>
+      </li>
+      <li class="list-group-item">
+        <span class="badge">Concentración Alta</span>
+        IHH mayor a <strong>1.800</strong>
+      </li>
+    </ul>
+  </div>
+';
+$htmlExplanation = Inflector::compress($htmlExplanation);
 ?>
 
 /*<script>*/
@@ -127,39 +147,11 @@ $htmlDescription .= '</ol>';
 				,id: module + 'ColumnChart'
 				,plain:true
 			}]
-
-		/*},{
-			style:{padding:'0px'}
-			,border:true
-			,html: ''
-			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
-			},{
-				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 12
-				,width: 100
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeIndicador.load();
-				}
-			}]
 		},{
-			height:430
-			,html:'<div id="' + module + 'PieChart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'PieChart'
-				,plain:true
-			}]*/
+			style:{padding:'0px'}
+			,html: '<div class="bootstrap-styles">' +
+					'<div class="clearfix"></div><?= $htmlExplanation; ?>' +
+			'</div>'
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridIndicador]

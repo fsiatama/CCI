@@ -350,6 +350,7 @@ jQuery(function($) {
 						            $('#page-content').text('Page ' + page);
 						        }*/
 						    });
+						    Holder.run();
 
 						} else {
 							$("#modal-error-msg").html(data.error);

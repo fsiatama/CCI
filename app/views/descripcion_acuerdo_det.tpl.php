@@ -11,7 +11,8 @@ if (empty($rowAgreement['acuerdo_mercado_id'])) {
 } else {
 	$flag = 'img/flags/markets/'.$rowAgreement['mercado_bandera'];
 }
-$flag = ( file_exists(PATH_RAIZ.$flag) ) ? URL_RAIZ.$flag : 'holder.js/64x64/sky/size:7/text:' . $partner ;
+
+$flag = ( is_file(PATH_RAIZ.$flag) && file_exists(PATH_RAIZ.$flag) ) ? URL_RAIZ.$flag : 'holder.js/64x64/sky/size:7/text:' . $partner ;
 
 $acuerdo_url = '';
 if ( ! empty($rowAgreement['acuerdo_url']) ) {

@@ -4,7 +4,8 @@ Ext.ux.lang.error = {
 	 ,close_tab: 'Para realizar esta acción necesita cerrar la pestaña de crear o modificar que se encuentra abierta'
 	 ,invalid_pass_input: 'No es una contraseña válida. Debe contener al menos una letra mayúscula, una letra minúscula y al menos un número.'
 	 ,empty_fields: 'Compruebe el formulario ya que se encontraron campos vacíos o inválidos los cuales están resaltados en rojo.'
-	 ,empty_country: 'Por favor seleccione un país o un mercado'
+	 ,empty_country: 'Por favor seleccione un país o un bloque comercial'
+	 ,empty_product: 'Por favor seleccione un producto o un sector'
 	 ,ajaxTimeOut: 'La consulta está tardando más de lo normal,<br>seguramente el servidor se encuentra ocupado,<br>por favor vuelva a intentar en unos segundos!'
 }
 

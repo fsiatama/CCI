@@ -355,7 +355,7 @@ function integerFormat (value) {
 	}
 }
 //valida en conjunto que exista un pais o un mercado seleccionado
-function isValidCountry (fieldId1, fieldId2) {
+function isValidComplement (fieldId1, fieldId2) {
 	var field1 = Ext.getCmp(fieldId1);
 	var field2 = Ext.getCmp(fieldId2);
 	if (!field1 || !field2) {

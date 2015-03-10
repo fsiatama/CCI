@@ -22,6 +22,12 @@ return [
 				'required'   => false,
 				'multivalue' => true,
 			],[
+				'field'      => 'sector_id',
+				'field_expo' => 'sector_id',
+				'field_impo' => 'sector_id',
+				'required'   => false,
+				'multivalue' => false,
+			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
 				'field_impo' => 'anio',
@@ -56,6 +62,12 @@ return [
 				'required'   => false,
 				'multivalue' => true,
 			],[
+				'field'      => 'sector_id',
+				'field_expo' => 'sector_id',
+				'field_impo' => 'sector_id',
+				'required'   => false,
+				'multivalue' => false,
+			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
 				'field_impo' => 'anio',
@@ -84,11 +96,20 @@ return [
 				'required'      => false,
 				'itComplements' => true, //son complemento del filtro id_pais
 			],[
-				'field'      => 'id_posicion',
-				'field_expo' => 'id_posicion',
-				'field_impo' => 'id_posicion',
-				'required'   => true,
-				'multivalue' => true,
+				'field'              => 'id_posicion',
+				'field_expo'         => 'id_posicion',
+				'field_impo'         => 'id_posicion',
+				'required'           => false,
+				'multivalue'         => true,
+				'requiredComplement' => true,
+				'complement'         => ['sector_id'],
+			],[
+				'field'         => 'sector_id',
+				'field_expo'    => 'sector_id',
+				'field_impo'    => 'sector_id',
+				'required'      => false,
+				'multivalue'    => false,
+				'itComplements' => true, //son complemento del filtro id_posicion
 			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',

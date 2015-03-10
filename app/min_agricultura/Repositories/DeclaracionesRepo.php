@@ -201,6 +201,16 @@ class DeclaracionesRepo extends BaseRepo {
 						$filterValue = implode(',', $arr);
 					}
 
+				} elseif ($filter['field'] == 'sector_id') {
+
+					//Trae los productos configurados en el sector seleccionado
+					$result = $this->findProductsBySector($arrFiltersValues['sector_id']);
+					if (!$result['success']) {
+						return $result;
+					}
+					$products = $result['data'];
+					$this->model->setId_posicion($products);
+					
 				} elseif (!empty($filter['itComplements'])) {
 					//si el filtro es complemento de otro no lo debe tener en cuenta
 					$setFilterValue = false;
