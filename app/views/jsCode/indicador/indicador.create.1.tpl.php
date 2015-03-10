@@ -383,7 +383,7 @@
 		arrValues      = [];
 		selection      = Ext.getCmp(module+'comboSector').getSelectedRecords();
 		label          = Ext.getCmp(module+'comboSector').fieldLabel;
-		
+
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('sector_nombre'));
 		});
@@ -411,7 +411,7 @@
 	}
 
 	function fnSave () {
-		if (!isValidCountry(module+'comboPais', module+'comboMercado')) {
+		if (!isValidComplement(module+'comboPais', module+'comboMercado')) {
 			Ext.Msg.show({
 				title: Ext.ux.lang.messages.warning
 				,msg: Ext.ux.lang.error.empty_country

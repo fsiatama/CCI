@@ -438,7 +438,7 @@
 	}
 
 	function fnSave () {
-		if (!isValidCountry(module+'comboPais', module+'comboMercado')) {
+		if (!isValidComplement(module+'comboPais', module+'comboMercado')) {
 			Ext.Msg.show({
 				title: Ext.ux.lang.messages.warning
 				,msg: Ext.ux.lang.error.empty_country

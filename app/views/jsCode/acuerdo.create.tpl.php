@@ -328,7 +328,7 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 	}
 
 	function fnSave () {
-		if (!isValidCountry(module+'comboPais', module+'comboMercado')) {
+		if (!isValidComplement(module+'comboPais', module+'comboMercado')) {
 			Ext.Msg.show({
 				title: Ext.ux.lang.messages.warning
 				,msg: '<?= Lang::get('error.acuerdo_invalid_country'); ?>'
