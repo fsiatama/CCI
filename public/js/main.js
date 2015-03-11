@@ -345,10 +345,12 @@ jQuery(function($) {
 						        first: '&laquo;',
 						        prev: '&lsaquo;',
 						        next: '&rsaquo;',
-						        last: '&raquo;'
-						        /*onPageClick: function (event, page) {
-						            $('#page-content').text('Page ' + page);
-						        }*/
+						        last: '&raquo;',
+						        onPageClick: function (event, page) {
+						        	console.log(page);
+						        	//$('#agreementDetTabs #agreementDet_' + page).tab('show');
+						        	$('#agreementDetTabs li:eq(' + page + ') a').tab('show');
+						        }
 						    });
 						    Holder.run();
 

@@ -45,6 +45,53 @@ if ( ! empty($rowAgreement['acuerdo_decreto']) ) {
 	';
 }
 
+/*<div role="tabpanel">
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="home">...</div>
+    <div role="tabpanel" class="tab-pane" id="profile">...</div>
+    <div role="tabpanel" class="tab-pane" id="messages">...</div>
+    <div role="tabpanel" class="tab-pane" id="settings">...</div>
+  </div>
+
+</div>*/
+$htmlAgreementDetItems = '';
+$htmlAgreementDetTabs = '';
+foreach ($arrAgreementDet as $key => $row) {
+
+	$id = 'agreementDet_'.($key + 1);
+
+	$htmlAgreementDetTabs .= '
+		<li><a href="#'. $id .'" data-toggle="tab">'. $id .'</a></li>
+	';
+	$htmlAgreementDetItems .= '
+		<div role="tabpanel" class="tab-pane" id="'. $id .'">
+		 Page '. $id .'
+		</div>
+	';
+}
+
+$htmlAgreementDet = '
+<div role="tabpanel">
+	<ul class="nav hide nav-tabs" id="agreementDetTabs">
+		'. $htmlAgreementDetTabs .'
+	</ul>
+	<div class="tab-content">
+		'. $htmlAgreementDetItems .'
+	</div>
+</div>
+';
+
+
 ?>
 
 
@@ -74,18 +121,14 @@ if ( ! empty($rowAgreement['acuerdo_decreto']) ) {
 <hr class="half-margins">
 <ul id="pagination" class="pagination-sm"></ul>
 
+<?= $htmlAgreementDet; ?>
+
 <div class="table-responsive">
 	<table class="table table-bordered table-striped">
 	  <colgroup>
 	    <col class="col-xs-1">
 	    <col class="col-xs-7">
 	  </colgroup>
-	  <thead>
-	    <tr>
-	      <th>Class</th>
-	      <th>Description</th>
-	    </tr>
-	  </thead>
 	  <tbody>
 	    <tr>
 	      <th scope="row">
