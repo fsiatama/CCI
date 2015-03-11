@@ -560,5 +560,80 @@ class IndicadorRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function executeQuadrants($params)
+	{
+		extract($params);
+
+		$products  = ( !empty($products) && is_array($products) ) ? $products : [] ;
+		$countries = ( !empty($countries) && is_array($countries) ) ? $countries : [] ;
+
+		if (empty($products)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+
+		$lines            = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.cuadrantes');
+		$arrFiltersName   = Helpers::arrayGet($lines, 'filters.cuadrantes');
+
+		if (empty($arrExecuteConfig)) {
+			return [
+				'success' => false,
+				'error'   => 'There is no configuration for this method'
+			];
+		}
+
+		$repoFileName   = PATH_MODELS.'Repositories/'.$arrExecuteConfig['repoClassName'].'.php';
+		$repoClassName  = $arrExecuteConfig['repoClassName'];
+		$repoMethodName = 'execute' . $arrExecuteConfig['methodName'];
+
+		if ( ! file_exists($repoFileName)) {
+			return [
+				'success' => false,
+				'error'   => 'unavailable repo '. $repoClassName
+			];
+		}
+		require $repoFileName;
+
+		$now = new DateTime;
+  		$now->modify( '-1year' );
+  		$yearLast = $now->format('Y'); //toma el año inmediatamente anterior
+  		$now->modify( '-4year' );
+  		$yearFirst = $now->format('Y'); //toma 5 hacia a tras
+
+		$arrFilters = [
+			'id_subpartida:'  . implode(',', $products),
+			'id_pais_destino:'. implode(',', $countries),
+			'anio_ini:'       . $yearFirst,
+			'anio_fin:'       . $yearLast,
+		];
+		$params       = [
+			'indicador_filtros'        => implode('||', $arrFilters),
+			'tipo_indicador_activador' => 'volumen',
+		];
+
+		$repo = new $repoClassName(
+			$params,
+			$arrFiltersName,
+			'',
+			12,
+			1
+		);
+		if (!method_exists($repo, $repoMethodName)) {
+			return [
+				'success' => false,
+				'error'   => 'unavailable method '. $repoMethodName
+			];
+		}
+		$rsExecuted = call_user_func_array([$repo, $repoMethodName], []);
+		//if ( ! $rsExecuted['success'] ) {
+			return $rsExecuted;
+		//}
+
+	}
+
 }
 

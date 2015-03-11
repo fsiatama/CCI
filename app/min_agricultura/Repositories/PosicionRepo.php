@@ -38,14 +38,35 @@ class PosicionRepo extends BaseRepo {
 
 		if (!empty($valuesqry) && $valuesqry) {
 			$query = explode('|',$query);
+
 			$posicion->setId_posicion(implode('", "', $query));
 			$posicion->setId_partida(implode('", "', $query));
 			$posicion->setId_subpartida(implode('", "', $query));
 			$posicion->setId_capitulo(implode('", "', $query));
 
-			return $posicionAdo->inSearch($posicion);
-		}
-		else {
+			$result = $posicionAdo->inSearch($posicion);
+			if ( ! $result['success'] || $result['total'] == 0 ) {
+				return $result;
+			}
+
+			$arrData = [];
+
+
+			foreach ($result['data'] as $key => $row) {
+
+				//var_dump(in_array($row['id_posicion'], $query), $row['id_posicion']);
+
+				if ( in_array($row['id_posicion'], $query)  ) {
+					$arrData[] = $row;
+				}
+			}
+
+			return [
+				'success' => true,
+				'total'   => count($arrData),
+				'data'    => $arrData,
+			];
+		} else {
 			$posicion->setId_posicion($query);
 			$posicion->setPosicion($query);
 			if (!empty($selected)) {

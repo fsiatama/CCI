@@ -1,7 +1,8 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Subpartida.php';
-require PATH_APP.'min_agricultura/Ado/SubpartidaAdo.php';
+require PATH_MODELS.'Entities/Subpartida.php';
+require PATH_MODELS.'Ado/SubpartidaAdo.php';
+require PATH_MODELS.'Repositories/SectorRepo.php';
 require_once ('BaseRepo.php');
 
 class SubpartidaRepo extends BaseRepo {
@@ -23,6 +24,31 @@ class SubpartidaRepo extends BaseRepo {
 
 	public function setData($params, $action)
 	{
+		
+	}
+
+	public function listAgriculture($params)
+	{
+		extract($params);
+
+		$linesConfig = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+
+		$sector_id  = Helpers::arrayGet( $linesConfig, 'sectorIdAgriculture' );
+		$sectorRepo = new SectorRepo;
+		$result     = $sectorRepo->findPrimaryKey($sector_id);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$row      = array_shift( $result['data'] );
+		$products = $row['sector_productos'];
+
+		$subpartida->setId_subpartida($query);
+		$subpartida->setSubpartida($query);
+
+		//metodo incompleto, no debe ser inplementado
+
 		
 	}
 

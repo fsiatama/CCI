@@ -41,12 +41,12 @@
 				</div>
 
 				<div class="form-group">
-					<label for="ms-filter-product">Productos</label>
+					<label for="ms-filter-product" class="margin-bottom10">Productos</label>
 					<input type="text" class="form-control" id="ms-filter-product">
 				</div>
 
 				<div class="form-group">
-					<label for="ms-filter-country">Socio Comercial</label>
+					<label for="ms-filter-country" class="margin-bottom10">Socio Comercial</label>
 					<input type="text" class="form-control" id="ms-filter-country">
 				</div>
 

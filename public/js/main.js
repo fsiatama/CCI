@@ -125,7 +125,7 @@ jQuery(function($) {
 
 		var msProduct = $('#ms-filter-product').magicSuggest({
 			allowFreeEntries: false
-			,data: 'posicion/listInAgreement'
+			,data: 'posicion/list-in-agreement'
 			,displayField: 'posicion'
 			,highlight:true
 			,maxSelection: 1
@@ -149,6 +149,9 @@ jQuery(function($) {
 					'</div>' +
 				'</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
 			}
+			,maxSelectionRenderer: function(v){
+				return 'Solo puedes seleccionar ' + v + ' item' + (v > 1 ? 's':'');
+			}
 		});
 		
 		$(msProduct).on('beforeload', function(c){
@@ -158,7 +161,7 @@ jQuery(function($) {
 		
 		var msCountry = $('#ms-filter-country').magicSuggest({
 			allowFreeEntries: false
-			,data: 'pais/listInAgreement'
+			,data: 'pais/list-in-agreement'
 			,displayField: 'pais'
 			,highlight:true
 			,maxSelection: 5
@@ -172,6 +175,9 @@ jQuery(function($) {
 			,valueField: 'id_pais'
 			,selectionRenderer: function(data){
 				return data.pais + ' (<b>' + data.pais_iata + '</b>)';
+			}
+			,maxSelectionRenderer: function(v){
+				return 'Solo puedes seleccionar ' + v + ' item' + (v > 1 ? 's':'');
 			}
 		});
 
@@ -198,7 +204,7 @@ jQuery(function($) {
 
 				$.ajax({
 					type:"POST"
-					,url:'acuerdo/publicSearch'
+					,url:'acuerdo/public-search'
 					,data:{
 						products: products,
 						countries: countries,
@@ -244,7 +250,7 @@ jQuery(function($) {
 
 		var msCountry = $('#ms-filter-country').magicSuggest({
 			allowFreeEntries: false
-			,data: 'pais/listInAgreement'
+			,data: 'pais/list-in-agreement'
 			,displayField: 'pais'
 			,highlight:true
 			,maxSelection: 1
@@ -261,6 +267,9 @@ jQuery(function($) {
 			,selectionRenderer: function(data){
 				return data.pais + ' (<b>' + data.pais_iata + '</b>)';
 			}
+			,maxSelectionRenderer: function(v){
+				return 'Solo puedes seleccionar ' + v + ' item' + (v > 1 ? 's':'');
+			}
 		});
 
 		$(msCountry).on('beforeload', function(c){
@@ -270,7 +279,7 @@ jQuery(function($) {
 
 		var msProduct = $('#ms-filter-product').magicSuggest({
 			allowFreeEntries: false
-			,data: 'posicion/listInAgreement'
+			,data: 'posicion/list-in-agreement'
 			,disabled: true
 			,displayField: 'posicion'
 			,highlight:true
@@ -296,6 +305,9 @@ jQuery(function($) {
 						'<div style="color: #999; font-size: 10px">' + data.posicion + '</div>' +
 					'</div>' +
 				'</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
+			}
+			,maxSelectionRenderer: function(v){
+				return 'Solo puedes seleccionar ' + v + ' item' + (v > 1 ? 's':'');
 			}
 		});
 
@@ -367,6 +379,92 @@ jQuery(function($) {
 		});
 
 	}// End of if ( $('#grid-quota').length > 0 )
+
+	if ( $('#grid-quadrant').length > 0 ) {
+
+		var msProduct = $('#ms-filter-product').magicSuggest({
+			allowFreeEntries: false
+			,data: 'subpartida/list'
+			,displayField: 'subpartida'
+			,highlight:true
+			,maxSelection: 1
+			,minChars:2
+			,placeholder: 'Select...'
+			,mode: 'remote'
+			,resultsField: 'data'
+			,selectionPosition: 'bottom'
+			,selectionStacked: true
+			,typeDelay: 600
+			,useZebraStyle: true
+			,valueField: 'id_subpartida'
+			,selectionRenderer: function(data){
+				return data.subpartida + ' (<b>' + data.id_subpartida + '</b>)';
+			}
+			,renderer: function(data){
+				return '<div style="padding: 5px; overflow:hidden;">' +
+					'<div style="float: left; margin-left: 5px">' +
+						'<div style="font-weight: bold; color: #333; font-size: 11px; line-height: 11px">' + data.id_subpartida + '</div>' +
+						'<div style="color: #999; font-size: 10px">' + data.subpartida + '</div>' +
+					'</div>' +
+				'</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
+			}
+			,maxSelectionRenderer: function(v){
+				return 'Solo puedes seleccionar ' + v + ' item' + (v > 1 ? 's':'');
+			}
+		});
+		
+		var msCountry = $('#ms-filter-country').magicSuggest({
+			allowFreeEntries: false
+			,data: 'comtrade_country/list'
+			,displayField: 'country'
+			,highlight:true
+			,maxSelection: 1
+			,placeholder: 'Select...'
+			,mode: 'remote'
+			,resultsField: 'data'
+			,selectionPosition: 'bottom'
+			,selectionStacked: true
+			,typeDelay: 600
+			,useZebraStyle: true
+			,valueField: 'id_country'
+			,maxSelectionRenderer: function(v){
+				return 'Solo puedes seleccionar ' + v + ' item' + (v > 1 ? 's':'');
+			}
+		});
+
+		$('#searchQuadrantForm').on('submit', function(event){
+			
+			var countries = msCountry.getValue();
+			var products  = msProduct.getValue();
+			
+			if ( products.length > 0) {
+
+				var form = $(this);
+				var btn = $('#searchQuadrantSubmit');
+
+				$.ajax({
+					type:"POST"
+					,url:'indicador/public-quadrants'
+					,data:{
+						products: products,
+						countries: countries,
+					}
+					,dataType:"json"
+					,success:function(data){
+						if(data.success){
+							var records = data.data;
+							
+						} else {
+							$("#modal-error-msg").html(data.error);
+							$('#errorModal').modal('show');
+						}
+					}
+				}).always(function(){
+				});
+			}
+			event.preventDefault();
+		});
+	}// End of if ( $('#map-quadrant').length > 0 )
 
 });
 
@@ -457,7 +555,7 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
 		google.maps.event.addListener(polygonObj, 'click', function (event) {
 			$.ajax({
 				type:"POST"
-				,url:'acuerdo/listIdPublic'
+				,url:'acuerdo/list-id-public'
 				,data:{
 					acuerdo_id: agreement
 				}

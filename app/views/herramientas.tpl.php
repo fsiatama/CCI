@@ -6,6 +6,16 @@
                     <strong class="">Herramientas</strong>
                 </div>
                 <div class="panel-body">
+                        <h2>Posicionamiento y dinamismo de los <strong>productos</strong></h2>
+                        <p>
+                            Priorización de productos a partir de la demanda “Metodología de cuadrantes” – exploración preliminar de mercados
+                        </p>
+                        <ul>
+                            <li>
+                                <a href="<?= URL_RAIZ; ?>posicionamiento-dinamismo-productos">Haz click aqui</a>
+                            </li>
+                        </ul>
+                        <hr class="half-margins">
                         <h2>Cronograma de desgravación y contingentes <strong>otorgados</strong></h2>
                         <p>
                             El siguiente link te permite consultar Las desgravaciones otorgadas a Colombia 

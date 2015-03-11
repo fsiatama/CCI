@@ -1,13 +1,13 @@
 
 <div class="container white">
 	<header class="page-header">
-		<h3>Cronograma de desgravación y contingentes otorgados</h3>
+		<h3>Posicionamiento y dinamismo de los productos</h3>
 	</header>
 	<div class="row">
 
 		<div class="col-md-12">
 			<p class="lead">
-				Aquí podrá consultar Las desgravaciones otorgadas a Colombia por producto, por País y con los años proyectados, así como los tamaños de los contingentes y la tasa extra contingente.
+				Análisis dinámico para la diferenciación de productos y mercados según el comportamiento de la demanda (importaciones) y el atractivo comercial que representan los mercados de destino
 				<br>
 				Para la búsqueda se debe seleccionar:
 				<ul>
@@ -18,33 +18,18 @@
 						Segundo, un país con los que existen acuerdos comerciales.
 					</li>
 					<li>
-						Tercero, un producto de la lista, la cual contiene todos los productos del acuerdo comercial con el país seleccionado anteriormente
+						Tercero, un producto de la lista, la cual contiene todos los productos del arancel de aduanas a 6 dígitos
 					</li>
 				</ul>
 				<hr class="half-margins">
 			</p>
 		</div>
 
-
-
 		<aside class="col-md-3">
 
-			<form action="#" method="POST" role="form" id="searchQuotaForm">
+			<form action="#" method="POST" role="form" id="searchQuadrantForm">
 				<legend>Filtros</legend>
 
-				<div class="radio">
-				  <label>
-				    <input type="radio" name="agreementTrade" id="optionsRadios1" value="impo" checked="checked">
-				    Soy un importador
-				  </label>
-				</div>
-				<div class="radio">
-				  <label>
-				    <input type="radio" name="agreementTrade" id="optionsRadios2" value="expo">
-				    Soy un exportador
-				  </label>
-				</div>
-				
 				<div class="form-group">
 					<label for="ms-filter-country" class="margin-bottom10">Socio Comercial</label>
 					<input type="text" class="form-control" id="ms-filter-country">
@@ -56,7 +41,7 @@
 				</div>
 
 
-				<button type="submit" class="btn btn-primary" id="searchQuotaSubmit">Buscar</button>
+				<button type="submit" class="btn btn-primary" id="searchQuadrantSubmit">Buscar</button>
 			</form>
 
 		</aside>
@@ -68,7 +53,7 @@
 
 				</div>
 				<div class="panel-body">
-					<div id="grid-quota"></div>
+					<div id="grid-quadrant"></div>
 				</div>
 			</div>
 

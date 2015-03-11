@@ -837,6 +837,33 @@ return [
 				'multivalue' => true,
 			]
 		],
+		'cuadrantes' => [
+			[
+				'field'      => 'id_subpartida',
+				'field_expo' => 'id_subpartida',
+				'field_impo' => 'id_subpartida',
+				'required'   => true,
+				'multivalue' => true,
+			],[
+				'field'      => 'id_pais_destino',
+				'field_expo' => 'id_pais_destino',
+				'field_impo' => 'id_pais_destino',
+				'required'   => false,
+				'multivalue' => false,
+			],[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'yearRange'  => ['anio_fin'],
+			],[
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
+			]
+		],
 	],
 	'executeConfig' => [
 		'1'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaRelativa'],
@@ -864,6 +891,7 @@ return [
 		'23' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ComtradePuestoColombiaProveedor'],
 		'contingente' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'AcumuladoContingente'],
 		'acuerdo_det' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'AcumuladoPosicionPais'],
+		'cuadrantes'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ComtradeCuadrantes'],
 	],
 	'yearsAvailable' => ['2005','2006','2007','2008','2009','2010', '2011', '2012', '2013', '2014'],
 	'periods' => [
