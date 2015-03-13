@@ -32,7 +32,7 @@ class ComtradeTempAdo extends Connection {
 		$this->arrdata   = $arrdata;
 		$this->conn      = $this->getConnection();
 		
-		$this->conn->debug=1;
+		//$this->conn->debug=1;
 		ADOdb_Active_Record::SetDatabaseAdapter($this->conn);
 		//$ADODB_ASSOC_CASE = 2;
 		$this->createTable();
@@ -69,7 +69,7 @@ class ComtradeTempAdo extends Connection {
 				}
 			}
 			$this->model->save();
-			echo "<p>The Insert ID generated:"; print_r($this->model->id);
+			//echo "<p>The Insert ID generated:"; print_r($this->model->id);
 		}
 	}
 
@@ -149,96 +149,12 @@ class ComtradeTempAdo extends Connection {
 		$this->primaryKey = 'id';
 	}
 
-	protected function setData()
+	public function pivotSearch()
 	{
-		$declaraexp = $this->getModel();
 
-		$id = $declaraexp->getId();
-		$anio = $declaraexp->getAnio();
-		$periodo = $declaraexp->getPeriodo();
-		$id_empresa = $declaraexp->getId_empresa();
-		$id_paisdestino = $declaraexp->getId_paisdestino();
-		$id_capitulo = $declaraexp->getId_capitulo();
-		$id_partida = $declaraexp->getId_partida();
-		$id_subpartida = $declaraexp->getId_subpartida();
-		$id_posicion = $declaraexp->getId_posicion();
-		$id_ciiu = $declaraexp->getId_ciiu();
-		$valorfob = $declaraexp->getValorfob();
-		$valorcif = $declaraexp->getValorcif();
-		$peso_neto = $declaraexp->getPeso_neto();
-
-		$this->data = compact(
-			'id',
-			'anio',
-			'periodo',
-			'id_empresa',
-			'id_paisdestino',
-			'id_capitulo',
-			'id_partida',
-			'id_subpartida',
-			'id_posicion',
-			'id_ciiu',
-			'valorfob',
-			'valorcif',
-			'peso_neto'
-		);
-	}
-
-	public function create($declaraexp)
-	{
-		$conn = $this->getConnection();
-		$this->setModel($declaraexp);
-		$this->setData();
-
-		$sql = '
-			INSERT INTO declaraexp (
-				id,
-				anio,
-				periodo,
-				id_empresa,
-				id_paisdestino,
-				id_capitulo,
-				id_partida,
-				id_subpartida,
-				id_posicion,
-				id_ciiu,
-				valorfob,
-				valorcif,
-				peso_neto
-			)
-			VALUES (
-				"'.$this->data['id'].'",
-				"'.$this->data['anio'].'",
-				"'.$this->data['periodo'].'",
-				"'.$this->data['id_empresa'].'",
-				"'.$this->data['id_paisdestino'].'",
-				"'.$this->data['id_capitulo'].'",
-				"'.$this->data['id_partida'].'",
-				"'.$this->data['id_subpartida'].'",
-				"'.$this->data['id_posicion'].'",
-				"'.$this->data['id_ciiu'].'",
-				"'.$this->data['valorfob'].'",
-				"'.$this->data['valorcif'].'",
-				"'.$this->data['peso_neto'].'"
-			)
-		';
-		$resultSet = $conn->Execute($sql);
-		$result = $this->buildResult($resultSet, $conn->Insert_ID());
-
-		return $result;
-	}
-
-	public function pivotSearch($model)
-	{
-		$this->setModel($model);
-		$this->setOperator('IN');
-		
-		$conn = $this->getConnection();
-		$this->setData();
-
-		$sql = $this->buildPivotSelect();
-
-		$resultSet = $conn->Execute($sql);
+		$sql       = $this->buildPivotSelect();
+		$resultSet = $this->conn->Execute($sql);
+		//var_dump($resultSet);
 		$result = $this->buildResult($resultSet);
 
 		return $result;
@@ -248,22 +164,17 @@ class ComtradeTempAdo extends Connection {
 	{
 		require_once PATH_APP.'lib/pivottable.inc.php';
 		
-		$conn  = $this->getConnection();
-		$table = $this->getTable();
-		
-		$this->setJoins();
-		
-		$where = $this->buildSelectWhere();
+		//$where = $this->buildSelectWhere();
 
 		$sql = PivotTableSQL(
-		 	$conn,  										# adodb connection
-		 	$table,									  		# tables
-			$this->pivotRowFields,							# row fields
-			$this->pivotColumnFields,						# column fields
-			$where, 										# joins/where
-			$this->pivotTotalFields, 						# SUM fields
-			'',												# Function Label
-			$this->pivotGroupingFunction,					# Function (SUM, COUNT, AGV)
+		 	$this->conn,  							# adodb connection
+		 	$this->getTableName(),					# tables
+			$this->pivotRowFields,					# row fields
+			$this->pivotColumnFields,				# column fields
+			'', 								# joins/where
+			$this->pivotTotalFields, 				# SUM fields
+			'',										# Function Label
+			$this->pivotGroupingFunction,			# Function (SUM, COUNT, AGV)
 			false
 		);
 
@@ -275,23 +186,33 @@ class ComtradeTempAdo extends Connection {
 		return $sql;
 	}
 
+	protected function buildResult(&$resultSet)
+	{
+		$result = array();
+		
+		if(!$resultSet){
+			$result['success'] = false;
+			$result['error']  = $conn->ErrorMsg();
+		}
+		else{
+			$result['success'] = true;
+			$result['total']   = $resultSet->RecordCount();
+			$result['data']    = [];
+			while(!$resultSet->EOF){
+				$result['data'][] = $resultSet->fields;
+				$resultSet->MoveNext();
+			}
+			$resultSet->Close();
+		}
+
+		return $result;
+	}
+
 	public function buildSelect()
 	{
 		$sql = 'SELECT
-			 decl.id,
-			 decl.anio,
-			 decl.periodo,
-			 decl.id_empresa,
-			 decl.id_paisdestino,
-			 decl.id_capitulo,
-			 decl.id_partida,
-			 decl.id_subpartida,
-			 decl.id_posicion,
-			 decl.id_ciiu,
-			 decl.valorfob,
-			 decl.valorcif,
-			 decl.peso_neto
-			FROM declaraexp as decl
+			 
+			FROM 
 		';
 		
 		$sql .= $this->buildSelectWhere();
@@ -302,7 +223,6 @@ class ComtradeTempAdo extends Connection {
 	public function buildSelectWhere()
 	{
 		$filter = array();
-		$filterPosicion = array();
 		$operator = $this->getOperator();
 		$joinOperator = ' AND ';
 		foreach($this->data as $key => $data){

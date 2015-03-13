@@ -599,7 +599,7 @@ class IndicadorRepo extends BaseRepo {
 		require $repoFileName;
 
 		$now = new DateTime;
-  		$now->modify( '-1year' );
+  		$now->modify( '-2year' );
   		$yearLast = $now->format('Y'); //toma el año inmediatamente anterior
   		$now->modify( '-4year' );
   		$yearFirst = $now->format('Y'); //toma 5 hacia a tras

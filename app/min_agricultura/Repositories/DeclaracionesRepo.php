@@ -3600,7 +3600,7 @@ class DeclaracionesRepo extends BaseRepo {
 		if (
 			empty($yearFirst) ||
 			empty($yearLast) ||
-			empty($id_subpartida)
+			( empty($id_subpartida) && empty($id_pais_destino) )
 		) {
 			$result = [
 				'success' => false,
@@ -3617,6 +3617,9 @@ class DeclaracionesRepo extends BaseRepo {
 		if ( !empty($id_pais_destino) ) {
 			$reporter = $id_pais_destino;
 		}
+		/*if ( !empty($id_subpartida) ) {
+			$partner = 'all';
+		}*/
 
 		//curl 'http://comtrade.un.org/api/get?max=500&type=C&freq=A&px=HS&ps=2013%2C2010%2C2011%2C2012&r=170%2C218&p=0&rg=1%2C2&cc=01&token=56233621927079056ea4d1e49ecf8f11' -H 'Host: comtrade.un.org' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:34.0) Gecko/20100101 Firefox/34.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: es-MX,es-ES;q=0.8,es-AR;q=0.7,es;q=0.5,en-US;q=0.3,en;q=0.2' -H 'Accept-Encoding: gzip, deflate' -H 'X-Requested-With: XMLHttpRequest' -H 'Referer: http://comtrade.un.org/data/' -H 'Cookie: _ga=GA1.2.2137246786.1419954195; ASPSESSIONIDAACRDDSB=HGLJBMEDNOAGEKOAKDFCLCBC; _gat=1; _gali=preview'
 
@@ -3632,7 +3635,7 @@ class DeclaracionesRepo extends BaseRepo {
 			'cc'   => $id_subpartida,
 		];
 
-		$url = $baseUrl . '?' . http_build_query($parameters);
+		$url = $baseUrl . http_build_query($parameters);
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -3652,17 +3655,110 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		$arrFields = [
+			'id'         => 'SMALLINT(4) UNSIGNED NOT NULL',
 			'yr'         => 'SMALLINT(4) UNSIGNED NOT NULL',
 			'rtCode'     => 'SMALLINT(4) UNSIGNED NOT NULL',
 			'rtTitle'    => 'VARCHAR(100) NOT NULL',
 			'ptCode'     => 'SMALLINT(4) UNSIGNED NOT NULL',
 			'ptTitle'    => 'VARCHAR(100) NOT NULL',
-			'TradeValue' => 'DECIMAL(13,2) UNSIGNED NOT NULL',
+			'TradeValue' => 'DECIMAL(20,2) UNSIGNED NOT NULL',
 		];
 
 		$this->modelAdo = new ComtradeTempAdo ('', $arrFields, $result['dataset']);
 
+		//$rowFields   = ( empty($id_pais_destino) ) ? 'rtCode, rtTitle' : 'ptCode, ptTitle' ;
+		//$rowFieldId  = ( empty($id_pais_destino) ) ? 'rtCode' : 'ptCode' ;
+		$rowFields   = 'rtCode, rtTitle';
+		$rowFieldId  = 'rtCode';
+
+		$columnValue = 'TradeValue';
+
+		$this->modelAdo->setPivotRowFields('id, '.$rowFields);
+		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
+		$this->modelAdo->setPivotColumnFields('yr');
+
+		$result = $this->modelAdo->pivotSearch();
+
+		if (!$result['success']) {
+			return $result;
+		}
+
 		$arrData = [];
+		$acummulatedAvg   = 0;
+		$acummulatedSlope = 0;
+		$numberRecords    = 0;
+
+		foreach ($result['data'] as $row) {
+
+			$arrCalculatedColumns = array_diff_key($row, $arrFields);
+
+			//verifica que no existan registros con valores en cero
+			$isValid = true;
+			foreach ($arrCalculatedColumns as $key => $value) {
+				if ( empty($value) ) {
+					$isValid = false;
+				}
+			}
+			if ($isValid) {
+				if ( $row[$rowFieldId] == '0' ) {
+					//captura la fila acumulada del todo el mundo
+
+					//var_dump($row);
+
+				} else {
+
+					$avg = array_sum($arrCalculatedColumns) / count($arrCalculatedColumns);
+
+					$arrY = array_map('Helpers::naturalLogarithm', $arrCalculatedColumns);
+
+					$linearRegression  = Helpers::linearRegression($arrY);
+					$slope             = ( $linearRegression['m'] * 100 );
+					$acummulatedAvg   += $avg;
+					$acummulatedSlope += $slope;
+					$numberRecords    += 1;
+
+					$arrData[] = array_merge( $row, compact('slope', 'avg') );
+
+				}
+			}
+		}
+
+		if ($numberRecords > 0) {
+			$totalAvg   = ($acummulatedAvg / $numberRecords);
+			$totalSlope = ($acummulatedSlope / $numberRecords);
+
+			$arr = [];
+			
+			foreach ($arrData as $row) {
+				$avg      = (float)$row['avg'];
+				$slope    = (float)$row['slope'];
+				$quadrant = 'Cuadrante 3';
+
+				$pais = $row['rtTitle'];
+				
+
+				if ( $avg > $totalAvg && $slope > $totalSlope ) {
+					$quadrant = 'Cuadrante 1';
+				} elseif ( $avg > $totalAvg && $slope < $totalSlope ) {
+					$quadrant = 'Cuadrante 4';
+				} elseif ( $avg < $totalAvg && $slope > $totalSlope ) {
+					$quadrant = 'Cuadrante 2';
+				}
+
+				var_dump(compact('avg', 'totalAvg', 'slope', 'totalSlope','pais', 'quadrant', 'acummulatedSlope'));
+
+				$arr[] = array_merge( $row, compact('quadrant') );
+			}
+
+			$arrData = $arr;
+		}
+
+		//var_dump($arrData);
+
+
+
 
 		
 

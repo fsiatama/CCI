@@ -506,4 +506,66 @@ class Helpers
 
 	}
 
+	/**
+	 * linear regression function
+	 * @param $x array x-coords
+	 * @param $y array y-coords
+	 * @returns array() m=>slope, b=>intercept
+	 */
+	public static function linearRegression(array $y, $x =[]) {
+
+		// calculate number points
+		$n = count($y);
+
+		if ( empty($x) ) {
+			//si no se tiene informacion del eje x, se calcula un valor progresivo 1,2,3,4 ya que se trata de una progresion lineal
+			$x = [];
+			$i = 0;
+			foreach ($y as $key => $value) {
+				$i      += 1;
+				$x[$key] = $i;
+			}
+		}
+
+		// ensure both arrays of points are the same size
+		if ($n != count($x)) {
+
+			trigger_error("linearRegression(): Number of elements in coordinate arrays do not match.", E_USER_ERROR);
+
+		}
+
+		// calculate sums
+		$x_sum = array_sum($x);
+		$y_sum = array_sum($y);
+
+		$xx_sum = 0;
+		$xy_sum = 0;
+
+		foreach ($x as $key => $value) {
+			if ( ! isset( $y[$key] ) ) {
+
+				trigger_error('linearRegression(): key '. $key . ' unavailable on Y array', E_USER_ERROR);
+
+			}
+			$xy_sum += ( $x[$key] * $y[$key] );
+			$xx_sum += ( $x[$key] * $x[$key] );
+		}
+		// calculate slope
+		$m = (($n * $xy_sum) - ($x_sum * $y_sum)) / (($n * $xx_sum) - ($x_sum * $x_sum));
+
+		// calculate intercept
+		$b = ($y_sum - ($m * $x_sum)) / $n;
+
+		// return result
+		return array("m"=>$m, "b"=>$b);
+
+	}
+
+	public static function naturalLogarithm($value)
+	{
+		$value = floatval($value);
+		$result = ($value == 0) ? 0 : log($value) ;
+		return $result;
+	}
+
 }

@@ -842,7 +842,7 @@ return [
 				'field'      => 'id_subpartida',
 				'field_expo' => 'id_subpartida',
 				'field_impo' => 'id_subpartida',
-				'required'   => true,
+				'required'   => false,
 				'multivalue' => true,
 			],[
 				'field'      => 'id_pais_destino',
