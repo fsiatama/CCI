@@ -97,11 +97,11 @@ jQuery(function($) {
 		var $btn = $('#loginFormSubmit');
 		$btn.button('loading');
 		$.ajax({
-			type:"POST"
+			type:'POST'
 			,url:$form.attr('action')
 			,data:{
-				email: $("#inputEmail").val(),
-				password: $.md5($("#inputPassword").val())
+				email: $('#inputEmail').val(),
+				password: $.md5($('#inputPassword').val())
 			}
 			,dataType:"json"
 			,success:function(data){
@@ -110,7 +110,7 @@ jQuery(function($) {
 					window.location.replace(data.url);
 				}
 				else{
-					$("#modal-error-msg").html(data.error);
+					$('#modal-error-msg').html(data.error);
 					$('#errorModal').modal('show');
 				}
 			}
@@ -203,7 +203,7 @@ jQuery(function($) {
 				btn.button('loading');
 
 				$.ajax({
-					type:"POST"
+					type:'POST'
 					,url:'acuerdo/public-search'
 					,data:{
 						products: products,
@@ -234,7 +234,7 @@ jQuery(function($) {
 								}
 							});
 						} else {
-							$("#modal-error-msg").html(data.error);
+							$('#modal-error-msg').html(data.error);
 							$('#errorModal').modal('show');
 						}
 					}
@@ -273,7 +273,7 @@ jQuery(function($) {
 		});
 
 		$(msCountry).on('beforeload', function(c){
-			var trade = $("#searchQuotaForm input[name=agreementTrade]:checked").val();
+			var trade = $('#searchQuotaForm input[name=agreementTrade]:checked').val();
 			this.setDataUrlParams({trade: trade});
 		});
 
@@ -313,7 +313,7 @@ jQuery(function($) {
 
 		$(msCountry).on('selectionchange', function(e,m,a,b){
 			var countries = msCountry.getValue();
-			var trade     = $("#searchAgreementForm input[name=agreementTrade]:checked").val();
+			var trade     = $('#searchAgreementForm input[name=agreementTrade]:checked').val();
 			if ( countries.length > 0 ) {
 				msProduct.setDataUrlParams({
 					trade: trade,
@@ -329,7 +329,7 @@ jQuery(function($) {
 			
 			var countries = msCountry.getValue();
 			var products  = msProduct.getValue();
-			var trade     = $("#searchQuotaForm input[name=agreementTrade]:checked").val();
+			var trade     = $('#searchQuotaForm input[name=agreementTrade]:checked').val();
 			
 			if ( countries.length > 0 && products.length > 0) {
 				
@@ -338,7 +338,7 @@ jQuery(function($) {
 				btn.button('loading');
 
 				$.ajax({
-					type:"POST"
+					type:'POST'
 					,url:'acuerdo_det/publicSearch'
 					,data:{
 						products: products,
@@ -350,7 +350,7 @@ jQuery(function($) {
 						if(data.success){
 							var records = data.data;
 							var index   = 0;
-							$("#grid-quota").html(data.html);
+							$('#grid-quota').html(data.html);
 							$('#pagination').twbsPagination({
 						        totalPages: data.total,
 						        visiblePages: 5,
@@ -367,7 +367,7 @@ jQuery(function($) {
 						    Holder.run();
 
 						} else {
-							$("#modal-error-msg").html(data.error);
+							$('#modal-error-msg').html(data.error);
 							$('#errorModal').modal('show');
 						}
 					}
@@ -443,24 +443,27 @@ jQuery(function($) {
 				var btn = $('#searchQuadrantSubmit');
 
 				$.ajax({
-					type:"POST"
+					type:'POST'
 					,url:'indicador/public-quadrants'
 					,data:{
 						products: products,
 						countries: countries,
 					}
-					,dataType:"json"
+					,dataType:'json'
 					,success:function(data){
 						if(data.success){
 							var records = data.data;
 							
 						} else {
-							$("#modal-error-msg").html(data.error);
+							$('#modal-error-msg').html(data.error);
 							$('#errorModal').modal('show');
 						}
 					}
 				}).always(function(){
 				});
+			} else {
+				$('#modal-error-msg').html('Para esta consulta debe seleccionar un producto');
+				$('#errorModal').modal('show');
 			}
 			event.preventDefault();
 		});
@@ -554,7 +557,7 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
 
 		google.maps.event.addListener(polygonObj, 'click', function (event) {
 			$.ajax({
-				type:"POST"
+				type:'POST'
 				,url:'acuerdo/list-id-public'
 				,data:{
 					acuerdo_id: agreement
@@ -566,7 +569,7 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
 						$('#agreementModal').modal('show');
 						Holder.run();
 					} else {
-						$("#modal-error-msg").html(data.error);
+						$('#modal-error-msg').html(data.error);
 						$('#errorModal').modal('show');
 					}
 				}

@@ -4,6 +4,7 @@ require PATH_MODELS.'Entities/Declaraimp.php';
 require PATH_MODELS.'Ado/DeclaraimpAdo.php';
 require PATH_MODELS.'Entities/Declaraexp.php';
 require PATH_MODELS.'Ado/DeclaraexpAdo.php';
+require PATH_MODELS.'Ado/ComtradeTempAdo.php';
 require PATH_MODELS.'Repositories/SectorRepo.php';
 require_once PATH_MODELS.'Repositories/MercadoRepo.php';
 
@@ -3640,7 +3641,7 @@ class DeclaracionesRepo extends BaseRepo {
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		$result = json_decode(curl_exec($ch), true);
 
-		var_dump($result, $url);
+		//var_dump($result, $url);
 
 		if (empty($result['dataset'])) {
 			$result = [
@@ -3649,6 +3650,37 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 			return $result;
 		}
+
+		$arrFields = [
+			'yr'         => 'SMALLINT(4) UNSIGNED NOT NULL',
+			'rtCode'     => 'SMALLINT(4) UNSIGNED NOT NULL',
+			'rtTitle'    => 'VARCHAR(100) NOT NULL',
+			'ptCode'     => 'SMALLINT(4) UNSIGNED NOT NULL',
+			'ptTitle'    => 'VARCHAR(100) NOT NULL',
+			'TradeValue' => 'DECIMAL(13,2) UNSIGNED NOT NULL',
+		];
+
+		$this->modelAdo = new ComtradeTempAdo ('', $arrFields, $result['dataset']);
+
+		$arrData = [];
+
+		
+
+		exit();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		return $result;
 
