@@ -73,9 +73,50 @@ foreach ($arrAgreementDet as $key => $row) {
 	$htmlAgreementDetTabs .= '
 		<li><a href="#'. $id .'" data-toggle="tab">'. $id .'</a></li>
 	';
+
+	$htmlProducts = '<dl>';
+	foreach ($row['productsData'] as $product) {
+
+		$htmlProducts .= '<dt>'.$product['id_posicion'].'</dt></dd>'.$product['posicion'].'</dd>';
+	}
+	$htmlProducts .= '</dl>';
+
 	$htmlAgreementDetItems .= '
 		<div role="tabpanel" class="tab-pane" id="'. $id .'">
-		 Page '. $id .'
+		 <div class="table-responsive">
+		 	<table class="table table-bordered table-striped">
+		 	  <colgroup>
+		 	    <col class="col-xs-2">
+		 	    <col class="col-xs-6">
+		 	  </colgroup>
+		 	  <tbody>
+		 	    <tr>
+		 	      <th scope="row">
+		 	        <code>' . Lang::get('acuerdo_det.columns_title.acuerdo_det_productos') . '</code>
+		 	      </th>
+		 	      <td>' . $htmlProducts . '</td>
+		 	    </tr>
+		 	    <tr>
+		 	      <th scope="row">
+		 	        <code>' . Lang::get('acuerdo_det.columns_title.acuerdo_det_productos_desc') . '</code>
+		 	      </th>
+		 	      <td>' . $row['acuerdo_det_productos_desc'] . '</td>
+		 	    </tr>
+		 	    <tr>
+		 	      <th scope="row">
+		 	        <code>' . Lang::get('acuerdo_det.columns_title.acuerdo_det_arancel_base') . '</code>
+		 	      </th>
+		 	      <td>' . $row['acuerdo_det_arancel_base'] . '%</td>
+		 	    </tr>
+		 	    <tr>
+		 	      <th scope="row">
+		 	        <code>' . Lang::get('acuerdo_det.columns_title.acuerdo_det_nperiodos') . '</code>
+		 	      </th>
+		 	      <td>' . $row['acuerdo_det_nperiodos'] . '</td>
+		 	    </tr>
+		 	  </tbody>
+		 	</table>
+		 </div>
 		</div>
 	';
 }
@@ -123,46 +164,7 @@ $htmlAgreementDet = '
 
 <?= $htmlAgreementDet; ?>
 
-<div class="table-responsive">
-	<table class="table table-bordered table-striped">
-	  <colgroup>
-	    <col class="col-xs-1">
-	    <col class="col-xs-7">
-	  </colgroup>
-	  <tbody>
-	    <tr>
-	      <th scope="row">
-	        <code>.active</code>
-	      </th>
-	      <td>Applies the hover color to a particular row or cell</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">
-	        <code>.success</code>
-	      </th>
-	      <td>Indicates a successful or positive action</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">
-	        <code>.info</code>
-	      </th>
-	      <td>Indicates a neutral informative change or action</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">
-	        <code>.warning</code>
-	      </th>
-	      <td>Indicates a warning that might need attention</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">
-	        <code>.danger</code>
-	      </th>
-	      <td>Indicates a dangerous or potentially negative action</td>
-	    </tr>
-	  </tbody>
-	</table>
-</div>
+
 
 
 

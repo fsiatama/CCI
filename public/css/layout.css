@@ -292,53 +292,6 @@ blockquote cite {
 
 /** 09. Buttons
  **************************************************************** **/
-.btn, .btn:hover {
-	border: 0;
-	padding: 8px 18px;
-	border:rgba(255,255,255,0) 2px solid;
-
-	-webkit-transition: all 0.2s;
-	   -moz-transition: all 0.2s;
-		 -o-transition: all 0.2s;
-			transition: all 0.2s;
-}
-
-
-.btn:active,
-.btn:focus,
-.btn.active {
-	-webkit-box-shadow: none;
-	   -moz-box-shadow: none;
-			box-shadow: none;
-}
-
-.btn.disabled {
-	background-color: #999;
-	border: #bbb 2px solid;
-}
-
-.btn-default {
-	background:none !important;
-	border:#ddd 2px solid !important;
-	padding:8px 18px;
-}
-
-.btn[disabled] {
-	background-color:#999;
-	border:#bbb 2px solid;
-}
-
-.btn-lg,.btn-lg:hover {
-	padding: 12px 32px;
-}
-.btn-sm, .btn-sm:hover {
-	padding: 6px 16px;
-}
-.btn-xs, .btn-xs:hover {
-	padding: 3px 13px;
-}
-
-
 
 /** 10. Labels
  **************************************************************** **/

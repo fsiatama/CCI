@@ -7,13 +7,16 @@
 
 		<div class="col-md-12">
 			<p class="lead">
-				Aquí podrá encontrar fácilmente información de los acuerdos comerciales entre Colombia y otros países, para los productos agropecuarios y agroindustriales.
+				Aquí podrá encontrar fácilmente información general de los acuerdos comerciales entre Colombia y otros países, para los productos agropecuarios y agroindustriales.
 				<ul>
 					<li>
-						Puede buscar por productos, digitando la descripción o el capítulo, partida, subpartida o posición arancelaria (Es decir según el arancel de aduanas).
+						Por favor seleccione un país de la lista que dice Socio Comercial.
 					</li>
 					<li>
-						También puede buscar directamente un socio comercial (país), para ver la información del acuerdo comercial.
+						Una vez lo haga, oprima el botón buscar.
+					</li>
+					<li>
+						A continuación se resaltara en el mapa todos los países que se incluyen en el acuerdo comercial al cual se encuentra suscrito el país seleccionado.
 					</li>
 				</ul>
 				<hr class="half-margins">
@@ -40,10 +43,10 @@
 				  </label>
 				</div>
 
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label for="ms-filter-product" class="margin-bottom10">Productos</label>
 					<input type="text" class="form-control" id="ms-filter-product">
-				</div>
+				</div> -->
 
 				<div class="form-group">
 					<label for="ms-filter-country" class="margin-bottom10">Socio Comercial</label>
@@ -81,3 +84,6 @@
 		</div>
 	</div>
 </div>
+
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>

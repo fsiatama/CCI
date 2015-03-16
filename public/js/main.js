@@ -1,51 +1,4 @@
-var mapStyles = {
-	1: {
-		lineColor: "#FF0000",
-		lineWidth: 1,
-		lineOpacity: 1,
-		backgroundColor: "#FF0000",
-		backgroundOpacity: 0.5
-	},
-	2: {
-		lineColor: "#996633",
-		lineWidth: 1,
-		lineOpacity: 1,
-		backgroundColor: "#FFCC99",
-		backgroundOpacity: 0.5
-	},
-	3: {
-		lineColor: "#0000FF",
-		lineWidth: 1,
-		lineOpacity: 1,
-		backgroundColor: "#0000FF",
-		backgroundOpacity: 0.5
-	},
-	4: {
-		lineColor: "#00FFFF",
-		lineWidth: 1,
-		lineOpacity: 1,
-		backgroundColor: "#00FFFF",
-		backgroundOpacity: 0.5
-	},
-	5: {
-		lineColor: "#996600",
-		lineWidth: 1,
-		lineOpacity: 1,
-		backgroundColor: "#996600",
-		backgroundOpacity: 0.5
-	},
-	6: {
-		lineColor: "#660000",
-		lineWidth: 1,
-		lineOpacity: 1,
-		backgroundColor: "#660000",
-		backgroundOpacity: 0.5
-	}
-};
-
-
 jQuery(function($) {
-
 	$(document).ajaxStart(function(){
 		$.blockUI({ message: '<h4 class="margin-top10 margin-bottom10"><i class="fa fa-spinner fa-spin"></i> Espere por favor</h4 class= "nomargin">' });
 	}).ajaxComplete(function() {
@@ -119,7 +72,9 @@ jQuery(function($) {
 
 	if ( $('#map-canvas').length > 0 ) {
 
-		var msProduct = $('#ms-filter-product').magicSuggest({
+		var mapStyles = {1: {lineColor: "#FF0000", lineWidth: 1, lineOpacity: 1, backgroundColor: "#FF0000", backgroundOpacity: 0.5 }, 2: {lineColor: "#996633", lineWidth: 1, lineOpacity: 1, backgroundColor: "#FFCC99", backgroundOpacity: 0.5 }, 3: {lineColor: "#0000FF", lineWidth: 1, lineOpacity: 1, backgroundColor: "#0000FF", backgroundOpacity: 0.5 }, 4: {lineColor: "#00FFFF", lineWidth: 1, lineOpacity: 1, backgroundColor: "#00FFFF", backgroundOpacity: 0.5 }, 5: {lineColor: "#996600", lineWidth: 1, lineOpacity: 1, backgroundColor: "#996600", backgroundOpacity: 0.5 }, 6: {lineColor: "#660000", lineWidth: 1, lineOpacity: 1, backgroundColor: "#660000", backgroundOpacity: 0.5 } };
+
+		/*var msProduct = $('#ms-filter-product').magicSuggest({
 			allowFreeEntries: false
 			,data: 'posicion/list-in-agreement'
 			,displayField: 'posicion'
@@ -153,7 +108,7 @@ jQuery(function($) {
 		$(msProduct).on('beforeload', function(c){
 			var trade = $("#searchAgreementForm input[name=agreementTrade]:checked").val();
 			this.setDataUrlParams({trade: trade});
-		});
+		});*/
 		
 		var msCountry = $('#ms-filter-country').magicSuggest({
 			allowFreeEntries: false
@@ -187,10 +142,10 @@ jQuery(function($) {
 		$('#searchAgreementForm').on('submit', function(event){
 			
 			var countries = msCountry.getValue();
-			var products  = msProduct.getValue();
+			/*var products  = msProduct.getValue();*/
 			var trade     = $("#searchAgreementForm input[name=agreementTrade]:checked").val();
 			
-			if ( countries.length > 0 || products.length > 0) {
+			if ( countries.length > 0 /*|| products.length > 0*/) {
 				
 				initialize();
 
@@ -202,7 +157,7 @@ jQuery(function($) {
 					type:'POST'
 					,url:'acuerdo/public-search'
 					,data:{
-						products: products,
+						/*products: products,*/
 						countries: countries,
 						trade: trade
 					}
@@ -355,9 +310,7 @@ jQuery(function($) {
 						        next: '&rsaquo;',
 						        last: '&raquo;',
 						        onPageClick: function (event, page) {
-						        	console.log(page);
-						        	//$('#agreementDetTabs #agreementDet_' + page).tab('show');
-						        	$('#agreementDetTabs li:eq(' + page + ') a').tab('show');
+						        	$('#agreementDetTabs li:eq(' + (page - 1) + ') a').tab('show');
 						        }
 						    });
 						    Holder.run();
@@ -456,28 +409,28 @@ jQuery(function($) {
 							$('#quadrant_4_chart_div').html('');
 
 							if (data.arrQuadrant1.rows) {
-								drawSeriesChart(data.arrQuadrant1, 'quadrant_1_chart_div');
+								drawSeriesChart(data.arrQuadrant1, 'quadrant_1_chart_div', 'btn-print-1');
 								if ( !showTab ) {
 									$('#quadrantTabs a[href="#quadrant_1"]').tab('show');
 									showTab = true;
 								}
 							}
 							if (data.arrQuadrant2.rows) {
-								drawSeriesChart(data.arrQuadrant2, 'quadrant_2_chart_div');
+								drawSeriesChart(data.arrQuadrant2, 'quadrant_2_chart_div', 'btn-print-2');
 								if ( !showTab ) {
 									$('#quadrantTabs a[href="#quadrant_2"]').tab('show');
 									showTab = true;
 								}
 							}
 							if (data.arrQuadrant3.rows) {
-								drawSeriesChart(data.arrQuadrant3, 'quadrant_3_chart_div');
+								drawSeriesChart(data.arrQuadrant3, 'quadrant_3_chart_div', 'btn-print-3');
 								if ( !showTab ) {
 									$('#quadrantTabs a[href="#quadrant_3"]').tab('show');
 									showTab = true;
 								}
 							}
 							if (data.arrQuadrant4.rows) {
-								drawSeriesChart(data.arrQuadrant4, 'quadrant_4_chart_div');
+								drawSeriesChart(data.arrQuadrant4, 'quadrant_4_chart_div', 'btn-print-4');
 								if ( !showTab ) {
 									$('#quadrantTabs a[href="#quadrant_4"]').tab('show');
 									showTab = true;
@@ -613,7 +566,7 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
 	}
 }
 
-function drawSeriesChart(jsonData, divId) {
+function drawSeriesChart(jsonData, divId, btnId) {
 
 	var data = new google.visualization.DataTable(jsonData);
 
@@ -623,7 +576,8 @@ function drawSeriesChart(jsonData, divId) {
 		hAxis: {title: 'Vr. Prom. Anual'},
         vAxis: {title: 'Prom. Anual'},
         title: 'Unidad : Dólar EUA miles',
-        allowHtml: true
+        allowHtml: true,
+        crosshair: { trigger: 'both' }
 	};
 
 	var formatter = new google.visualization.NumberFormat({
@@ -634,5 +588,13 @@ function drawSeriesChart(jsonData, divId) {
   	formatter.format(data, 0);
   	
 	var chart = new google.visualization.ScatterChart(document.getElementById(divId));
+
+	/*google.visualization.events.addListener(chart, 'ready', function () {
+		chart.setSelection([{row:0, column:0}]); // Select one of the points.
+		png = chart.getImageURI();
+		//$('#' + btnId).disable(false);
+		$('#' + btnId).prop('disabled', false);
+		console.log(png, $('#' + btnId));
+	});*/
 	chart.draw(data, options);
 }

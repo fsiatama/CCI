@@ -3870,12 +3870,14 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$result = [
 			'success'      => true,
-			'data'         => $arrData,
-			'total'        => count($arrData),
+			/*'data'         => $arrData,
+			'total'        => count($arrData),*/
 			'arrQuadrant1' => $arrChartQuadrant1,
 			'arrQuadrant2' => $arrChartQuadrant2,
 			'arrQuadrant3' => $arrChartQuadrant3,
 			'arrQuadrant4' => $arrChartQuadrant4,
+			'totalSlope'   => $totalSlope,
+			'totalAvg'     => $totalAvg,
 		];
 
 		return $result;

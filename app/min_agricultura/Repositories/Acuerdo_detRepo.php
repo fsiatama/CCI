@@ -695,8 +695,14 @@ class Acuerdo_detRepo extends BaseRepo {
 
 		foreach ($result['data'] as $key => $row) {
 			if ( $row['acuerdo_intercambio'] == $trade && $row['acuerdo_det_acuerdo_id'] == $acuerdo_id ) {
+
+				$rsAgreementDet = $this->listId( [ 'acuerdo_det_id' => $row['acuerdo_det_id'] ] );
+
+				if (!$rsAgreementDet['success']) {
+					return $rsAgreementDet;
+				}
 				
-				$arrAgreementDet[] = $row;
+				$arrAgreementDet[] = array_merge( $row, ['productsData' => $rsAgreementDet['productsData'] ] );
 			}
 		}
 		if ( empty($arrAgreementDet) ) {
