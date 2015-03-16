@@ -3805,7 +3805,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$arr['c'][] = [ 'v' => $avg ];
 			for ($i=2; $i <= count($arrQuadrant2) + 1; $i++) {
 				if ($i == count($arrChartColumns2)) {
-					$arr['c'][] = [ 'v' => $slope ];
+					$arr['c'][] = [ 'v' => number_format($slope ,2) ];
 				} else {
 					$arr['c'][] = [ 'v' => null ];
 				}
@@ -3831,7 +3831,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$arr['c'][] = [ 'v' => $avg ];
 			for ($i=2; $i <= count($arrQuadrant3) + 1; $i++) {
 				if ($i == count($arrChartColumns3)) {
-					$arr['c'][] = [ 'v' => $slope ];
+					$arr['c'][] = [ 'v' => number_format($slope ,2) ];
 				} else {
 					$arr['c'][] = [ 'v' => null ];
 				}
@@ -3857,7 +3857,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$arr['c'][] = [ 'v' => $avg ];
 			for ($i=2; $i <= count($arrQuadrant4) + 1; $i++) {
 				if ($i == count($arrChartColumns4)) {
-					$arr['c'][] = [ 'v' => $slope ];
+					$arr['c'][] = [ 'v' => number_format($slope ,2) ];
 				} else {
 					$arr['c'][] = [ 'v' => null ];
 				}
