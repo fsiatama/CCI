@@ -3725,171 +3725,157 @@ class DeclaracionesRepo extends BaseRepo {
 			}
 		}
 
+		$arrQuadrant1 = [];
+		$arrQuadrant2 = [];
+		$arrQuadrant3 = [];
+		$arrQuadrant4 = [];
+
 		if ($numberRecords > 0) {
-			$totalAvg   = ($acummulatedAvg / $numberRecords);
+			$totalAvg   = ($acummulatedAvg / $numberRecords) / 1000;
 			$totalSlope = ($acummulatedSlope / $numberRecords);
 
-			$arr = [];
 			
 			foreach ($arrData as $row) {
-				$avg      = (float)$row['avg'];
+				$avg      = (float)$row['avg'] / 1000;
 				$slope    = (float)$row['slope'];
-				$quadrant = 'Cuadrante 3';
+				$quadrant = 'cuadrante_3';
 
 				$pais = $row['rtTitle'];
 				
-
 				if ( $avg > $totalAvg && $slope > $totalSlope ) {
-					$quadrant = 'Cuadrante 1';
+					//$quadrant = 'cuadrante_1';
+					$arrQuadrant1[] = $row;
 				} elseif ( $avg > $totalAvg && $slope < $totalSlope ) {
-					$quadrant = 'Cuadrante 4';
+					//$quadrant = 'cuadrante_4';
+					$arrQuadrant4[] = $row;
 				} elseif ( $avg < $totalAvg && $slope > $totalSlope ) {
-					$quadrant = 'Cuadrante 2';
+					$arrQuadrant2[] = $row;
+					//$quadrant = 'cuadrante_2';
+				} else {
+					$arrQuadrant3[] = $row;
 				}
-
-				var_dump(compact('avg', 'totalAvg', 'slope', 'totalSlope','pais', 'quadrant', 'acummulatedSlope'));
-
-				$arr[] = array_merge( $row, compact('quadrant') );
+				//var_dump(compact('avg', 'totalAvg', 'slope', 'totalSlope','pais', 'quadrant', 'acummulatedSlope'));
 			}
 
-			$arrData = $arr;
+			//$arrData = $arr;
 		}
 
-		//var_dump($arrData);
+		$arrChartQuadrant1 = [];
+		$arrChartQuadrant2 = [];
+		$arrChartQuadrant3 = [];
+		$arrChartQuadrant4 = [];
 
+		/************************** Chart 1 *******************************/
 
+		$arrChartColumns1   = [];
+		$arrChartColumns1[] = ['id' => 'x', 'label' => 'Vr. Prom. Anual', 'type' => 'number'];
+		foreach ($arrQuadrant1 as $key => $row) {
+			$avg      = (float)$row['avg'] / 1000;
+			$slope    = (float)$row['slope'];
 
+			$pais = $row['rtTitle'];
+			$arrChartColumns1[] = ['id' => '', 'label' => $pais, 'type' => 'number'];
 
-		
-
-		exit();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		return $result;
-
-
-		$arrDataColImp = [];
-		$arrDataColExp = [];
-		$arrDataImp    = [];
-		$arrDataExp    = [];
-		$arrData       = [];
-		$columnValue   = 'TradeValue';
-
-		foreach ($result['dataset'] as $key => $row) {
-			//var_dump($row['rgCode'], $row['rtCode'], $colombiaIdComtrade);
-			if ($row['rgCode'] == 1) { //Importaciones
-				
-				if ($row['rtCode'] == $colombiaIdComtrade) {
-					$arrDataColImp[] = [
-						'id'         => $row['yr'],
-						'periodo'    => $row['period'],
-						'valor_impo' => $row[$columnValue],
-					];
+			$arr = [];
+			$arr['c'][] = [ 'v' => $avg ];
+			for ($i=2; $i <= count($arrQuadrant1) + 1; $i++) {
+				if ($i == count($arrChartColumns1)) {
+					$arr['c'][] = [ 'v' => $slope ];
 				} else {
-					$arrDataImp[] = [
-						'id'         => $row['yr'],
-						'periodo'    => $row['period'],
-						'valor_impo' => $row[$columnValue],
-					];
-				}
-				
-			} elseif ($row['rgCode'] == 2) { //Exportaciones
-				
-				if ($row['rtCode'] == $colombiaIdComtrade) {
-					$arrDataColExp[] = [
-						'id'         => $row['yr'],
-						'periodo'    => $row['period'],
-						'valor_expo' => $row[$columnValue],
-					];
-				} else {
-					$arrDataExp[] = [
-						'id'         => $row['yr'],
-						'periodo'    => $row['period'],
-						'valor_expo' => $row[$columnValue],
-					];
+					$arr['c'][] = [ 'v' => null ];
 				}
 			}
+
+			$arrChartQuadrant1['rows'][] = $arr;
 		}
 
-		//var_dump($arrDataImp, $arrDataExp, $arrDataColExp);
+		$arrChartQuadrant1['cols'] = $arrChartColumns1;
 
-		foreach ($arrDataImp as $key => $rowImpo) {
-			$rowExpo = Helpers::findKeyInArrayMulti(
-				$arrDataExp,
-				'periodo',
-				$rowImpo['periodo']
-			);
-			$rowImpoCol = Helpers::findKeyInArrayMulti(
-				$arrDataColImp,
-				'periodo',
-				$rowImpo['periodo']
-			);
-			$rowExpoCol = Helpers::findKeyInArrayMulti(
-				$arrDataColExp,
-				'periodo',
-				$rowImpo['periodo']
-			);
+		/************************** Chart 2 *******************************/
+		$arrChartColumns2   = [];
+		$arrChartColumns2[] = ['id' => 'x', 'label' => 'Vr. Prom. Anual', 'type' => 'number'];
+		foreach ($arrQuadrant2 as $key => $row) {
+			$avg      = (float)$row['avg'] / 1000;
+			$slope    = (float)$row['slope'];
 
-			$totalExpo    = ($rowExpo    !== false) ? $rowExpo['valor_expo']    : 0 ;
-			$totalImpoCol = ($rowImpoCol !== false) ? $rowImpoCol['valor_impo'] : 0 ;
-			$totalExpoCol = ($rowExpoCol !== false) ? $rowExpoCol['valor_expo'] : 1 ;
+			$pais = $row['rtTitle'];
+			$arrChartColumns2[] = ['id' => '', 'label' => $pais, 'type' => 'number'];
 
+			$arr = [];
+			$arr['c'][] = [ 'v' => $avg ];
+			for ($i=2; $i <= count($arrQuadrant2) + 1; $i++) {
+				if ($i == count($arrChartColumns2)) {
+					$arr['c'][] = [ 'v' => $slope ];
+				} else {
+					$arr['c'][] = [ 'v' => null ];
+				}
+			}
 
-			$rate = ($totalExpoCol == 0) ? 0 : (($totalExpo - $rowImpo['valor_impo']) / $totalExpoCol) ;
-
-			$arrData[] = [
-				'id'             => $rowImpo['id'],
-				'periodo'        => $rowImpo['periodo'],
-				'valor_impo'     => $rowImpo['valor_impo'],
-				'valor_expo'     => $totalExpo,
-				'valor_expo_col' => $totalExpoCol,
-				'valor_impo_col' => $totalImpoCol,
-				'IEI'  => ($rate * 100)
-			];
-
+			$arrChartQuadrant2['rows'][] = $arr;
 		}
 
-		if (count($arrData) == 0) {
-			return [
-				'success' => false,
-				'error'   => Lang::get('error.no_records_found')
-			];
+		$arrChartQuadrant2['cols'] = $arrChartColumns2;
+
+		/************************** Chart 3 *******************************/
+
+		$arrChartColumns3   = [];
+		$arrChartColumns3[] = ['id' => 'x', 'label' => 'Vr. Prom. Anual', 'type' => 'number'];
+		foreach ($arrQuadrant3 as $key => $row) {
+			$avg      = (float)$row['avg'] / 1000;
+			$slope    = (float)$row['slope'];
+
+			$pais = $row['rtTitle'];
+			$arrChartColumns3[] = ['id' => '', 'label' => $pais, 'type' => 'number'];
+
+			$arr = [];
+			$arr['c'][] = [ 'v' => $avg ];
+			for ($i=2; $i <= count($arrQuadrant3) + 1; $i++) {
+				if ($i == count($arrChartColumns3)) {
+					$arr['c'][] = [ 'v' => $slope ];
+				} else {
+					$arr['c'][] = [ 'v' => null ];
+				}
+			}
+
+			$arrChartQuadrant3['rows'][] = $arr;
 		}
 
-		usort($arrData, Helpers::arraySortByValue('periodo'));
+		$arrChartQuadrant3['cols'] = $arrChartColumns3;
 
-		$arrSeries = [
-			'IEI' => Lang::get('indicador.columns_title.IEI')
-		];
+		/************************** Chart 4 *******************************/
 
-		$columnChart = Helpers::jsonChart(
-			$arrData,
-			'periodo',
-			$arrSeries,
-			COLUMNAS,
-			'',
-			Lang::get('indicador.columns_title.IEI')
-		);
+		$arrChartColumns4   = [];
+		$arrChartColumns4[] = ['id' => 'x', 'label' => 'Vr. Prom. Anual', 'type' => 'number'];
+		foreach ($arrQuadrant4 as $key => $row) {
+			$avg      = (float)$row['avg'] / 1000;
+			$slope    = (float)$row['slope'];
+
+			$pais = $row['rtTitle'];
+			$arrChartColumns4[] = ['id' => '', 'label' => $pais, 'type' => 'number'];
+
+			$arr = [];
+			$arr['c'][] = [ 'v' => $avg ];
+			for ($i=2; $i <= count($arrQuadrant4) + 1; $i++) {
+				if ($i == count($arrChartColumns4)) {
+					$arr['c'][] = [ 'v' => $slope ];
+				} else {
+					$arr['c'][] = [ 'v' => null ];
+				}
+			}
+
+			$arrChartQuadrant4['rows'][] = $arr;
+		}
+
+		$arrChartQuadrant4['cols'] = $arrChartColumns4;
 
 		$result = [
-			'success'         => true,
-			'data'            => $arrData,
-			'total'           => count($arrData),
-			'columnChartData' => $columnChart,
-			//'areaChartData'   => $areaChart,
+			'success'      => true,
+			'data'         => $arrData,
+			'total'        => count($arrData),
+			'arrQuadrant1' => $arrChartQuadrant1,
+			'arrQuadrant2' => $arrChartQuadrant2,
+			'arrQuadrant3' => $arrChartQuadrant3,
+			'arrQuadrant4' => $arrChartQuadrant4,
 		];
 
 		return $result;

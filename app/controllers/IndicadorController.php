@@ -232,8 +232,6 @@ class IndicadorController {
 	public function publicQuadrantsAction($urlParams, $postParams)
 	{
 
-		var_dump($postParams);
-
 		return $this->indicadorRepo->executeQuadrants($postParams);
 
 	}

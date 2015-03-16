@@ -43,10 +43,6 @@ var mapStyles = {
 	}
 };
 
-var mapOptions = {
-	zoom: 2,
-	center: new google.maps.LatLng(35, 0)
-};
 
 jQuery(function($) {
 
@@ -186,7 +182,7 @@ jQuery(function($) {
 			this.setDataUrlParams({trade: trade});
 		});
 
-		initialize(mapOptions);
+		initialize();
 
 		$('#searchAgreementForm').on('submit', function(event){
 			
@@ -196,7 +192,7 @@ jQuery(function($) {
 			
 			if ( countries.length > 0 || products.length > 0) {
 				
-				initialize(mapOptions);
+				initialize();
 
 				var form = $(this);
 				var btn = $('#searchAgreementSubmit');
@@ -452,7 +448,10 @@ jQuery(function($) {
 					,dataType:'json'
 					,success:function(data){
 						if(data.success){
-							var records = data.data;
+							drawSeriesChart(data.arrQuadrant1, 'quadrant_1_chart_div');
+							drawSeriesChart(data.arrQuadrant2, 'quadrant_2_chart_div');
+							drawSeriesChart(data.arrQuadrant3, 'quadrant_3_chart_div');
+							drawSeriesChart(data.arrQuadrant4, 'quadrant_4_chart_div');
 							
 						} else {
 							$('#modal-error-msg').html(data.error);
@@ -472,7 +471,12 @@ jQuery(function($) {
 });
 
 
-function initialize(mapOptions) {
+function initialize() {
+
+	var mapOptions = {
+		zoom: 2,
+		center: new google.maps.LatLng(35, 0)
+	};
 	
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
@@ -576,4 +580,20 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
 			});
 		});
 	}
+}
+
+function drawSeriesChart(jsonData, divId) {
+
+	var data = new google.visualization.DataTable(jsonData);
+
+	var options = {
+		width: 700,
+		height: 400,
+		hAxis: {title: 'Vr. Prom. Anual'},
+        vAxis: {title: 'Prom. Anual'},
+        title: 'Unidad : Dólar EUA miles'
+	};
+
+	var chart = new google.visualization.ScatterChart(document.getElementById(divId));
+	chart.draw(data, options);
 }
