@@ -414,7 +414,7 @@ jQuery(function($) {
 			,data: 'comtrade_country/list'
 			,displayField: 'country'
 			,highlight:true
-			,maxSelection: 1
+			,maxSelection: 5
 			,placeholder: 'Select...'
 			,mode: 'remote'
 			,resultsField: 'data'
@@ -448,10 +448,41 @@ jQuery(function($) {
 					,dataType:'json'
 					,success:function(data){
 						if(data.success){
-							drawSeriesChart(data.arrQuadrant1, 'quadrant_1_chart_div');
-							drawSeriesChart(data.arrQuadrant2, 'quadrant_2_chart_div');
-							drawSeriesChart(data.arrQuadrant3, 'quadrant_3_chart_div');
-							drawSeriesChart(data.arrQuadrant4, 'quadrant_4_chart_div');
+							var showTab = false;
+
+							$('#quadrant_1_chart_div').html('');
+							$('#quadrant_2_chart_div').html('');
+							$('#quadrant_3_chart_div').html('');
+							$('#quadrant_4_chart_div').html('');
+
+							if (data.arrQuadrant1.rows) {
+								drawSeriesChart(data.arrQuadrant1, 'quadrant_1_chart_div');
+								if ( !showTab ) {
+									$('#quadrantTabs a[href="#quadrant_1"]').tab('show');
+									showTab = true;
+								}
+							}
+							if (data.arrQuadrant2.rows) {
+								drawSeriesChart(data.arrQuadrant2, 'quadrant_2_chart_div');
+								if ( !showTab ) {
+									$('#quadrantTabs a[href="#quadrant_2"]').tab('show');
+									showTab = true;
+								}
+							}
+							if (data.arrQuadrant3.rows) {
+								drawSeriesChart(data.arrQuadrant3, 'quadrant_3_chart_div');
+								if ( !showTab ) {
+									$('#quadrantTabs a[href="#quadrant_3"]').tab('show');
+									showTab = true;
+								}
+							}
+							if (data.arrQuadrant4.rows) {
+								drawSeriesChart(data.arrQuadrant4, 'quadrant_4_chart_div');
+								if ( !showTab ) {
+									$('#quadrantTabs a[href="#quadrant_4"]').tab('show');
+									showTab = true;
+								}
+							}
 							
 						} else {
 							$('#modal-error-msg').html(data.error);
@@ -591,9 +622,17 @@ function drawSeriesChart(jsonData, divId) {
 		height: 400,
 		hAxis: {title: 'Vr. Prom. Anual'},
         vAxis: {title: 'Prom. Anual'},
-        title: 'Unidad : Dólar EUA miles'
+        title: 'Unidad : Dólar EUA miles',
+        allowHtml: true
 	};
 
+	var formatter = new google.visualization.NumberFormat({
+		prefix: '$'
+		,negativeColor: 'red'
+		,negativeParens: true
+	});
+  	formatter.format(data, 0);
+  	
 	var chart = new google.visualization.ScatterChart(document.getElementById(divId));
 	chart.draw(data, options);
 }

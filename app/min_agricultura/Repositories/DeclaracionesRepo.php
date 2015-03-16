@@ -3614,10 +3614,10 @@ class DeclaracionesRepo extends BaseRepo {
 		$reporter = 'all';
 		$partner  = '0';
 
-		if ( !empty($id_pais_destino) ) {
+		/*if ( !empty($id_pais_destino) ) {
 			$reporter = $id_pais_destino;
 		}
-		/*if ( !empty($id_subpartida) ) {
+		if ( !empty($id_subpartida) ) {
 			$partner = 'all';
 		}*/
 
@@ -3709,17 +3709,18 @@ class DeclaracionesRepo extends BaseRepo {
 
 				} else {
 
-					$avg = array_sum($arrCalculatedColumns) / count($arrCalculatedColumns);
-
+					$avg  = array_sum($arrCalculatedColumns) / count($arrCalculatedColumns);
 					$arrY = array_map('Helpers::naturalLogarithm', $arrCalculatedColumns);
 
-					$linearRegression  = Helpers::linearRegression($arrY);
-					$slope             = ( $linearRegression['m'] * 100 );
+					$linearRegression = Helpers::linearRegression($arrY);
+					$slope            = ( $linearRegression['m'] * 100 );
 					$acummulatedAvg   += $avg;
 					$acummulatedSlope += $slope;
 					$numberRecords    += 1;
 
-					$arrData[] = array_merge( $row, compact('slope', 'avg') );
+					if ( ( !empty($id_pais_destino) && in_array($row[$rowFieldId], explode(',', $id_pais_destino))) || empty($id_pais_destino) ) {
+						$arrData[] = array_merge( $row, compact('slope', 'avg') );
+					}
 
 				}
 			}
@@ -3733,7 +3734,6 @@ class DeclaracionesRepo extends BaseRepo {
 		if ($numberRecords > 0) {
 			$totalAvg   = ($acummulatedAvg / $numberRecords) / 1000;
 			$totalSlope = ($acummulatedSlope / $numberRecords);
-
 			
 			foreach ($arrData as $row) {
 				$avg      = (float)$row['avg'] / 1000;
@@ -3780,7 +3780,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$arr['c'][] = [ 'v' => $avg ];
 			for ($i=2; $i <= count($arrQuadrant1) + 1; $i++) {
 				if ($i == count($arrChartColumns1)) {
-					$arr['c'][] = [ 'v' => $slope ];
+					$arr['c'][] = [ 'v' => number_format($slope ,2) ];
 				} else {
 					$arr['c'][] = [ 'v' => null ];
 				}
