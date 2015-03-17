@@ -457,6 +457,56 @@ jQuery(function($) {
 			event.preventDefault();
 		});
 	}// End of if ( $('#grid-quadrant').length > 0 )
+	
+	if ( $('#grid-trade-info').length > 0 ) {
+
+		$("#trade-reports > li > a").on("click", function(e) {
+
+			var report = $(this).data('report');
+
+			$.ajax({
+				type:'POST'
+				,url:'indicador/public-reports'
+				,data:{
+					report: report
+				}
+				,dataType:'json'
+				,success:function(data){
+					if(data.success){
+
+						var showTab = false;
+
+						$('#chart_1_div').html('');
+
+						/*$('#quadrant_2_chart_div').html('');
+						$('#quadrant_3_chart_div').html('');
+						$('#quadrant_4_chart_div').html('');*/
+
+						if (data.pieChart.rows) {
+							drawPieChart(data.pieChart, 'chart_1_div', 'btn-print-1');
+
+							
+							/*if ( !showTab ) {
+								$('#quadrantTabs a[href="#chart_1"]').tab('show');
+								showTab = true;
+							}*/
+						}
+						
+						
+						
+					} else {
+						$('#modal-error-msg').html(data.error);
+						$('#errorModal').modal('show');
+					}
+				}
+			}).always(function(){
+			});
+
+		    e.preventDefault();
+
+		});
+
+	}// End of if ( $('#grid-trade-info').length > 0 )
 
 });
 
@@ -595,6 +645,36 @@ function drawSeriesChart(jsonData, divId, btnId) {
   	
 	var chart = new google.visualization.ScatterChart(document.getElementById(divId));
 
+	/*google.visualization.events.addListener(chart, 'ready', function () {
+		chart.setSelection([{row:0, column:0}]); // Select one of the points.
+		png = chart.getImageURI();
+		//$('#' + btnId).disable(false);
+		$('#' + btnId).prop('disabled', false);
+		console.log(png, $('#' + btnId));
+	});*/
+	chart.draw(data, options);
+}
+function drawPieChart(jsonData, divId, btnId) {
+
+	var data = new google.visualization.DataTable(jsonData);
+
+	var options = {
+		width: 700,
+		height: 400,
+        allowHtml: true
+	};
+
+	var formatter = new google.visualization.NumberFormat({
+		prefix: '$'
+		,negativeColor: 'red'
+		,negativeParens: true
+	});
+  	formatter.format(data, 1);
+
+  	
+	var chart = new google.visualization.PieChart(document.getElementById(divId));
+
+  	//console.log(chart);
 	/*google.visualization.events.addListener(chart, 'ready', function () {
 		chart.setSelection([{row:0, column:0}]); // Select one of the points.
 		png = chart.getImageURI();

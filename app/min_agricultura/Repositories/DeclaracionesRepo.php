@@ -81,14 +81,34 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->trade = $trade;
 	}
 
+	private function getColumnValueImpo()
+	{
+		return 'valorcif';
+	}
+
+	private function getColumnValueExpo()
+	{
+		return 'valorfob';
+	}
+
+	private function getColumnVolumeImpo()
+	{
+		return 'peso_neto';
+	}
+
+	private function getColumnVolumeExpo()
+	{
+		return 'peso_neto';
+	}
+
 	protected function setColumnValue()
 	{
 		if ($this->tipo_indicador_activador == 'precio') {
-			$this->columnValueImpo = 'valorcif';
-			$this->columnValueExpo = 'valorfob';
+			$this->columnValueImpo = $this->getColumnValueImpo();
+			$this->columnValueExpo = $this->getColumnValueExpo();
 		} else {
-			$this->columnValueImpo = 'peso_neto';
-			$this->columnValueExpo = 'peso_neto';
+			$this->columnValueImpo = $this->getColumnVolumeImpo();
+			$this->columnValueExpo = $this->getColumnVolumeExpo();
 		}
 
 
@@ -3881,6 +3901,182 @@ class DeclaracionesRepo extends BaseRepo {
 		];
 
 		return $result;
+	}
+
+	public function executeColombiaAlMundo()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
+		$this->setTrade('expo');
+
+		$this->model    = $this->getModelExpo();
+		$this->modelAdo = $this->getModelExpoAdo();
+		$columnValue    = $this->getColumnValueExpo();
+		$columnVolume   = $this->getColumnVolumeExpo();
+
+		//Trae los productos configurados como agricolas
+		$result = $this->findProductsBySector('sectorIdAgriculture');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsAgriculture = $result['data'];
+
+		$this->model->setId_posicion($productsAgriculture);
+		
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues();
+
+		$this->modelAdo->setPivotRowFields('id, decl.id_posicion, posicion');
+		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotColumnFields('anio');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
+
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$rsDeclaraciones['success']) {
+			return $rsDeclaraciones;
+		}
+
+		if ($rsDeclaraciones['total'] == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		$arrFieldAlias = ['id', 'id_posicion', 'posicion'];;
+		$arrData      = [];
+		$arrChartData = [];
+		$arrTotals    = [];
+		$arrSeries    = [];
+
+		foreach ($rsDeclaraciones['data'] as $row) {
+			foreach ($row as $key => $value) {
+				if ( !in_array($key, $arrFieldAlias) ) {
+					//suma las columnas que no estan en array de filas
+					//es decir las columnas calculadas
+					if (empty($arrTotals[$key])) {
+						$arrTotals[$key] = 0;
+					}
+					$arrTotals[$key] += (float)($value / $this->divisor);
+					$arrSeries[]      = $key;
+				}
+			}
+		}
+
+		$yearFirst         = $arrFiltersValues['anio_ini'];
+		$yearLast          = $arrFiltersValues['anio_fin'];
+		$rangeYear         = range($yearFirst, $yearLast);
+		$numberPeriods     = count($rangeYear);
+		$valueLast         = 0;
+		$valueFirst        = 0;
+		$arrChartColumns   = [];
+		$arrChartColumns[] = ['id' => 'x', 'label' => 'Vr. Prom. Anual', 'type' => 'number'];
+
+		foreach ($rsDeclaraciones['data'] as $row) {
+			$arr = [];
+			$includeRow = true;
+			$growthRate = 0;
+			foreach ($row as $key => $value) {
+				//suprimir la palabra " peso_neto" que le pone por defecto la clase pivottable a las columnas calculadas
+				$index = str_replace(' '.$columnValue, '', $key);
+				
+				if (in_array($key, $arrSeries)) {
+					
+					$value = (float)($value / $this->divisor);
+					if ($key == $columnValue) {
+
+						$rate = ($arrTotals[$key] == 0) ? 0 : ( $value / $arrTotals[$key]) ;
+						if ($rate < 0.003) {
+							//descartar los productos con poca participacion inferior al 0.3%
+							$includeRow = false;
+						}
+						//calcula la participacion y la agrega como columna
+						$arr['rate_'.$index] = $rate * 100;
+					} else {
+
+						if ($index == $yearFirst) {
+							$valueFirst = $value;
+						}
+						$valueLast = $value;
+					}
+					$arr[$index] = $value;
+					
+				} else {
+					$arr[$index] = $value;
+				}
+			}
+			if ($includeRow) {
+				$valueFirst        = ($valueFirst == 0) ? 1 : $valueFirst ;
+				$growthRate        = ( pow(($valueLast / $valueFirst), (1 / $numberPeriods)) - 1);
+				$arr['growthRate'] = ( $growthRate * 100 );
+				$arrData[]         = $arr;
+
+				$arrChartData[] = [
+					'posicion'      => '(' . $row['id_posicion'] . ') ',
+					'valor_expo'    => $row[$columnValue]
+				];
+			}
+		}
+
+
+		$pieChart           = [];
+		$pieChart['cols'][] = ['id' => 'posicion', 'label' => Lang::get('indicador.columns_title.posicion'), 'type' => 'string'];
+		$pieChart['cols'][] = ['id' => 'valor_expo', 'label' => Lang::get('indicador.columns_title.valor_expo'), 'type' => 'number'];
+
+		foreach ($arrChartData as $key => $row) {
+			$arr = [];
+			$arr['c'][] = [ 'v' => $row['posicion'] ];
+			$arr['c'][] = [ 'v' => $row['valor_expo'] ];
+
+			$pieChart['rows'][] = $arr;
+		}
+
+		$result = [
+			'success'     => true,
+			'data'        => $arrData,
+			'total'       => count($arrData),
+			//'columnChart' => $columnChart,
+			'pieChart'    => $pieChart,
+		];
+		//print_r(json_encode($pieChart));
+
+		return $result;
+
+		exit();
+
+
+
+
+
+
+		foreach ($arrQuadrant1 as $key => $row) {
+			$avg      = (float)$row['avg'] / 1000;
+			$slope    = (float)$row['slope'];
+
+			$pais = $row['rtTitle'];
+			$arrChartColumns1[] = ['id' => '', 'label' => $pais, 'type' => 'number'];
+
+			$arr = [];
+			$arr['c'][] = [ 'v' => $avg ];
+			for ($i=2; $i <= count($arrQuadrant1) + 1; $i++) {
+				if ($i == count($arrChartColumns1)) {
+					$arr['c'][] = [ 'v' => number_format($slope ,2) ];
+				} else {
+					$arr['c'][] = [ 'v' => null ];
+				}
+			}
+
+			$arrChartQuadrant1['rows'][] = $arr;
+		}
+
+		$arrChartQuadrant1['cols'] = $arrChartColumns1;
+
+
+
+
+		var_dump($arrData);
+		exit();
 	}
 }
 

@@ -864,6 +864,21 @@ return [
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
 		],
+		'colombiaAlMundo' => [
+			[
+				'field'      => 'anio_ini',
+				'field_expo' => 'anio',
+				'field_impo' => 'anio',
+				'required'   => true,
+				'yearRange'  => ['anio_fin'],
+			],[
+				'field'         => 'anio_fin',
+				'field_expo'    => 'anio',
+				'field_impo'    => 'anio',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro anio_ini
+			]
+		],
 	],
 	'executeConfig' => [
 		'1'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'BalanzaRelativa'],
@@ -892,6 +907,7 @@ return [
 		'contingente' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'AcumuladoContingente'],
 		'acuerdo_det' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'AcumuladoPosicionPais'],
 		'cuadrantes'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ComtradeCuadrantes'],
+		'colombiaAlMundo'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ColombiaAlMundo'],
 	],
 	'yearsAvailable' => ['2005','2006','2007','2008','2009','2010', '2011', '2012', '2013', '2014'],
 	'periods' => [

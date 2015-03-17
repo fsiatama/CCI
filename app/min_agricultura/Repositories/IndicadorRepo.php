@@ -635,5 +635,77 @@ class IndicadorRepo extends BaseRepo {
 
 	}
 
+	public function executePublicReports($params)
+	{
+		extract($params);
+
+
+		if (empty($report)) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+
+		$methodName       = Inflector::lowerCamel($report);
+		$lines            = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.'.$methodName);
+		$arrFiltersName   = Helpers::arrayGet($lines, 'filters.'.$methodName);
+
+		if (empty($arrExecuteConfig)) {
+			return [
+				'success' => false,
+				'error'   => 'There is no configuration for this method'
+			];
+		}
+
+		$repoFileName   = PATH_MODELS.'Repositories/'.$arrExecuteConfig['repoClassName'].'.php';
+		$repoClassName  = $arrExecuteConfig['repoClassName'];
+		$repoMethodName = 'execute' . $arrExecuteConfig['methodName'];
+
+		if ( ! file_exists($repoFileName)) {
+			return [
+				'success' => false,
+				'error'   => 'unavailable repo '. $repoClassName
+			];
+		}
+		require $repoFileName;
+
+		$updateInfo = Helpers::getUpdateInfo('aduanas', 'impo');
+		$yearLast   = $updateInfo['dateTo']->format('Y');
+  		$updateInfo['dateTo']->modify( '-4year' );
+  		$yearFirst = $updateInfo['dateTo']->format('Y'); //toma 5 hacia a tras
+
+		$arrFilters = [
+			'anio_ini:'       . $yearFirst,
+			'anio_fin:'       . $yearLast,
+		];
+		$params       = [
+			'indicador_filtros'        => implode('||', $arrFilters),
+			'tipo_indicador_activador' => 'volumen',
+		];
+
+		$repo = new $repoClassName(
+			$params,
+			$arrFiltersName,
+			'',
+			12,
+			1,
+			2
+		);
+		if (!method_exists($repo, $repoMethodName)) {
+			return [
+				'success' => false,
+				'error'   => 'unavailable method '. $repoMethodName
+			];
+		}
+		$rsExecuted = call_user_func_array([$repo, $repoMethodName], []);
+		//if ( ! $rsExecuted['success'] ) {
+			return $rsExecuted;
+		//}
+
+	}
+
 }
 

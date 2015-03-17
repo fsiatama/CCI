@@ -6,6 +6,16 @@
                     <strong class="">Herramientas</strong>
                 </div>
                 <div class="panel-body">
+                        <h2>Comercio agropecuario de <strong>Colombia</strong></h2>
+                        <p>
+                            Esta herramienta presenta reportes de actualización mensual, con los flujos comerciales del país para el sector agropecuario.
+                        </p>
+                        <ul>
+                            <li>
+                                <a href="<?= URL_RAIZ; ?>comercio-agropecuario-colombia">Haz click aqui</a>
+                            </li>
+                        </ul>
+                        <hr class="half-margins">
                         <h2>Posicionamiento y dinamismo de los <strong>productos</strong></h2>
                         <p>
                             Priorización de productos a partir de la demanda “Metodología de cuadrantes” – exploración preliminar de mercados

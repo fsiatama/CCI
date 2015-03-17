@@ -236,6 +236,13 @@ class IndicadorController {
 
 	}
 
+	public function publicReportsAction($urlParams, $postParams)
+	{
+
+		return $this->indicadorRepo->executePublicReports($postParams);
+
+	}
+
 }
 	
 
