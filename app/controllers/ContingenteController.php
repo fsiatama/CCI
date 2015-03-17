@@ -162,6 +162,12 @@ class ContingenteController {
 		return $result;
 	}
 
+	public function publicSearchByParentAction($urlParams, $postParams)
+	{
+		$result = $this->contingenteRepo->publicSearch($postParams);
+		return $result;
+	}
+
 }
 	
 

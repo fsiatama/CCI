@@ -558,6 +558,8 @@ class ContingenteRepo extends BaseRepo {
 				'cumulativeRate'   => 0,
 			];
 
+			$gaugeChart = $this->getGaugeData($arrContingente, 0, $quotaWeight, $arrContingente['pais']);
+
 		} else {
 
 			$arrDeclaraciones = $result['data'];

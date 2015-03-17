@@ -15,6 +15,7 @@
 
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.css">
 		<link rel="stylesheet" href="<?= URL_RAIZ; ?>css/layout.css" />
 
 		<script src="<?= URL_RAIZ; ?>js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -130,6 +131,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.5.2/holder.min.js"></script>
 		<script src="<?= URL_RAIZ; ?>js/plugins.js"></script>
+		<script src="//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 		<script src="<?= URL_RAIZ; ?>js/main.js"></script>
 	</body>
 </html>

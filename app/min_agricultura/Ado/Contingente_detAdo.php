@@ -124,6 +124,8 @@ class Contingente_detAdo extends BaseAdo {
 			$sql .= '  ('. implode( $joinOperator, $filter ).')';
 		}
 
+		$sql .= ' ORDER BY contingente_det_anio_ini';
+
 		//echo "<pre>$sql</pre>";
 
 		return $sql;

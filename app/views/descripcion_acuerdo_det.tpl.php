@@ -45,33 +45,16 @@ if ( ! empty($rowAgreement['acuerdo_decreto']) ) {
 	';
 }
 
-/*<div role="tabpanel">
-
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
-    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="home">...</div>
-    <div role="tabpanel" class="tab-pane" id="profile">...</div>
-    <div role="tabpanel" class="tab-pane" id="messages">...</div>
-    <div role="tabpanel" class="tab-pane" id="settings">...</div>
-  </div>
-
-</div>*/
 $htmlAgreementDetItems = '';
 $htmlAgreementDetTabs = '';
+
+//var_dump($arrAgreementDet);
 foreach ($arrAgreementDet as $key => $row) {
 
 	$id = 'agreementDet_'.($key + 1);
 
 	$htmlAgreementDetTabs .= '
-		<li><a href="#'. $id .'" data-toggle="tab">'. $id .'</a></li>
+		<li><a href="#'. $id .'" data-toggle="tab" data-key="'.$row['acuerdo_det_id'].'" >'. $id .'</a></li>
 	';
 
 	$htmlProducts = '<dl>';
@@ -94,31 +77,75 @@ foreach ($arrAgreementDet as $key => $row) {
 		 	      <th scope="row">
 		 	        <code>' . Lang::get('acuerdo_det.columns_title.acuerdo_det_productos') . '</code>
 		 	      </th>
-		 	      <td>' . $htmlProducts . '</td>
+		 	      <td class="fsize11">' . $htmlProducts . '</td>
 		 	    </tr>
 		 	    <tr>
 		 	      <th scope="row">
 		 	        <code>' . Lang::get('acuerdo_det.columns_title.acuerdo_det_productos_desc') . '</code>
 		 	      </th>
-		 	      <td>' . $row['acuerdo_det_productos_desc'] . '</td>
+		 	      <td class="fsize11">' . $row['acuerdo_det_productos_desc'] . '</td>
 		 	    </tr>
 		 	    <tr>
 		 	      <th scope="row">
 		 	        <code>' . Lang::get('acuerdo_det.columns_title.acuerdo_det_arancel_base') . '</code>
 		 	      </th>
-		 	      <td>' . $row['acuerdo_det_arancel_base'] . '%</td>
+		 	      <td class="fsize11">' . $row['acuerdo_det_arancel_base'] . '%</td>
 		 	    </tr>
 		 	    <tr>
 		 	      <th scope="row">
 		 	        <code>' . Lang::get('acuerdo_det.columns_title.acuerdo_det_nperiodos') . '</code>
 		 	      </th>
-		 	      <td>' . $row['acuerdo_det_nperiodos'] . '</td>
+		 	      <td class="fsize11">' . $row['acuerdo_det_nperiodos'] . '</td>
 		 	    </tr>
 		 	  </tbody>
 		 	</table>
 		 </div>
-		</div>
 	';
+
+	$rowContingente = $row['rowContingente'];
+
+
+	$htmlAgreementDetItems .= '
+	<div class="row">
+		<div class="col-sm-12">
+			<p>'.$rowContingente['contingente_desc'].'<p>
+			<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="quotaDatasource">
+				<thead>
+					<th>Año</th>
+					<th>'.Lang::get('contingente_det.peso_contingente').'</th>
+					<th>'.Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa').'</th>
+				</thead>
+				<tbody>
+	';
+
+	$zeroQuota = false;
+	$zeroDuty  = false;
+
+	foreach ($row['arrDetail'] as $year => $rowDet) {
+		$quota     = ($rowDet['quota'] == 0) ? Lang::get('contingente_det.peso_ilimitado') : number_format($rowDet['quota'], 2) ;
+
+		if ( !$zeroQuota && !$zeroDuty ) {
+			$htmlAgreementDetItems .= '
+			<tr>
+				<td>'.$rowDet['year'].'</td>
+				<td class="text-right">'.$quota.'</td>
+				<td class="text-right">'.number_format($rowDet['duty'], 2).'%</td>
+			</tr>
+			';
+		}
+		$zeroQuota = ($rowDet['quota'] == 0) ? true : false;
+		$zeroDuty  = ($rowDet['duty'] == 0) ? true : false;
+	}
+
+	$htmlAgreementDetItems .= '
+				</tbody>
+			</table>
+		</div>
+	</div>
+	';
+
+
+	$htmlAgreementDetItems .= '</div>';
 }
 
 $htmlAgreementDet = '
@@ -163,6 +190,9 @@ $htmlAgreementDet = '
 <ul id="pagination" class="pagination-sm"></ul>
 
 <?= $htmlAgreementDet; ?>
+
+
+
 
 
 

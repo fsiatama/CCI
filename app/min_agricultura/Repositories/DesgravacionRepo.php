@@ -357,4 +357,50 @@ class DesgravacionRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function listDetail($params)
+	{
+		extract($params);
+
+		if (
+			empty($acuerdo_id) ||
+			empty($acuerdo_det_id)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request. contingenteRepo  execute'
+			];
+			return $result;
+		}
+
+		$this->model->setDesgravacion_acuerdo_det_id($acuerdo_det_id);
+		$this->model->setDesgravacion_acuerdo_det_acuerdo_id($acuerdo_id);
+		if ( !empty($country) ) {
+			$this->model->setDesgravacion_id_pais($country);
+		}
+
+		$result = $this->modelAdo->exactSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
+		//la consulta solo deberia arrojar un registro
+		$rowDesgravacion                     = array_shift($result['data']);
+		$desgravacion_id                     = $rowDesgravacion['desgravacion_id'];
+		$desgravacion_acuerdo_det_id         = $rowDesgravacion['desgravacion_acuerdo_det_id'];
+		$desgravacion_acuerdo_det_acuerdo_id = $rowDesgravacion['desgravacion_acuerdo_det_acuerdo_id'];
+
+		$this->desgravacion_detRepo = new Desgravacion_detRepo;
+		$result = $this->desgravacion_detRepo->listId( compact('desgravacion_id', 'desgravacion_acuerdo_det_id', 'desgravacion_acuerdo_det_acuerdo_id') );
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$result = [
+			'success' => true,
+			'rowDesgravacion' => $rowDesgravacion,
+			'arrDesgravacion_det' => $result['data'],
+		];
+
+		return $result;
+	}
+
 }

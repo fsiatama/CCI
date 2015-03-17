@@ -691,6 +691,9 @@ class Acuerdo_detRepo extends BaseRepo {
 			return $result;
 		}
 
+		$this->contingenteRepo  = new ContingenteRepo;
+		$this->desgravacionRepo = new DesgravacionRepo;
+
 		$rowAgreementDet = [];
 
 		foreach ($result['data'] as $key => $row) {
@@ -701,8 +704,67 @@ class Acuerdo_detRepo extends BaseRepo {
 				if (!$rsAgreementDet['success']) {
 					return $rsAgreementDet;
 				}
+
+				$acuerdo_id     = $row['acuerdo_det_acuerdo_id'];
+				$acuerdo_det_id = $row[$this->primaryKey];
+				$country        = ( $row['acuerdo_det_contingente_acumulado_pais'] == '1' ) ? '' : array_shift($countries) ;
+				$rsQuota        = $this->contingenteRepo->listDetail( compact('acuerdo_id', 'acuerdo_det_id', 'country') );
+
+				if (!$rsQuota['success']) {
+					return $rsQuota;
+				}
+
+				$rsReduction = $this->desgravacionRepo->listDetail( compact('acuerdo_id', 'acuerdo_det_id', 'country') );
+
+				if (!$rsQuota['success']) {
+					return $rsQuota;
+				}
+
+				$arrDetail = [];
+				if ( $rsQuota['rowContingente']['contingente_mcontingente'] == '1' ) {
+					foreach ($rsQuota['arrContingente_det'] as $rowDet) {
+						$year = $rowDet['contingente_det_anio_ini'];
+						$arrDetail[ $year ] = [
+							'year'  => $year,
+							'quota' => $rowDet['contingente_det_peso_neto'],
+							'duty'  => 0
+						];
+					}
+				}
+				if ( $rsReduction['rowDesgravacion']['desgravacion_mdesgravacion'] == '1' ) {
+					foreach ($rsReduction['arrDesgravacion_det'] as $rowDet) {
+						$year = $rowDet['desgravacion_det_anio_ini'];
+						$rowQuota = Helpers::findKeyInArrayMulti(
+							$arrDetail,
+							'year',
+							$year
+						);
+						if ($rowQuota !== false) {
+							//si encuentra el registro en contingentes añade informacion de desgravacion
+							$arrDetail[ $year ][ 'duty' ] = $rowDet['desgravacion_det_tasa'];
+						} else {
+							//si no encuentra el registro crea uno 
+							$arrDetail[ $year ] = [
+								'year'  => $year,
+								'quota' => 0,
+								'duty'  => $rowDet['desgravacion_det_tasa']
+							];
+						}
+					}
+				}
+
+				//var_dump($rsReduction);
 				
-				$arrAgreementDet[] = array_merge( $row, ['productsData' => $rsAgreementDet['productsData'] ] );
+				$arrAgreementDet[] = array_merge( 
+					$row,
+					[
+						'productsData'    => $rsAgreementDet['productsData'],
+						'rowContingente'  => $rsQuota['rowContingente'],
+						'rowDesgravacion' => $rsReduction['rowDesgravacion'],
+						'arrDetail'       => $arrDetail, 
+					]
+				);
+
 			}
 		}
 		if ( empty($arrAgreementDet) ) {
@@ -721,20 +783,14 @@ class Acuerdo_detRepo extends BaseRepo {
 		return $return;
 		//var_dump($rowAgreementDet, $rowAgreement);
 
-		$this->contingenteRepo  = new ContingenteRepo;
-		$this->desgravacionRepo = new DesgravacionRepo;
+		
 
-		$acuerdo_id     = $rowAgreementDet['acuerdo_det_acuerdo_id'];
-		$acuerdo_det_id = $rowAgreementDet[$this->primaryKey];
-		$country        = ( $rowAgreementDet['acuerdo_det_contingente_acumulado_pais'] == '1' ) ? '' : array_shift($countries) ;
-
-
-		$result = $this->contingenteRepo->listDetail( compact('acuerdo_id', 'acuerdo_det_id', 'country') );
+		
 
 		var_dump($result);
 		//hasta aqui tiene toda la informacion para resumir todo la configuracion del acuerdo
 
-		var_dump($rowAgreementDet, $rowAgreement);
+		//var_dump($rowAgreementDet, $rowAgreement);
 
 
 

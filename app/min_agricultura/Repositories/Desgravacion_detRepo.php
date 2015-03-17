@@ -340,4 +340,35 @@ class Desgravacion_detRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function listId($params)
+	{
+		extract($params);
+		
+		if (
+			empty($desgravacion_id) ||
+			empty($desgravacion_acuerdo_det_id) ||
+			empty($desgravacion_acuerdo_det_acuerdo_id)
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request. desgravacion_detRepo listId'
+			];
+			return $result;
+		}
+
+
+		//busca todos los registros en contingente_det por la llave de desgravacion
+		$this->model->setDesgravacion_det_desgravacion_id($desgravacion_id);
+		$this->model->setDesgravacion_det_desgravacion_acuerdo_det_id($desgravacion_acuerdo_det_id);
+		$this->model->setDesgravacion_det_desgravacion_acuerdo_det_acuerdo_id($desgravacion_acuerdo_det_acuerdo_id);
+
+		if (!empty($year)) {
+			$this->model->setDesgravacion_det_anio_ini($year);
+			$this->model->setDesgravacion_det_anio_fin($year);
+		}
+		
+		$result = $this->modelAdo->exactSearch($this->model);
+		return $result;
+	}
+
 }

@@ -265,6 +265,7 @@ jQuery(function($) {
 		$(msCountry).on('selectionchange', function(e,m,a,b){
 			var countries = msCountry.getValue();
 			var trade     = $('#searchAgreementForm input[name=agreementTrade]:checked').val();
+			msProduct.clear();
 			if ( countries.length > 0 ) {
 				msProduct.setDataUrlParams({
 					trade: trade,
@@ -290,7 +291,7 @@ jQuery(function($) {
 
 				$.ajax({
 					type:'POST'
-					,url:'acuerdo_det/publicSearch'
+					,url:'acuerdo_det/public-search'
 					,data:{
 						products: products,
 						countries: countries,
@@ -302,6 +303,7 @@ jQuery(function($) {
 							var records = data.data;
 							var index   = 0;
 							$('#grid-quota').html(data.html);
+							$('#agreementDetTabs li:eq(0) a').tab('show');
 							$('#pagination').twbsPagination({
 						        totalPages: data.total,
 						        visiblePages: 5,
@@ -310,7 +312,11 @@ jQuery(function($) {
 						        next: '&rsaquo;',
 						        last: '&raquo;',
 						        onPageClick: function (event, page) {
-						        	$('#agreementDetTabs li:eq(' + (page - 1) + ') a').tab('show');
+						        	var link = $('#agreementDetTabs li:eq(' + (page - 1) + ') a');
+						        	link.tab('show');
+						        	var key = link.data('key');
+
+						        	findQuota( key, countries);
 						        }
 						    });
 						    Holder.run();
@@ -450,7 +456,7 @@ jQuery(function($) {
 			}
 			event.preventDefault();
 		});
-	}// End of if ( $('#map-quadrant').length > 0 )
+	}// End of if ( $('#grid-quadrant').length > 0 )
 
 });
 
@@ -597,4 +603,24 @@ function drawSeriesChart(jsonData, divId, btnId) {
 		console.log(png, $('#' + btnId));
 	});*/
 	chart.draw(data, options);
+}
+
+function findQuota (key, country) {
+	$.ajax({
+		type:'POST'
+		,url:'contingente/public-search-by-Parent'
+		,data:{
+			acuerdo_det_id: key,
+			country: country
+		}
+		,dataType:"json"
+		,success:function(data){
+			if(data.success){
+				
+			} else {
+				$('#modal-error-msg').html(data.error);
+				$('#errorModal').modal('show');
+			}
+		}
+	});
 }

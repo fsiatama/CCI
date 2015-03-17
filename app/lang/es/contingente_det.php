@@ -5,6 +5,7 @@ return [
 	'peso_contingente'    => 'Cupo del Contingente (Tm)',
 	'peso_ejecutado'      => 'Peso Ejecutado (Tm)',
 	'peso_acumulado'      => 'Peso Acumulado (Tm)',
+	'peso_ilimitado'      => 'Ilimitado',
 	'peso_salvaguardia'   => 'Cupo con salvaguardia (Tm)',
 	'valor_ejecutado'     => 'Ejecutado (%)',
 	'valor_acumulado'     => 'Acumulado (%)',
