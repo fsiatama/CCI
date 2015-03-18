@@ -3964,14 +3964,12 @@ class DeclaracionesRepo extends BaseRepo {
 			}
 		}
 
-		$yearFirst         = $arrFiltersValues['anio_ini'];
-		$yearLast          = $arrFiltersValues['anio_fin'];
-		$rangeYear         = range($yearFirst, $yearLast);
-		$numberPeriods     = count($rangeYear);
-		$valueLast         = 0;
-		$valueFirst        = 0;
-		$arrChartColumns   = [];
-		$arrChartColumns[] = ['id' => 'x', 'label' => 'Vr. Prom. Anual', 'type' => 'number'];
+		$yearFirst     = $arrFiltersValues['anio_ini'];
+		$yearLast      = $arrFiltersValues['anio_fin'];
+		$rangeYear     = range($yearFirst, $yearLast);
+		$numberPeriods = count($rangeYear);
+		$valueLast     = 0;
+		$valueFirst    = 0;
 
 		foreach ($rsDeclaraciones['data'] as $row) {
 			$arr = [];
@@ -4007,36 +4005,46 @@ class DeclaracionesRepo extends BaseRepo {
 				}
 			}
 			if ($includeRow) {
+				$posicion          = '(' . $row['id_posicion'] . ') ' . $row['posicion'];
 				$valueFirst        = ($valueFirst == 0) ? 1 : $valueFirst ;
 				$growthRate        = ( pow(($valueLast / $valueFirst), (1 / $numberPeriods)) - 1);
 				$arr['growthRate'] = ( $growthRate * 100 );
 				$arrData[]         = $arr;
 
 				$arrChartData[] = [
-					'posicion'      => '(' . $row['id_posicion'] . ') ',
-					'valor_expo'    => $row[$columnValue]
+					'id_posicion' => $row['id_posicion'] ,
+					'posicion'    => $posicion,
+					'valor_expo'  => (float)($row[$columnValue] / $this->divisor),
+					'growthRate'  => ( $growthRate * 100 )
 				];
 			}
 		}
 
 
-		$pieChart           = [];
-		$pieChart['cols'][] = ['id' => 'posicion', 'label' => Lang::get('indicador.columns_title.posicion'), 'type' => 'string'];
-		$pieChart['cols'][] = ['id' => 'valor_expo', 'label' => Lang::get('indicador.columns_title.valor_expo'), 'type' => 'number'];
+		$pieChart              = [];
+		$pieChart['cols'][]    = ['id' => 'posicion', 'label' => Lang::get('indicador.columns_title.posicion'), 'type' => 'string'];
+		$pieChart['cols'][]    = ['id' => 'valor_expo', 'label' => Lang::get('indicador.columns_title.valor_expo'), 'type' => 'number'];
+		$columnChart           = [];
+		$columnChart['cols'][] = ['id' => 'posicion', 'label' => Lang::get('indicador.columns_title.posicion'), 'type' => 'string'];
+		$columnChart['cols'][] = ['id' => 'growthRate', 'label' => Lang::get('indicador.reports.growVariation'), 'type' => 'number'];
 
 		foreach ($arrChartData as $key => $row) {
-			$arr = [];
-			$arr['c'][] = [ 'v' => $row['posicion'] ];
-			$arr['c'][] = [ 'v' => $row['valor_expo'] ];
-
+			$arr                = [];
+			$arr['c'][]         = [ 'v' => $row['posicion'], 'f' => null ];
+			$arr['c'][]         = [ 'v' => $row['valor_expo'], 'f' => null ];
 			$pieChart['rows'][] = $arr;
+
+			$arr                   = [];
+			$arr['c'][]            = [ 'v' => $row['id_posicion'], 'f' => null ];
+			$arr['c'][]            = [ 'v' => $row['growthRate'], 'f' => null ];
+			$columnChart['rows'][] = $arr;
 		}
 
 		$result = [
 			'success'     => true,
 			'data'        => $arrData,
 			'total'       => count($arrData),
-			//'columnChart' => $columnChart,
+			'columnChart' => $columnChart,
 			'pieChart'    => $pieChart,
 		];
 		//print_r(json_encode($pieChart));

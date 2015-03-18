@@ -61,7 +61,7 @@ $updateInfo = Inflector::compress($updateInfo);
 								<div class="panel-body text-center">
 									<h4>Principales Productos</h4>
 									<p class="help-block">Valor acumulado últimos 5 años</p>
-									<div id="chart_1_div"></div>
+									<div id="chart_1_div" style="width:100%; height:500px"></div>
 								</div>
 								<div class="panel-heading">
 									<span class="panel-title">Participación Por Producto</span>
@@ -78,9 +78,9 @@ $updateInfo = Inflector::compress($updateInfo);
 						<div id="chart_2" class="tab-pane" role="tabpanel">
 							<div class="panel panel-success margin-top10">
 								<div class="panel-body text-center">
-									<h4>Altamente Atractivos</h4>
-									<p class="help-block">Mercado grande con crecimiento dinámico</p>
-									<div id="quadrant_2_chart_div" style="width: 700px; height: 400px;"></div>
+									<h4>Principales Productos</h4>
+									<p class="help-block">Valor promedio de los últimos 5 años</p>
+									<div id="chart_2_div" style="width:100%; height:500px"></div>
 								</div>
 								<div class="panel-heading">
 									<span class="panel-title">Tasa de crecimiento</span>

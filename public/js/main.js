@@ -477,6 +477,7 @@ jQuery(function($) {
 						var showTab = false;
 
 						$('#chart_1_div').html('');
+						$('#chart_2_div').html('');
 
 						/*$('#quadrant_2_chart_div').html('');
 						$('#quadrant_3_chart_div').html('');
@@ -484,6 +485,15 @@ jQuery(function($) {
 
 						if (data.pieChart.rows) {
 							drawPieChart(data.pieChart, 'chart_1_div', 'btn-print-1');
+
+							
+							/*if ( !showTab ) {
+								$('#quadrantTabs a[href="#chart_1"]').tab('show');
+								showTab = true;
+							}*/
+						}
+						if (data.columnChart.rows) {
+							drawColumnChart(data.columnChart, 'chart_2_div', 'btn-print-2');
 
 							
 							/*if ( !showTab ) {
@@ -659,9 +669,9 @@ function drawPieChart(jsonData, divId, btnId) {
 	var data = new google.visualization.DataTable(jsonData);
 
 	var options = {
-		width: 700,
-		height: 400,
-        allowHtml: true
+		allowHtml: true,
+		is3D: true,
+		legend: 'none'
 	};
 
 	var formatter = new google.visualization.NumberFormat({
@@ -673,6 +683,36 @@ function drawPieChart(jsonData, divId, btnId) {
 
   	
 	var chart = new google.visualization.PieChart(document.getElementById(divId));
+
+  	//console.log(chart);
+	/*google.visualization.events.addListener(chart, 'ready', function () {
+		chart.setSelection([{row:0, column:0}]); // Select one of the points.
+		png = chart.getImageURI();
+		//$('#' + btnId).disable(false);
+		$('#' + btnId).prop('disabled', false);
+		console.log(png, $('#' + btnId));
+	});*/
+	chart.draw(data, options);
+}
+
+function drawColumnChart(jsonData, divId, btnId) {
+
+	var data = new google.visualization.DataTable(jsonData);
+
+	var options = {
+        width: 1000,
+        height: 563,
+        hAxis: {
+          title: 'Time of Day',
+          format: 'h:mm a',
+          gridlines: {count: 10}
+        },
+        vAxis: {
+          title: 'Rating (scale of 1-10)'
+        }
+      };
+  	
+	var chart = new google.visualization.ColumnChart(document.getElementById(divId));
 
   	//console.log(chart);
 	/*google.visualization.events.addListener(chart, 'ready', function () {
