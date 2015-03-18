@@ -239,7 +239,25 @@ class IndicadorController {
 	public function publicReportsAction($urlParams, $postParams)
 	{
 
-		return $this->indicadorRepo->executePublicReports($postParams);
+		$result = $this->indicadorRepo->executePublicReports($postParams);
+		if ($result['success']) {
+
+			$template    = Inflector::lowerCamel($postParams['report']);
+			$is_template = true;
+
+			extract($result);
+
+			$view = new View($template, compact('is_template', 'data', 'htmlColumns'));
+
+			ob_start();
+
+			$view->execute();
+			$html = ob_get_clean();
+
+			$result = array_merge( $result, compact('html') );
+		}
+
+		return $result;
 
 	}
 

@@ -3971,9 +3971,16 @@ class DeclaracionesRepo extends BaseRepo {
 		$valueLast     = 0;
 		$valueFirst    = 0;
 
+
+		$htmlColumns   = [];
+		$htmlColumns['id_posicion'] = Lang::get('indicador.columns_title.posicion');
+		$htmlColumns['posicion']    = Lang::get('indicador.columns_title.desc_posicion');
+
+
 		foreach ($rsDeclaraciones['data'] as $row) {
 			$arr = [];
 			$includeRow = true;
+			$assignFirst = false;
 			$growthRate = 0;
 			foreach ($row as $key => $value) {
 				//suprimir la palabra " peso_neto" que le pone por defecto la clase pivottable a las columnas calculadas
@@ -3982,6 +3989,7 @@ class DeclaracionesRepo extends BaseRepo {
 				if (in_array($key, $arrSeries)) {
 					
 					$value = (float)($value / $this->divisor);
+					$title = $index;
 					if ($key == $columnValue) {
 
 						$rate = ($arrTotals[$key] == 0) ? 0 : ( $value / $arrTotals[$key]) ;
@@ -3989,16 +3997,29 @@ class DeclaracionesRepo extends BaseRepo {
 							//descartar los productos con poca participacion inferior al 0.3%
 							$includeRow = false;
 						}
+
+						$title = Lang::get('indicador.columns_title.participacion');
+
+						if ( empty($htmlColumns['rate_'.$index]) ) {
+							$htmlColumns['rate_'.$index] = $title;
+						}
+						$title = Lang::get('indicador.columns_title.valor_expo');
 						//calcula la participacion y la agrega como columna
 						$arr['rate_'.$index] = $rate * 100;
 					} else {
 
-						if ($index == $yearFirst) {
-							$valueFirst = $value;
+						//if ($index == $yearFirst) {
+						if ( $value > 0 && !$assignFirst ) {
+							$valueFirst  = $value;
+							$assignFirst = true;
 						}
 						$valueLast = $value;
 					}
 					$arr[$index] = $value;
+
+					if ( empty($htmlColumns[$index]) ) {
+						$htmlColumns[$index] = $title;
+					}
 					
 				} else {
 					$arr[$index] = $value;
@@ -4026,7 +4047,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$pieChart['cols'][]    = ['id' => 'valor_expo', 'label' => Lang::get('indicador.columns_title.valor_expo'), 'type' => 'number'];
 		$columnChart           = [];
 		$columnChart['cols'][] = ['id' => 'posicion', 'label' => Lang::get('indicador.columns_title.posicion'), 'type' => 'string'];
-		$columnChart['cols'][] = ['id' => 'growthRate', 'label' => Lang::get('indicador.reports.growVariation'), 'type' => 'number'];
+		$columnChart['cols'][] = ['id' => 'growthRate', 'label' => Lang::get('indicador.reports.growRate'), 'type' => 'number'];
 
 		foreach ($arrChartData as $key => $row) {
 			$arr                = [];
@@ -4035,7 +4056,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$pieChart['rows'][] = $arr;
 
 			$arr                   = [];
-			$arr['c'][]            = [ 'v' => $row['id_posicion'], 'f' => null ];
+			$arr['c'][]            = [ 'v' => $row['posicion'], 'f' => null ];
 			$arr['c'][]            = [ 'v' => $row['growthRate'], 'f' => null ];
 			$columnChart['rows'][] = $arr;
 		}
@@ -4046,6 +4067,7 @@ class DeclaracionesRepo extends BaseRepo {
 			'total'       => count($arrData),
 			'columnChart' => $columnChart,
 			'pieChart'    => $pieChart,
+			'htmlColumns' => $htmlColumns,
 		];
 		//print_r(json_encode($pieChart));
 

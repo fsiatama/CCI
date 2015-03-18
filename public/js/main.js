@@ -474,32 +474,20 @@ jQuery(function($) {
 				,success:function(data){
 					if(data.success){
 
-						var showTab = false;
+						var records = data.data;
+						$('#grid-trade-info').html(data.html);
 
 						$('#chart_1_div').html('');
 						$('#chart_2_div').html('');
 
-						/*$('#quadrant_2_chart_div').html('');
-						$('#quadrant_3_chart_div').html('');
-						$('#quadrant_4_chart_div').html('');*/
+						$('#data-table').dynatable();
 
 						if (data.pieChart.rows) {
 							drawPieChart(data.pieChart, 'chart_1_div', 'btn-print-1');
-
-							
-							/*if ( !showTab ) {
-								$('#quadrantTabs a[href="#chart_1"]').tab('show');
-								showTab = true;
-							}*/
+							$('#quadrantTabs a[href="#chart_1"]').tab('show');
 						}
 						if (data.columnChart.rows) {
-							drawColumnChart(data.columnChart, 'chart_2_div', 'btn-print-2');
-
-							
-							/*if ( !showTab ) {
-								$('#quadrantTabs a[href="#chart_1"]').tab('show');
-								showTab = true;
-							}*/
+							drawBarChart(data.columnChart, 'chart_2_div', 'btn-print-2');
 						}
 						
 						
@@ -695,24 +683,25 @@ function drawPieChart(jsonData, divId, btnId) {
 	chart.draw(data, options);
 }
 
-function drawColumnChart(jsonData, divId, btnId) {
+function drawBarChart(jsonData, divId, btnId) {
 
 	var data = new google.visualization.DataTable(jsonData);
 
 	var options = {
-        width: 1000,
-        height: 563,
-        hAxis: {
-          title: 'Time of Day',
-          format: 'h:mm a',
-          gridlines: {count: 10}
-        },
-        vAxis: {
-          title: 'Rating (scale of 1-10)'
-        }
-      };
+		vAxis: { title: '', textStyle: {fontSize:8 }, textPosition: 'none' },
+		hAxis: { title: '', format:"#'%'" },
+		legend: {position:'none'},
+		width: '700',
+		height: '500',
+		bar: { groupWidth: "90%" }
+	};
+	var formatter = new google.visualization.NumberFormat({
+		fractionDigits: 2,
+		suffix: '%'
+	});
+	formatter.format(data, 1);
   	
-	var chart = new google.visualization.ColumnChart(document.getElementById(divId));
+	var chart = new google.visualization.BarChart(document.getElementById(divId));
 
   	//console.log(chart);
 	/*google.visualization.events.addListener(chart, 'ready', function () {

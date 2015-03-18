@@ -62,6 +62,7 @@ return [
 		'finalRange'        => 'Rango Final',
 		'variation'         => 'Variación',
 		'growVariation'     => 'Relación de Crecimiento',
+		'growRate'          => 'Tasa de Crecimiento',
 		'ESME'              => '* ESME (Excluyendo El sector minero energético)',
 		'relation'          => 'Relación',
 		'diferencia'        => 'Diferencia',
