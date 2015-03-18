@@ -62,7 +62,7 @@
                         </ul>
                         <hr class="half-margins">
                         <h2>Utilización de <strong>contingentes</strong></h2>
-                        <p>También dispones de los siguientes links para consultar los requisitos sanitarios de paises como Estados Unidos y Canada</p>
+                        <p>Con los siguientes links podrás consultar los contingentes arancelarios de países como Estados Unidos y México, o bloques comerciales como la Unión Europea y EFTA</p>
                         <ul>
                             <li><a target="_blank" href="http://www.cbp.gov/trade/quota/guide-import-goods/commodities">Estados Unidos</a></li>
                             <li><a target="_blank" href="http://ec.europa.eu/taxation_customs/dds2/taric/quota_consultation.jsp?Lang=es&Screen=0&Status=&Offset=0&Critical=&Origin=&callbackuri=CBU-1&Code=&Expand=false">Unión Europea</a></li>

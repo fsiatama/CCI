@@ -6,6 +6,7 @@
  *
  * @author Julian Hernández R.
  **/
+ 
 include "../../public/lib/config.php";
 
 require PATH_APP.'../vendor/autoload.php';
@@ -116,7 +117,7 @@ class DataSync extends Connection {
         }
         
         $this->Log("Renombrando archivo el servidor FTP");
-        $ok = ftp_rename($ftpSession, $ftpFileName, $ftpFileName."_".date('YmdHis'));
+        $ok = ftp_rename($ftpSession, $ftpFileName, $ftpFileName."_".date("YmdHis"));
         if ($ok != TRUE) {
             $this->Log("ERROR. No se ha podido renombrar el archivo en el servidor FTP");
             return;
@@ -153,7 +154,7 @@ class DataSync extends Connection {
         for ($i = -1; $i < filesize($file); $i += 2097152) {
             $cont = file_get_contents($file, FALSE, NULL, $i, 2097152);
             $cont = utf8_encode($cont);
-            $cont = preg_replace('/[^a-zA-Z0-9_\n\r\.\,\|-]/', '', $cont);
+            $cont = preg_replace("/[^a-zA-Z0-9_\n\r\.\,\|-]/", "", $cont);
             //
             $arch = fopen($tempfile, "a+");
             fwrite($arch, $cont);
@@ -166,7 +167,7 @@ class DataSync extends Connection {
         $conn->BeginTrans();
         
         $sql   = [];
-        $sql[] = 'DROP TEMPORARY TABLE IF EXISTS ".$table."_TEMP;';
+        $sql[] = "DROP TEMPORARY TABLE IF EXISTS ".$table."_TEMP;";
         $sql[] = "CREATE TEMPORARY TABLE ".$table."_TEMP LIKE ".$table.";";
         $sql[] = "
             LOAD DATA LOCAL INFILE '".$tempfile."'
@@ -176,19 +177,49 @@ class DataSync extends Connection {
             OPTIONALLY ENCLOSED BY '\"'
             LINES TERMINATED BY '\n' STARTING BY '';
         ";
-        $sql[] = "
-            DELETE tbl FROM ".$table." tbl
-            INNER JOIN ".$table."_TEMP inn on inn.id = tbl.id;
-        ";
-        $sql[] = "INSERT INTO ".$table." SELECT * FROM ".$table."_TEMP;";
+        
+        if ($table == "declaraimp" or $table == "declaraexp") {
+            $sql[] = "
+                DELETE tbl FROM ".$table." tbl
+                INNER JOIN (
+                    select sub.anio, sub.periodo 
+                    from ".$table."_TEMP sub 
+                    group by sub.anio, sub.periodo
+                ) as tmp on tmp.anio = tbl.anio and tmp.periodo = tbl.periodo;
+            ";
+
+            $columns = "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`=(SELECT DATABASE()) AND `TABLE_NAME`='".$table."';";
+            $rs = $conn->Execute($columns);
+            $columns = "";
+            foreach ($rs->GetRows() as $row) {
+                if ($row["COLUMN_NAME"] != "id") {
+                    $columns = $columns . "`" . $row["COLUMN_NAME"] . "`,";
+                }
+            }
+            $columns = substr($columns, 0, strlen($columns) - 1);
+            
+            $sql[] = "INSERT INTO ".$table." (".$columns.") SELECT ".$columns." FROM ".$table."_TEMP;";
+            
+            $trade = ($table == "declaraimp") ? "impo" : "expo" ;
+            $sql[] = "
+                UPDATE update_info 
+                SET update_info_to = ( 
+                    SELECT MAX(DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(tab.anio,'-',tab.periodo,'-01 23:59:59.999999'), '%Y-%m-%d %H:%i:%s.%f'),INTERVAL 1 MONTH),INTERVAL -1 DAY)) 
+                    FROM declaraexp tab 
+                ) 
+                WHERE update_info_product = 'aduanas' 
+                  AND update_info_trade = '".$trade."';
+            ";
+        }
+        else {
+            $sql[] = "
+                DELETE tbl FROM ".$table." tbl
+                INNER JOIN ".$table."_TEMP inn on inn.id = tbl.id;
+            ";
+            $sql[] = "INSERT INTO ".$table." SELECT * FROM ".$table."_TEMP;";
+        }
+        
         $sql[] = "DROP TEMPORARY TABLE IF EXISTS ".$table."_TEMP;";
-        $sql[] = "UPDATE update_info SET update_info_to = CURRENT_DATE() WHERE update_info_product = 'aduanas' AND update_info_trade = 'impo';";
-
-        $trade = ($table == "declaraimp") ? 'impo' : 'expo' ;
-
-        $sql[] = "
-            UPDATE update_info SET update_info_to = CURRENT_DATE() WHERE update_info_product = 'aduanas' AND update_info_trade = '".$trade."';
-        ";
             
         $ok = TRUE;
         foreach ($sql as $comm) {
@@ -207,12 +238,12 @@ class DataSync extends Connection {
     }
     
     protected function Log($message) {
-        echo date('Y-m-d H:i:s')." -> ".$message."\xA";
+        echo date("Y-m-d H:i:s")." -> ".$message."\xA";
     }
 
     // Function for basic field validation (present and neither empty nor only white space
     protected function IsNullOrEmptyString($question) {
-        return (!isset($question) || trim($question) === '');
+        return (!isset($question) || trim($question) === "");
     }
 
     protected function DeleteTemps($arrayTemps) {
@@ -227,7 +258,7 @@ class DataSync extends Connection {
 
     protected function rmdir_recursive($dir) {
         foreach (scandir($dir) as $file) {
-            if ('.' === $file || '..' === $file) {
+            if ("." === $file || ".." === $file) {
                 continue;
             }
             if (is_dir("$dir/$file")) {
