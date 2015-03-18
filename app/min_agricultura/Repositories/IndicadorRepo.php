@@ -639,7 +639,6 @@ class IndicadorRepo extends BaseRepo {
 	{
 		extract($params);
 
-
 		if (empty($report)) {
 			$result = [
 				'success' => false,

@@ -474,22 +474,19 @@ jQuery(function($) {
 				,success:function(data){
 					if(data.success){
 
-						var records = data.data;
-						$('#grid-trade-info').html(data.html);
+						/*if (report == 'colombia-al-mundo') {
 
-						$('#chart_1_div').html('');
-						$('#chart_2_div').html('');
+							processReport1(data);
 
-						$('#data-table').dynatable();
+						} else if (report == 'principales-destinos') {
 
-						if (data.pieChart.rows) {
-							drawPieChart(data.pieChart, 'chart_1_div', 'btn-print-1');
-							$('#quadrantTabs a[href="#chart_1"]').tab('show');
-						}
-						if (data.columnChart.rows) {
-							drawBarChart(data.columnChart, 'chart_2_div', 'btn-print-2');
-						}
-						
+							processReport1(data);
+
+						} else {
+
+						}*/
+
+						processReport(data);
 						
 						
 					} else {
@@ -732,4 +729,32 @@ function findQuota (key, country) {
 			}
 		}
 	});
+}
+
+function processReport (data) {
+	
+	$('#grid-trade-info').html(data.html);
+	$('#chart_1_div').html('');
+	$('#chart_2_div').html('');
+	//$('#data_3').html('');
+
+	$('#data-table').dynatable({
+		features: {
+			recordCount: false,
+			search: false,
+			perPageSelect: false
+		},
+		table: {
+			copyHeaderClass: true
+		}
+	});
+
+	if (data.pieChart.rows) {
+		drawPieChart(data.pieChart, 'chart_1_div', 'btn-print-1');
+		$('#quadrantTabs a[href="#chart_1"]').tab('show');
+	}
+	if (data.columnChart.rows) {
+		drawBarChart(data.columnChart, 'chart_2_div', 'btn-print-2');
+	}
+
 }

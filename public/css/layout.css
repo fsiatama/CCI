@@ -1101,14 +1101,6 @@ body.modal-open {
  *
  * Date: Tue Jan 02 2014
  */
-th a {
-  color: #fff;
-}
-th a:hover {
-  color: #fff;
-  text-decoration: underline;
-}
-
 .dynatable-search {
   float: right;
   margin-bottom: 10px;
@@ -1160,6 +1152,8 @@ th a:hover {
   background: none;
   color: #999;
 }
+
+#data-table tbody > tr > td {white-space: nowrap;}
 
 
 /** --. Responsive
