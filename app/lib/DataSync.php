@@ -9,8 +9,12 @@
  
 include "../../public/lib/config.php";
 
+ini_set('display_errors', false);
+error_reporting(0);
+
 require PATH_APP.'../vendor/autoload.php';
 require PATH_APP.'lib/connection/Connection.php';
+require_once PATH_MODELS.'Repositories/AcuerdoRepo.php';
 
 class DataSync extends Connection {
 
@@ -19,15 +23,22 @@ class DataSync extends Connection {
     private $FtpUsername;
     private $FtpPassword;
 
-    function __construct($ftpHost, $ftpPort, $ftpUsername, $ftpPassword) {
+    public function __construct() {
 
         parent::__construct('min_agricultura');
 
-        $this->FtpHost = $ftpHost;
-        $this->FtpPort = $ftpPort;
-        $this->FtpUsername = $ftpUsername;
-        $this->FtpPassword = $ftpPassword;
+        $this->setFtpConnection();
+    }
 
+    private function setFtpConnection()
+    {
+        $linesConfig   = file_get_contents(PATH_APP.'lib/ftpConfig.php');
+        $ftpConnection = unserialize(base64_decode(str_rot13($linesConfig)));
+
+        $this->FtpHost     = $ftpConnection->ftpHost;
+        $this->FtpPort     = $ftpConnection->ftpPort;
+        $this->FtpUsername = $ftpConnection->ftpUsername;
+        $this->FtpPassword = $ftpConnection->ftpPassword;
     }
 
     public function Syncronize($table) {
@@ -36,6 +47,8 @@ class DataSync extends Connection {
         $ok = $this->IsNullOrEmptyString($table);
         if ($ok === TRUE) {
             $this->Log("ERROR. No se ha proporcionado el nombre de la tabla a actualizar");
+            $this->Log("====================================================================================");
+            $this->Log("====================================================================================");
             return;
         }
 
@@ -44,6 +57,8 @@ class DataSync extends Connection {
         $ok = ftp_login($ftpSession, $this->FtpUsername, $this->FtpPassword);
         if ($ok != TRUE) {
             $this->Log("ERROR. No se ha podido establecer conexión con el servidor FTP");
+            $this->Log("====================================================================================");
+            $this->Log("====================================================================================");
             return;
         }
 
@@ -54,6 +69,8 @@ class DataSync extends Connection {
             $this->Log("No hay archivo disponible");
             $this->Log("Cerrando conexión con el servidor FTP");
             ftp_close($ftpSession);
+            $this->Log("====================================================================================");
+            $this->Log("====================================================================================");
             return;
         }
 
@@ -68,6 +85,8 @@ class DataSync extends Connection {
             
             $this->Log("ERROR. Falló la descarga del archivo");
             $this->DeleteTemps($arrayTemps);
+            $this->Log("====================================================================================");
+            $this->Log("====================================================================================");
             return;
         }
         
@@ -82,6 +101,8 @@ class DataSync extends Connection {
         if ($ok != TRUE) {
             $this->Log("ERROR. Ha ocurrido un error inesperado");
             $this->DeleteTemps($arrayTemps);
+            $this->Log("====================================================================================");
+            $this->Log("====================================================================================");
             return;
         }
 
@@ -90,6 +111,8 @@ class DataSync extends Connection {
         if ($ok != TRUE) {
             $this->Log("ERROR. Fallo durante la descompresión de datos");
             $this->DeleteTemps($arrayTemps);
+            $this->Log("====================================================================================");
+            $this->Log("====================================================================================");
             return;
         }
 
@@ -100,6 +123,8 @@ class DataSync extends Connection {
             if ($ok != TRUE) {
                 $this->Log("ERROR. Fallo durante carga de datos nuevos");
                 $this->DeleteTemps($arrayTemps);
+                $this->Log("====================================================================================");
+                $this->Log("====================================================================================");
                 return;
             }
         }
@@ -113,6 +138,8 @@ class DataSync extends Connection {
         $ok = ftp_login($ftpSession, $this->FtpUsername, $this->FtpPassword);
         if ($ok != TRUE) {
             $this->Log("ERROR. No se ha podido establecer conexión con el servidor FTP");
+            $this->Log("====================================================================================");
+            $this->Log("====================================================================================");
             return;
         }
         
@@ -120,11 +147,25 @@ class DataSync extends Connection {
         $ok = ftp_rename($ftpSession, $ftpFileName, $ftpFileName."_".date("YmdHis"));
         if ($ok != TRUE) {
             $this->Log("ERROR. No se ha podido renombrar el archivo en el servidor FTP");
+            $this->Log("====================================================================================");
+            $this->Log("====================================================================================");
             return;
         }
 
         $this->Log("Cerrando conexión con el servidor FTP");
         $ok = ftp_close($ftpSession);
+
+        $this->Log("Finaliza proceso de actualización para la tabla ". $table);
+        
+
+        //una vez cargada la informacion nueva, dispara las alertas para los contingentes
+        $this->Log("Inicia proceso de alertas para los contingentes de ". $table);
+        $result = $this->acuerdo_detRepo->gridDetailed($postParams);
+
+
+
+        $this->Log("====================================================================================");
+        $this->Log("====================================================================================");
         return;
     }
 
@@ -154,7 +195,7 @@ class DataSync extends Connection {
         for ($i = -1; $i < filesize($file); $i += 2097152) {
             $cont = file_get_contents($file, FALSE, NULL, $i, 2097152);
             $cont = utf8_encode($cont);
-            $cont = preg_replace("/[^a-zA-Z0-9_\n\r\.\,\|-]/", "", $cont);
+            $cont = preg_replace("/[^a-zA-Z0-9_\n\r\.\,\|, -]/", "", $cont);
             //
             $arch = fopen($tempfile, "a+");
             fwrite($arch, $cont);
@@ -204,8 +245,7 @@ class DataSync extends Connection {
             $sql[] = "
                 UPDATE update_info 
                 SET update_info_to = ( 
-                    SELECT MAX(DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(tab.anio,'-',tab.periodo,'-01 23:59:59.999999'), '%Y-%m-%d %H:%i:%s.%f'),INTERVAL 1 MONTH),INTERVAL -1 DAY)) 
-                    FROM declaraexp tab 
+                    SELECT MAX( LAST_DAY(CONCAT(tab.anio,'-',tab.periodo,'-01')) ) FROM declaraexp tab 
                 ) 
                 WHERE update_info_product = 'aduanas' 
                   AND update_info_trade = '".$trade."';
@@ -213,10 +253,15 @@ class DataSync extends Connection {
         }
         else {
             $sql[] = "
-                DELETE tbl FROM ".$table." tbl
-                INNER JOIN ".$table."_TEMP inn on inn.id = tbl.id;
+                DELETE tbl FROM ".$table." tbl;
             ";
-            $sql[] = "INSERT INTO ".$table." SELECT * FROM ".$table."_TEMP;";
+            if ($table == "subpartida") {
+                $sql[] = "INSERT INTO ".$table." SELECT id_subpartida, subpartida, SUBSTR(id_subpartida,1,2), SUBSTR(id_subpartida,1,4) FROM ".$table."_TEMP;";
+            } elseif ($table == "posicion") {
+                $sql[] = "INSERT INTO ".$table." SELECT id_posicion, posicion, SUBSTR(id_posicion,1,2), SUBSTR(id_posicion,1,4), SUBSTR(id_posicion,1,6) FROM ".$table."_TEMP;";
+            } else {
+                $sql[] = "INSERT INTO ".$table." SELECT * FROM ".$table."_TEMP;";
+            }
         }
         
         $sql[] = "DROP TEMPORARY TABLE IF EXISTS ".$table."_TEMP;";
@@ -238,7 +283,18 @@ class DataSync extends Connection {
     }
     
     protected function Log($message) {
-        echo date("Y-m-d H:i:s")." -> ".$message."\xA";
+
+        $filename = PATH_REPORTS."update_info_log.txt";
+        $fp = fopen($filename, "a+");
+
+        chmod($filename, 0777);
+        $text = date("Y-m-d H:i:s")." - ". $message."\xA";
+        if($fp) {
+            fwrite($fp, $text, strlen($text));
+            fclose($fp);
+        }
+
+        //echo date("Y-m-d H:i:s")." -> ".$message."\xA";
     }
 
     // Function for basic field validation (present and neither empty nor only white space
@@ -290,6 +346,12 @@ class DataSync extends Connection {
 
 }
 
-$dataSync = new DataSync("190.60.211.98", 21, "fs1atam4", "fsagr1");
+$dataSync = new DataSync();
+$dataSync->Syncronize("arancel");
+$dataSync->Syncronize("posicion");
+$dataSync->Syncronize("subpartida");
+$dataSync->Syncronize("empresa");
+$dataSync->Syncronize("departamento");
+$dataSync->Syncronize("pais");
 $dataSync->Syncronize("declaraexp");
 $dataSync->Syncronize("declaraimp");
