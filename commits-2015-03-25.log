@@ -1,0 +1,211 @@
+5084a6f was Fabian Siatama, 5 days ago, message: archivos modificados, que perteneces al MADR con la configuracion para consultar con LDAP
+ff6f985 was Fabian Siatama, 5 days ago, message: ajustes DataSync
+9848e7c was Fabian Siatama, 7 days ago, message: Ajustes finales Datasync
+e0f27b1 was Fabian Siatama, 7 days ago, message: avances de reportes publicos
+45e7d4d was Fabian Siatama, 7 days ago, message: avances reportes publicos
+2bcabd6 was Fabian Siatama, 8 days ago, message: avances reportes publicos
+3919cb6 was Fabian Siatama, 8 days ago, message: avances de reportes publicos
+e1ce594 was Fabian Siatama, 8 days ago, message: Avances cronograma de desgravaciones
+4f6617d was Fabian Siatama, 9 days ago, message: avances cronograma de desgraviones
+0649a35 was Fabian Siatama, 9 days ago, message: avances de cuadrantes
+8cb3a89 was Fabian Siatama, 9 days ago, message: avances de cuadrantes
+bb40f7f was Fabian Siatama, 9 days ago, message: Avnces de cuadrantes
+398faef was Fabian Siatama, 12 days ago, message: avances de cuadrantes
+0bdf21b was Fabian Siatama, 12 days ago, message: avances de cuadrantes
+4c10031 was Fabian Siatama, 2 weeks ago, message: avances de cuadrantes
+35de06a was Fabian Siatama, 2 weeks ago, message: avances desgravaciones modulo 3
+f27424c was Fabian Siatama, 2 weeks ago, message: ajustes en titulos de indicadores y adicion del sector a los tres indicadores de balanza comercial
+daaad00 was Fabian Siatama, 2 weeks ago, message: ajustes en titulos de indicadores y adicion del sector a los tres indicadores de balanza comercial
+36d5c6a was Fabian Siatama, 2 weeks ago, message: avances cronograma de desgravaciones
+e24eaf0 was Fabian Siatama, 2 weeks ago, message: cambio de titulos y ajuste en excel remplazo de array_column
+3b35ab9 was Fabian Siatama, 2 weeks ago, message: cambio de titulo en los indicadores pais origen o destino por socio comercial
+5f2cb1b was Fabian Siatama, 2 weeks ago, message: adicion helper para subir imagenes
+7e19668 was Fabian Siatama, 2 weeks ago, message: avances sobre la herramienta para mostrar desgravaciones
+325a84f was Fabian Siatama, 3 weeks ago, message: se adiciono campos de tipo de operacion en desgravaciones y contingentes detalle
+77bce76 was Fabian Siatama, 3 weeks ago, message: ajustes a las consultas publicas de contingentes y desgravaciones
+93d563b was Fabian Siatama, 3 weeks ago, message: ajustes a las consultas publicas de acuerdos
+49ab32e was Fabian Siatama, 3 weeks ago, message: se crean vistas para los gronogramas de desgravacion
+e35b555 was Fabian Siatama, 3 weeks ago, message: version final mapa de informacion general acuerdos
+d1d77b7 was Fabian Siatama, 3 weeks ago, message: se adiciona la funcion arrayColumn a Helpers
+711f8cf was Fabian Siatama, 3 weeks ago, message: ajustes en el mapa herramientas
+6a8ce09 was Fabian Siatama, 4 weeks ago, message: se adicionan campos en mercado y acuerdo
+4416121 was Fabian Siatama, 4 weeks ago, message: ajustes en el modelo entidad acuerdo
+a0ec7fb was Fabian Siatama, 4 weeks ago, message: ajustes en el mapa informacion-general
+120cfc5 was Fabian Siatama, 4 weeks ago, message: ajustes en la vista de acuerdo_det.create.tpl
+0228f80 was Fabian Siatama, 4 weeks ago, message: ajustes en la vista de acuerdo_det.list.tpl
+7e81fdc was Fabian Siatama, 4 weeks ago, message: ajustes en la vista de acuerdo_det.list.tpl
+ad2d6c6 was Fabian Siatama, 4 weeks ago, message: ajuste en el mapa
+2d871ea was Fabian Siatama, 4 weeks ago, message: finaliza jornada QH 2014-02-25
+954e38a was Fabian Siatama, 4 weeks ago, message: finaliza jornada QH 2014-02-24
+0d75322 was Fabian Siatama, 4 weeks ago, message: finaliza jornada QH 2014-02-23
+b7bd085 was Fabian Siatama, 5 weeks ago, message: finaliza jornada QH 2014-02-20
+87137a3 was Fabian Siatama, 5 weeks ago, message: pruebas de codificacion utf8
+89fd3b3 was Fabian Siatama, 5 weeks ago, message: se encriptaron las credenciales de coneccion a la base de datos
+98994fb was Fabian Siatama, 5 weeks ago, message: se elimina la libreria adodb para que sea manejada por composer
+387856d was Fabian Siatama, 5 weeks ago, message: pruebas para actualizacion de informacion impo y expo
+aa5d549 was Fabian Siatama, 5 weeks ago, message: se cambio el logo en la aplicacion despues del login
+7e5ffdb was Fabian Siatama, 5 weeks ago, message: se realizan ajustes de indicadores segun comentarios MADR
+67fb3a6 was Fabian Siatama, 5 weeks ago, message: Se realizan mas ajustes de los indicadores, segun indicaciones del MADR
+1f92a38 was Fabian Siatama, 5 weeks ago, message: se realizan ajustes de indicadores segun comentarios MADR
+0faf53a was Fabian Siatama, 6 weeks ago, message: se realizan ajustes de indicadores segun comentarios MADR
+645fad8 was Fabian Siatama, 6 weeks ago, message: se realizan ajustes de indicadores segun comentarios MADR
+083df76 was Fabian Siatama, 6 weeks ago, message: se realizan ajustes de indicadores segun comentarios MADR
+4704f57 was Fabian Siatama, 6 weeks ago, message: se realizan ajustes de indicadores segun comentarios MADR
+bcb1f4c was Fabian Siatama, 6 weeks ago, message: se realizan ajustes de indicadores segun comentarios MADR
+fc82f7c was Fabian Siatama, 6 weeks ago, message: se realizan ajustes de indicadores segun comentarios MADR
+9cd848f was Fabian Siatama, 6 weeks ago, message: se ajusto el combo de seleccion multiple para que funcione en IE
+14ada4a was Fabian Siatama, 6 weeks ago, message: se realizan ajustes de indicadores segun comentarios MADR
+f213df9 was Fabian Siatama, 6 weeks ago, message: ajustes parciales de comentarios fase 1
+78ae182 was Fabian Siatama, 6 weeks ago, message: arreglo descargas a excel
+c6b4d01 was Fabian Siatama, 6 weeks ago, message: arreglo gitignore
+3c6f94b was Fabian Siatama, 6 weeks ago, message: arreglo gitignore
+f8fa157 was Fabian Siatama, 6 weeks ago, message: mejoras en el menu fase 3 para resoluciones entre 1000 y 1200 de ancho
+20735fa was Fabian Siatama, 6 weeks ago, message: mejoras en el reporte de contingentes
+10e7550 was Fabian Siatama, 7 weeks ago, message: Finaliza jornada QH 2015-02-06
+b764333 was Fabian Siatama, 7 weeks ago, message: Finaliza jornada QH 2015-02-05
+35a5e56 was Fabian Siatama, 7 weeks ago, message: Finaliza jornada QH 2015-02-04
+50bef93 was Fabian Siatama, 7 weeks ago, message: se combinaron los cambios de la rama master y desarrollo_fase_3 hasta 2015-02-03
+1823dd0 was Fabian Siatama, 7 weeks ago, message: subo cambios para hacer el merge con fase 3
+ed96a43 was Fabian Siatama, 7 weeks ago, message: Finaliza jornada QH 2015-02-02
+5e7a3b4 was Fabian Siatama, 8 weeks ago, message: Finaliza jornada QH 2015-01-30
+2d2d4dd was Fabian Siatama, 8 weeks ago, message: Finaliza jornada QH 2015-01-29
+384172c was Fabian Siatama, 8 weeks ago, message: Finaliza jornada QH 2015-01-29
+68d7cb8 was Fabian Siatama, 8 weeks ago, message: Finaliza jornada QH 2015-01-28
+487fdae was Fabian Siatama, 8 weeks ago, message: quitar css no utlizado
+806b205 was Fabian Siatama, 8 weeks ago, message: arreglo de rutas y llamado a controladores
+19cd6a4 was Fabian Siatama, 8 weeks ago, message: corregido error al renombrar la carpeta root del remote Tree en la consulta de indicadores
+ddab532 was Fabian Siatama, 8 weeks ago, message: Merge pull request #2 from memoher/desarrollo_fase_3
+cfaa9fd was memoher, 8 weeks ago, message: Completando el formulario de herramientas
+4a88a05 was memoher, 8 weeks ago, message: Mejoras en el home y en el menú
+0e0396f was Fabian Siatama, 8 weeks ago, message: borrado antiguo FusionChart
+6c8e58b was memoher, 8 weeks ago, message: Mejoras en el Home
+9d387c0 was Fabian Siatama, 8 weeks ago, message: Finaliza 2015-01-25
+b67f3b3 was memoher, 9 weeks ago, message: Mas cambios
+ef66aee was memoher, 9 weeks ago, message: Cambios antes de incluir carousel
+9b6dee2 was Fabian Siatama, 9 weeks ago, message: Finaliza jornada QH 2015-01-23
+ae5d22c was Fabian Siatama, 9 weeks ago, message: Finaliza 2015-01-22
+f233c66 was Fabian Siatama, 9 weeks ago, message: Finaliza jornada QH 2015-01-22
+f472f0e was Fabian Siatama, 9 weeks ago, message: Finaliza jornada QH 2015-01-21}
+fc879fd was Fabian Siatama, 9 weeks ago, message: Finaliza 2015-01-20
+6cda162 was Fabian Siatama, 9 weeks ago, message: Finaliza jornada QH 2015-01-20
+ff5d2bd was Fabian Siatama, 9 weeks ago, message: Finaliza jornada QH 2015-01-19
+62458d6 was Fabian Siatama, 9 weeks ago, message: Finaliza 2015-01-18
+5d2148f was Fabian Siatama, 10 weeks ago, message: Finaliza jornada QH 2015-01-16
+98684dd was Fabian Siatama, 10 weeks ago, message: Finaliza jornada QH 2015-01-15
+7fefb78 was Fabian Siatama, 10 weeks ago, message: Merge pull request #1 from memoher/desarrollo_fase_3
+3b94666 was Fabian Siatama, 2 months ago, message: Finaliza jornada QH 2015-01-14
+b599766 was memoher, 2 months ago, message: Primer commit
+5ad3c11 was Fabian Siatama, 2 months ago, message: Finaliza 2015-01-13
+1d83d7c was Fabian Siatama, 2 months ago, message: Finaliza jornada QH 2015-01-13
+f5aa0d2 was Fabian Siatama, 2 months ago, message: Finaliza 2015-01-12
+1790982 was Fabian Siatama, 2 months ago, message: Finaliza 2015-01-11
+9e2818f was Fabian Siatama, 3 months ago, message: Finaliza jornada QH 2015-01-09
+860870a was Fabian Siatama, 3 months ago, message: Finaliza jornada QH 2015-01-08
+fd9b55f was Fabian Siatama, 3 months ago, message: Finaliza jornada QH 2015-01-07
+a657b81 was memoher, 3 months ago, message: Separé el formulario de logueo de la página principal Incluí la hoja de estilos normalize.css
+c5c626b was Fabian Siatama, 3 months ago, message: Finaliza 2015-01-06
+3609758 was Fabian Siatama, 3 months ago, message: Finaliza jornada QH 2015-01-06
+53cf897 was Fabian Siatama, 3 months ago, message: Finaliza jornada QH 2015-01-05
+0af3a38 was fsiatama, 3 months ago, message: ajuste del timeout para ajax
+50af6a9 was Fabian Siatama, 3 months ago, message: se suben cambio para demo
+a2d3287 was Fabian Siatama, 3 months ago, message: se suben cambio para demo
+1be1680 was Fabian Siatama, 3 months ago, message: Finaliza 2015-01-04
+29b3bed was Fabian Siatama, 3 months ago, message: finaliza jornada QH 02-01-2015
+3f73ec4 was Fabian Siatama, 3 months ago, message: creacion indicador 22
+da383c5 was Fabian Siatama, 3 months ago, message: creacion indicador 22
+1474f70 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 30-12-2014
+6e433ab was Fabian Siatama, 3 months ago, message: Finaliza 2014-12-29
+3ce4ecd was Fabian Siatama, 3 months ago, message: finaliza jornada QH 29-12-2014
+f537a57 was memoher, 3 months ago, message: Ajustes iniciales al layout
+00a7754 was Fabian Siatama, 3 months ago, message: Finaliza 2014-12-28
+606f3fe was Fabian Siatama, 3 months ago, message: Finaliza 2014-12-28
+486592c was memoher, 3 months ago, message: Prueba 2
+8a982de was memoher, 3 months ago, message: Prueba Julian
+308b4ce was Fabian Siatama, 3 months ago, message: ejemplo Julian
+d6b7773 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 26-12-2014
+cb42c36 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 26-12-2014
+330fff9 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 26-12-2014
+cf40b71 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 23-12-2014
+4b7a713 was Fabian Siatama, 3 months ago, message: Finaliza 2014-12-22
+cfb39d6 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 22-12-2014
+d237ae7 was Fabian Siatama, 3 months ago, message: Finaliza 2014-12-21
+26ee453 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 19-12-2014
+884df53 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 19-12-2014
+9b28de6 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 18-12-2014
+5b66a24 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 18-12-2014
+cef1d8d was Fabian Siatama, 3 months ago, message: arreglo phpExcel graficar
+e745818 was Fabian Siatama, 3 months ago, message: arreglo phpExcel graficar
+7240aac was Fabian Siatama, 3 months ago, message: finaliza jornada QH 17-12-2014
+a028749 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 16-12-2014
+69fe9b8 was Fabian Siatama, 3 months ago, message: Finaliza 2014-12-14
+a876578 was Fabian Siatama, 3 months ago, message: fin jornada 13-12-2014
+6fdb455 was Fabian Siatama, 3 months ago, message: fin jornada 13-12-2014
+b105623 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 12-12-2014
+3aac278 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 11-12-2014
+5a0d621 was Fabian Siatama, 3 months ago, message: finaliza jornada QH 11-12-2014
+0000cea was Fabian Siatama, 4 months ago, message: finaliza jornada QH 10-12-2014
+066324d was Fabian Siatama, 4 months ago, message: adicion phpexcel
+1da918d was Fabian Siatama, 4 months ago, message: finaliza jornada QH 09-12-2014
+1b0eb05 was Fabian Siatama, 4 months ago, message: fin jornada 08-12-2014
+929f089 was Fabian Siatama, 4 months ago, message: fin jornada 07-12-2014
+b9a1ad2 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 05-12-2014
+7cea1a8 was Fabian Siatama, 4 months ago, message: fin jornada 04-12-2014
+ba556e6 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 04-12-2014
+5b887ad was Fabian Siatama, 4 months ago, message: finaliza jornada QH 03-12-2014
+c6eab6a was Fabian Siatama, 4 months ago, message: finaliza jornada QH 02-12-2014
+4aaf2f1 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 02-12-2014
+ef35b95 was Fabian Siatama, 4 months ago, message: fin jornada 01-12-2014
+90c3049 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 01-12-2014
+e00c5c4 was Fabian Siatama, 4 months ago, message: fin jornada 30-11-2014
+c78be54 was Fabian Siatama, 4 months ago, message: fin jornada 29-11-2014
+550143f was Fabian Siatama, 4 months ago, message: finaliza jornada QH 28-11-2014
+431de77 was Fabian Siatama, 4 months ago, message: fin jornada 27-11-2014
+74f2059 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 27-11-2014
+dde97c4 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 27-11-2014
+d396c08 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 26-11-2014
+06813dc was Fabian Siatama, 4 months ago, message: finaliza jornada QH 25-11-2014
+90defc1 was Fabian Siatama, 4 months ago, message: fin jornada 24-11-2014
+7e56ac2 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 24-11-2014
+a93238b was Fabian Siatama, 4 months ago, message: finaliza jornada QH 24-11-2014
+0cf4e7e was Fabian Siatama, 4 months ago, message: fin jornada 23-11-2014
+f192d44 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 21-11-2014
+47e351f was Fabian Siatama, 4 months ago, message: finaliza jornada QH 20-11-2014
+4b53770 was Fabian Siatama, 4 months ago, message: fin jornada 19-11-2014
+dd28b8b was Fabian Siatama, 4 months ago, message: finaliza jornada QH 19-11-2014
+33e4332 was Fabian Siatama, 4 months ago, message: fin jornada 18-11-2014
+9db0ed6 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 18-11-2014
+8313a69 was Fabian Siatama, 4 months ago, message: fin jornada 17-11-2014
+3200ee0 was Fabian Siatama, 4 months ago, message: fin jornada 15-11-2014
+b3771b5 was Fabian Siatama, 4 months ago, message: finaliza jornada QH 14-11-2014
+677df22 was Fabian Siatama, 4 months ago, message: adicion de tabla correlativas
+74e955c was Fabian Siatama, 4 months ago, message: finaliza jornada QH 13-11-2014
+143f60a was Fabian Siatama, 4 months ago, message: reinicio de equipo QH 13-11-2014 12:26
+9b5bb25 was Fabian Siatama, 4 months ago, message: se incorpora el funcionamiento del menu principal
+e7af1ca was Fabian Siatama, 4 months ago, message: finaliza jornada QH 12-11-2014
+1feb71f was Fabian Siatama, 4 months ago, message: finaliza jornada QH 11-11-2014
+8d0d6a6 was Fabian Siatama, 5 months ago, message: se modifico la tabla category
+e8c8dcd was Fabian Siatama, 5 months ago, message: se ajusto GUI de extjs en el app
+608de52 was Fabian Siatama, 5 months ago, message: finaliza jornada QH 10-11-2014
+f07593e was Fabian Siatama, 5 months ago, message: finaliza jornada QH 10-11-2014
+f662cfd was Fabian Siatama, 5 months ago, message: adicion de carpeta de ayuda otros proyectos
+0f44c6e was Fabian Siatama, 5 months ago, message: se modifico el generador de classes
+5e1a64f was Fabian Siatama, 5 months ago, message: Finaliza jornada QH 07-11-2014
+21a7d2a was Fabian Siatama, 5 months ago, message: se creo la capa Ado
+a47619f was Fabian Siatama, 5 months ago, message: Finaliza jornada QH 06-11-2014
+908ccfe was Fabian Siatama, 5 months ago, message: Finaliza jornada QH 06-11-2014
+be57561 was Fabian Siatama, 5 months ago, message: adicion de logo
+dfba74e was Fabian Siatama, 5 months ago, message: modificacion config frontend
+cbefb8e was Fabian Siatama, 5 months ago, message: modificacion config frontend
+2e82dec was Fabian Siatama, 5 months ago, message: Merge remote-tracking branch 'origin/master'
+6ab1376 was Fabian Siatama, 5 months ago, message: finaliza jornada QH 05-11-2014
+7eb3fa8 was Fabian Siatama, 5 months ago, message: finaliza jornada QH 05-11-2014
+c733288 was Fabian Siatama, 5 months ago, message: mejoras en archivo de coneccion
+cc65665 was Fabian Siatama, 5 months ago, message: adicion de la carpeta FusionCharts
+f199b1a was Fabian Siatama, 5 months ago, message: modicacion public/config.php
+8d89e54 was Fabian Siatama, 5 months ago, message: modicacion app/config.php
+cede4b7 was Fabian Siatama, 5 months ago, message: Create README.md
+6813231 was Fabian Siatama, 5 months ago, message: adicion de la carpeta extjs-3.4.0
+125dc02 was Fabian Siatama, 5 months ago, message: adicion de la carpeta css
+152c0d5 was Fabian Siatama, 5 months ago, message: adicion de documentos del proyecto
+25dcdf0 was Fabian Siatama, 5 months ago, message: adicion de otras librerias php
+99549a0 was Fabian Siatama, 5 months ago, message: adicion de adodb5 php

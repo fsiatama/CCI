@@ -473,7 +473,8 @@ class IndicadorRepo extends BaseRepo {
 		$fields = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
 		$scope  = (empty($scope)) ? 1 : $scope ;
 		$scale  = (empty($scale)) ? 1 : $scale ;
-		$typeIndicator  = (empty($typeIndicator)) ? 'precio' : $typeIndicator ;
+		
+
 		if (empty($indicador_id)) {
 			return [
 				'success' => false,
@@ -484,6 +485,8 @@ class IndicadorRepo extends BaseRepo {
 		$result = $this->modelAdo->exactSearch($this->model);
 		if ($result['success']) {
 			$row = array_shift($result['data']);
+
+			$typeIndicator  = ( empty($typeIndicator) ) ? $row['tipo_indicador_activador'] : $typeIndicator ;
 
 			$lines = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 
@@ -516,45 +519,45 @@ class IndicadorRepo extends BaseRepo {
 				$year,
 				$period,
 				$scope,
-				$scale
+				$scale,
+				$typeIndicator
 			);
-			if (method_exists($repo, $repoMethodName)) {
-				$result = call_user_func_array([$repo, $repoMethodName], []);
-
-				if ($format !== false && !empty($fields) && $result['total'] > 0) {
-					$arrDescription   = [];
-					$arrDescription['title'] = $row['tipo_indicador_nombre'];
-					foreach (explode('||', $row['indicador_campos']) as $value) {
-						$arr  = explode(':', $value);
-						if (!empty($arr[1])) {
-							$arrDescription[$arr[0]] = $value;
-						}
-					}
-
-					if ($scale == '2') {
-						$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceThousands') : Lang::get('indicador.reports.quantityThousands') ;
-					} elseif ($scale == '3') {
-						$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceMillions') : Lang::get('indicador.reports.quantityMillions');
-					} else {
-						$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceUnit') : Lang::get('indicador.reports.quantityUnit');
-					}
-
-					$arrDescription['values'] = Lang::get('indicador.reports.valuesPresentedIn') . ': ' . $scaleName;
-
-					$excel = new Excel (
-						$result,
-						$format,
-						$fields,
-						$row['indicador_nombre'],
-						$arrDescription
-					);
-					$result = $excel->write();
-				}
-			} else {
+			if ( !method_exists($repo, $repoMethodName) ) {
 				return [
 					'success' => false,
 					'error'   => 'unavailable method '. $repoMethodName
 				];
+			}
+			$result = call_user_func_array([$repo, $repoMethodName], []);
+
+			if ($format !== false && !empty($fields) && $result['total'] > 0) {
+				$arrDescription   = [];
+				$arrDescription['title'] = $row['tipo_indicador_nombre'];
+				foreach (explode('||', $row['indicador_campos']) as $value) {
+					$arr  = explode(':', $value);
+					if (!empty($arr[1])) {
+						$arrDescription[$arr[0]] = $value;
+					}
+				}
+
+				if ($scale == '2') {
+					$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceThousands') : Lang::get('indicador.reports.quantityThousands') ;
+				} elseif ($scale == '3') {
+					$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceMillions') : Lang::get('indicador.reports.quantityMillions');
+				} else {
+					$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceUnit') : Lang::get('indicador.reports.quantityUnit');
+				}
+
+				$arrDescription['values'] = Lang::get('indicador.reports.valuesPresentedIn') . ': ' . $scaleName;
+
+				$excel = new Excel (
+					$result,
+					$format,
+					$fields,
+					$row['indicador_nombre'],
+					$arrDescription
+				);
+				$result = $excel->write();
 			}
 		}
 		return $result;

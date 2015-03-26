@@ -44,10 +44,14 @@ $htmlDescription .= '</ol>';
 
 	storeBalanza.on('beforeload', function(){
 		var scale  = Ext.getCmp(module + 'comboScale').getValue();
-		if (!scale) {
+		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
+		if (!scale || !typeIndicator) {
 			return false;
 		};
 		this.setBaseParam('scale', scale);
+		this.setBaseParam('typeIndicator', typeIndicator);
+
+		setColumnsTitle();
 		/*var scope = Ext.getCmp(module + 'comboScope').getValue();
 		if (!scope) {
 			return false;
@@ -109,9 +113,10 @@ $htmlDescription .= '</ol>';
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridBalanza.getItemId());
 
-	var arrPeriods = <?= json_encode($periods); ?>;
-	var arrScopes  = <?= json_encode($scopes); ?>;
-	var arrScales = <?= json_encode($scales); ?>;
+	var arrPeriods   = <?= json_encode($periods); ?>;
+	var arrScopes    = <?= json_encode($scopes); ?>;
+	var arrScales    = <?= json_encode($scales); ?>;
+	var arrActivator = <?= json_encode($activator); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -155,6 +160,19 @@ $htmlDescription .= '</ol>';
 				,triggerAction: 'all'
 				,selectOnFocus:true
 				,value: 1
+				,width: 150
+			},'-',{
+				xtype: 'label'
+				,text: '<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador')?>: '
+			},{
+				xtype: 'combo'
+				,store: arrActivator
+				,id: module + 'comboActivator'
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: '<?= $tipo_indicador_activador; ?>'
 				,width: 150
 			/*},'-',{
 				xtype: 'label'
@@ -224,6 +242,12 @@ $htmlDescription .= '</ol>';
 		if(FusionCharts(module + 'PieChartId')){
 			FusionCharts(module + 'PieChartId').dispose();
 		}
+	}
+
+	function setColumnsTitle () {
+		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
+		var titleExpo = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_expo'); ?>' : '<?= Lang::get('indicador.columns_title.peso_expo'); ?>' ;
+		colModelBalanza.setColumnHeader( 4, titleExpo );
 	}
 
 	/*********************************************** End functions***********************************************/

@@ -40,27 +40,35 @@ $htmlDescription .= '</ol>';
 	});
 
 	storeBalanza.on('beforeload', function(){
-		var year   = Ext.getCmp(module + 'comboYear').getValue();
-		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		var scale  = Ext.getCmp(module + 'comboScale').getValue();
-		if (!year || !period || !scale) {
+		var year          = Ext.getCmp(module + 'comboYear').getValue();
+		var period        = Ext.getCmp(module + 'comboPeriod').getValue();
+		var scale         = Ext.getCmp(module + 'comboScale').getValue();
+		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
+
+		if (!year || !period || !scale || !typeIndicator) {
 			return false;
-		};
+		}
+
 		this.setBaseParam('year', year);
 		this.setBaseParam('period', period);
 		this.setBaseParam('scale', scale);
+		this.setBaseParam('typeIndicator', typeIndicator);
+
+		setColumnsTitle();
+
 		Ext.ux.bodyMask.show();
 	});
-	
+
 	storeBalanza.on('load', function(store){
 		FusionCharts.setCurrentRenderer('javascript');
-		
+
 		disposeCharts();
-		
+
 		var chart = new FusionCharts('<?= AREA; ?>', module + 'AreaChartId', '100%', '100%', '0', '1');
 		chart.setTransparent(true);
 		chart.setJSONData(store.reader.jsonData.areaChartData);
 		chart.render(module + 'AreaChart');
+
 		Ext.ux.bodyMask.hide();
 	});
 	var colModelBalanza = new Ext.grid.ColumnModel({
@@ -75,7 +83,7 @@ $htmlDescription .= '</ol>';
 			,align: 'right'
 		}
 	});
-	
+
 	var gridBalanza = new Ext.grid.GridPanel({
 		border:true
 		,monitorResize:true
@@ -100,12 +108,12 @@ $htmlDescription .= '</ol>';
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridBalanza.getItemId());
-	
-	var arrYears = <?= json_encode($yearsAvailable); ?>;
-	var defaultYear = <?= end($yearsAvailable); ?>;
-	
-	var arrPeriods = <?= json_encode($periods); ?>;
-	var arrScales = <?= json_encode($scales); ?>;
+
+	var arrYears     = <?= json_encode($yearsAvailable); ?>;
+	var defaultYear  = <?= end($yearsAvailable); ?>;
+	var arrPeriods   = <?= json_encode($periods); ?>;
+	var arrScales    = <?= json_encode($scales); ?>;
+	var arrActivator = <?= json_encode($activator); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -138,60 +146,103 @@ $htmlDescription .= '</ol>';
 			,border:true
 			,html: ''
 			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
-			},{
-				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 12
-				,width: 100
-				,listeners:{
-					select: {
-						fn: function(combo,reg){
-							Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
+				xtype: 'buttongroup'
+	            ,columns: 1
+	            ,defaults: {
+	                scale: 'small'
+	            }
+	            ,items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectPeriod + ': '
+				},{
+					xtype: 'combo'
+					,store: arrPeriods
+					,id: module + 'comboPeriod'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: 12
+					,width: 120
+					,listeners:{
+						select: {
+							fn: function(combo,reg){
+								Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
+							}
 						}
 					}
-				}
-			},'-',{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectYear + ': '
+				}]
 			},{
-				xtype: 'combo'
-				,store: arrYears
-				,id: module + 'comboYear'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: defaultYear
-				,disabled: true
-				,width: 100
-			},'-',{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectScale + ': '
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectYear + ': '
+				},{
+					xtype: 'combo'
+					,store: arrYears
+					,id: module + 'comboYear'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: defaultYear
+					,disabled: true
+					,width: 120
+				}]
 			},{
-				xtype: 'combo'
-				,store: arrScales
-				,id: module + 'comboScale'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 1
-				,width: 150
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					/*var html = Ext.getCmp(module + 'excuteIndicadorContainer').getEl().dom.innerHTML;
-					console.log(html);*/
-					storeBalanza.load();
-				}
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectScale + ': '
+				},{
+					xtype: 'combo'
+					,store: arrScales
+					,id: module + 'comboScale'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: 1
+					,width: 150
+				}]
+			},{
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: '<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador')?>: '
+				},{
+					xtype: 'combo'
+					,store: arrActivator
+					,id: module + 'comboActivator'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= $tipo_indicador_activador; ?>'
+					,width: 150
+				}]
+			},{
+				xtype:'buttongroup',
+				items: [{
+					text: Ext.ux.lang.buttons.generate
+					,iconCls: 'icon-refresh'
+					,iconAlign: 'top'
+					,handler: function () {
+						storeBalanza.load();
+					}
+				}]
 			}]
 		/*},{
 			height:430
@@ -229,19 +280,27 @@ $htmlDescription .= '</ol>';
 	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
 		storeBalanza.load();
 	});
-	
+
 	storeBalanza.load();
 
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
-	
+
 	function disposeCharts () {
 		if(FusionCharts(module + 'AreaChartId')){
 			FusionCharts(module + 'AreaChartId').dispose();
 		}
 	}
-	
+
+	function setColumnsTitle () {
+		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
+		var titleImpo = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_impo'); ?>' : '<?= Lang::get('indicador.columns_title.peso_impo'); ?>' ;
+		var titleExpo = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_expo'); ?>' : '<?= Lang::get('indicador.columns_title.peso_expo'); ?>' ;
+		colModelBalanza.setColumnHeader( 1, titleImpo );
+		colModelBalanza.setColumnHeader( 2, titleExpo );
+	}
+
 
 	/*********************************************** End functions***********************************************/
 })()

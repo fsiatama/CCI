@@ -387,10 +387,12 @@
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('sector_nombre'));
 		});
-		arrDescription.push({
-			label: label
-			,values: arrValues
-		});
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		}
 
 		var yearIni      = Ext.getCmp(module+'comboAnio_ini').getValue();
 		var yearFin      = Ext.getCmp(module+'comboAnio_fin').getValue();

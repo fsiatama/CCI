@@ -2,7 +2,7 @@
 return [
 	'tipo_indicador_activador' => [
 	    'precio' => 'Por precio (Valor FOB $)',
-	    'volumen' => 'Por Volumen (Tm)'
+	    'volumen' => 'Por Volumen (Kg)'
 	],
     'columns_title' => [
 		'tipo_indicador_nombre'     => 'Nombre Indicador',

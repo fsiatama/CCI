@@ -21,14 +21,14 @@ class DeclaracionesRepo extends BaseRepo {
 	protected $period;
 	protected $range = false;
 	protected $trade;
-	protected $tipo_indicador_activador;
+	protected $typeIndicator;
 	protected $linesConfig;
 	protected $scope;
 	private $scale;
 	private $divisor = 1;
 	private $pYAxisName;
 
-	public function __construct($rowIndicador, $filtersConfig, $year, $period, $scope, $scale = '1')
+	public function __construct($rowIndicador, $filtersConfig, $year, $period, $scope, $scale = '1', $typeIndicator = '')
 	{
 		$this->rowIndicador  = $rowIndicador;
 		$this->filtersConfig = $filtersConfig;
@@ -39,8 +39,8 @@ class DeclaracionesRepo extends BaseRepo {
 
 		extract($rowIndicador);
 
-		$this->arrFiltersValues         = Helpers::filterValuesToArray($indicador_filtros);
-		$this->tipo_indicador_activador = $tipo_indicador_activador;
+		$this->arrFiltersValues = Helpers::filterValuesToArray($indicador_filtros);
+		$this->typeIndicator = ( empty($typeIndicator) ) ? $tipo_indicador_activador : $typeIndicator ;
 		$this->setColumnValue();
 		$this->setDivisor();
 		$this->linesConfig = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
@@ -101,9 +101,35 @@ class DeclaracionesRepo extends BaseRepo {
 		return 'peso_neto';
 	}
 
+	private function getFloatValue($value)
+	{
+		//$floatValue = ( $this->typeIndicator == 'precio' ) ? (float)$value : ( (float)$value / 1000 );
+		return ( (float)$value / $this->divisor );
+	}
+
+	private function getColumnValueImpoTitle()
+	{
+		return ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_impo') : Lang::get('indicador.columns_title.peso_impo') ;
+	}
+
+	private function getColumnValueExpoTitle()
+	{
+		return ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo') : Lang::get('indicador.columns_title.peso_expo') ;
+	}
+
+	private function getColumnValueExpoAgroTitle()
+	{
+		return ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_agricola') : Lang::get('indicador.columns_title.peso_expo_agricola') ;
+	}
+	
+	private function getColumnBalanceTitle()
+	{
+		return ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_balanza') : Lang::get('indicador.columns_title.peso_balanza') ;
+	}
+
 	protected function setColumnValue()
 	{
-		if ($this->tipo_indicador_activador == 'precio') {
+		if ($this->typeIndicator == 'precio') {
 			$this->columnValueImpo = $this->getColumnValueImpo();
 			$this->columnValueExpo = $this->getColumnValueExpo();
 		} else {
@@ -115,15 +141,15 @@ class DeclaracionesRepo extends BaseRepo {
 		if ($this->scale == '2') {
 			//escala de miles
 			//$this->xAxisname   = '';
-			$this->pYAxisName  = ($this->tipo_indicador_activador != 'precio') ? Lang::get('indicador.reports.quantityThousands') : Lang::get('indicador.reports.priceThousands') ;
+			$this->pYAxisName  = ($this->typeIndicator != 'precio') ? Lang::get('indicador.reports.quantityThousands') : Lang::get('indicador.reports.priceThousands') ;
 		} elseif ($this->scale == '3') {
 			//escala de millones
 			//$this->xAxisname   = '';
-			$this->pYAxisName  = ($this->tipo_indicador_activador != 'precio') ? Lang::get('indicador.reports.quantityMillions') : Lang::get('indicador.reports.priceMillions') ;
+			$this->pYAxisName  = ($this->typeIndicator != 'precio') ? Lang::get('indicador.reports.quantityMillions') : Lang::get('indicador.reports.priceMillions') ;
 		} else {
 			//escala de unidades
 			//$this->xAxisname   = '';
-			$this->pYAxisName  = ($this->tipo_indicador_activador != 'precio') ? Lang::get('indicador.reports.quantityUnit') : Lang::get('indicador.reports.priceUnit') ;
+			$this->pYAxisName  = ($this->typeIndicator != 'precio') ? Lang::get('indicador.reports.quantityUnit') : Lang::get('indicador.reports.priceUnit') ;
 		}
 	}
 
@@ -365,28 +391,33 @@ class DeclaracionesRepo extends BaseRepo {
 			foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
 
 				if($rowImpo['periodo'] == $rowExpo['periodo']){
-					$valor_impo   = $rowImpo[$this->columnValueImpo];
+					$valor_impo   = $this->getFloatValue( $rowImpo[$this->columnValueImpo] );
 					$arrPeriods[] = $rowImpo['periodo'];
 				}
 
 			}
 
+			$valor_expo = $this->getFloatValue( $rowExpo[$this->columnValueExpo] );
+
 			$arrData[] = [
 				'id'         => $rowExpo['id'],
 				'periodo'    => $rowExpo['periodo'],
-				'valor_expo' => ( (float)$rowExpo[$this->columnValueExpo] / $divisor ),
-				'valor_impo' => ( (float)$valor_impo / $divisor ),
+				'valor_expo' => $valor_expo,
+				'valor_impo' => $valor_impo,
 			];
 		}
 
 		foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
 
 			if(!in_array($rowImpo['periodo'], $arrPeriods)){
+				
+				$valor_impo = $this->getFloatValue( $rowImpo[$this->columnValueImpo] );
+				
 				$arrData[] = [
 					'id'         => $rowImpo['id'],
 					'periodo'    => $rowImpo['periodo'],
 					'valor_expo' => 0,
-					'valor_impo' => ( (float)$rowImpo[$this->columnValueImpo] / $divisor ),
+					'valor_impo' => $valor_impo,
 				];
 			}
 
@@ -457,9 +488,9 @@ class DeclaracionesRepo extends BaseRepo {
 			}
 
 			$arrSeries = [
-				'valor_expo'    => Lang::get('indicador.columns_title.valor_expo'),
-				'valor_impo'    => Lang::get('indicador.columns_title.valor_impo'),
-				'valor_balanza' => Lang::get('indicador.columns_title.valor_balanza')
+				'valor_expo'    => $this->getColumnValueExpoTitle(),
+				'valor_impo'    => $this->getColumnValueImpoTitle(),
+				'valor_balanza' => $this->getColumnBalanceTitle()
 			];
 
 			$columnChart = Helpers::jsonChart(
@@ -472,7 +503,7 @@ class DeclaracionesRepo extends BaseRepo {
 			);
 
 			$arrSeries = [
-				'valor_balanza' => Lang::get('indicador.columns_title.valor_balanza')
+				'valor_balanza' => $this->getColumnBalanceTitle()
 			];
 
 			$areaChart = Helpers::jsonChart(
@@ -515,7 +546,7 @@ class DeclaracionesRepo extends BaseRepo {
 			}
 
 			$arrSeries = [
-				'valor_balanza' => Lang::get('indicador.columns_title.valor_balanza')
+				'valor_balanza' => $this->getColumnBalanceTitle()
 			];
 
 			$areaChart = Helpers::jsonChart(
@@ -770,7 +801,7 @@ class DeclaracionesRepo extends BaseRepo {
 			'id'            => $indexId,
 			'numero'        => '',
 			'id_posicion'   => '*************************',
-			'posicion'      => Lang::get('indicador.columns_title.valor_expo'),
+			'posicion'      => $this->getColumnValueExpoTitle(),
 			'valor_expo'    => $totalValue,
 			'participacion' => 100
 		];
@@ -781,7 +812,7 @@ class DeclaracionesRepo extends BaseRepo {
 		];
 
 		$arrSeries = [
-			'valor_expo' => Lang::get('indicador.columns_title.valor_expo')
+			'valor_expo' => $this->getColumnValueExpoTitle()
 		];
 
 		$pieChart = Helpers::jsonChart(
@@ -1137,18 +1168,21 @@ class DeclaracionesRepo extends BaseRepo {
 		$totalValue = 0;
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
-			$totalValue += (float)$rowExpo[$this->columnValueExpo];
+			$value       = $this->getFloatValue( $rowExpo[$this->columnValueExpo] );
+			$totalValue += $value;
 		}
 
 		$arrData           = [];
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
 
-			$rate = round( ($rowExpo[$this->columnValueExpo] / $totalValue ) * 100 , 2 );
+			$value = $this->getFloatValue( $rowExpo[$this->columnValueExpo] );
+
+			$rate = round( ( $value / $totalValue ) * 100 , 2 );
 			$arrData[] = [
 				'id'            => $keyExpo,
 				'pais'          => $rowExpo['pais'],
-				'valor_expo'    => $rowExpo[$this->columnValueExpo],
+				'valor_expo'    => $value,
 				'participacion' => $rate
 			];
 		}
@@ -1375,10 +1409,10 @@ class DeclaracionesRepo extends BaseRepo {
 							$rowTotal['periodo']
 						);
 
-						$totalProductsAgriculture   = ($rowProductsAgriculture   !== false) ? ( $rowProductsAgriculture[$columnValue] / $this->divisor )   : 0 ;
-						$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? ( $rowEnergeticMiningSector[$columnValue] / $this->divisor ) : 0 ;
+						$totalProductsAgriculture   = ($rowProductsAgriculture   !== false) ? $this->getFloatValue( $rowProductsAgriculture[$columnValue] )   : 0 ;
+						$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? $this->getFloatValue( $rowEnergeticMiningSector[$columnValue] ) : 0 ;
 
-						$total = ( $rowTotal[$columnValue]  / $this->divisor ) - $totalEnergeticMiningSector;
+						$total = ( $this->getFloatValue( $rowTotal[$columnValue] ) ) - $totalEnergeticMiningSector;
 						$total = ( $total == 0 ) ? 1 : $total ;
 						$rate  = round( ($totalProductsAgriculture / $total ) * 100 , 2 );
 
@@ -1392,8 +1426,8 @@ class DeclaracionesRepo extends BaseRepo {
 					}
 
 					$arrSeries = [
-						'valor_expo_agricola' => Lang::get('indicador.columns_title.valor_expo_agricola'),
-						'valor_expo'          => Lang::get('indicador.columns_title.valor_expo'),
+						'valor_expo_agricola' => $this->getColumnValueExpoAgroTitle(),
+						'valor_expo'          => $this->getColumnValueExpoTitle(),
 					];
 
 					$columnChart = Helpers::jsonChart(
@@ -1495,10 +1529,13 @@ class DeclaracionesRepo extends BaseRepo {
 						$rowTotal['periodo']
 					);
 
-					$totalProductsTraditional    = ( $rowProductsTraditional !== false ) ? ( $rowProductsTraditional[$columnValue] / $this->divisor ) : 0 ;
-					$totalProductsNonTraditional = ( $rowTotal[$columnValue] / $this->divisor ) - $totalProductsTraditional;
+					$value = $this->getFloatValue( $rowTotal[$columnValue] );
 
-					$total = ($rowTotal[$columnValue] == 0) ? 1 : ( $rowTotal[$columnValue] / $this->divisor ) ;
+
+					$totalProductsTraditional    = ( $rowProductsTraditional !== false ) ? $this->getFloatValue( $rowProductsTraditional[$columnValue] ) : 0 ;
+					$totalProductsNonTraditional = ( $value ) - $totalProductsTraditional;
+
+					$total = ($rowTotal[$columnValue] == 0) ? 1 : $value ;
 					$rate  = round( ($totalProductsNonTraditional / $total ) * 100 , 2 );
 
 					$arrData[] = [
@@ -1510,9 +1547,11 @@ class DeclaracionesRepo extends BaseRepo {
 					];
 				}
 
+				$titleAgroNT = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_no_tradi') : Lang::get('indicador.columns_title.peso_expo_no_tradi') ;
+
 				$arrSeries = [
-					'valor_expo_no_tradi' => Lang::get('indicador.columns_title.valor_expo_no_tradi'),
-					'valor_expo'          => Lang::get('indicador.columns_title.valor_expo_agricola'),
+					'valor_expo_no_tradi' => $titleAgroNT,
+					'valor_expo'          => $this->getColumnValueExpoAgroTitle(),
 				];
 
 				$columnChart = Helpers::jsonChart(
@@ -1598,9 +1637,9 @@ class DeclaracionesRepo extends BaseRepo {
 						$rowTotal['periodo']
 					);
 
-					$totalProduct = ($rowProduct !== false) ? ( $rowProduct[$columnValue] / $this->divisor ) : 0 ;
+					$totalProduct = ($rowProduct !== false) ? $this->getFloatValue( $rowProduct[$columnValue] ) : 0 ;
 
-					$total = ($rowTotal[$columnValue] == 0) ? 1 : ( $rowTotal[$columnValue] / $this->divisor ) ;
+					$total = ($rowTotal[$columnValue] == 0) ? 1 : $this->getFloatValue( $rowTotal[$columnValue] ) ;
 					$rate  = round( ($totalProduct / $total ) * 100 , 2 );
 
 					$arrData[] = [
@@ -1612,9 +1651,11 @@ class DeclaracionesRepo extends BaseRepo {
 					];
 				}
 
+				$titleSector = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_sector') : Lang::get('indicador.columns_title.peso_expo_sector') ;
+
 				$arrSeries = [
-					'valor_expo_sector' => Lang::get('indicador.columns_title.valor_expo_sector'),
-					'valor_expo'        => Lang::get('indicador.columns_title.valor_expo'),
+					'valor_expo_sector' => $titleSector,
+					'valor_expo'        => $this->getColumnValueExpoAgroTitle(),
 				];
 
 				$columnChart = Helpers::jsonChart(
