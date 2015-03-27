@@ -40,6 +40,14 @@ $htmlDescription .= '</ol>';
 	});
 
 	storeIndicador.on('beforeload', function(){
+		var scale         = Ext.getCmp(module + 'comboScale').getValue();
+		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
+		if (!scale || !typeIndicator) {
+			return false;
+		}
+		this.setBaseParam('scale', scale);
+		this.setBaseParam('typeIndicator', typeIndicator);
+		setColumnsTitle();
 		Ext.ux.bodyMask.show();
 	});
 
@@ -105,6 +113,9 @@ $htmlDescription .= '</ol>';
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
+	var arrScales    = <?= json_encode($scales); ?>;
+	var arrActivator = <?= json_encode($activator); ?>;
+
 	/******************************************************************************************************************************************************************************/
 
 	var indicadorContainer = new Ext.Panel({
@@ -150,6 +161,43 @@ $htmlDescription .= '</ol>';
 				'</div>' +
 			'</div>'
 		},{
+			style:{padding:'10px'}
+			,border:true
+			,html: ''
+			,tbar:[{
+				xtype: 'label'
+				,text: Ext.ux.lang.reports.selectScale + ': '
+			},{
+				xtype: 'combo'
+				,store: arrScales
+				,id: module + 'comboScale'
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: 1
+				,width: 150
+			},'-',{
+				xtype: 'label'
+				,text: '<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador')?>: '
+			},{
+				xtype: 'combo'
+				,store: arrActivator
+				,id: module + 'comboActivator'
+				,typeAhead: true
+				,forceSelection: true
+				,triggerAction: 'all'
+				,selectOnFocus:true
+				,value: '<?= $tipo_indicador_activador; ?>'
+				,width: 150
+			},'-',{
+				text: Ext.ux.lang.buttons.generate
+				,iconCls: 'icon-refresh'
+				,handler: function () {
+					storeIndicador.load();
+				}
+			}]
+		},{
 			height:430
 			,html:'<div id="' + module + 'ColumnChart"></div>'
 			,items:[{
@@ -187,6 +235,14 @@ $htmlDescription .= '</ol>';
 		if(FusionCharts(module + 'ColumnChartId')){
 			FusionCharts(module + 'ColumnChartId').dispose();
 		}
+	}
+
+	function setColumnsTitle () {
+		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
+		var titleExpoNT   = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_expo_no_tradi'); ?>' : '<?= Lang::get('indicador.columns_title.peso_expo_no_tradi'); ?>' ;
+		var titleExpoAgro = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_expo_agricola'); ?>' : '<?= Lang::get('indicador.columns_title.peso_expo_agricola'); ?>' ;
+		colModelIndicador.setColumnHeader( 1, titleExpoNT );
+		colModelIndicador.setColumnHeader( 2, titleExpoAgro );
 	}
 
 	/*********************************************** End functions***********************************************/

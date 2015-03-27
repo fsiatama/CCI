@@ -2174,9 +2174,9 @@ class DeclaracionesRepo extends BaseRepo {
 			);
 
 			$yearLast                    = $rowTotal['periodo'];
-			$valueLastTotal              = ( (float)$rowTotal[$columnValue] / $this->divisor );
-			$valueLastAgriculture        = ( $rowProductsAgriculture   !== false ) ? ( (float)$rowProductsAgriculture[$columnValue] / $this->divisor ) : 0 ;
-			$totalEnergeticMiningSector  = ( $rowEnergeticMiningSector !== false ) ? ( (float)$rowEnergeticMiningSector[$columnValue] / $this->divisor ) : 0 ;
+			$valueLastTotal              = $this->getFloatValue( $rowTotal[$columnValue] );
+			$valueLastAgriculture        = ( $rowProductsAgriculture   !== false ) ? $this->getFloatValue( $rowProductsAgriculture[$columnValue] ) : 0 ;
+			$totalEnergeticMiningSector  = ( $rowEnergeticMiningSector !== false ) ? $this->getFloatValue( $rowEnergeticMiningSector[$columnValue] ) : 0 ;
 			$valueLastTotalWithoutMining = ( $valueLastTotal - $totalEnergeticMiningSector );
 			$valueLastTotalWithoutMining = ( $valueLastTotalWithoutMining == 0 ) ? 1 : $valueLastTotalWithoutMining ;
 
@@ -2202,10 +2202,14 @@ class DeclaracionesRepo extends BaseRepo {
 		$growthRateExpoWithoutMining = ( pow(($valueLastTotalWithoutMining / $valueFirstTotalWithoutMining), (1 / $numberPeriods)) - 1);
 		$growthRateExpo              = ( pow(($valueLastTotal / $valueFirstTotal), (1 / $numberPeriods)) - 1);
 
+
+
+		$titleMiningSector = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_sin_minero') : Lang::get('indicador.columns_title.peso_expo_sin_minero') ;
+
 		$arrSeries = [
-			'valor_expo_agricola' => Lang::get('indicador.columns_title.valor_expo_agricola'),
-			'valor_expo_sin_minero' => Lang::get('indicador.columns_title.valor_expo_sin_minero'),
-			'valor_expo'          => Lang::get('indicador.columns_title.valor_expo'),
+			'valor_expo_agricola'   => $this->getColumnValueExpoAgroTitle(),
+			'valor_expo_sin_minero' => $titleMiningSector,
+			'valor_expo'            => $this->getColumnValueExpoTitle(),
 		];
 
 		$columnChart = Helpers::jsonChart(
@@ -2306,9 +2310,9 @@ class DeclaracionesRepo extends BaseRepo {
 			);
 
 			$yearLast                     = $rowTotal['periodo'];
-			$valueLastTotal               = (float)$rowTotal[$columnValue];
+			$valueLastTotal               = $this->getFloatValue( $rowTotal[$columnValue] );
 			$valueLastTotal               = ($valueLastTotal == 0) ? 1 : $valueLastTotal ;
-			$valueLastProductsTraditional = ($rowProductsTraditional !== false) ? (float)$rowProductsTraditional[$columnValue] : 0 ;
+			$valueLastProductsTraditional = ($rowProductsTraditional !== false) ? $this->getFloatValue( $rowProductsTraditional[$columnValue] ) : 0 ;
 			$valueLastNonTraditional      = $valueLastTotal - $valueLastProductsTraditional;
 
 			if ($rowTotal['periodo'] == $yearFirst) {
@@ -2330,16 +2334,21 @@ class DeclaracionesRepo extends BaseRepo {
 		$growthRateAgricultureNonTraditional = ( pow(($valueLastNonTraditional / $valueFirstNonTraditional), (1 / $numberPeriods)) - 1);
 		$growthRateAgriculture               = ( pow(($valueLastTotal / $valueFirstTotal), (1 / $numberPeriods)) - 1);
 
+
+		$titleAgroNT = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_no_tradi') : Lang::get('indicador.columns_title.peso_expo_no_tradi') ;
+
 		$arrSeries = [
-			'valor_expo_no_tradi' => Lang::get('indicador.columns_title.valor_expo_no_tradi'),
-			'valor_expo_agricola' => Lang::get('indicador.columns_title.valor_expo_agricola'),
+			'valor_expo_no_tradi' => $titleAgroNT,
+			'valor_expo_agricola' => $this->getColumnValueExpoAgroTitle(),
 		];
 
 		$columnChart = Helpers::jsonChart(
 			$arrData,
 			'periodo',
 			$arrSeries,
-			COLUMNAS
+			COLUMNAS,
+			'',
+			$this->pYAxisName
 		);
 
 		$result = [
@@ -2428,9 +2437,8 @@ class DeclaracionesRepo extends BaseRepo {
 
 			//el pib vienen en miles de millones por eso hay que multiplicar por 1000000000
 			$pib_nacional = ($rowPib['pib_nacional'] == 0) ? 0 : (float)( $rowPib['pib_nacional'] * 100000000 );
-			$pib_nacional = ( $pib_nacional / $this->divisor );
-
-			$totalValue   = ( (float)$row[$columnValue] / $this->divisor );
+			$pib_nacional = $this->getFloatValue( $pib_nacional );
+			$totalValue   = $this->getFloatValue( $row[$columnValue] );
 
 			$rate = ($pib_nacional == 0) ? 0 : ( $totalValue / $pib_nacional ) ;
 
@@ -2449,13 +2457,26 @@ class DeclaracionesRepo extends BaseRepo {
 			'pib_nacional'        => Lang::get('pib.columns_title.pib_nacional'),
 		];
 
+
+
+		if ($this->scale == '2') {
+			//escala de miles
+			$pYAxisName  = Lang::get('indicador.reports.copThousands') ;
+		} elseif ($this->scale == '3') {
+			//escala de millones
+			$pYAxisName  = Lang::get('indicador.reports.copMillions') ;
+		} else {
+			//escala de unidades
+			$pYAxisName  = Lang::get('indicador.reports.copUnit') ;
+		}
+
 		$columnChart = Helpers::jsonChart(
 			$arrData,
 			'periodo',
 			$arrSeries,
 			COLUMNAS,
 			'',
-			$this->pYAxisName
+			$pYAxisName
 		);
 
 		$result = [
@@ -2534,9 +2555,9 @@ class DeclaracionesRepo extends BaseRepo {
 
 			//el pib vienen en miles de millones por eso hay que multiplicar por 1000000000
 			$pib_agricultura = ($rowPib['pib_agricultura'] == 0) ? 0 : ($rowPib['pib_agricultura'] * 100000000);
-			$pib_agricultura = ( $pib_agricultura / $this->divisor );
+			$pib_agricultura = $this->getFloatValue( $pib_agricultura );
 
-			$totalValue   = ( (float)$row[$columnValue] / $this->divisor );
+			$totalValue   = $this->getFloatValue( $row[$columnValue] );
 
 			$rate = ($pib_agricultura == 0) ? 0 : ( $totalValue / $pib_agricultura ) ;
 
@@ -2557,13 +2578,24 @@ class DeclaracionesRepo extends BaseRepo {
 			'pib_agricultura'         => Lang::get('pib.columns_title.pib_agricultura'),
 		];
 
+		if ($this->scale == '2') {
+			//escala de miles
+			$pYAxisName  = Lang::get('indicador.reports.copThousands') ;
+		} elseif ($this->scale == '3') {
+			//escala de millones
+			$pYAxisName  = Lang::get('indicador.reports.copMillions') ;
+		} else {
+			//escala de unidades
+			$pYAxisName  = Lang::get('indicador.reports.copUnit') ;
+		}
+
 		$columnChart = Helpers::jsonChart(
 			$arrData,
 			'periodo',
 			$arrSeries,
 			COLUMNAS,
 			'',
-			$this->pYAxisName
+			$pYAxisName
 		);
 
 		$result = [
@@ -2658,21 +2690,21 @@ class DeclaracionesRepo extends BaseRepo {
 			);
 			$valor_impo = 0;
 			if ($rowImpo !== false) {
-				$valor_impo   = $rowImpo[$this->columnValueImpo];
+				$valor_impo   = $this->getFloatValue( $rowImpo[$this->columnValueImpo] );
 				$arrPeriods[] = $rowImpo['periodo'];
 			}
 
 			//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
-			$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
-
-			$divider = ($produccion_peso_neto + $valor_impo - $rowExpo[$this->columnValueExpo]);
-
-			$PI = ($divider == 0) ? 0 : ($valor_impo / $divider) ;
+			$produccion_peso_neto = ( $rowProduccion['produccion_peso_neto'] == 0 ) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+			$produccion_peso_neto = $this->getFloatValue( $produccion_peso_neto );
+			$valor_expo           = $this->getFloatValue( $rowExpo[$this->columnValueExpo] );
+			$divider              = ( $produccion_peso_neto + $valor_impo - $valor_expo );
+			$PI                   = ( $divider == 0 ) ? 0 : ( $valor_impo / $divider ) ;
 
 			$arrData[] = [
 				'id'              => $rowExpo['id'],
 				'periodo'         => $rowExpo['periodo'],
-				'peso_expo'       => $rowExpo[$this->columnValueExpo],
+				'peso_expo'       => $valor_expo,
 				'peso_impo'       => $valor_impo,
 				'produccion_peso' => $produccion_peso_neto,
 				'PI'              => ($PI * 100),
@@ -2700,11 +2732,14 @@ class DeclaracionesRepo extends BaseRepo {
 				);
 				//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
 				$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+				$produccion_peso_neto = $this->getFloatValue( $produccion_peso_neto );
+				$valor_impo           = $this->getFloatValue( $rowImpo[$this->columnValueImpo] );
+
 				$arrData[] = [
 					'id'              => $rowImpo['id'],
 					'periodo'         => $rowImpo['periodo'],
 					'peso_expo'       => 0,
-					'peso_impo'       => $rowImpo[$this->columnValueImpo],
+					'peso_impo'       => $valor_impo,
 					'produccion_peso' => $produccion_peso_neto,
 					'PI'              => 0,
 				];
@@ -2826,21 +2861,21 @@ class DeclaracionesRepo extends BaseRepo {
 			);
 			$valor_impo = 0;
 			if ($rowImpo !== false) {
-				$valor_impo   = $rowImpo[$this->columnValueImpo];
+				$valor_impo   = $this->getFloatValue( $rowImpo[$this->columnValueImpo] );
 				$arrPeriods[] = $rowImpo['periodo'];
 			}
 
 			//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
-			$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
-
-			$divider = ($produccion_peso_neto + $valor_impo - $rowExpo[$this->columnValueExpo]);
-
-			$AE = ($divider == 0) ? 0 : ($rowExpo[$this->columnValueExpo] / $divider) ;
+			$produccion_peso_neto = ( $rowProduccion['produccion_peso_neto'] == 0 ) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+			$produccion_peso_neto = $this->getFloatValue( $produccion_peso_neto );
+			$valor_expo           = $this->getFloatValue( $rowExpo[$this->columnValueExpo] );
+			$divider              = ( $produccion_peso_neto + $valor_impo - $valor_expo );
+			$AE                   = ( $divider == 0 ) ? 0 : ( $valor_expo / $divider ) ;
 
 			$arrData[] = [
 				'id'              => $rowExpo['id'],
 				'periodo'         => $rowExpo['periodo'],
-				'peso_expo'       => $rowExpo[$this->columnValueExpo],
+				'peso_expo'       => $valor_expo,
 				'peso_impo'       => $valor_impo,
 				'produccion_peso' => $produccion_peso_neto,
 				'AE'              => ($AE * 100),
@@ -2868,11 +2903,14 @@ class DeclaracionesRepo extends BaseRepo {
 				);
 				//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
 				$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+				$produccion_peso_neto = $this->getFloatValue( $produccion_peso_neto );
+				$valor_impo           = $this->getFloatValue( $rowImpo[$this->columnValueImpo] );
+
 				$arrData[] = [
 					'id'              => $rowImpo['id'],
 					'periodo'         => $rowImpo['periodo'],
 					'peso_expo'       => 0,
-					'peso_impo'       => $rowImpo[$this->columnValueImpo],
+					'peso_impo'       => $valor_impo,
 					'produccion_peso' => $produccion_peso_neto,
 					'AE'              => 0,
 				];
@@ -2969,7 +3007,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
 
-			$anio    = $rowExpo['periodo'];
+			$anio   = $rowExpo['periodo'];
 			$result = $produccionRepo->listPeriodSector(compact('anio', 'sector_id'));
 			if (!$result['success']) {
 				return $result;
@@ -2993,20 +3031,22 @@ class DeclaracionesRepo extends BaseRepo {
 			);
 			$valor_impo = 0;
 			if ($rowImpo !== false) {
-				$valor_impo   = $rowImpo[$this->columnValueImpo];
+				$valor_impo   = $this->getFloatValue( $rowImpo[$this->columnValueImpo] );
 				$arrPeriods[] = $rowImpo['periodo'];
 			}
 
 			//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
 			$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+			$produccion_peso_neto = $this->getFloatValue( $produccion_peso_neto );
+			$valor_expo           = $this->getFloatValue( $rowExpo[$this->columnValueExpo] );
 
-			$CA  = ($produccion_peso_neto + $valor_impo - $rowExpo[$this->columnValueExpo]);
+			$CA  = ($produccion_peso_neto + $valor_impo - $valor_expo);
 			$CAA = ($produccion_peso_neto / $CA);
 
 			$arrData[] = [
 				'id'              => $rowExpo['id'],
 				'periodo'         => $rowExpo['periodo'],
-				'peso_expo'       => $rowExpo[$this->columnValueExpo],
+				'peso_expo'       => $valor_expo,
 				'peso_impo'       => $valor_impo,
 				'produccion_peso' => $produccion_peso_neto,
 				'CA'              => $CA,
@@ -3034,16 +3074,18 @@ class DeclaracionesRepo extends BaseRepo {
 					$anio
 				);
 				//la produccion viene en toneladas metricas por eso hay que multiplicar por 1000
-				$produccion_peso_neto = ($rowProduccion['produccion_peso_neto'] == 0) ? 0 : ($rowProduccion['produccion_peso_neto'] * 1000);
+				$produccion_peso_neto = ( $rowProduccion['produccion_peso_neto'] == 0 ) ? 0 : ( $rowProduccion['produccion_peso_neto'] * 1000 );
+				$produccion_peso_neto = $this->getFloatValue( $produccion_peso_neto );
+				$valor_impo           = $this->getFloatValue( $rowImpo[$this->columnValueImpo] );
 
-				$CA  = ($produccion_peso_neto + $rowImpo[$this->columnValueImpo]);
-				$CAA = ($produccion_peso_neto / $CA);
+				$CA  = ( $produccion_peso_neto + $valor_impo );
+				$CAA = ( $produccion_peso_neto / $CA );
 
 				$arrData[] = [
 					'id'              => $rowImpo['id'],
 					'periodo'         => $rowImpo['periodo'],
 					'peso_expo'       => 0,
-					'peso_impo'       => $rowImpo[$this->columnValueImpo],
+					'peso_impo'       => $valor_impo,
 					'produccion_peso' => $produccion_peso_neto,
 					'CA'              => $CA,
 					'CAA'             => ($CAA * 100),

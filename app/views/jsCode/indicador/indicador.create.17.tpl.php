@@ -32,7 +32,7 @@
 		,forceSelection:true
 		,allowNewData:true
 		,extraItemCls:'x-tag'
-		,allowBlank:false
+		,allowBlank:true
 		,extraItemStyle:'border-width:2px'
 		,stackItems:true
 		,mode:'remote'
@@ -51,6 +51,7 @@
 		,valueField:'id_posicion'
 		,tpl: resultTplPosicion
 		,displayFieldTpl:'({id_posicion}) - {posicion}'
+		,allowBlank:true
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {
@@ -61,6 +62,36 @@
 		}
 	});
 
+	var storeSector = new Ext.data.JsonStore({
+		url:'sector/list'
+		,id:module+'storeSector'
+		,root:'data'
+		,sortInfo:{field:'sector_id',direction:'ASC'}
+		,totalProperty:'total'
+		,baseParams:{id:'<?= $id; ?>'}
+		,fields:[
+			{name:'sector_id', type:'float'},
+			{name:'sector_nombre', type:'string'}
+		]
+	});
+	var resultTplSector = new Ext.XTemplate(
+		'<tpl for=".">' +
+			'<div class="search-item x-combo-list-item">' +
+				'<span>{sector_nombre}</span>' +
+			'</div>' +
+		'</tpl>'
+	);
+	var comboSector = new Combo({
+		id:module+'comboSector'
+		,singleMode:true
+		,fieldLabel:'<?= Lang::get('sector.columns_title.sector_nombre'); ?>'
+		,name:'sector_id[]'
+		,store:storeSector
+		,displayField:'sector_nombre'
+		,valueField:'sector_id'
+		,tpl: resultTplSector
+		,displayFieldTpl:'{sector_nombre}'
+	});
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 
 	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
@@ -85,7 +116,7 @@
 		,store:arrYears
 		,fieldLabel:Ext.ux.lang.reports.selectYearTo
 	});
-	
+
 	var formIndicador = new Ext.FormPanel({
 		baseCls:'x-plain'
 		,id:module + 'formIndicador'
@@ -104,6 +135,7 @@
 				{name:'indicador_tipo_indicador_id', mapping:'indicador_tipo_indicador_id', type:'float'},
 				{name:'indicador_nombre', mapping:'indicador_nombre', type:'string'},
 				{name:'id_posicion', mapping:'id_posicion', type:'string'},
+				{name:'sector_id', mapping:'sector_id', type:'string'},
 				{name:'anio_ini', mapping:'anio_ini', type:'float'},
 				{name:'anio_fin', mapping:'anio_fin', type:'float'}
 			]
@@ -171,6 +203,10 @@
 				,columnWidth:1
 				,items:[comboPosicion]
 			},{
+				defaults:{anchor:'100%'}
+				,columnWidth:1
+				,items:[comboSector]
+			},{
 				xtype:'hidden'
 				,name:'indicador_tipo_indicador_id'
 				,id:module+'indicador_tipo_indicador_id'
@@ -179,7 +215,6 @@
 				xtype:'hidden'
 				,name:'indicador_id'
 				,id:module+'indicador_id'
-
 			}]
 		}]
 		,buttons: [{
@@ -215,6 +250,7 @@
 			,waitMsg: 'Loading......'
 			,success: function(formulario, response) {
 				Ext.getCmp(module+'comboPosicion').setValue(response.result.data.id_posicion);
+				Ext.getCmp(module+'comboSector').setValue(response.result.data.sector_id);
 			}
 		});
 	});";
@@ -235,18 +271,33 @@
 		Ext.each(selection,function(row){
 			arrValues.push('['+row.get('id_posicion')+'] ' + row.get('posicion'));
 		});
-		arrDescription.push({
-			label: label
-			,values: arrValues
-		});
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
 
 		arrValues      = [];
+		selection      = Ext.getCmp(module+'comboSector').getSelectedRecords();
+		label          = Ext.getCmp(module+'comboSector').fieldLabel;
+
+		Ext.each(selection,function(row){
+			arrValues.push(row.get('sector_nombre'));
+		});
+		if (arrValues.length > 0) {
+			arrDescription.push({
+				label: label
+				,values: arrValues
+			});
+		};
+
 		var yearIni      = Ext.getCmp(module+'comboAnio_ini').getValue();
 		var yearFin      = Ext.getCmp(module+'comboAnio_fin').getValue();
 		arrValues     = [];
 
 		arrValues.push(yearIni + ' - ' + yearFin);
-		
+
 		arrDescription.push({
 			label: Ext.ux.lang.reports.period
 			,values: arrValues
