@@ -270,34 +270,32 @@ $tipo_indicador_html = Inflector::compress($tipo_indicador_html);
 			var initialPanel = {
 				xtype:'panel'
 				,id:module+'initialPanel'
+				,layout:'column'
 				,border:false
-				,autoScroll: false
-				,layout: 'fit'
+				,baseCls:'x-plain'
+				,autoWidth:true
+				,autoScroll:true
+				,bodyStyle:	'padding:15px;position:relative;'
+				,defaults:{
+					columnWidth:1
+					,border:false
+					,xtype:'panel'
+					,style:{padding:'10px'}
+					,layout:'fit'
+				}
 				,items:[{
 					defaults:{anchor:'100%'}
-					,autoWidth:true
-					,autoScroll:true
 					,items:[{
 						style:{padding:'0px'}
 						,autoHeight:true
 						,border:false
-						//,margins:'10 15 5 0'
+						,margins:'10 15 5 0'
 						,html: '<div class="bootstrap-styles">' +
-							'<?= $tipo_indicador_html; ?>' +
+							'<div class="panel panel-default">' +
+								'<div class="panel-body"><?= $tipo_indicador_html; ?></div>' +
+							'</div>' +
 						'</div>'
 					}]
-					/*border:false
-					,xtype:'panel'
-					,border: false
-					,baseCls:'bootstrap-styles'
-					,layout:'column'
-					,items: [{
-						style:{padding:'0px'}
-						,columnWidth:.98
-						,border: false
-						//,layout:'fit'
-						,html: '<?= $tipo_indicador_html; ?>'
-					}]*/
 				}]
 			}
 			Ext.getCmp(module+'lpIndicador').add(initialPanel);

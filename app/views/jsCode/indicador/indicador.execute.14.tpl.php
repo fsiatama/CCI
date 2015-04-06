@@ -12,6 +12,20 @@ foreach ($arrDescription as $value) {
 
 $htmlDescription .= '</ol>';
 
+$htmlExplanation = '
+  <div class="well bs-component">
+    <ul class="list-group">
+      <li class="list-group-item">
+        Por encima de 100%, el producto colombiano está ganando participación en el mercado.
+      </li>
+      <li class="list-group-item">
+        Por debajo de 100% está perdiendo participación.
+      </li>
+    </ul>
+  </div>
+';
+$htmlExplanation = Inflector::compress($htmlExplanation);
+
 ?>
 
 /*<script>*/
@@ -174,6 +188,11 @@ $htmlDescription .= '</ol>';
 					storeIndicador.load();
 				}
 			}]
+		},{
+			style:{padding:'0px'}
+			,html: '<div class="bootstrap-styles">' +
+					'<div class="clearfix"></div><?= $htmlExplanation; ?>' +
+			'</div>'
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridIndicador]

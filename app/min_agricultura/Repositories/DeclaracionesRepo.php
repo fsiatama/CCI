@@ -716,14 +716,15 @@ class DeclaracionesRepo extends BaseRepo {
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
 
-		//Trae los productos configurados como agricolas
-		$result = $this->findProductsBySector('sectorIdAgriculture');
-		if (!$result['success']) {
-			return $result;
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
+			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
+			$result = $this->findProductsBySector('sectorIdAgriculture');
+			if (!$result['success']) {
+				return $result;
+			}
+			$productsAgriculture = $result['data'];
+			$this->model->setId_posicion($productsAgriculture);
 		}
-		$productsAgriculture = $result['data'];
-
-		$this->model->setId_posicion($productsAgriculture);
 
 		$arrRowField = ['id', 'decl.id_posicion', 'posicion'];
 
@@ -845,12 +846,15 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo   = $this->getModelImpoAdo();
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
-		$result = $this->findProductsBySector('sectorIdAgriculture');
-		if (!$result['success']) {
-			return $result;
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
+			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
+			$result = $this->findProductsBySector('sectorIdAgriculture');
+			if (!$result['success']) {
+				return $result;
+			}
+			$productsAgriculture = $result['data'];
+			$this->model->setId_posicion($productsAgriculture);
 		}
-		$productsAgriculture = $result['data'];
-		$this->model->setId_posicion($productsAgriculture);
 
 		$columnValue = 'decl.id_posicion';
 
@@ -881,7 +885,9 @@ class DeclaracionesRepo extends BaseRepo {
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
 
-		$this->model->setId_posicion($productsAgriculture);
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
+			$this->model->setId_posicion($productsAgriculture);
+		}
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotGroupingFunction('COUNT_DISTINCT');
@@ -992,12 +998,15 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->setFiltersValues();
 
-		$result = $this->findProductsBySector('sectorIdAgriculture');
-		if (!$result['success']) {
-			return $result;
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
+			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
+			$result = $this->findProductsBySector('sectorIdAgriculture');
+			if (!$result['success']) {
+				return $result;
+			}
+			$productsAgriculture = $result['data'];
+			$this->model->setId_posicion($productsAgriculture);
 		}
-		$productsAgriculture = $result['data'];
-		$this->model->setId_posicion($productsAgriculture);
 
 		$columnValue = 'decl.id_posicion';
 
@@ -1030,7 +1039,10 @@ class DeclaracionesRepo extends BaseRepo {
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
 
-		$this->model->setId_posicion($productsAgriculture);
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
+			$this->model->setId_posicion($productsAgriculture);
+		}
+
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotGroupingFunction('COUNT_DISTINCT');
@@ -1137,14 +1149,17 @@ class DeclaracionesRepo extends BaseRepo {
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
 
-		//Trae los productos configurados como agricolas
-		$result = $this->findProductsBySector('sectorIdAgriculture');
-		if (!$result['success']) {
-			return $result;
-		}
-		$productsAgriculture = $result['data'];
+		//var_dump($arrFiltersValues, $this->model);
 
-		$this->model->setId_posicion($productsAgriculture);
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
+			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
+			$result = $this->findProductsBySector('sectorIdAgriculture');
+			if (!$result['success']) {
+				return $result;
+			}
+			$productsAgriculture = $result['data'];
+			$this->model->setId_posicion($productsAgriculture);
+		}
 
 		$arrRowField = ['id', 'decl.id_paisdestino', 'pais'];
 
@@ -1691,7 +1706,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$columnValue = 'id_empresa';
 
-		if (!array_key_exists('id_posicion', $arrFiltersValues)) {
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
 			$result = $this->findProductsBySector('sectorIdAgriculture');
 			if (!$result['success']) {
@@ -1813,7 +1828,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$columnValue2 = 'arancel_pagado';
 		$columnValue3 = 'valor_pesos';
 
-		if (!array_key_exists('id_posicion', $arrFiltersValues)) {
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
 			$result = $this->findProductsBySector('sectorIdAgriculture');
 			if (!$result['success']) {
@@ -2113,7 +2128,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
 		//busca los datos del sector agricola
-		if (!array_key_exists('id_posicion', $arrFiltersValues)) {
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
 			$result = $this->findProductsBySector('sectorIdAgriculture');
 			if (!$result['success']) {
@@ -3691,6 +3706,7 @@ class DeclaracionesRepo extends BaseRepo {
 	public function executeComtradeCuadrantes()
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
+		//var_dump($arrFiltersValues);
 		$this->setRange('ini');
 
 		$yearFirst = $arrFiltersValues['anio_ini'];

@@ -163,6 +163,18 @@ return [
 				'required'      => false,
 				'itComplements' => true, //son complemento del filtro id_pais
 			],[
+				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'sector_id',
+				'field_expo' => 'sector_id',
+				'field_impo' => 'sector_id',
+				'required'   => false,
+				'multivalue' => false,
+			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
 				'field_impo' => 'anio',
@@ -196,6 +208,18 @@ return [
 				'field_impo'    => 'mercado_id',
 				'required'      => false,
 				'itComplements' => true, //son complemento del filtro id_pais
+			],[
+				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'sector_id',
+				'field_expo' => 'sector_id',
+				'field_impo' => 'sector_id',
+				'required'   => false,
+				'multivalue' => false,
 			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
@@ -255,6 +279,18 @@ return [
 				'required'      => false,
 				'itComplements' => true, //son complemento del filtro id_pais
 			],[
+				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'sector_id',
+				'field_expo' => 'sector_id',
+				'field_impo' => 'sector_id',
+				'required'   => false,
+				'multivalue' => false,
+			],[
 				'field'      => 'anio_ini',
 				'field_expo' => 'anio',
 				'field_impo' => 'anio',
@@ -311,6 +347,18 @@ return [
 				'field_impo' => 'periodo',
 				'required'   => true,
 				'itComplements' => true, //son complemento del filtro anio
+			],[
+				'field'      => 'id_posicion',
+				'field_expo' => 'id_posicion',
+				'field_impo' => 'id_posicion',
+				'required'   => false,
+				'multivalue' => true,
+			],[
+				'field'      => 'sector_id',
+				'field_expo' => 'sector_id',
+				'field_impo' => 'sector_id',
+				'required'   => false,
+				'multivalue' => false,
 			]
 		],
 		'8' => [

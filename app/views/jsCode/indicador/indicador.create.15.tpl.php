@@ -417,6 +417,22 @@
 	}
 
 	function fnSave () {
+		var field1 = Ext.getCmp(module+'comboPosicion');
+		var field2 = Ext.getCmp(module+'comboSector');
+		if (!field1 || !field2) {
+			return false;
+		}
+		var cnt1 = field1.getValue().length;
+		var cnt2 = field2.getValue().length;
+		if ((cnt1 > 0 && cnt2 > 0)) {
+			Ext.Msg.show({
+				title: Ext.ux.lang.messages.warning
+				,msg: Ext.ux.lang.error.empty_product
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+			return false;
+		}
 		if(formIndicador.form.isValid()){
 			var description = getDescription();
 			params = {
