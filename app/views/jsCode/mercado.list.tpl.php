@@ -3,6 +3,49 @@
 	Ext.form.Field.prototype.msgTarget = 'side';
 	var module = '<?= $module; ?>';
 	var numberRecords = Math.floor((Ext.getCmp('tabpanel').getInnerHeight() - 120)/22);
+
+	var storePais = new Ext.data.JsonStore({
+		url:'pais/list'
+		,id:module+'storePais'
+		,root:'data'
+		,sortInfo:{field:'id_pais',direction:'ASC'}
+		,totalProperty:'total'
+		,baseParams:{
+			id:'<?= $id; ?>'
+			,valuesqry: true
+		}
+		,fields:[
+			{name:'id_pais', type:'float'},
+			{name:'pais', type:'string'},
+			{name:'pais_iata', type:'string'},
+		]
+	});
+
+	var listViewCountries = new Ext.list.ListView({
+		store: storePais,
+		reserveScrollOffset: true,
+		columns: [{
+			header: '<?= Lang::get('pais.columns_title.pais'); ?>',
+			dataIndex: 'pais'
+		},{
+			header: '<?= Lang::get('pais.columns_title.pais_iata'); ?>',
+			dataIndex: 'pais_iata'
+		}]
+	});
+
+	var dialogCountries = new Ext.Window({
+		id:module+'dialogCountries'
+		,layout:'fit'
+		,width:230
+		,autoHeight:true
+		,modal:true
+		,draggable:false
+		,resizable:false
+		//,items:[formPeriodo]
+		,closeAction:'hide'		
+		,border:true
+		,plain:true
+	});
 	
 	var storeMercado = new Ext.data.JsonStore({
 		url:'mercado/list'
@@ -29,6 +72,9 @@
 		},{
 			 iconCls: 'silk-page-edit'
 			,tooltip: Ext.ux.lang.buttons.modify_tt
+		},{
+			 iconCls: 'icon-view'
+			,tooltip: Ext.ux.lang.buttons.detail_tt
 		}]
 		,callbacks:{
 			'silk-delete':function(grid, record, action, row, col) {
@@ -36,6 +82,9 @@
 			}
 			,'silk-page-edit':function(grid, record, action, row, col) {
 				fnEditItm(record);
+			}
+			,'icon-view':function(grid, record, action, row, col) {
+				fnViewDetail(record);
 			}
 		}
 	});
@@ -127,6 +176,12 @@
 
 	return gridMercado;	
 	/*********************************************** Start functions***********************************************/
+
+	function fnViewDetail (record) {
+		var countries = record.get('mercado_paises').split(',');
+		storePais.setBaseParam('query', countries.join('|'));
+		storePais.load();
+	}
 	
 	function fnEditItm(record){
 		var key = record.get('mercado_id');

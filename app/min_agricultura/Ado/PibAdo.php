@@ -170,6 +170,8 @@ class PibAdo extends BaseAdo {
 		';
 		$sql .= $this->buildSelectWhere();
 
+		$sql .= ' ORDER BY pib_anio, pib_periodo';
+
 		return $sql;
 	}
 

@@ -1,183 +1,317 @@
-2015-03-19 11:56:26 - Inicia proceso para actualizar datos en la tabla arancel
-2015-03-19 11:56:26 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:26 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:26 - No hay archivo disponible
-2015-03-19 11:56:26 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - Inicia proceso para actualizar datos en la tabla posicion
-2015-03-19 11:56:26 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:26 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:26 - No hay archivo disponible
-2015-03-19 11:56:26 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - Inicia proceso para actualizar datos en la tabla subpartida
-2015-03-19 11:56:26 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:26 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:26 - No hay archivo disponible
-2015-03-19 11:56:26 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - Inicia proceso para actualizar datos en la tabla empresa
-2015-03-19 11:56:26 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:26 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:26 - No hay archivo disponible
-2015-03-19 11:56:26 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - Inicia proceso para actualizar datos en la tabla departamento
-2015-03-19 11:56:26 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:26 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:26 - No hay archivo disponible
-2015-03-19 11:56:26 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - Inicia proceso para actualizar datos en la tabla pais
-2015-03-19 11:56:26 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:26 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:26 - No hay archivo disponible
-2015-03-19 11:56:26 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - Inicia proceso para actualizar datos en la tabla declaraexp
-2015-03-19 11:56:26 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:26 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:26 - No hay archivo disponible
-2015-03-19 11:56:26 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - Inicia proceso para actualizar datos en la tabla declaraimp
-2015-03-19 11:56:26 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:26 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:26 - No hay archivo disponible
-2015-03-19 11:56:26 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:26 - ====================================================================================
-2015-03-19 11:56:56 - Inicia proceso para actualizar datos en la tabla arancel
-2015-03-19 11:56:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:56 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:56 - No hay archivo disponible
-2015-03-19 11:56:56 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - Inicia proceso para actualizar datos en la tabla posicion
-2015-03-19 11:56:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:56 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:56 - No hay archivo disponible
-2015-03-19 11:56:56 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - Inicia proceso para actualizar datos en la tabla subpartida
-2015-03-19 11:56:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:56 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:56 - Inicia descarga de archivo subpartida.zip
-2015-03-19 11:56:56 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:56 - Preparando carpeta temporal
-2015-03-19 11:56:56 - Descomprimiendo datos
-2015-03-19 11:56:56 - Inicia carga de datos nuevos
-2015-03-19 11:56:56 - Elimina archivos y carpetas temporales
-2015-03-19 11:56:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:56 - Renombrando archivo el servidor FTP
-2015-03-19 11:56:56 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:56 - Finaliza proceso de actualización para la tabla subpartida
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - Inicia proceso para actualizar datos en la tabla empresa
-2015-03-19 11:56:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:56 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:56 - No hay archivo disponible
-2015-03-19 11:56:56 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - Inicia proceso para actualizar datos en la tabla departamento
-2015-03-19 11:56:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:56 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:56 - No hay archivo disponible
-2015-03-19 11:56:56 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - Inicia proceso para actualizar datos en la tabla pais
-2015-03-19 11:56:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:56 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:56 - No hay archivo disponible
-2015-03-19 11:56:56 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - Inicia proceso para actualizar datos en la tabla declaraexp
-2015-03-19 11:56:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:56 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:56 - No hay archivo disponible
-2015-03-19 11:56:56 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - Inicia proceso para actualizar datos en la tabla declaraimp
-2015-03-19 11:56:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 11:56:56 - Comprueba si existe un archivo disponible
-2015-03-19 11:56:56 - No hay archivo disponible
-2015-03-19 11:56:56 - Cerrando conexión con el servidor FTP
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 11:56:56 - ====================================================================================
-2015-03-19 12:26:11 - Inicia proceso para actualizar datos en la tabla arancel
-2015-03-19 12:26:11 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 12:26:11 - Comprueba si existe un archivo disponible
-2015-03-19 12:26:11 - No hay archivo disponible
-2015-03-19 12:26:11 - Cerrando conexión con el servidor FTP
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - Inicia proceso para actualizar datos en la tabla posicion
-2015-03-19 12:26:11 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 12:26:11 - Comprueba si existe un archivo disponible
-2015-03-19 12:26:11 - No hay archivo disponible
-2015-03-19 12:26:11 - Cerrando conexión con el servidor FTP
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - Inicia proceso para actualizar datos en la tabla subpartida
-2015-03-19 12:26:11 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 12:26:11 - Comprueba si existe un archivo disponible
-2015-03-19 12:26:11 - No hay archivo disponible
-2015-03-19 12:26:11 - Cerrando conexión con el servidor FTP
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - Inicia proceso para actualizar datos en la tabla empresa
-2015-03-19 12:26:11 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 12:26:11 - Comprueba si existe un archivo disponible
-2015-03-19 12:26:11 - No hay archivo disponible
-2015-03-19 12:26:11 - Cerrando conexión con el servidor FTP
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - Inicia proceso para actualizar datos en la tabla departamento
-2015-03-19 12:26:11 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 12:26:11 - Comprueba si existe un archivo disponible
-2015-03-19 12:26:11 - No hay archivo disponible
-2015-03-19 12:26:11 - Cerrando conexión con el servidor FTP
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - Inicia proceso para actualizar datos en la tabla pais
-2015-03-19 12:26:11 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 12:26:11 - Comprueba si existe un archivo disponible
-2015-03-19 12:26:11 - No hay archivo disponible
-2015-03-19 12:26:11 - Cerrando conexión con el servidor FTP
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - Inicia proceso para actualizar datos en la tabla declaraexp
-2015-03-19 12:26:11 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 12:26:11 - Comprueba si existe un archivo disponible
-2015-03-19 12:26:11 - No hay archivo disponible
-2015-03-19 12:26:11 - Cerrando conexión con el servidor FTP
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - ====================================================================================
-2015-03-19 12:26:11 - Inicia proceso para actualizar datos en la tabla declaraimp
-2015-03-19 12:26:11 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 12:26:11 - Comprueba si existe un archivo disponible
-2015-03-19 12:26:11 - Inicia descarga de archivo declaraimp.zip
-2015-03-19 12:26:15 - Cerrando conexión con el servidor FTP
-2015-03-19 12:26:15 - Preparando carpeta temporal
-2015-03-19 12:26:15 - Descomprimiendo datos
-2015-03-19 12:26:17 - Inicia carga de datos nuevos
-2015-03-19 12:34:17 - Elimina archivos y carpetas temporales
-2015-03-19 12:34:17 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
-2015-03-19 12:34:17 - Renombrando archivo el servidor FTP
-2015-03-19 12:34:17 - Cerrando conexión con el servidor FTP
-2015-03-19 12:34:17 - Finaliza proceso de actualización para la tabla declaraimp
-2015-03-19 12:34:17 - Inicia proceso de alertas para los contingentes de declaraimp
+2015-04-07 10:28:59 - Inicia proceso para actualizar datos en la tabla arancel
+2015-04-07 10:28:59 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:28:59 - Comprueba si existe un archivo disponible
+2015-04-07 10:28:59 - No hay archivo disponible
+2015-04-07 10:28:59 - Cerrando conexión con el servidor FTP
+2015-04-07 10:28:59 - ====================================================================================
+2015-04-07 10:28:59 - ====================================================================================
+2015-04-07 10:28:59 - Inicia proceso para actualizar datos en la tabla posicion
+2015-04-07 10:28:59 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:28:59 - Comprueba si existe un archivo disponible
+2015-04-07 10:28:59 - Inicia descarga de archivo posicion.zip
+2015-04-07 10:28:59 - Cerrando conexión con el servidor FTP
+2015-04-07 10:28:59 - Preparando carpeta temporal
+2015-04-07 10:28:59 - Descomprimiendo datos
+2015-04-07 10:28:59 - Inicia carga de datos nuevos
+2015-04-07 10:29:00 - Elimina archivos y carpetas temporales
+2015-04-07 10:29:00 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:29:00 - Renombrando archivo el servidor FTP
+2015-04-07 10:29:00 - Cerrando conexión con el servidor FTP
+2015-04-07 10:29:00 - Finaliza proceso de actualización para la tabla posicion
+2015-04-07 10:29:00 - Inicia proceso de alertas para los contingentes de posicion
+2015-04-07 10:29:52 - Inicia proceso para actualizar datos en la tabla arancel
+2015-04-07 10:29:52 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:29:52 - Comprueba si existe un archivo disponible
+2015-04-07 10:29:52 - No hay archivo disponible
+2015-04-07 10:29:52 - Cerrando conexión con el servidor FTP
+2015-04-07 10:29:52 - ====================================================================================
+2015-04-07 10:29:52 - ====================================================================================
+2015-04-07 10:29:52 - Inicia proceso para actualizar datos en la tabla posicion
+2015-04-07 10:29:52 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:29:52 - Comprueba si existe un archivo disponible
+2015-04-07 10:29:52 - No hay archivo disponible
+2015-04-07 10:29:52 - Cerrando conexión con el servidor FTP
+2015-04-07 10:29:52 - ====================================================================================
+2015-04-07 10:29:52 - ====================================================================================
+2015-04-07 10:29:52 - Inicia proceso para actualizar datos en la tabla subpartida
+2015-04-07 10:29:52 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:29:52 - Comprueba si existe un archivo disponible
+2015-04-07 10:29:52 - Inicia descarga de archivo subpartida.zip
+2015-04-07 10:29:52 - Cerrando conexión con el servidor FTP
+2015-04-07 10:29:52 - Preparando carpeta temporal
+2015-04-07 10:29:52 - Descomprimiendo datos
+2015-04-07 10:29:52 - Inicia carga de datos nuevos
+2015-04-07 10:29:53 - Elimina archivos y carpetas temporales
+2015-04-07 10:29:53 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:29:53 - Renombrando archivo el servidor FTP
+2015-04-07 10:29:53 - Cerrando conexión con el servidor FTP
+2015-04-07 10:29:53 - Finaliza proceso de actualización para la tabla subpartida
+2015-04-07 10:29:53 - ====================================================================================
+2015-04-07 10:29:53 - ====================================================================================
+2015-04-07 10:29:53 - Inicia proceso para actualizar datos en la tabla empresa
+2015-04-07 10:29:53 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:29:53 - Comprueba si existe un archivo disponible
+2015-04-07 10:29:53 - Inicia descarga de archivo empresa.zip
+2015-04-07 10:29:53 - Cerrando conexión con el servidor FTP
+2015-04-07 10:29:53 - Preparando carpeta temporal
+2015-04-07 10:29:53 - Descomprimiendo datos
+2015-04-07 10:29:54 - Inicia carga de datos nuevos
+2015-04-07 10:30:02 - Elimina archivos y carpetas temporales
+2015-04-07 10:30:02 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:30:02 - Renombrando archivo el servidor FTP
+2015-04-07 10:30:02 - Cerrando conexión con el servidor FTP
+2015-04-07 10:30:02 - Finaliza proceso de actualización para la tabla empresa
+2015-04-07 10:30:02 - ====================================================================================
+2015-04-07 10:30:02 - ====================================================================================
+2015-04-07 10:30:02 - Inicia proceso para actualizar datos en la tabla departamento
+2015-04-07 10:30:02 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:30:02 - Comprueba si existe un archivo disponible
+2015-04-07 10:30:02 - Inicia descarga de archivo departamento.zip
+2015-04-07 10:30:02 - Cerrando conexión con el servidor FTP
+2015-04-07 10:30:02 - Preparando carpeta temporal
+2015-04-07 10:30:02 - Descomprimiendo datos
+2015-04-07 10:30:02 - Inicia carga de datos nuevos
+2015-04-07 10:30:02 - Elimina archivos y carpetas temporales
+2015-04-07 10:30:02 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:30:02 - Renombrando archivo el servidor FTP
+2015-04-07 10:30:02 - Cerrando conexión con el servidor FTP
+2015-04-07 10:30:02 - Finaliza proceso de actualización para la tabla departamento
+2015-04-07 10:30:02 - ====================================================================================
+2015-04-07 10:30:02 - ====================================================================================
+2015-04-07 10:30:02 - Inicia proceso para actualizar datos en la tabla pais
+2015-04-07 10:30:02 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:30:02 - Comprueba si existe un archivo disponible
+2015-04-07 10:30:02 - Inicia descarga de archivo pais.zip
+2015-04-07 10:30:02 - Cerrando conexión con el servidor FTP
+2015-04-07 10:30:02 - Preparando carpeta temporal
+2015-04-07 10:30:02 - Descomprimiendo datos
+2015-04-07 10:30:02 - Inicia carga de datos nuevos
+2015-04-07 10:30:02 - Elimina archivos y carpetas temporales
+2015-04-07 10:30:02 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:30:02 - Renombrando archivo el servidor FTP
+2015-04-07 10:30:02 - Cerrando conexión con el servidor FTP
+2015-04-07 10:30:02 - Finaliza proceso de actualización para la tabla pais
+2015-04-07 10:30:02 - ====================================================================================
+2015-04-07 10:30:02 - ====================================================================================
+2015-04-07 10:30:02 - Inicia proceso para actualizar datos en la tabla declaraexp
+2015-04-07 10:30:02 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:30:02 - Comprueba si existe un archivo disponible
+2015-04-07 10:30:02 - No hay archivo disponible
+2015-04-07 10:30:02 - Cerrando conexión con el servidor FTP
+2015-04-07 10:30:02 - ====================================================================================
+2015-04-07 10:30:02 - ====================================================================================
+2015-04-07 10:30:02 - Inicia proceso para actualizar datos en la tabla declaraimp
+2015-04-07 10:30:02 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:30:02 - Comprueba si existe un archivo disponible
+2015-04-07 10:30:02 - Inicia descarga de archivo declaraimp.zip
+2015-04-07 10:30:03 - Cerrando conexión con el servidor FTP
+2015-04-07 10:30:03 - Preparando carpeta temporal
+2015-04-07 10:30:03 - Descomprimiendo datos
+2015-04-07 10:30:03 - Inicia carga de datos nuevos
+2015-04-07 10:44:04 - Elimina archivos y carpetas temporales
+2015-04-07 10:44:04 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 10:44:04 - Renombrando archivo el servidor FTP
+2015-04-07 10:44:04 - Cerrando conexión con el servidor FTP
+2015-04-07 10:44:04 - Finaliza proceso de actualización para la tabla declaraimp
+2015-04-07 10:44:04 - ====================================================================================
+2015-04-07 10:44:04 - ====================================================================================
+2015-04-07 11:00:47 - Inicia proceso para actualizar datos en la tabla arancel
+2015-04-07 11:00:47 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:00:47 - Comprueba si existe un archivo disponible
+2015-04-07 11:00:47 - No hay archivo disponible
+2015-04-07 11:00:47 - Cerrando conexión con el servidor FTP
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - Inicia proceso para actualizar datos en la tabla posicion
+2015-04-07 11:00:47 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:00:47 - Comprueba si existe un archivo disponible
+2015-04-07 11:00:47 - No hay archivo disponible
+2015-04-07 11:00:47 - Cerrando conexión con el servidor FTP
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - Inicia proceso para actualizar datos en la tabla subpartida
+2015-04-07 11:00:47 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:00:47 - Comprueba si existe un archivo disponible
+2015-04-07 11:00:47 - No hay archivo disponible
+2015-04-07 11:00:47 - Cerrando conexión con el servidor FTP
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - Inicia proceso para actualizar datos en la tabla empresa
+2015-04-07 11:00:47 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:00:47 - Comprueba si existe un archivo disponible
+2015-04-07 11:00:47 - No hay archivo disponible
+2015-04-07 11:00:47 - Cerrando conexión con el servidor FTP
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - Inicia proceso para actualizar datos en la tabla departamento
+2015-04-07 11:00:47 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:00:47 - Comprueba si existe un archivo disponible
+2015-04-07 11:00:47 - No hay archivo disponible
+2015-04-07 11:00:47 - Cerrando conexión con el servidor FTP
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - Inicia proceso para actualizar datos en la tabla pais
+2015-04-07 11:00:47 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:00:47 - Comprueba si existe un archivo disponible
+2015-04-07 11:00:47 - No hay archivo disponible
+2015-04-07 11:00:47 - Cerrando conexión con el servidor FTP
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - Inicia proceso para actualizar datos en la tabla declaraexp
+2015-04-07 11:00:47 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:00:47 - Comprueba si existe un archivo disponible
+2015-04-07 11:00:47 - No hay archivo disponible
+2015-04-07 11:00:47 - Cerrando conexión con el servidor FTP
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - ====================================================================================
+2015-04-07 11:00:47 - Inicia proceso para actualizar datos en la tabla declaraimp
+2015-04-07 11:00:47 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:00:47 - Comprueba si existe un archivo disponible
+2015-04-07 11:00:47 - Inicia descarga de archivo declaraimp.zip
+2015-04-07 11:00:48 - Cerrando conexión con el servidor FTP
+2015-04-07 11:00:48 - Preparando carpeta temporal
+2015-04-07 11:00:48 - Descomprimiendo datos
+2015-04-07 11:00:48 - Inicia carga de datos nuevos
+2015-04-07 11:03:10 - Elimina archivos y carpetas temporales
+2015-04-07 11:03:10 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:03:10 - Renombrando archivo el servidor FTP
+2015-04-07 11:03:10 - Cerrando conexión con el servidor FTP
+2015-04-07 11:03:10 - Finaliza proceso de actualización para la tabla declaraimp
+2015-04-07 11:03:10 - ====================================================================================
+2015-04-07 11:03:10 - ====================================================================================
+2015-04-07 11:06:43 - Inicia proceso para actualizar datos en la tabla arancel
+2015-04-07 11:06:43 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:06:43 - Comprueba si existe un archivo disponible
+2015-04-07 11:06:43 - No hay archivo disponible
+2015-04-07 11:06:43 - Cerrando conexión con el servidor FTP
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - Inicia proceso para actualizar datos en la tabla posicion
+2015-04-07 11:06:43 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:06:43 - Comprueba si existe un archivo disponible
+2015-04-07 11:06:43 - No hay archivo disponible
+2015-04-07 11:06:43 - Cerrando conexión con el servidor FTP
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - Inicia proceso para actualizar datos en la tabla subpartida
+2015-04-07 11:06:43 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:06:43 - Comprueba si existe un archivo disponible
+2015-04-07 11:06:43 - No hay archivo disponible
+2015-04-07 11:06:43 - Cerrando conexión con el servidor FTP
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - Inicia proceso para actualizar datos en la tabla empresa
+2015-04-07 11:06:43 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:06:43 - Comprueba si existe un archivo disponible
+2015-04-07 11:06:43 - No hay archivo disponible
+2015-04-07 11:06:43 - Cerrando conexión con el servidor FTP
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - Inicia proceso para actualizar datos en la tabla departamento
+2015-04-07 11:06:43 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:06:43 - Comprueba si existe un archivo disponible
+2015-04-07 11:06:43 - No hay archivo disponible
+2015-04-07 11:06:43 - Cerrando conexión con el servidor FTP
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - Inicia proceso para actualizar datos en la tabla pais
+2015-04-07 11:06:43 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:06:43 - Comprueba si existe un archivo disponible
+2015-04-07 11:06:43 - No hay archivo disponible
+2015-04-07 11:06:43 - Cerrando conexión con el servidor FTP
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - ====================================================================================
+2015-04-07 11:06:43 - Inicia proceso para actualizar datos en la tabla declaraexp
+2015-04-07 11:06:43 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:06:43 - Comprueba si existe un archivo disponible
+2015-04-07 11:06:43 - Inicia descarga de archivo declaraexp.zip
+2015-04-07 11:06:44 - Cerrando conexión con el servidor FTP
+2015-04-07 11:06:44 - Preparando carpeta temporal
+2015-04-07 11:06:44 - Descomprimiendo datos
+2015-04-07 11:06:44 - Inicia carga de datos nuevos
+2015-04-07 11:11:45 - Elimina archivos y carpetas temporales
+2015-04-07 11:11:45 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:11:46 - Renombrando archivo el servidor FTP
+2015-04-07 11:11:46 - Cerrando conexión con el servidor FTP
+2015-04-07 11:11:46 - Finaliza proceso de actualización para la tabla declaraexp
+2015-04-07 11:11:46 - ====================================================================================
+2015-04-07 11:11:46 - ====================================================================================
+2015-04-07 11:11:46 - Inicia proceso para actualizar datos en la tabla declaraimp
+2015-04-07 11:11:46 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:11:46 - Comprueba si existe un archivo disponible
+2015-04-07 11:11:46 - Inicia descarga de archivo declaraimp.zip
+2015-04-07 11:11:50 - Cerrando conexión con el servidor FTP
+2015-04-07 11:11:50 - Preparando carpeta temporal
+2015-04-07 11:11:50 - Descomprimiendo datos
+2015-04-07 11:11:52 - Inicia carga de datos nuevos
+2015-04-07 11:41:42 - Elimina archivos y carpetas temporales
+2015-04-07 11:41:42 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:41:42 - Renombrando archivo el servidor FTP
+2015-04-07 11:41:42 - Cerrando conexión con el servidor FTP
+2015-04-07 11:41:42 - Finaliza proceso de actualización para la tabla declaraimp
+2015-04-07 11:41:42 - ====================================================================================
+2015-04-07 11:41:42 - ====================================================================================
+2015-04-07 11:56:51 - Inicia proceso para actualizar datos en la tabla arancel
+2015-04-07 11:56:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:56:51 - Comprueba si existe un archivo disponible
+2015-04-07 11:56:51 - No hay archivo disponible
+2015-04-07 11:56:51 - Cerrando conexión con el servidor FTP
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - Inicia proceso para actualizar datos en la tabla posicion
+2015-04-07 11:56:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:56:51 - Comprueba si existe un archivo disponible
+2015-04-07 11:56:51 - Inicia descarga de archivo posicion.zip
+2015-04-07 11:56:51 - Cerrando conexión con el servidor FTP
+2015-04-07 11:56:51 - Preparando carpeta temporal
+2015-04-07 11:56:51 - Descomprimiendo datos
+2015-04-07 11:56:51 - Inicia carga de datos nuevos
+2015-04-07 11:56:51 - Elimina archivos y carpetas temporales
+2015-04-07 11:56:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:56:51 - Renombrando archivo el servidor FTP
+2015-04-07 11:56:51 - Cerrando conexión con el servidor FTP
+2015-04-07 11:56:51 - Finaliza proceso de actualización para la tabla posicion
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - Inicia proceso para actualizar datos en la tabla subpartida
+2015-04-07 11:56:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:56:51 - Comprueba si existe un archivo disponible
+2015-04-07 11:56:51 - No hay archivo disponible
+2015-04-07 11:56:51 - Cerrando conexión con el servidor FTP
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - Inicia proceso para actualizar datos en la tabla empresa
+2015-04-07 11:56:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:56:51 - Comprueba si existe un archivo disponible
+2015-04-07 11:56:51 - No hay archivo disponible
+2015-04-07 11:56:51 - Cerrando conexión con el servidor FTP
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - Inicia proceso para actualizar datos en la tabla departamento
+2015-04-07 11:56:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:56:51 - Comprueba si existe un archivo disponible
+2015-04-07 11:56:51 - No hay archivo disponible
+2015-04-07 11:56:51 - Cerrando conexión con el servidor FTP
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - Inicia proceso para actualizar datos en la tabla pais
+2015-04-07 11:56:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:56:51 - Comprueba si existe un archivo disponible
+2015-04-07 11:56:51 - No hay archivo disponible
+2015-04-07 11:56:51 - Cerrando conexión con el servidor FTP
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - Inicia proceso para actualizar datos en la tabla declaraexp
+2015-04-07 11:56:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:56:51 - Comprueba si existe un archivo disponible
+2015-04-07 11:56:51 - No hay archivo disponible
+2015-04-07 11:56:51 - Cerrando conexión con el servidor FTP
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - Inicia proceso para actualizar datos en la tabla declaraimp
+2015-04-07 11:56:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-04-07 11:56:51 - Comprueba si existe un archivo disponible
+2015-04-07 11:56:51 - No hay archivo disponible
+2015-04-07 11:56:51 - Cerrando conexión con el servidor FTP
+2015-04-07 11:56:51 - ====================================================================================
+2015-04-07 11:56:51 - ====================================================================================

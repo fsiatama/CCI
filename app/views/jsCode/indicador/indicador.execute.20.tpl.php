@@ -12,6 +12,15 @@ foreach ($arrDescription as $value) {
 
 $htmlDescription .= '</ol>';
 
+$htmlExplanation = '
+  <div class="well bs-component">
+    <p>
+    	Por encima de 100%, las exportaciones agropecuarias y agroindustriales no tradicionales están creciendo por encima del total de las exportaciones agropecuarias y agroindustriales del país al mundo o a un mercado específico.
+	</p>
+  </div>
+';
+$htmlExplanation = Inflector::compress($htmlExplanation);
+
 ?>
 
 /*<script>*/
@@ -197,6 +206,11 @@ $htmlDescription .= '</ol>';
 					storeIndicador.load();
 				}
 			}]
+		},{
+			style:{padding:'0px'}
+			,html: '<div class="bootstrap-styles">' +
+					'<div class="clearfix"></div><?= $htmlExplanation; ?>' +
+			'</div>'
 		},{
 			height:430
 			,html:'<div id="' + module + 'ColumnChart"></div>'

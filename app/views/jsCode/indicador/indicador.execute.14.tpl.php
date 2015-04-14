@@ -166,6 +166,11 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 			'</div>'
 		},{
 			style:{padding:'0px'}
+			,html: '<div class="bootstrap-styles">' +
+					'<div class="clearfix"></div><?= $htmlExplanation; ?>' +
+			'</div>'
+		},{
+			style:{padding:'0px'}
 			,border:true
 			,html: ''
 			,tbar:[{
@@ -188,11 +193,6 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 					storeIndicador.load();
 				}
 			}]
-		},{
-			style:{padding:'0px'}
-			,html: '<div class="bootstrap-styles">' +
-					'<div class="clearfix"></div><?= $htmlExplanation; ?>' +
-			'</div>'
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridIndicador]

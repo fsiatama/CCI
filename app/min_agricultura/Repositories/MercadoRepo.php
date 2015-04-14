@@ -2,6 +2,7 @@
 
 require PATH_MODELS.'Entities/Mercado.php';
 require PATH_MODELS.'Ado/MercadoAdo.php';
+require_once PATH_MODELS.'Repositories/PaisRepo.php';
 require_once ('BaseRepo.php');
 
 class MercadoRepo extends BaseRepo {
@@ -120,6 +121,36 @@ class MercadoRepo extends BaseRepo {
 			$this->model->setMercado_fupdate(Helpers::getDateTimeNow());
 		}
 		$result = ['success' => true];
+		return $result;
+	}
+
+	public function listId($params)
+	{
+		$this->modelAdo->setColumns([
+			'mercado_id',
+			'mercado_nombre',
+			'mercado_paises'
+		]);
+
+		$result = $this->validateModify($params);
+		if ($result['success']) {
+
+			$row = $result['data'][0];
+
+			$arrCountries = [];
+
+			$paisRepo  = new PaisRepo;
+			$query     = explode(',', $row['mercado_paises']);
+			$query     = implode('|', $query);
+			$valuesqry = true;
+			
+			$rsCountries = $paisRepo->listAll(compact('query', 'valuesqry'));
+			if ($rsCountries['success']) {
+				$arrCountries = $result['data'];
+			}
+			array_push($result, compact('arrCountries'));
+		}
+
 		return $result;
 	}
 

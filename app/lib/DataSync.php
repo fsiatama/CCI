@@ -9,11 +9,11 @@
  
 include "../../public/lib/config.php";
 
-ini_set('display_errors', false);
-error_reporting(0);
+ini_set('display_errors', true);
+error_reporting(-1);
 
 require PATH_APP.'../vendor/autoload.php';
-require PATH_APP.'lib/connection/Connection.php';
+//require PATH_APP.'lib/connection/Connection.php';
 require_once PATH_MODELS.'Repositories/AcuerdoRepo.php';
 
 class DataSync extends Connection {
@@ -159,8 +159,8 @@ class DataSync extends Connection {
         
 
         //una vez cargada la informacion nueva, dispara las alertas para los contingentes
-        $this->Log("Inicia proceso de alertas para los contingentes de ". $table);
-        $result = $this->acuerdo_detRepo->gridDetailed($postParams);
+        //$this->Log("Inicia proceso de alertas para los contingentes de ". $table);
+        //$result = $this->acuerdo_detRepo->gridDetailed($postParams);
 
 
 
@@ -245,7 +245,7 @@ class DataSync extends Connection {
             $sql[] = "
                 UPDATE update_info 
                 SET update_info_to = ( 
-                    SELECT MAX( LAST_DAY(CONCAT(tab.anio,'-',tab.periodo,'-01')) ) FROM declaraexp tab 
+                    SELECT MAX( LAST_DAY(CONCAT(tab.anio,'-',tab.periodo,'-01')) ) FROM ".$table." tab 
                 ) 
                 WHERE update_info_product = 'aduanas' 
                   AND update_info_trade = '".$trade."';

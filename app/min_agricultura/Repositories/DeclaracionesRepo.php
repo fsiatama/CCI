@@ -1902,6 +1902,166 @@ class DeclaracionesRepo extends BaseRepo {
 
 	public function executeComtradeRelacionCrecimientoExpoColombiaImpoPais()
 	{
+
+		//este indicador se debe redefinir, pero se espera informacion adicional por parte del MADR
+
+		/*
+		$arrFiltersValues = $this->arrFiltersValues;
+		//var_dump($arrFiltersValues);
+		$this->setRange('ini');
+
+		$yearFirst = $arrFiltersValues['anio_ini'];
+		$yearLast  = $arrFiltersValues['anio_fin'];
+		$rangeYear = range($yearFirst, $yearLast);
+
+		$id_pais_destino = $arrFiltersValues['id_pais_destino'];
+		$id_subpartida   = $arrFiltersValues['id_subpartida'];
+
+		if (
+			empty($yearFirst) ||
+			empty($yearLast) ||
+			( empty($id_subpartida) && empty($id_pais_destino) )
+		) {
+			$result = [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+			return $result;
+		}
+		
+		$baseUrl = Helpers::arrayGet($this->linesConfig, 'urlApiComtrade');
+
+		$reporter = 'all';
+		$partner  = '0';
+
+		if ( !empty($id_pais_destino) ) {
+			$reporter = $id_pais_destino;
+			$partner  = 'all';
+		}
+
+		$parameters = [
+			'max'  => 5000,
+			'type' => 'C',
+			'freq' => 'A', //frecuancia anual
+			'px'   => 'HS',
+			'rg'   => '1', //impo
+			'ps'   => implode(',', $rangeYear),
+			'r'    => $reporter,
+			'p'    => $partner,
+			'cc'   => $id_subpartida,
+		];
+
+		$url = $baseUrl . http_build_query($parameters);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		$result = json_decode(curl_exec($ch), true);
+
+		//var_dump($result, $url);
+
+		if (empty($result['dataset'])) {
+			$result = [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found_comtrade')
+			];
+			return $result;
+		}
+
+		$arrFields = [
+			'id'         => 'SMALLINT(4) UNSIGNED NOT NULL',
+			'yr'         => 'SMALLINT(4) UNSIGNED NOT NULL',
+			'rtCode'     => 'SMALLINT(4) UNSIGNED NOT NULL',
+			'rtTitle'    => 'VARCHAR(100) NOT NULL',
+			'ptCode'     => 'SMALLINT(4) UNSIGNED NOT NULL',
+			'ptTitle'    => 'VARCHAR(100) NOT NULL',
+			'TradeValue' => 'DECIMAL(20,2) UNSIGNED NOT NULL',
+		];
+
+		$this->modelAdo = new ComtradeTempAdo ('', $arrFields, $result['dataset']);
+
+		//$rowFields   = ( empty($id_pais_destino) ) ? 'rtCode, rtTitle' : 'ptCode, ptTitle' ;
+		//$rowFieldId  = ( empty($id_pais_destino) ) ? 'rtCode' : 'ptCode' ;
+		$rowFields   = 'rtCode, rtTitle';
+		$rowFieldId  = 'rtCode';
+
+		if ( !empty($id_pais_destino) ) {
+			$rowFields  = 'ptCode, ptTitle';
+			$rowFieldId = 'ptCode';
+		}
+
+		$columnValue = 'TradeValue';
+
+		$this->modelAdo->setPivotRowFields('id, '.$rowFields);
+		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
+		$this->modelAdo->setPivotColumnFields('yr');
+
+		$result = $this->modelAdo->pivotSearch();
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$arrData = [];
+		$acummulatedAvg   = 0;
+		$acummulatedSlope = 0;
+		$numberRecords    = 0;
+
+		//var_dump($result);
+
+		foreach ($result['data'] as $row) {
+
+			$arrCalculatedColumns = array_diff_key($row, $arrFields);
+
+			//verifica que no existan registros con valores en cero
+			$isValid = true;
+			foreach ($arrCalculatedColumns as $key => $value) {
+				if ( empty($value) ) {
+					$isValid = false;
+				}
+				$row[$key] = $this->getFloatValue( $value );
+			}
+			if ($isValid) {
+				if ( $row[$rowFieldId] == '0' ) {
+					//captura la fila acumulada del todo el mundo
+
+					//var_dump($row);
+
+				} else {
+
+					$totalValue = $this->getFloatValue( array_sum($arrCalculatedColumns) );
+					$avg        = $totalValue / count($arrCalculatedColumns);
+					$arrY       = array_map('Helpers::naturalLogarithm', $arrCalculatedColumns);
+
+					$linearRegression = Helpers::linearRegression($arrY);
+					$slope            = ( $linearRegression['m'] * 100 );
+					$acummulatedAvg   += $avg;
+					$acummulatedSlope += $slope;
+					$numberRecords    += 1;
+
+					//if ( ( !empty($id_pais_destino) && in_array($row[$rowFieldId], explode(',', $id_pais_destino))) || empty($id_pais_destino) ) {
+						$arrData[] = array_merge( $row, compact('slope', 'avg') );
+					//}
+
+				}
+			}
+		}
+
+
+		var_dump($arrData);
+		exit();
+
+		*/
+
+
+
+
+
+
 		$arrFiltersValues = $this->arrFiltersValues;
 		$this->setRange('ini');
 		$yearFirst = empty($arrFiltersValues['anio_ini']) ? '' : $arrFiltersValues['anio_ini'];
@@ -2472,8 +2632,6 @@ class DeclaracionesRepo extends BaseRepo {
 			'pib_nacional'        => Lang::get('pib.columns_title.pib_nacional'),
 		];
 
-
-
 		if ($this->scale == '2') {
 			//escala de miles
 			$pYAxisName  = Lang::get('indicador.reports.copThousands') ;
@@ -2499,7 +2657,7 @@ class DeclaracionesRepo extends BaseRepo {
 			'data'            => $arrData,
 			'total'           => count($arrData),
 			'columnChartData' => $columnChart,
-			//'areaChartData'   => $areaChart,
+			'pYAxisName'      => $pYAxisName,
 		];
 
 		return $result;
@@ -2618,7 +2776,7 @@ class DeclaracionesRepo extends BaseRepo {
 			'data'            => $arrData,
 			'total'           => count($arrData),
 			'columnChartData' => $columnChart,
-			//'areaChartData'   => $areaChart,
+			'pYAxisName'      => $pYAxisName,
 		];
 
 		return $result;
@@ -3151,7 +3309,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$rangeYear = range($yearFirst, $yearLast);
 
 		$id_pais_origen  = $arrFiltersValues['id_pais_origen'];
-		$id_pais_destino = empty($arrFiltersValues['id_pais_destino']) ? 0 : $arrFiltersValues['id_pais_destino'];
+		//$id_pais_destino = empty($arrFiltersValues['id_pais_destino']) ? 0 : $arrFiltersValues['id_pais_destino'];
 		$id_subpartida   = $arrFiltersValues['id_subpartida'];
 
 		if (
@@ -3180,7 +3338,7 @@ class DeclaracionesRepo extends BaseRepo {
 			'rg'   => '1,2', //impo y expo
 			'ps'   => implode(',', $rangeYear),
 			'r'    => $id_pais_origen . ',' . $colombiaIdComtrade,
-			'p'    => $id_pais_destino,
+			'p'    => 0,
 			'cc'   => $id_subpartida,
 		];
 
@@ -3266,7 +3424,6 @@ class DeclaracionesRepo extends BaseRepo {
 			$totalExpo    = ($rowExpo    !== false) ? $rowExpo['valor_expo']    : 0 ;
 			$totalImpoCol = ($rowImpoCol !== false) ? $rowImpoCol['valor_impo'] : 0 ;
 			$totalExpoCol = ($rowExpoCol !== false) ? $rowExpoCol['valor_expo'] : 1 ;
-
 
 			$rate = ($totalExpoCol == 0) ? 0 : (($totalExpo - $rowImpo['valor_impo']) / $totalExpoCol) ;
 
@@ -3819,6 +3976,7 @@ class DeclaracionesRepo extends BaseRepo {
 				if ( empty($value) ) {
 					$isValid = false;
 				}
+				$row[$key] = $this->getFloatValue( $value );
 			}
 			if ($isValid) {
 				if ( $row[$rowFieldId] == '0' ) {
@@ -3989,8 +4147,8 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$result = [
 			'success'      => true,
-			/*'data'         => $arrData,
-			'total'        => count($arrData),*/
+			'data'         => $arrData,
+			'total'        => count($arrData),
 			'arrQuadrant1' => $arrChartQuadrant1,
 			'arrQuadrant2' => $arrChartQuadrant2,
 			'arrQuadrant3' => $arrChartQuadrant3,

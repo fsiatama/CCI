@@ -170,7 +170,7 @@
 		echo "
 	formMercado.on('show', function(){
 		formMercado.form.load({
-			 url: 'mercado/listId'
+			 url: 'mercado/list-id'
 			,params:{
 				 mercado_id: '$mercado_id'
 				,id: '$id'

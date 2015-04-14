@@ -15,6 +15,20 @@ foreach ($arrDescription as $value) {
 
 $htmlDescription .= '</ol>';
 
+$htmlExplanation = '
+  <div class="well bs-component">
+    <ul class="list-group">
+      <li class="list-group-item">
+        Por encima de 100%, las exportaciones agropecuarias y agroindustriales están creciendo por encima de las exportaciones totales del país al mundo o a un mercado específico.
+      </li>
+      <li class="list-group-item">
+        Por debajo de 100%, las exportaciones agropecuarias y agroindustriales están creciendo por debajo de las exportaciones totales del país al mundo o a un mercado específico.
+      </li>
+    </ul>
+  </div>
+';
+$htmlExplanation = Inflector::compress($htmlExplanation);
+
 ?>
 
 /*<script>*/
@@ -173,6 +187,11 @@ $htmlDescription .= '</ol>';
 						'<strong id="' + module + 'rateVariation">0</strong>' +
 					'</div>' +
 				'</div>' +
+			'</div>'
+		},{
+			style:{padding:'0px'}
+			,html: '<div class="bootstrap-styles">' +
+					'<div class="clearfix"></div><?= $htmlExplanation; ?>' +
 			'</div>'
 		},{
 			style:{padding:'0px'}

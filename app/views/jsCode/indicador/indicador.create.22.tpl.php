@@ -95,7 +95,7 @@
 		,displayFieldTpl:'{country}'
 	});
 
-	var comboPaisDestino = new Combo({
+	/*var comboPaisDestino = new Combo({
 		id:module+'comboPaisDestino'
 		,singleMode:true
 		,fieldLabel:'<?= Lang::get('indicador.comtrade_columns_title.pais'); ?>'
@@ -105,7 +105,7 @@
 		,valueField:'id_country'
 		,tpl: resultTplPais
 		,displayFieldTpl:'{country}'
-	});
+	});*/
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 
@@ -218,10 +218,10 @@
 				defaults:{anchor:'100%'}
 				,items:[comboPaisOrigen]
 				,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.countryOriginHelp)]
-			},{
+			/*},{
 				defaults:{anchor:'100%'}
 				,items:[comboPaisDestino]
-				,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.countryPartnerHelp)]
+				,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.countryPartnerHelp)]*/
 			},{
 				defaults:{anchor:'100%'}
 				,columnWidth:1
@@ -273,7 +273,7 @@
 			,success: function(formulario, response) {
 				Ext.getCmp(module+'comboSubpartida').setValue(response.result.data.id_subpartida);
 				Ext.getCmp(module+'comboPaisOrigen').setValue(response.result.data.id_pais_origen);
-				Ext.getCmp(module+'comboPaisDestino').setValue(response.result.data.id_pais_destino);
+				//Ext.getCmp(module+'comboPaisDestino').setValue(response.result.data.id_pais_destino);
 			}
 		});
 	});";
@@ -302,7 +302,7 @@
 			});
 		};
 
-		arrValues      = [];
+		/*arrValues      = [];
 		selection      = Ext.getCmp(module+'comboPaisDestino').getSelectedRecords();
 		label          = Ext.getCmp(module+'comboPaisDestino').fieldLabel;
 
@@ -314,7 +314,7 @@
 				label: label
 				,values: arrValues
 			});
-		};
+		};*/
 
 		arrValues      = [];
 		selection      = Ext.getCmp(module+'comboSubpartida').getSelectedRecords();

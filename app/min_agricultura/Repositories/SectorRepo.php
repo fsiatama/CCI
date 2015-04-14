@@ -1,7 +1,7 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Sector.php';
-require PATH_APP.'min_agricultura/Ado/SectorAdo.php';
+require PATH_MODELS.'Entities/Sector.php';
+require PATH_MODELS.'Ado/SectorAdo.php';
 require_once ('BaseRepo.php');
 
 class SectorRepo extends BaseRepo {

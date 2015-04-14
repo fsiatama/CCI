@@ -1,7 +1,7 @@
 <?php
 
-require PATH_APP.'min_agricultura/Repositories/MercadoRepo.php';
-require PATH_APP.'min_agricultura/Repositories/UserRepo.php';
+require PATH_MODELS.'Repositories/MercadoRepo.php';
+require PATH_MODELS.'Repositories/UserRepo.php';
 
 class MercadoController {
 	
@@ -26,7 +26,13 @@ class MercadoController {
 
 	public function listIdAction($urlParams, $postParams)
 	{
-		return $this->mercadoRepo->validateModify($postParams);
+		$result = $this->userRepo->validateMenu('list', $postParams);
+
+		if ($result['success']) {
+			$result = $this->mercadoRepo->listId($postParams);
+		}
+
+		return $result;
 	}
 
 	public function createAction($urlParams, $postParams)

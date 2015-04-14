@@ -1,7 +1,7 @@
 <?php
 
-require PATH_APP.'min_agricultura/Entities/Indicador.php';
-require PATH_APP.'min_agricultura/Ado/IndicadorAdo.php';
+require PATH_MODELS.'Entities/Indicador.php';
+require PATH_MODELS.'Ado/IndicadorAdo.php';
 require_once ('BaseRepo.php');
 
 class IndicadorRepo extends BaseRepo {
@@ -540,12 +540,16 @@ class IndicadorRepo extends BaseRepo {
 					}
 				}
 
-				if ($scale == '2') {
-					$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceThousands') : Lang::get('indicador.reports.quantityThousands') ;
-				} elseif ($scale == '3') {
-					$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceMillions') : Lang::get('indicador.reports.quantityMillions');
+				if ( ! empty($result['pYAxisName']) ) {
+					$scaleName = $result['pYAxisName'];
 				} else {
-					$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceUnit') : Lang::get('indicador.reports.quantityUnit');
+					if ($scale == '2') {
+						$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceThousands') : Lang::get('indicador.reports.quantityThousands') ;
+					} elseif ($scale == '3') {
+						$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceMillions') : Lang::get('indicador.reports.quantityMillions');
+					} else {
+						$scaleName  = ($typeIndicator == 'precio') ? Lang::get('indicador.reports.priceUnit') : Lang::get('indicador.reports.quantityUnit');
+					}
 				}
 
 				$arrDescription['values'] = Lang::get('indicador.reports.valuesPresentedIn') . ': ' . $scaleName;
