@@ -91,6 +91,12 @@ return [
 		'BCR'               => 'índice de BCR',
 		'convention'        => 'Convención',
     ],
+    'charts' => [
+		'columns' => 'Columnas',
+		'lines'   => 'Lineas',
+		'area'    => 'Área',
+		'pie'     => 'Circular',
+    ],
     'months' => [
 		'1'  => 'Enero',
 		'2'  => 'Febrero',

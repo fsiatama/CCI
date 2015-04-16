@@ -109,5 +109,61 @@ class DeclaraimpRepo extends BaseRepo {
 		return $result;
 	}
 
-}	
+	public function listAll($params)
+	{
+		extract($params);
+		$start = ( isset($start) ) ? $start : 0;
+		$limit = ( isset($limit) ) ? $limit : MAXREGEXCEL;
+		$page  = ( $start==0 ) ? 1 : ( $start/$limit )+1;
 
+		if (!empty($valuesqry) && $valuesqry) {
+			$query = explode('|',$query);
+			$this->model->setId(implode('", "', $query));
+			$this->model->setAnio(implode('", "', $query));
+			$this->model->setPeriodo(implode('", "', $query));
+			$this->model->setFecha(implode('", "', $query));
+			$this->model->setId_empresa(implode('", "', $query));
+			$this->model->setId_paisorigen(implode('", "', $query));
+			$this->model->setId_paiscompra(implode('", "', $query));
+			$this->model->setId_paisprocedencia(implode('", "', $query));
+			$this->model->setId_deptorigen(implode('", "', $query));
+			$this->model->setId_capitulo(implode('", "', $query));
+			$this->model->setId_partida(implode('", "', $query));
+			$this->model->setId_subpartida(implode('", "', $query));
+			$this->model->setId_posicion(implode('", "', $query));
+			$this->model->setId_ciiu(implode('", "', $query));
+			$this->model->setValorcif(implode('", "', $query));
+			$this->model->setValorfob(implode('", "', $query));
+			$this->model->setPeso_neto(implode('", "', $query));
+			$this->model->setArancel_pagado(implode('", "', $query));
+			$this->model->setValorarancel(implode('", "', $query));
+
+			return $this->modelAdo->inSearch($this->model);
+		}
+		else {
+			$this->model->setId($query);
+			$this->model->setAnio($query);
+			$this->model->setPeriodo($query);
+			$this->model->setFecha($query);
+			$this->model->setId_empresa($query);
+			$this->model->setId_paisorigen($query);
+			$this->model->setId_paiscompra($query);
+			$this->model->setId_paisprocedencia($query);
+			$this->model->setId_deptorigen($query);
+			$this->model->setId_capitulo($query);
+			$this->model->setId_partida($query);
+			$this->model->setId_subpartida($query);
+			$this->model->setId_posicion($query);
+			$this->model->setId_ciiu($query);
+			$this->model->setValorcif($query);
+			$this->model->setValorfob($query);
+			$this->model->setPeso_neto($query);
+			$this->model->setArancel_pagado($query);
+			$this->model->setValorarancel($query);
+
+			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
+		}
+
+	}
+
+}

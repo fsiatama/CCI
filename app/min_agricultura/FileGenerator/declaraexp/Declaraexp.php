@@ -99,40 +99,7 @@ class Declaraexp {
 	}
 
 	public function setId_posicion($id_posicion){
-		$arrCapitulo   = array();
-		$arrPartida    = array();
-		$arrSubpartida = array();
-		$arrPosicion   = array();
-
-		$arrValues = explode(',', $id_posicion);
-
-		foreach ($arrValues as $value) {
-			switch (strlen($value)){
-				case 2:
-					$arrCapitulo[] = $value;
-				break;
-				case 4:
-					$arrPartida[] = $value;
-				break;
-				case 6:
-					$arrSubpartida[] = $value;
-				break;
-				default:
-					$arrPosicion[] = $value;
-			}
-		}
-		//if (!empty($arrCapitulo)) {
-			$this->setId_capitulo(implode(',', $arrCapitulo));
-		//}
-		//if (!empty($arrPartida)) {
-			$this->setId_partida(implode(',', $arrPartida));
-		//}
-		//if (!empty($arrSubpartida)) {
-			$this->setId_subpartida(implode(',', $arrSubpartida));
-		//}
-		//if (!empty($arrPosicion)) {
-			$this->id_posicion = implode(',', $arrPosicion);
-		//}
+		$this->id_posicion = $id_posicion;
 	}
 
 	public function getId_posicion(){

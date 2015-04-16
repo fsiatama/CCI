@@ -25,10 +25,11 @@ class DeclaracionesRepo extends BaseRepo {
 	protected $linesConfig;
 	protected $scope;
 	private $scale;
+	private $chartType;
 	private $divisor = 1;
 	private $pYAxisName;
 
-	public function __construct($rowIndicador, $filtersConfig, $year, $period, $scope, $scale = '1', $typeIndicator = '')
+	public function __construct($rowIndicador, $filtersConfig, $year, $period, $scope, $scale = '1', $typeIndicator = '', $chartType = '')
 	{
 		$this->rowIndicador  = $rowIndicador;
 		$this->filtersConfig = $filtersConfig;
@@ -36,6 +37,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->period        = $period;
 		$this->scope         = $scope;
 		$this->scale         = $scale;
+		$this->chartType     = $chartType;
 
 		extract($rowIndicador);
 
@@ -225,11 +227,25 @@ class DeclaracionesRepo extends BaseRepo {
 
 				} elseif (!empty($filter['yearRange'])) {
 
-					//si es un rango de años debe unir el valor inicial y el final
+					//si es un rango de fechas debe unir el valor inicial y el final
+
+
+					//Apartir de abril de 2015 se genero un cambio para poder seleccionar periodos en años diferentes
+					//pero los reportes construidos con anterioridad solo tienen el año
+
+					$arrDate  = explode('-', $filterValue);
+					$yearIni  = $arrDate[0];
+					$monthIni = empty($arrDate[1]) ? '01' : $arrDate[1];
+					$arrDate  = explode('-', $arrFiltersValues[$filter['yearRange'][0]]);
+					$yearFin  = $arrDate[0];
+					$monthFin = empty($arrDate[1]) ? '12' : $arrDate[1];
+
 					$setFilterValue = false;
 
-					$filterValue = range($filterValue, $arrFiltersValues[$filter['yearRange'][0]]);
-					$filterValue = implode(',', $filterValue);
+					$filterValue = 'DATE("' . $yearIni . '-' . $monthIni . '-01") AND DATE("' . $yearFin . '-' . $monthFin . '-01")';
+
+					$methodName = $this->getColumnMethodName('set', 'fecha');
+
 
 					call_user_func_array([$this->model, $methodName], compact('filterValue'));
 
@@ -327,9 +343,9 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$row = 'anio AS id';
 		//si el periodo es diferente a anual debe filtrar por año
-		if ($period != 12 && !empty($year)) {
-			$this->model->setAnio($year);
-			$row = 'periodo AS id';
+		if ($period != 12) {
+			//$this->model->setAnio($year);
+			$row = 'fecha AS id';
 		} else {
 			if (array_key_exists('anio_'.$range, $this->arrFiltersValues)) {
 				$year = $this->arrFiltersValues['anio_'.$range];
@@ -337,7 +353,7 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		if ($range !== false) {
-			$row = 'periodo AS id';
+			$row = 'fecha AS id';
 		}
 
 		$arrRowField = [$row, $rowField];
@@ -362,9 +378,9 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->setFiltersValues();
 
 		//si el periodo es diferente a anual debe filtrar por año
-		if ($period != 12 && !empty($year)) {
-			$this->model->setAnio($year);
-			$row = 'periodo AS id';
+		if ($period != 12) {
+			//$this->model->setAnio($year);
+			$row = 'fecha AS id';
 		} else {
 			if (array_key_exists('anio_'.$range, $this->arrFiltersValues)) {
 				$year = $this->arrFiltersValues['anio_'.$range];
@@ -423,6 +439,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		}
 
+
 		if (count($arrData) == 0) {
 			return [
 				'success' => false,
@@ -430,39 +447,46 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 
-		//si el reporte no es anual y no encuentra informacion en algun periodo,
-		//debe rrellenar con una fila en ceros
-		$numberPeriods = (12 / $period);
-		if (count($arrData) < $numberPeriods) {
+		/* dado el ajuste de abril de 2015 para poder seleccionar periodos en años diferentes
+		/* es imposible calcular los periodos vacios
 
-			$arrFinal = [];
-			$rangePeriods  = Helpers::getPeriodRange($period);
+			//si el reporte no es anual y no encuentra informacion en algun periodo,
+			//debe rrellenar con una fila en ceros
+			$numberPeriods = (12 / $period);
+			if (count($arrData) < $numberPeriods) {
 
-			foreach ($rangePeriods as $number => $range) {
+				$arrFinal = [];
+				$rangePeriods  = Helpers::getPeriodRange($period);
 
-				$findId = false;
-				foreach ($arrData as $row) {
+				var_dump($rangePeriods);
 
-					if (in_array($row['id'], $range)) {
-						$findId = true;
-						$arrFinal[$number] = $row;
+				foreach ($rangePeriods as $number => $range) {
+
+					$findId = false;
+					foreach ($arrData as $row) {
+
+						if (in_array($row['id'], $range)) {
+							$findId = true;
+							$arrFinal[$number] = $row;
+						}
 					}
+
+					if (!$findId) {
+						$periodName = Helpers::getPeriodName($period, $number);
+
+						$arrFinal[$number] = [
+							'id'         => array_shift($range),
+							'periodo'    => $year . ' ' . $periodName,
+							'valor_expo' => 0,
+							'valor_impo' => 0,
+						];
+					}
+
 				}
-
-				if (!$findId) {
-					$periodName = Helpers::getPeriodName($period, $number);
-
-					$arrFinal[$number] = [
-						'id'         => array_shift($range),
-						'periodo'    => $year . ' ' . $periodName,
-						'valor_expo' => 0,
-						'valor_impo' => 0,
-					];
-				}
-
+				$arrData = $arrFinal;
 			}
-			$arrData = $arrFinal;
-		}
+		*/
+
 
 		return [
 			'success' => true,
@@ -493,34 +517,20 @@ class DeclaracionesRepo extends BaseRepo {
 				'valor_balanza' => $this->getColumnBalanceTitle()
 			];
 
-			$columnChart = Helpers::jsonChart(
+			$chartData = Helpers::jsonChart(
 				$arrData,
 				'periodo',
 				$arrSeries,
-				COLUMNAS,
-				'',
-				$this->pYAxisName
-			);
-
-			$arrSeries = [
-				'valor_balanza' => $this->getColumnBalanceTitle()
-			];
-
-			$areaChart = Helpers::jsonChart(
-				$arrData,
-				'periodo',
-				$arrSeries,
-				AREA,
+				$this->chartType,
 				'',
 				$this->pYAxisName
 			);
 
 			$result = [
-				'success'         => $result['success'],
-				'data'            => $arrData,
-				'total'           => $result['total'],
-				'columnChartData' => $columnChart,
-				'areaChartData'   => $areaChart,
+				'success'   => $result['success'],
+				'data'      => $arrData,
+				'total'     => $result['total'],
+				'chartData' => $chartData,
 			];
 
 		}
@@ -549,21 +559,20 @@ class DeclaracionesRepo extends BaseRepo {
 				'valor_balanza' => $this->getColumnBalanceTitle()
 			];
 
-			$areaChart = Helpers::jsonChart(
+			$chartData = Helpers::jsonChart(
 				$arrData,
 				'periodo',
 				$arrSeries,
-				AREA,
+				$this->chartType,
 				'',
 				Lang::get('indicador.reports.BCR')
 			);
 
 			$result = [
-				'success'         => $result['success'],
-				'data'            => $arrData,
-				'total'           => $result['total'],
-				//'columnChartData' => $columnChart,
-				'areaChartData'   => $areaChart,
+				'success'   => $result['success'],
+				'data'      => $arrData,
+				'total'     => $result['total'],
+				'chartData' => $chartData,
 			];
 
 		}

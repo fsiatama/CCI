@@ -1,22 +1,25 @@
 <?php
-class Declaraexp {
+class Declaraimp {
 
 	private $id;
 	private $anio;
 	private $periodo;
 	private $fecha;
 	private $id_empresa;
-	private $id_paisdestino;
+	private $id_paisorigen;
+	private $id_paiscompra;
+	private $id_paisprocedencia;
 	private $id_deptorigen;
 	private $id_capitulo;
 	private $id_partida;
 	private $id_subpartida;
 	private $id_posicion;
 	private $id_ciiu;
-	private $valorfob;
 	private $valorcif;
-	private $valor_pesos;
+	private $valorfob;
 	private $peso_neto;
+	private $arancel_pagado;
+	private $valorarancel;
 
 	public function setId($id){
 		$this->id = $id;
@@ -58,12 +61,28 @@ class Declaraexp {
 		return $this->id_empresa;
 	}
 
-	public function setId_paisdestino($id_paisdestino){
-		$this->id_paisdestino = $id_paisdestino;
+	public function setId_paisorigen($id_paisorigen){
+		$this->id_paisorigen = $id_paisorigen;
 	}
 
-	public function getId_paisdestino(){
-		return $this->id_paisdestino;
+	public function getId_paisorigen(){
+		return $this->id_paisorigen;
+	}
+
+	public function setId_paiscompra($id_paiscompra){
+		$this->id_paiscompra = $id_paiscompra;
+	}
+
+	public function getId_paiscompra(){
+		return $this->id_paiscompra;
+	}
+
+	public function setId_paisprocedencia($id_paisprocedencia){
+		$this->id_paisprocedencia = $id_paisprocedencia;
+	}
+
+	public function getId_paisprocedencia(){
+		return $this->id_paisprocedencia;
 	}
 
 	public function setId_deptorigen($id_deptorigen){
@@ -99,40 +118,7 @@ class Declaraexp {
 	}
 
 	public function setId_posicion($id_posicion){
-		$arrCapitulo   = array();
-		$arrPartida    = array();
-		$arrSubpartida = array();
-		$arrPosicion   = array();
-
-		$arrValues = explode(',', $id_posicion);
-
-		foreach ($arrValues as $value) {
-			switch (strlen($value)){
-				case 2:
-					$arrCapitulo[] = $value;
-				break;
-				case 4:
-					$arrPartida[] = $value;
-				break;
-				case 6:
-					$arrSubpartida[] = $value;
-				break;
-				default:
-					$arrPosicion[] = $value;
-			}
-		}
-		//if (!empty($arrCapitulo)) {
-			$this->setId_capitulo(implode(',', $arrCapitulo));
-		//}
-		//if (!empty($arrPartida)) {
-			$this->setId_partida(implode(',', $arrPartida));
-		//}
-		//if (!empty($arrSubpartida)) {
-			$this->setId_subpartida(implode(',', $arrSubpartida));
-		//}
-		//if (!empty($arrPosicion)) {
-			$this->id_posicion = implode(',', $arrPosicion);
-		//}
+		$this->id_posicion = $id_posicion;
 	}
 
 	public function getId_posicion(){
@@ -147,14 +133,6 @@ class Declaraexp {
 		return $this->id_ciiu;
 	}
 
-	public function setValorfob($valorfob){
-		$this->valorfob = $valorfob;
-	}
-
-	public function getValorfob(){
-		return $this->valorfob;
-	}
-
 	public function setValorcif($valorcif){
 		$this->valorcif = $valorcif;
 	}
@@ -163,12 +141,12 @@ class Declaraexp {
 		return $this->valorcif;
 	}
 
-	public function setValor_pesos($valor_pesos){
-		$this->valor_pesos = $valor_pesos;
+	public function setValorfob($valorfob){
+		$this->valorfob = $valorfob;
 	}
 
-	public function getValor_pesos(){
-		return $this->valor_pesos;
+	public function getValorfob(){
+		return $this->valorfob;
 	}
 
 	public function setPeso_neto($peso_neto){
@@ -177,6 +155,22 @@ class Declaraexp {
 
 	public function getPeso_neto(){
 		return $this->peso_neto;
+	}
+
+	public function setArancel_pagado($arancel_pagado){
+		$this->arancel_pagado = $arancel_pagado;
+	}
+
+	public function getArancel_pagado(){
+		return $this->arancel_pagado;
+	}
+
+	public function setValorarancel($valorarancel){
+		$this->valorarancel = $valorarancel;
+	}
+
+	public function getValorarancel(){
+		return $this->valorarancel;
 	}
 
 }

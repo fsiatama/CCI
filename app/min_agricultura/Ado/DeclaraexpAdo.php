@@ -66,8 +66,10 @@ class DeclaraexpAdo extends BaseAdo {
 		$id = $declaraexp->getId();
 		$anio = $declaraexp->getAnio();
 		$periodo = $declaraexp->getPeriodo();
+		$fecha = $declaraexp->getFecha();
 		$id_empresa = $declaraexp->getId_empresa();
 		$id_paisdestino = $declaraexp->getId_paisdestino();
+		$id_deptorigen = $declaraexp->getId_deptorigen();
 		$id_capitulo = $declaraexp->getId_capitulo();
 		$id_partida = $declaraexp->getId_partida();
 		$id_subpartida = $declaraexp->getId_subpartida();
@@ -75,14 +77,17 @@ class DeclaraexpAdo extends BaseAdo {
 		$id_ciiu = $declaraexp->getId_ciiu();
 		$valorfob = $declaraexp->getValorfob();
 		$valorcif = $declaraexp->getValorcif();
+		$valor_pesos = $declaraexp->getValor_pesos();
 		$peso_neto = $declaraexp->getPeso_neto();
 
 		$this->data = compact(
 			'id',
 			'anio',
 			'periodo',
+			'fecha',
 			'id_empresa',
 			'id_paisdestino',
+			'id_deptorigen',
 			'id_capitulo',
 			'id_partida',
 			'id_subpartida',
@@ -90,6 +95,7 @@ class DeclaraexpAdo extends BaseAdo {
 			'id_ciiu',
 			'valorfob',
 			'valorcif',
+			'valor_pesos',
 			'peso_neto'
 		);
 	}
@@ -105,8 +111,10 @@ class DeclaraexpAdo extends BaseAdo {
 				id,
 				anio,
 				periodo,
+				fecha,
 				id_empresa,
 				id_paisdestino,
+				id_deptorigen,
 				id_capitulo,
 				id_partida,
 				id_subpartida,
@@ -114,14 +122,17 @@ class DeclaraexpAdo extends BaseAdo {
 				id_ciiu,
 				valorfob,
 				valorcif,
+				valor_pesos,
 				peso_neto
 			)
 			VALUES (
 				"'.$this->data['id'].'",
 				"'.$this->data['anio'].'",
 				"'.$this->data['periodo'].'",
+				"'.$this->data['fecha'].'",
 				"'.$this->data['id_empresa'].'",
 				"'.$this->data['id_paisdestino'].'",
+				"'.$this->data['id_deptorigen'].'",
 				"'.$this->data['id_capitulo'].'",
 				"'.$this->data['id_partida'].'",
 				"'.$this->data['id_subpartida'].'",
@@ -129,6 +140,7 @@ class DeclaraexpAdo extends BaseAdo {
 				"'.$this->data['id_ciiu'].'",
 				"'.$this->data['valorfob'].'",
 				"'.$this->data['valorcif'].'",
+				"'.$this->data['valor_pesos'].'",
 				"'.$this->data['peso_neto'].'"
 			)
 		';
@@ -221,7 +233,11 @@ class DeclaraexpAdo extends BaseAdo {
 					$filter[] = 'decl.' . $key . ' ' . $operator . ' "' . $data . '"';
 				}
 				elseif ($operator == 'IN') {
-					if ($key == 'id_capitulo' || $key == 'id_partida' || $key == 'id_subpartida' || $key == 'id_posicion') {
+					if ($key == 'fecha') {
+						
+						$filter[] = 'decl.' . $key . ' BETWEEN ' . $data;
+
+					} elseif ($key == 'id_capitulo' || $key == 'id_partida' || $key == 'id_subpartida' || $key == 'id_posicion') {
 						//debe colocarle comillas a cada valor dentro del IN
 						$arr              = explode(',', $data);
 						$filterPosicion[] = 'decl.' . $key . ' ' . $operator . '("' . implode('","', $arr) . '")';

@@ -1045,6 +1045,12 @@ return [
 		['precio', Lang::get('tipo_indicador.tipo_indicador_activador.precio')],
 		['volumen', Lang::get('tipo_indicador.tipo_indicador_activador.volumen')],
 	],
+	'charts' => [
+		[COLUMNAS, Lang::get('indicador.charts.columns')],
+		[LINEAL, Lang::get('indicador.charts.lines')],
+		[AREA, Lang::get('indicador.charts.area')],
+		[PIE, Lang::get('indicador.charts.pie')],
+	],
 	'sectorIdAgriculture'  => 2,
 	'sectorIdTraditional'  => 3,
 	'sectorIdMiningSector' => 1,

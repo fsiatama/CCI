@@ -167,18 +167,30 @@
 		,flex:true
 	});
 
-	var comboAnio_ini = new simpleCombo({
-		hiddenName:'anio_ini'
+	var comboAnio_ini = new Ext.ux.MonthYearPicker({
+		name:'anio_ini'
 		,id:module+'comboAnio_ini'
 		,store:arrYears
 		,fieldLabel:Ext.ux.lang.reports.selectYearFrom
+		,format : 'Y-m'
+		/*,listeners : {
+			select : function(me, date) {
+				console.debug(date.format("Y-m-d H:i:s"));
+			}
+		}*/
 	});
 
-	var comboAnio_fin = new simpleCombo({
-		hiddenName:'anio_fin'
+	var comboAnio_fin = new Ext.ux.MonthYearPicker({
+		name:'anio_fin'
 		,id:module+'comboAnio_fin'
 		,store:arrYears
 		,fieldLabel:Ext.ux.lang.reports.selectYearTo
+		,format : 'Y-m'
+		/*,listeners : {
+			select : function(me, date) {
+				console.debug(date.format("Y-m-d H:i:s"));
+			}
+		}*/
 	});
 
 	var formIndicador = new Ext.FormPanel({
@@ -202,8 +214,8 @@
 				{name:'sector_id', mapping:'sector_id', type:'string'},
 				{name:'id_pais', mapping:'id_pais', type:'string'},
 				{name:'mercado_id', mapping:'mercado_id', type:'string'},
-				{name:'anio_ini', mapping:'anio_ini', type:'float'},
-				{name:'anio_fin', mapping:'anio_fin', type:'float'}
+				{name:'anio_ini', mapping:'anio_ini', type:'string', dateFormat: 'Y-m'},
+				{name:'anio_fin', mapping:'anio_fin', type:'string', dateFormat: 'Y-m'}
 			]
 		})
 		,defaults: {anchor:'97%'}
@@ -392,13 +404,13 @@
 				label: label
 				,values: arrValues
 			});
-		};
+		}
 
-		var yearIni      = Ext.getCmp(module+'comboAnio_ini').getValue();
-		var yearFin      = Ext.getCmp(module+'comboAnio_fin').getValue();
-		arrValues     = [];
+		var yearIni = Ext.getCmp(module+'comboAnio_ini').getValue();
+		var yearFin = Ext.getCmp(module+'comboAnio_fin').getValue();
+		arrValues   = [];
 
-		arrValues.push(yearIni + ' - ' + yearFin);
+		arrValues.push(yearIni.format('M, Y') + ' - ' + yearFin.format('M, Y'));
 
 		arrDescription.push({
 			label: Ext.ux.lang.reports.period

@@ -67,7 +67,7 @@
 		<script type="text/javascript" src="js/cookies.js"></script>
 		<script type="text/javascript" src="js/using.js"></script>
 		<script type="text/javascript" src="js/using-register.js"></script>
-		<script type="text/javascript" src="js/dic/lang-es.js"></script>
+		<script type="text/javascript" src="js/dic/lang-es.js?ver=1"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/grid/Ext.ux.grid.RowActions.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/RowExpander.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/Portal.js"></script>
@@ -99,6 +99,7 @@
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/ColumnHeaderGroup.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/grid/Ext.ux.gridOrden.js"></script>
 		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/selectBox/SuperBoxSelect2.js"></script>		
+		<script type="text/javascript" src="js/vendor/ext-3.4.0/examples/ux/Ext.ux.MonthPicker.js"></script>		
 
 		<!--<script type="text/javascript" src="js/vendor/FusionCharts/Charts/FusionCharts.js"></script>-->
 		<script type="text/javascript" src="js/vendor/FusionCharts/js/fusioncharts.js"></script>

@@ -69,10 +69,12 @@ class DeclaraimpAdo extends BaseAdo {
 		$id = $declaraimp->getId();
 		$anio = $declaraimp->getAnio();
 		$periodo = $declaraimp->getPeriodo();
+		$fecha = $declaraimp->getFecha();
 		$id_empresa = $declaraimp->getId_empresa();
 		$id_paisorigen = $declaraimp->getId_paisorigen();
 		$id_paiscompra = $declaraimp->getId_paiscompra();
 		$id_paisprocedencia = $declaraimp->getId_paisprocedencia();
+		$id_deptorigen = $declaraimp->getId_deptorigen();
 		$id_capitulo = $declaraimp->getId_capitulo();
 		$id_partida = $declaraimp->getId_partida();
 		$id_subpartida = $declaraimp->getId_subpartida();
@@ -81,15 +83,19 @@ class DeclaraimpAdo extends BaseAdo {
 		$valorcif = $declaraimp->getValorcif();
 		$valorfob = $declaraimp->getValorfob();
 		$peso_neto = $declaraimp->getPeso_neto();
+		$arancel_pagado = $declaraimp->getArancel_pagado();
+		$valorarancel = $declaraimp->getValorarancel();
 
 		$this->data = compact(
 			'id',
 			'anio',
 			'periodo',
+			'fecha',
 			'id_empresa',
 			'id_paisorigen',
 			'id_paiscompra',
 			'id_paisprocedencia',
+			'id_deptorigen',
 			'id_capitulo',
 			'id_partida',
 			'id_subpartida',
@@ -97,7 +103,9 @@ class DeclaraimpAdo extends BaseAdo {
 			'id_ciiu',
 			'valorcif',
 			'valorfob',
-			'peso_neto'
+			'peso_neto',
+			'arancel_pagado',
+			'valorarancel'
 		);
 	}
 
@@ -112,10 +120,12 @@ class DeclaraimpAdo extends BaseAdo {
 				id,
 				anio,
 				periodo,
+				fecha,
 				id_empresa,
 				id_paisorigen,
 				id_paiscompra,
 				id_paisprocedencia,
+				id_deptorigen,
 				id_capitulo,
 				id_partida,
 				id_subpartida,
@@ -123,16 +133,20 @@ class DeclaraimpAdo extends BaseAdo {
 				id_ciiu,
 				valorcif,
 				valorfob,
-				peso_neto
+				peso_neto,
+				arancel_pagado,
+				valorarancel
 			)
 			VALUES (
 				"'.$this->data['id'].'",
 				"'.$this->data['anio'].'",
 				"'.$this->data['periodo'].'",
+				"'.$this->data['fecha'].'",
 				"'.$this->data['id_empresa'].'",
 				"'.$this->data['id_paisorigen'].'",
 				"'.$this->data['id_paiscompra'].'",
 				"'.$this->data['id_paisprocedencia'].'",
+				"'.$this->data['id_deptorigen'].'",
 				"'.$this->data['id_capitulo'].'",
 				"'.$this->data['id_partida'].'",
 				"'.$this->data['id_subpartida'].'",
@@ -140,7 +154,9 @@ class DeclaraimpAdo extends BaseAdo {
 				"'.$this->data['id_ciiu'].'",
 				"'.$this->data['valorcif'].'",
 				"'.$this->data['valorfob'].'",
-				"'.$this->data['peso_neto'].'"
+				"'.$this->data['peso_neto'].'",
+				"'.$this->data['arancel_pagado'].'",
+				"'.$this->data['valorarancel'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -231,7 +247,11 @@ class DeclaraimpAdo extends BaseAdo {
 					$filter[] = 'decl.' . $key . ' ' . $operator . ' "' . $data . '"';
 				}
 				elseif ($operator == 'IN') {
-					if ($key == 'id_capitulo' || $key == 'id_partida' || $key == 'id_subpartida' || $key == 'id_posicion') {
+					if ($key == 'fecha') {
+						
+						$filter[] = 'decl.' . $key . ' BETWEEN ' . $data;
+
+					} elseif ($key == 'id_capitulo' || $key == 'id_partida' || $key == 'id_subpartida' || $key == 'id_posicion') {
 						//debe colocarle comillas a cada valor dentro del IN
 						$arr              = explode(',', $data);
 						$filterPosicion[] = 'decl.' . $key . ' ' . $operator . '("' . implode('","', $arr) . '")';

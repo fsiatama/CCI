@@ -467,12 +467,13 @@ class IndicadorRepo extends BaseRepo {
 	public function execute($params)
 	{
 		extract($params);
-		$year   = (empty($year)) ? '' : $year ;
-		$period = (empty($period)) ? 12 : $period ;
-		$format = (empty($format)) ? false : $format ;
-		$fields = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
-		$scope  = (empty($scope)) ? 1 : $scope ;
-		$scale  = (empty($scale)) ? 1 : $scale ;
+		$year      = (empty($year)) ? '' : $year ;
+		$period    = (empty($period)) ? 12 : $period ;
+		$format    = (empty($format)) ? false : $format ;
+		$fields    = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
+		$scope     = (empty($scope)) ? 1 : $scope ;
+		$scale     = (empty($scale)) ? 1 : $scale ;
+		$chartType = (empty($chartType)) ? AREA : $chartType ;
 		
 
 		if (empty($indicador_id)) {
@@ -520,7 +521,8 @@ class IndicadorRepo extends BaseRepo {
 				$period,
 				$scope,
 				$scale,
-				$typeIndicator
+				$typeIndicator,
+				$chartType
 			);
 			if ( !method_exists($repo, $repoMethodName) ) {
 				return [

@@ -4,10 +4,12 @@ class Declaraimp {
 	private $id;
 	private $anio;
 	private $periodo;
+	private $fecha;
 	private $id_empresa;
 	private $id_paisorigen;
 	private $id_paiscompra;
 	private $id_paisprocedencia;
+	private $id_deptorigen;
 	private $id_capitulo;
 	private $id_partida;
 	private $id_subpartida;
@@ -16,6 +18,8 @@ class Declaraimp {
 	private $valorcif;
 	private $valorfob;
 	private $peso_neto;
+	private $arancel_pagado;
+	private $valorarancel;
 
 	public function setId($id){
 		$this->id = $id;
@@ -39,6 +43,14 @@ class Declaraimp {
 
 	public function getPeriodo(){
 		return $this->periodo;
+	}
+
+	public function setFecha($fecha){
+		$this->fecha = $fecha;
+	}
+
+	public function getFecha(){
+		return $this->fecha;
 	}
 
 	public function setId_empresa($id_empresa){
@@ -71,6 +83,14 @@ class Declaraimp {
 
 	public function getId_paisprocedencia(){
 		return $this->id_paisprocedencia;
+	}
+
+	public function setId_deptorigen($id_deptorigen){
+		$this->id_deptorigen = $id_deptorigen;
+	}
+
+	public function getId_deptorigen(){
+		return $this->id_deptorigen;
 	}
 
 	public function setId_capitulo($id_capitulo){
@@ -170,6 +190,22 @@ class Declaraimp {
 
 	public function getPeso_neto(){
 		return $this->peso_neto;
+	}
+
+	public function setArancel_pagado($arancel_pagado){
+		$this->arancel_pagado = $arancel_pagado;
+	}
+
+	public function getArancel_pagado(){
+		return $this->arancel_pagado;
+	}
+
+	public function setValorarancel($valorarancel){
+		$this->valorarancel = $valorarancel;
+	}
+
+	public function getValorarancel(){
+		return $this->valorarancel;
 	}
 
 }
