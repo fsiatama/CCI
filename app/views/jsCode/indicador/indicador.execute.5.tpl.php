@@ -20,10 +20,11 @@ $htmlDescription .= '</ol>';
 	var module = '<?= $module.'_'.$indicador_id; ?>';
 	var panelHeight = Math.floor(Ext.getCmp('tabpanel').getInnerHeight() - 260);
 
-	var storeBalanza = new Ext.data.JsonStore({
+	var storeIndicador = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
-		,id:module+'storeBalanza'
+		,id:module+'storeIndicador'
+		,autoDestroy:true
 		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
@@ -41,24 +42,29 @@ $htmlDescription .= '</ol>';
 		]
 	});
 
-	storeBalanza.on('beforeload', function(){
-		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		if (!period) {
+	storeIndicador.on('beforeload', function(){
+		var period    = Ext.getCmp(module + 'comboPeriod').getValue();
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		if (!period || !chartType) {
 			return false;
 		};
 		this.setBaseParam('period', period);
+		this.setBaseParam('chartType', chartType);
 		Ext.ux.bodyMask.show();
 	});
-	
-	storeBalanza.on('load', function(store){
+
+	storeIndicador.on('load', function(store){
 		FusionCharts.setCurrentRenderer('javascript');
-		
+
 		disposeCharts();
 
-		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		var chart     = new FusionCharts(chartType, module + 'ChartId', '100%', '100%', '0', '1');
+
 		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.columnChartData);
-		chart.render(module + 'ColumnChart');
+		chart.setJSONData(store.reader.jsonData.chartData);
+		chart.render(module + 'Chart');
+
 		Ext.ux.bodyMask.hide();
 	});
 
@@ -72,7 +78,7 @@ $htmlDescription .= '</ol>';
 		rows: [titles]
 	});
 
-	var colModelBalanza = new Ext.grid.ColumnModel({
+	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'impoPeriod', align:'left'},
 			{header:'<?= Lang::get('indicador.columns_title.numero_productos_impo'); ?>', dataIndex:'impoValue' ,'renderer':integerFormat},
@@ -86,12 +92,12 @@ $htmlDescription .= '</ol>';
 			,align: 'right'
 		}
 	});
-	
-	var gridBalanza = new Ext.grid.GridPanel({
+
+	var gridIndicador = new Ext.grid.GridPanel({
 		border:true
 		,monitorResize:true
-		,store:storeBalanza
-		,colModel:colModelBalanza
+		,store:storeIndicador
+		,colModel:colModelIndicador
 		,stateful:true
 		,columnLines:true
 		,stripeRows:true
@@ -99,9 +105,9 @@ $htmlDescription .= '</ol>';
 			forceFit:true
 		}
 		,enableColumnMove:false
-		,id:module+'gridBalanza'			
+		,id:module+'gridIndicador'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeIndicador, displayInfo:true})
 		,iconCls:'silk-grid'
 		,plugins:[group, new Ext.ux.grid.Excel()]
 		,layout:'fit'
@@ -110,12 +116,14 @@ $htmlDescription .= '</ol>';
 		,margins:'10 15 5 0'
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
-	Ext.state.Manager.clear(gridBalanza.getItemId());
-	
+	Ext.state.Manager.clear(gridIndicador.getItemId());
+
 	var arrPeriods = <?= json_encode($periods); ?>;
+	var arrCharts  = <?= json_encode($charts); ?>;
+
 
 	/******************************************************************************************************************************************************************************/
-	
+
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
 		,id:module + 'excuteIndicadorContainer'
@@ -145,44 +153,67 @@ $htmlDescription .= '</ol>';
 			,border:true
 			,html: ''
 			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectPeriod + ': '
+				},{
+					xtype: 'combo'
+					,store: arrPeriods
+					,id: module + 'comboPeriod'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: 12
+					,width: 100
+				}]
 			},{
-				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 12
-				,width: 100
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeBalanza.load();
-				}
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectChart + ': '
+				},{
+					xtype: 'combo'
+					,store: arrCharts
+					,id: module + 'comboCharts'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= AREA; ?>'
+					,width: 150
+				}]
+			},{
+				xtype:'buttongroup',
+				items: [{
+					text: Ext.ux.lang.buttons.generate
+					,iconCls: 'icon-refresh'
+					,iconAlign: 'top'
+					,handler: function () {
+						storeIndicador.load();
+					}
+				}]
 			}]
 		},{
 			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
+			,html:'<div id="' + module + 'Chart"></div>'
 			,items:[{
 				xtype:'panel'
-				,id: module + 'ColumnChart'
+				,id: module + 'Chart'
 				,plain:true
 			}]
-		/*},{
-			height:430
-			,html:'<div id="' + module + 'AreaChart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'AreaChart'
-				,plain:true
-			}]*/
 		},{
 			defaults:{anchor:'100%'}
-			,items:[gridBalanza]
+			,items:[gridIndicador]
 		}]
 		,listeners:{
 			beforedestroy: {
@@ -193,23 +224,24 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
-	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p){
+	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
 		disposeCharts();
-	});
+	}, this);
 
-	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
-		storeBalanza.load();
-	});
-	
-	storeBalanza.load();
+	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
+		storeIndicador.load();
+	}, this);
+
+	storeIndicador.load();
 
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
+
 	function disposeCharts () {
-		if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
-		}		
+		if(FusionCharts(module + 'ChartId')){
+			FusionCharts(module + 'ChartId').dispose();
+		}
 	}
 
 	/*********************************************** End functions***********************************************/

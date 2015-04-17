@@ -199,12 +199,12 @@ class DeclaracionesRepo extends BaseRepo {
 
 				$setFilterValue = true;
 
-				if (!empty($filter['dateRange'])) {
+				/*if (!empty($filter['dateRange'])) {
 					//si el filtro es un rango de fechas, debe unir los periodos que componen el rango
 
 					$setFilterValue = false;
 
-					$rangeYear = ($range == 'ini') ? 'anio_ini' : 'anio_fin';
+					$rangeYear = ($range == 'ini') ? 'desde_ini' : 'desde_fin';
 
 					//la configuracion y las variables pueden traer dos rangos
 					//debe asignar solo uno
@@ -225,7 +225,7 @@ class DeclaracionesRepo extends BaseRepo {
 						call_user_func_array([$this->model, $methodName], compact('filterValue'));
 					}
 
-				} elseif (!empty($filter['yearRange'])) {
+				} else*/ if (!empty($filter['dateRange'])) {
 
 					//si es un rango de fechas debe unir el valor inicial y el final
 
@@ -233,21 +233,29 @@ class DeclaracionesRepo extends BaseRepo {
 					//Apartir de abril de 2015 se genero un cambio para poder seleccionar periodos en años diferentes
 					//pero los reportes construidos con anterioridad solo tienen el año
 
-					$arrDate  = explode('-', $filterValue);
-					$yearIni  = $arrDate[0];
-					$monthIni = empty($arrDate[1]) ? '01' : $arrDate[1];
-					$arrDate  = explode('-', $arrFiltersValues[$filter['yearRange'][0]]);
-					$yearFin  = $arrDate[0];
-					$monthFin = empty($arrDate[1]) ? '12' : $arrDate[1];
-
 					$setFilterValue = false;
 
-					$filterValue = 'DATE("' . $yearIni . '-' . $monthIni . '-01") AND DATE("' . $yearFin . '-' . $monthFin . '-01")';
+					if ( substr($filter['field'], -3) == $range || empty($range) ) {
+						
+						//var_dump(substr($filter['field'], -3), $trade, $range, $filterValue, $arrFiltersValues[$filter['dateRange'][0]]);
+						
+						$arrDate  = explode('-', $filterValue);
+						$yearIni  = $arrDate[0];
+						$monthIni = empty($arrDate[1]) ? '01' : $arrDate[1];
 
-					$methodName = $this->getColumnMethodName('set', 'fecha');
+						$arrDate  = explode('-', $arrFiltersValues[$filter['dateRange'][0]]);
+						$yearFin  = $arrDate[0];
+						$monthFin = empty($arrDate[1]) ? '12' : $arrDate[1];
 
 
-					call_user_func_array([$this->model, $methodName], compact('filterValue'));
+						$filterValue = 'DATE("' . $yearIni . '-' . $monthIni . '-01") AND DATE("' . $yearFin . '-' . $monthFin . '-01")';
+
+						$methodName = $this->getColumnMethodName('set', 'fecha');
+
+						call_user_func_array([$this->model, $methodName], compact('filterValue'));
+
+					}
+
 
 				} elseif ($filter['field'] == 'id_pais') {
 					//si el filtro es el pais puede venir como parametro un pais o un mercado (grupo de paises)
@@ -397,48 +405,45 @@ class DeclaracionesRepo extends BaseRepo {
 			return $rsDeclaraexp;
 		}
 
-		$arrData       = [];
-		$arrPeriods    = [];
+		$arrData    = [];
 
-		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+		$rsHigher          = $rsDeclaraexp['data'];
+		$keyHigher         = 'valor_expo';
+		$columnValueHigher = $this->columnValueExpo;
+		$rsLower           = $rsDeclaraimp['data'];
+		$keyLower          = 'valor_impo';
+		$columnValueLower  = $this->columnValueImpo;
+		
+		if ( $rsDeclaraexp['total'] < $rsDeclaraimp['total'] ) {
+			$rsHigher          = $rsDeclaraimp['data'];
+			$rsLower           = $rsDeclaraexp['data'];
+			$keyHigher         = 'valor_impo';
+			$keyLower          = 'valor_expo';
+			$columnValueHigher = $this->columnValueImpo;
+			$columnValueLower  = $this->columnValueExpo;
+		}
 
-			$valor_impo = 0;
+		foreach ($rsHigher as $rowHigher) {
 
-			foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
+			$valueLower = 0;
 
-				if($rowImpo['periodo'] == $rowExpo['periodo']){
-					$valor_impo   = $this->getFloatValue( $rowImpo[$this->columnValueImpo] );
-					$arrPeriods[] = $rowImpo['periodo'];
+			foreach ($rsLower as $rowLower) {
+
+				if ( $rowLower['periodo'] == $rowHigher['periodo'] ) {
+					$valueLower = $this->getFloatValue( $rowLower[$columnValueLower] );
 				}
 
 			}
 
-			$valor_expo = $this->getFloatValue( $rowExpo[$this->columnValueExpo] );
+			$valueHigher = $this->getFloatValue( $rowHigher[$columnValueHigher] );
 
 			$arrData[] = [
-				'id'         => $rowExpo['id'],
-				'periodo'    => $rowExpo['periodo'],
-				'valor_expo' => $valor_expo,
-				'valor_impo' => $valor_impo,
+				'id'       => $rowHigher['id'],
+				'periodo'  => $rowHigher['periodo'],
+				$keyHigher => $valueHigher,
+				$keyLower  => $valueLower,
 			];
 		}
-
-		foreach ($rsDeclaraimp['data'] as $keyImpo => $rowImpo) {
-
-			if(!in_array($rowImpo['periodo'], $arrPeriods)){
-				
-				$valor_impo = $this->getFloatValue( $rowImpo[$this->columnValueImpo] );
-				
-				$arrData[] = [
-					'id'         => $rowImpo['id'],
-					'periodo'    => $rowImpo['periodo'],
-					'valor_expo' => 0,
-					'valor_impo' => $valor_impo,
-				];
-			}
-
-		}
-
 
 		if (count($arrData) == 0) {
 			return [
@@ -585,131 +590,129 @@ class DeclaracionesRepo extends BaseRepo {
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
 
-
 		$arrRangeIni = range($arrFiltersValues['desde_ini'], $arrFiltersValues['hasta_ini']);
 		$arrRangeFin = range($arrFiltersValues['desde_fin'], $arrFiltersValues['hasta_fin']);
 
 		$this->setRange('ini');
 		$result = $this->findBalanzaData();
-		if ($result['success']) {
+		if (!$result['success']) {
+			return $result;
+		}
 
-			//calcula el valor de la balanza simple para el primer conjunto de resultados
-			$firstRangeData = [];
-			foreach ($result['data'] as $key => $value) {
+		//calcula el valor de la balanza simple para el primer conjunto de resultados
+		$firstRangeData = [];
+		foreach ($result['data'] as $key => $value) {
 
-				if ( in_array($value['id'], $arrRangeIni) ) {
-					$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
-
-					$firstRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
-				}
-
-			}
-			$this->setRange('fin');
-			$result = $this->findBalanzaData();
-
-			if ($result['success']) {
-
-				//calcula el valor de la balanza simple para el segundo conjunto de resultados
-				$lastRangeData = [];
-				foreach ($result['data'] as $key => $value) {
-
-					if ( in_array($value['id'], $arrRangeFin) ) {
-
-						$valor_balanza = ( $value['valor_expo'] - $value['valor_impo'] );
-
-						$lastRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
-					}
-
-				}
-
-				//une los conjuntos de resultados
-				$arrKeys      = [];
-				$arrData      = [];
-				$rowIndex     = 0;
-				foreach ($firstRangeData as $keyFirst => $firstRange) {
-
-					$lastPeriod     = 0;
-					$lastValImpo    = 0;
-					$lastValExpo    = 0;
-					$lastValBalanza = 0;
-
-					foreach ($lastRangeData as $keyLast => $lastRange) {
-
-						if ($keyFirst == $keyLast) {
-							//var_dump(array_merge($firstRange, $lastRange));
-							$lastPeriod    = $lastRange['periodo'];
-							$lastValImpo   = $lastRange['valor_impo'];
-							$lastValExpo   = $lastRange['valor_expo'];
-							$lastValBalanza = $lastRange['valor_balanza'];
-
-							$arrKeys[] = $keyLast;
-						}
-
-					}
-
-					$rateVariation = ($firstRange['valor_balanza'] == 0) ? 0: (($lastValBalanza - $firstRange['valor_balanza']) / $firstRange['valor_balanza']);
-					$rowIndex     += 1;
-
-					$arrData[] = [
-						'id'            => $firstRange['id'],
-						'rowIndex'      => 'Q'.$rowIndex,
-						'firstPeriod'   => $firstRange['periodo'],
-						'firstValImpo'  => $firstRange['valor_impo'],
-						'firstValExpo'  => $firstRange['valor_expo'],
-						'firstValue'    => ( $firstRange['valor_expo'] - $firstRange['valor_impo'] ),
-						'lastPeriod'    => $lastPeriod,
-						'lastValImpo'   => $lastValImpo,
-						'lastValExpo'   => $lastValExpo,
-						'lastValue'     => ( $lastValExpo - $lastValImpo ),
-						'rateVariation' => $rateVariation
-					];
-
-
-				}
-
-				foreach ($lastRangeData as $keyLast => $lastRange) {
-					if (!in_array($keyLast, $arrKeys)) {
-						$rowIndex += 1;
-						$arrData[] = [
-							'id'            => $lastRange['id'],
-							'rowIndex'      => 'Q'.$rowIndex,
-							'firstPeriod'   => $lastRange['periodo'],
-							'firstValImpo'  => 0,
-							'firstValExpo'  => 0,
-							'firstValue'    => 0,
-							'lastPeriod'    => $lastRange['periodo'],
-							'lastValImpo'   => $lastRange['valor_impo'],
-							'lastValExpo'   => $lastRange['valor_expo'],
-							'lastValue'     => ( $lastRange['valor_expo'] - $lastRange['valor_impo'] ),
-							'rateVariation' => 0
-						];
-					}
-				}
-
-				$arrSeries = [
-					'firstValue' => Lang::get('indicador.reports.initialRange'),
-					'lastValue'  => Lang::get('indicador.reports.finalRange'),
-				];
-
-				$columnChart = Helpers::jsonChart(
-					$arrData,
-					'rowIndex',
-					$arrSeries,
-					COLUMNAS,
-					'',
-					$this->pYAxisName
-				);
-
-				$result = [
-					'success'         => true,
-					'data'            => $arrData,
-					'columnChartData' => $columnChart,
-					'total'           => count($arrData)
-				];
-
-			}
+			//if ( in_array($value['id'], $arrRangeIni) ) {
+				$valor_balanza    = ( $value['valor_expo'] - $value['valor_impo'] );
+				$firstRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
+			//}
 
 		}
+		$this->setRange('fin');
+		$result = $this->findBalanzaData();
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		//calcula el valor de la balanza simple para el segundo conjunto de resultados
+		$lastRangeData = [];
+		foreach ($result['data'] as $key => $value) {
+
+			//if ( in_array($value['id'], $arrRangeFin) ) {
+				$valor_balanza   = ( $value['valor_expo'] - $value['valor_impo'] );
+				$lastRangeData[] = array_merge($value, ['valor_balanza' => $valor_balanza]);
+			//}
+
+		}
+
+		//var_dump($firstRangeData, $lastRangeData);
+
+		//une los conjuntos de resultados
+		$arrKeys  = [];
+		$arrData  = [];
+		$rowIndex = 0;
+		foreach ($firstRangeData as $keyFirst => $firstRange) {
+
+			$lastPeriod     = 0;
+			$lastValImpo    = 0;
+			$lastValExpo    = 0;
+			$lastValBalanza = 0;
+
+			foreach ($lastRangeData as $keyLast => $lastRange) {
+
+				if ($keyFirst == $keyLast) {
+					//var_dump(array_merge($firstRange, $lastRange));
+					$lastPeriod     = $lastRange['periodo'];
+					$lastValImpo    = $lastRange['valor_impo'];
+					$lastValExpo    = $lastRange['valor_expo'];
+					$lastValBalanza = $lastRange['valor_balanza'];
+
+					$arrKeys[] = $keyLast;
+				}
+
+			}
+
+			$rateVariation = ($firstRange['valor_balanza'] == 0) ? 0: (($lastValBalanza - $firstRange['valor_balanza']) / $firstRange['valor_balanza']);
+			$rowIndex     += 1;
+
+			$arrData[] = [
+				'id'            => $firstRange['id'],
+				'rowIndex'      => 'Q'.$rowIndex,
+				'firstPeriod'   => $firstRange['periodo'],
+				'firstValImpo'  => $firstRange['valor_impo'],
+				'firstValExpo'  => $firstRange['valor_expo'],
+				'firstValue'    => ( $firstRange['valor_expo'] - $firstRange['valor_impo'] ),
+				'lastPeriod'    => $lastPeriod,
+				'lastValImpo'   => $lastValImpo,
+				'lastValExpo'   => $lastValExpo,
+				'lastValue'     => ( $lastValExpo - $lastValImpo ),
+				'rateVariation' => $rateVariation
+			];
+
+
+		}
+
+		foreach ($lastRangeData as $keyLast => $lastRange) {
+			if (!in_array($keyLast, $arrKeys)) {
+				$rowIndex += 1;
+				$arrData[] = [
+					'id'            => $lastRange['id'],
+					'rowIndex'      => 'Q'.$rowIndex,
+					'firstPeriod'   => $lastRange['periodo'],
+					'firstValImpo'  => 0,
+					'firstValExpo'  => 0,
+					'firstValue'    => 0,
+					'lastPeriod'    => $lastRange['periodo'],
+					'lastValImpo'   => $lastRange['valor_impo'],
+					'lastValExpo'   => $lastRange['valor_expo'],
+					'lastValue'     => ( $lastRange['valor_expo'] - $lastRange['valor_impo'] ),
+					'rateVariation' => 0
+				];
+			}
+		}
+
+		$arrSeries = [
+			'firstValue' => Lang::get('indicador.reports.initialRange'),
+			'lastValue'  => Lang::get('indicador.reports.finalRange'),
+		];
+
+		$chartData = Helpers::jsonChart(
+			$arrData,
+			'rowIndex',
+			$arrSeries,
+			$this->chartType,
+			'',
+			$this->pYAxisName
+		);
+
+		$result = [
+			'success'   => $result['success'],
+			'data'      => $arrData,
+			'total'     => $result['total'],
+			'chartData' => $chartData,
+		];
 
 		return $result;
 	}
@@ -753,7 +756,6 @@ class DeclaracionesRepo extends BaseRepo {
 				'error'   => Lang::get('error.no_records_found')
 			];
 		}
-
 
 		$totalValue = 0;
 
@@ -825,19 +827,22 @@ class DeclaracionesRepo extends BaseRepo {
 			'valor_expo' => $this->getColumnValueExpoTitle()
 		];
 
-		$pieChart = Helpers::jsonChart(
+		$chartData = Helpers::jsonChart(
 			$arrChartData,
 			'posicion',
 			$arrSeries,
-			PIE
+			$this->chartType,
+			'',
+			$this->pYAxisName
 		);
 
 		$result = [
-			'success'         => true,
-			'data'            => $arrData,
-			'pieChartData'    => $pieChart,
-			'total'           => count($arrData)
+			'success'   => true,
+			'data'      => $arrData,
+			'total'     => count($arrData),
+			'chartData' => $chartData,
 		];
+
 		return $result;
 	}
 
@@ -868,7 +873,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$columnValue = 'decl.id_posicion';
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
-		$row = 'periodo AS id';
+		$row = 'fecha AS id';
 
 		$arrRowField   = [$row, $rowField];
 
@@ -968,20 +973,20 @@ class DeclaracionesRepo extends BaseRepo {
 			'variation' => Lang::get('indicador.reports.diferencia'),
 		];
 
-		$columnChart = Helpers::jsonChart(
+		$chartData = Helpers::jsonChart(
 			$arrData,
 			'rowIndex',
 			$arrSeries,
-			COLUMNAS,
+			$this->chartType,
 			'',
 			Lang::get('indicador.columns_title.numero_productos')
 		);
 
 		$result = [
-			'success'         => true,
-			'data'            => $arrData,
-			'columnChartData' => $columnChart,
-			'total'           => count($arrData)
+			'success'   => true,
+			'data'      => $arrData,
+			'total'     => count($arrData),
+			'chartData' => $chartData,
 		];
 
 		return $result;
@@ -1020,7 +1025,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$columnValue = 'decl.id_posicion';
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
-		$row = 'periodo AS id';
+		$row = 'fecha AS id';
 
 		$arrRowField   = [$row, $rowField];
 
@@ -1039,11 +1044,11 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->setRange('fin');
 
 		if ($trade == 'impo') {
-			$this->model      = $this->getModelImpo();
-			$this->modelAdo   = $this->getModelImpoAdo();
+			$this->model    = $this->getModelImpo();
+			$this->modelAdo = $this->getModelImpoAdo();
 		} else {
-			$this->model      = $this->getModelExpo();
-			$this->modelAdo   = $this->getModelExpoAdo();
+			$this->model    = $this->getModelExpo();
+			$this->modelAdo = $this->getModelExpoAdo();
 		}
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
@@ -1064,12 +1069,10 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrDataLast = $rsDeclaraimp['data'];
 
-		//var_dump($arrDataExp);
-
 		//une los conjuntos de resultados
-		$arrKeys      = [];
-		$arrData      = [];
-		$rowIndex     = 0;
+		$arrKeys  = [];
+		$arrData  = [];
+		$rowIndex = 0;
 		foreach ($arrDataFirst as $keyFirst => $rowFirst) {
 
 			$periodLast = '';
@@ -1106,7 +1109,7 @@ class DeclaracionesRepo extends BaseRepo {
 				$arrData[] = [
 					'id'          => $rowLast['id'],
 					'rowIndex'    => 'Q'.$rowIndex,
-					'periodFirst' => $rowLast['periodo'],
+					'periodFirst' => '',
 					'valueFirst'  => 0,
 					'periodLast'  => $rowLast['periodo'],
 					'valueLast'   => $rowLast[$columnValue],
@@ -1127,20 +1130,20 @@ class DeclaracionesRepo extends BaseRepo {
 			'valueLast'  => Lang::get('indicador.reports.finalRange'),
 		];
 
-		$columnChart = Helpers::jsonChart(
+		$chartData = Helpers::jsonChart(
 			$arrData,
 			'rowIndex',
 			$arrSeries,
-			COLUMNAS,
+			$this->chartType,
 			'',
 			Lang::get('indicador.columns_title.numero_productos')
 		);
 
 		$result = [
-			'success'         => true,
-			'data'            => $arrData,
-			'columnChartData' => $columnChart,
-			'total'           => count($arrData)
+			'success'   => true,
+			'data'      => $arrData,
+			'total'     => count($arrData),
+			'chartData' => $chartData,
 		];
 
 		return $result;
@@ -1323,20 +1326,20 @@ class DeclaracionesRepo extends BaseRepo {
 			'IHH' => Lang::get('indicador.columns_title.IHH')
 		];
 
-		$columnChart = Helpers::jsonChart(
+		$chartData = Helpers::jsonChart(
 			$arrData,
 			'periodo',
 			$arrSeries,
-			COLUMNAS,
+			$this->chartType,
 			'',
 			Lang::get('indicador.columns_title.IHH')
 		);
 
 		$result = [
-			'success'         => true,
-			'data'            => $arrData,
-			'columnChartData' => $columnChart,
-			'total'           => count($arrData)
+			'success'   => true,
+			'data'      => $arrData,
+			'total'     => count($arrData),
+			'chartData' => $chartData,
 		];
 
 		return $result;
@@ -1354,12 +1357,11 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->setFiltersValues();
 
-
 		$row = 'anio AS id';
 		//si el periodo es diferente a anual debe filtrar por año
-		if ($this->period != 12 && !empty($this->year)) {
-			$this->model->setAnio($this->year);
-			$row = 'periodo AS id';
+		if ($this->period != 12) {
+			//$this->model->setAnio($year);
+			$row = 'fecha AS id';
 		}
 
 		if (!empty($arrFiltersValues['mercado_id'])) {
@@ -1402,77 +1404,82 @@ class DeclaracionesRepo extends BaseRepo {
 		//busca los datos del sector energetico
 		$result = $this->modelAdo->pivotSearch($this->model);
 
-		if ($result['success']) {
-			$arrDataEnergeticMiningSector = $result['data'];
-
-			//busca los datos del sector agricola
-			$this->model->setId_posicion($productsAgriculture);
-			$result = $this->modelAdo->pivotSearch($this->model);
-
-			if ($result['success']) {
-				$arrDataProductsAgriculture = $result['data'];
-
-				//busca el total de las exportaciones
-				$this->model->setId_posicion('');
-				$result  = $this->modelAdo->pivotSearch($this->model);
-				$arrData = [];
-
-				if ($result['success']) {
-					$arrDataTotal = $result['data'];
-
-					foreach ($arrDataTotal as $rowTotal) {
-
-						$rowProductsAgriculture = Helpers::findKeyInArrayMulti(
-							$arrDataProductsAgriculture,
-							'periodo',
-							$rowTotal['periodo']
-						);
-						$rowEnergeticMiningSector = Helpers::findKeyInArrayMulti(
-							$arrDataEnergeticMiningSector,
-							'periodo',
-							$rowTotal['periodo']
-						);
-
-						$totalProductsAgriculture   = ($rowProductsAgriculture   !== false) ? $this->getFloatValue( $rowProductsAgriculture[$columnValue] )   : 0 ;
-						$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? $this->getFloatValue( $rowEnergeticMiningSector[$columnValue] ) : 0 ;
-
-						$total = ( $this->getFloatValue( $rowTotal[$columnValue] ) ) - $totalEnergeticMiningSector;
-						$total = ( $total == 0 ) ? 1 : $total ;
-						$rate  = round( ($totalProductsAgriculture / $total ) * 100 , 2 );
-
-						$arrData[] = [
-							'id'                  => $rowTotal['id'],
-							'periodo'             => $rowTotal['periodo'],
-							'valor_expo_agricola' => $totalProductsAgriculture,
-							'valor_expo'          => $total,
-							'participacion'       => $rate
-						];
-					}
-
-					$arrSeries = [
-						'valor_expo_agricola' => $this->getColumnValueExpoAgroTitle(),
-						'valor_expo'          => $this->getColumnValueExpoTitle(),
-					];
-
-					$columnChart = Helpers::jsonChart(
-						$arrData,
-						'periodo',
-						$arrSeries,
-						COLUMNAS,
-						'',
-						$this->pYAxisName
-					);
-
-					$result = [
-						'success'         => true,
-						'data'            => $arrData,
-						'total'           => $result['total'],
-						'columnChartData' => $columnChart,
-						//'areaChartData'   => $areaChart,
-					];
-				}
-			}
+		if (!$result['success']) {
+			return $result;
 		}
+
+		$arrDataEnergeticMiningSector = $result['data'];
+
+		//busca los datos del sector agricola
+		$this->model->setId_posicion($productsAgriculture);
+		$result = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$arrDataProductsAgriculture = $result['data'];
+
+		//busca el total de las exportaciones
+		$this->model->setId_posicion('');
+		$result  = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$arrData = [];
+		$arrDataTotal = $result['data'];
+
+		foreach ($arrDataTotal as $rowTotal) {
+
+			$rowProductsAgriculture = Helpers::findKeyInArrayMulti(
+				$arrDataProductsAgriculture,
+				'periodo',
+				$rowTotal['periodo']
+			);
+			$rowEnergeticMiningSector = Helpers::findKeyInArrayMulti(
+				$arrDataEnergeticMiningSector,
+				'periodo',
+				$rowTotal['periodo']
+			);
+
+			$totalProductsAgriculture   = ($rowProductsAgriculture   !== false) ? $this->getFloatValue( $rowProductsAgriculture[$columnValue] )   : 0 ;
+			$totalEnergeticMiningSector = ($rowEnergeticMiningSector !== false) ? $this->getFloatValue( $rowEnergeticMiningSector[$columnValue] ) : 0 ;
+
+			$total = ( $this->getFloatValue( $rowTotal[$columnValue] ) ) - $totalEnergeticMiningSector;
+			$total = ( $total == 0 ) ? 1 : $total ;
+			$rate  = round( ($totalProductsAgriculture / $total ) * 100 , 2 );
+
+			$arrData[] = [
+				'id'                  => $rowTotal['id'],
+				'periodo'             => $rowTotal['periodo'],
+				'valor_expo_agricola' => $totalProductsAgriculture,
+				'valor_expo'          => $total,
+				'participacion'       => $rate
+			];
+		}
+
+		$arrSeries = [
+			'valor_expo_agricola' => $this->getColumnValueExpoAgroTitle(),
+			'valor_expo'          => $this->getColumnValueExpoTitle(),
+		];
+
+		$chartData = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			$this->chartType,
+			'',
+			$this->pYAxisName
+		);
+
+		$result = [
+			'success'   => true,
+			'data'      => $arrData,
+			'total'     => count($arrData),
+			'chartData' => $chartData,
+		];
 
 		return $result;
 	}
@@ -1490,9 +1497,9 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$row = 'anio AS id';
 		//si el periodo es diferente a anual debe filtrar por año
-		if ($this->period != 12 && !empty($this->year)) {
-			$this->model->setAnio($this->year);
-			$row = 'periodo AS id';
+		if ($this->period != 12) {
+			//$this->model->setAnio($this->year);
+			$row = 'fecha AS id';
 		}
 
 		if (!empty($arrFiltersValues['mercado_id'])) {
@@ -1533,68 +1540,71 @@ class DeclaracionesRepo extends BaseRepo {
 		//busca los datos de los productos tradicionales
 		$result = $this->modelAdo->pivotSearch($this->model);
 
-		if ($result['success']) {
-			$arrProductsTraditional = $result['data'];
-
-			//busca los datos del sector agricola
-			$this->model->setId_posicion($productsAgriculture);
-			$result = $this->modelAdo->pivotSearch($this->model);
-
-			if ($result['success']) {
-				$arrData = [];
-
-				$arrDataTotal = $result['data'];
-
-				foreach ($arrDataTotal as $rowTotal) {
-
-					$rowProductsTraditional = Helpers::findKeyInArrayMulti(
-						$arrProductsTraditional,
-						'periodo',
-						$rowTotal['periodo']
-					);
-
-					$value = $this->getFloatValue( $rowTotal[$columnValue] );
-
-
-					$totalProductsTraditional    = ( $rowProductsTraditional !== false ) ? $this->getFloatValue( $rowProductsTraditional[$columnValue] ) : 0 ;
-					$totalProductsNonTraditional = ( $value ) - $totalProductsTraditional;
-
-					$total = ($rowTotal[$columnValue] == 0) ? 1 : $value ;
-					$rate  = round( ($totalProductsNonTraditional / $total ) * 100 , 2 );
-
-					$arrData[] = [
-						'id'                  => $rowTotal['id'],
-						'periodo'             => $rowTotal['periodo'],
-						'valor_expo_no_tradi' => $totalProductsNonTraditional,
-						'valor_expo'          => $total,
-						'participacion'       => $rate
-					];
-				}
-
-				$titleAgroNT = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_no_tradi') : Lang::get('indicador.columns_title.peso_expo_no_tradi') ;
-
-				$arrSeries = [
-					'valor_expo_no_tradi' => $titleAgroNT,
-					'valor_expo'          => $this->getColumnValueExpoAgroTitle(),
-				];
-
-				$columnChart = Helpers::jsonChart(
-					$arrData,
-					'periodo',
-					$arrSeries,
-					COLUMNAS,
-					'',
-					$this->pYAxisName
-				);
-
-				$result = [
-					'success'         => true,
-					'data'            => $arrData,
-					'total'           => $result['total'],
-					'columnChartData' => $columnChart,
-				];
-			}
+		if (!$result['success']) {
+			return $result;
 		}
+
+		$arrProductsTraditional = $result['data'];
+
+		//busca los datos del sector agricola
+		$this->model->setId_posicion($productsAgriculture);
+		$result = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$arrData      = [];
+		$arrDataTotal = $result['data'];
+
+		foreach ($arrDataTotal as $rowTotal) {
+
+			$rowProductsTraditional = Helpers::findKeyInArrayMulti(
+				$arrProductsTraditional,
+				'periodo',
+				$rowTotal['periodo']
+			);
+
+			$value = $this->getFloatValue( $rowTotal[$columnValue] );
+
+
+			$totalProductsTraditional    = ( $rowProductsTraditional !== false ) ? $this->getFloatValue( $rowProductsTraditional[$columnValue] ) : 0 ;
+			$totalProductsNonTraditional = ( $value ) - $totalProductsTraditional;
+
+			$total = ($rowTotal[$columnValue] == 0) ? 1 : $value ;
+			$rate  = round( ($totalProductsNonTraditional / $total ) * 100 , 2 );
+
+			$arrData[] = [
+				'id'                  => $rowTotal['id'],
+				'periodo'             => $rowTotal['periodo'],
+				'valor_expo_no_tradi' => $totalProductsNonTraditional,
+				'valor_expo'          => $total,
+				'participacion'       => $rate
+			];
+		}
+
+		$titleAgroNT = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_no_tradi') : Lang::get('indicador.columns_title.peso_expo_no_tradi') ;
+
+		$arrSeries = [
+			'valor_expo_no_tradi' => $titleAgroNT,
+			'valor_expo'          => $this->getColumnValueExpoAgroTitle(),
+		];
+
+		$chartData = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			$this->chartType,
+			'',
+			$this->pYAxisName
+		);
+
+		$result = [
+			'success'   => true,
+			'data'      => $arrData,
+			'total'     => count($arrData),
+			'chartData' => $chartData,
+		];
 
 		return $result;
 	}
@@ -1612,9 +1622,9 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$row = 'anio AS id';
 		//si el periodo es diferente a anual debe filtrar por año
-		if ($this->period != 12 && !empty($this->year)) {
-			$this->model->setAnio($this->year);
-			$row = 'periodo AS id';
+		if ($this->period != 12) {
+			//$this->model->setAnio($this->year);
+			$row = 'fecha AS id';
 		}
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
@@ -1628,77 +1638,80 @@ class DeclaracionesRepo extends BaseRepo {
 		//busca los datos de los productos seleccionados
 		$result = $this->modelAdo->pivotSearch($this->model);
 
-		if ($result['success']) {
-
-			if ($result['total'] == 0) {
-				return [
-					'success' => false,
-					'error'   => Lang::get('error.no_records_found')
-				];
-			}
-			$arrProduct = $result['data'];
-
-			//busca los datos del total de exportaciones del sector agricola
-			$result = $this->findProductsBySector('sectorIdAgriculture');
-			if (!$result['success']) {
-				return $result;
-			}
-			$productsAgriculture = $result['data'];
-			$this->model->setId_posicion($productsAgriculture);
-			//$this->model->setId_posicion('');
-			$result = $this->modelAdo->pivotSearch($this->model);
-
-			if ($result['success']) {
-				$arrData = [];
-
-				$arrDataTotal = $result['data'];
-
-				foreach ($arrDataTotal as $rowTotal) {
-
-					$rowProduct = Helpers::findKeyInArrayMulti(
-						$arrProduct,
-						'periodo',
-						$rowTotal['periodo']
-					);
-
-					$totalProduct = ($rowProduct !== false) ? $this->getFloatValue( $rowProduct[$columnValue] ) : 0 ;
-
-					$total = ($rowTotal[$columnValue] == 0) ? 1 : $this->getFloatValue( $rowTotal[$columnValue] ) ;
-					$rate  = round( ($totalProduct / $total ) * 100 , 2 );
-
-					$arrData[] = [
-						'id'                => $rowTotal['id'],
-						'periodo'           => $rowTotal['periodo'],
-						'valor_expo_sector' => $totalProduct,
-						'valor_expo'        => $total,
-						'participacion'     => $rate
-					];
-				}
-
-				$titleSector = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_sector') : Lang::get('indicador.columns_title.peso_expo_sector') ;
-
-				$arrSeries = [
-					'valor_expo_sector' => $titleSector,
-					'valor_expo'        => $this->getColumnValueExpoAgroTitle(),
-				];
-
-				$columnChart = Helpers::jsonChart(
-					$arrData,
-					'periodo',
-					$arrSeries,
-					COLUMNAS,
-					'',
-					$this->pYAxisName
-				);
-
-				$result = [
-					'success'         => true,
-					'data'            => $arrData,
-					'total'           => $result['total'],
-					'columnChartData' => $columnChart,
-				];
-			}
+		if (!$result['success']) {
+			return $result;
 		}
+
+		if ($result['total'] == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+		$arrProduct = $result['data'];
+
+		//busca los datos del total de exportaciones del sector agricola
+		$result = $this->findProductsBySector('sectorIdAgriculture');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsAgriculture = $result['data'];
+		$this->model->setId_posicion($productsAgriculture);
+		//$this->model->setId_posicion('');
+		$result = $this->modelAdo->pivotSearch($this->model);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$arrData = [];
+
+		$arrDataTotal = $result['data'];
+
+		foreach ($arrDataTotal as $rowTotal) {
+
+			$rowProduct = Helpers::findKeyInArrayMulti(
+				$arrProduct,
+				'periodo',
+				$rowTotal['periodo']
+			);
+
+			$totalProduct = ($rowProduct !== false) ? $this->getFloatValue( $rowProduct[$columnValue] ) : 0 ;
+
+			$total = ($rowTotal[$columnValue] == 0) ? 1 : $this->getFloatValue( $rowTotal[$columnValue] ) ;
+			$rate  = round( ($totalProduct / $total ) * 100 , 2 );
+
+			$arrData[] = [
+				'id'                => $rowTotal['id'],
+				'periodo'           => $rowTotal['periodo'],
+				'valor_expo_sector' => $totalProduct,
+				'valor_expo'        => $total,
+				'participacion'     => $rate
+			];
+		}
+
+		$titleSector = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_sector') : Lang::get('indicador.columns_title.peso_expo_sector') ;
+
+		$arrSeries = [
+			'valor_expo_sector' => $titleSector,
+			'valor_expo'        => $this->getColumnValueExpoAgroTitle(),
+		];
+
+		$chartData = Helpers::jsonChart(
+			$arrData,
+			'periodo',
+			$arrSeries,
+			$this->chartType,
+			'',
+			$this->pYAxisName
+		);
+
+		$result = [
+			'success'   => true,
+			'data'      => $arrData,
+			'total'     => count($arrData),
+			'chartData' => $chartData,
+		];
 
 		return $result;
 	}
@@ -1726,7 +1739,7 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
-		$row = 'periodo AS id';
+		$row = 'fecha AS id';
 
 		$arrRowField   = [$row, $rowField];
 
@@ -1737,89 +1750,92 @@ class DeclaracionesRepo extends BaseRepo {
 		//busca los datos del primer rango de fechas
 		$result = $this->modelAdo->pivotSearch($this->model);
 
-		if ($result['success']) {
+		if (!$result['success']) {
+			return $result;
+		}
+		
+		$firstRangeData = $result['data'];
 
-			$firstRangeData = $result['data'];
+		//busca los datos del segundo rango de fechas
+		$this->setRange('fin');
+		$this->setFiltersValues();
 
-			//busca los datos del segundo rango de fechas
-			$this->setRange('fin');
-			$this->setFiltersValues();
+		$result = $this->modelAdo->pivotSearch($this->model);
 
-			$result = $this->modelAdo->pivotSearch($this->model);
+		if (!$result['success']) {
+			return $result;
+		}
 
-			if ($result['success']) {
-				$arrData  = [];
-				$arrKeys  = [];
-				$rowIndex = 0;
+		$arrData  = [];
+		$arrKeys  = [];
+		$rowIndex = 0;
 
-				$lastRangeData = $result['data'];
+		$lastRangeData = $result['data'];
 
-				foreach ($firstRangeData as $keyFirst => $firstRange) {
+		foreach ($firstRangeData as $keyFirst => $firstRange) {
 
-					$lastPeriod    = '';
-					$lastValue     = 0;
+			$lastPeriod    = '';
+			$lastValue     = 0;
 
-					foreach ($lastRangeData as $keyLast => $lastRange) {
+			foreach ($lastRangeData as $keyLast => $lastRange) {
 
-						if ($keyFirst == $keyLast) {
-							$lastPeriod = $lastRange['periodo'];
-							$lastValue  = $lastRange[$columnValue];
-							$arrKeys[]  = $keyLast;
-						}
-
-					}
-
-					$rateVariation = ($firstRange[$columnValue] == 0) ? 0: (($lastValue - $firstRange[$columnValue]) / $firstRange[$columnValue]);
-					$rowIndex += 1;
-					$arrData[] = [
-						'id'            => $firstRange['id'],
-						'rowIndex'      => 'Q'.$rowIndex,
-						'firstPeriod'   => $firstRange['periodo'],
-						'firstValue'    => $firstRange[$columnValue],
-						'lastPeriod'    => $lastPeriod,
-						'lastValue'     => $lastValue,
-						'rateVariation' => $rateVariation
-					];
-
+				if ($keyFirst == $keyLast) {
+					$lastPeriod = $lastRange['periodo'];
+					$lastValue  = $lastRange[$columnValue];
+					$arrKeys[]  = $keyLast;
 				}
 
-				foreach ($lastRangeData as $keyLast => $lastRange) {
-					if (!in_array($keyLast, $arrKeys)) {
-						$rowIndex += 1;
-						$arrData[] = [
-							'id'            => $lastRange['id'],
-							'rowIndex'      => 'Q'.$rowIndex,
-							'firstPeriod'   => $lastRange['periodo'],
-							'firstValue'    => 0,
-							'lastPeriod'    => $lastRange['periodo'],
-							'lastValue'     => $lastRange[$columnValue],
-							'rateVariation' => 1
-						];
-					}
-				}
+			}
 
-				$arrSeries = [
-					'firstValue' => Lang::get('indicador.reports.initialRange'),
-					'lastValue'  => Lang::get('indicador.reports.finalRange'),
-				];
+			$rateVariation = ($firstRange[$columnValue] == 0) ? 0: (($lastValue - $firstRange[$columnValue]) / $firstRange[$columnValue]);
+			$rowIndex += 1;
+			$arrData[] = [
+				'id'            => $firstRange['id'],
+				'rowIndex'      => 'Q'.$rowIndex,
+				'firstPeriod'   => $firstRange['periodo'],
+				'firstValue'    => $firstRange[$columnValue],
+				'lastPeriod'    => $lastPeriod,
+				'lastValue'     => $lastValue,
+				'rateVariation' => $rateVariation
+			];
 
-				$columnChart = Helpers::jsonChart(
-					$arrData,
-					'rowIndex',
-					$arrSeries,
-					COLUMNAS,
-					'',
-					Lang::get('indicador.columns_title.numero_empresas_expo')
-				);
+		}
 
-				$result = [
-					'success'         => true,
-					'data'            => $arrData,
-					'total'           => $result['total'],
-					'columnChartData' => $columnChart,
+		foreach ($lastRangeData as $keyLast => $lastRange) {
+			if (!in_array($keyLast, $arrKeys)) {
+				$rowIndex += 1;
+				$arrData[] = [
+					'id'            => $lastRange['id'],
+					'rowIndex'      => 'Q'.$rowIndex,
+					'firstPeriod'   => $lastRange['periodo'],
+					'firstValue'    => 0,
+					'lastPeriod'    => $lastRange['periodo'],
+					'lastValue'     => $lastRange[$columnValue],
+					'rateVariation' => 1
 				];
 			}
 		}
+
+		$arrSeries = [
+			'firstValue' => Lang::get('indicador.reports.initialRange'),
+			'lastValue'  => Lang::get('indicador.reports.finalRange'),
+		];
+
+		$chartData = Helpers::jsonChart(
+			$arrData,
+			'rowIndex',
+			$arrSeries,
+			$this->chartType,
+			'',
+			Lang::get('indicador.columns_title.numero_empresas_expo')
+		);
+
+		$result = [
+			'success'   => true,
+			'data'      => $arrData,
+			'total'     => count($arrData),
+			'chartData' => $chartData,
+		];
 
 		return $result;
 	}
@@ -1848,7 +1864,7 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
-		$row = 'periodo AS id';
+		$row = 'fecha AS id';
 
 		$arrRowField = ['id', 'decl.id_posicion', 'posicion', 'pais'];
 
@@ -1859,52 +1875,56 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$result = $this->modelAdo->pivotSearch($this->model);
 
-		if ($result['success']) {
+		if (!$result['success']) {
+			return $result;
+		}
 
-			$totalValue = 0;
+		$totalValue = 0;
 
-			foreach ($result['data'] as $keyImpo => $rowImpo) {
-				$totalValue += (float)$rowImpo[$columnValue1];
-			}
+		foreach ($result['data'] as $keyImpo => $rowImpo) {
+			$totalValue += (float)$rowImpo[$columnValue1];
+		}
 
-			$arrData = [];
-			$average = 0;
+		$arrData = [];
+		$average = 0;
 
-			foreach ($result['data'] as $keyImpo => $rowImpo) {
+		foreach ($result['data'] as $keyImpo => $rowImpo) {
 
-				$rate     = ((float)$rowImpo[$columnValue1] / $totalValue );
-				$weighing = (float)$rowImpo[$columnValue1] * $rate;
-				$average += $weighing;
+			$rate     = ((float)$rowImpo[$columnValue1] / $totalValue );
+			$weighing = (float)$rowImpo[$columnValue1] * $rate;
+			$average += $weighing;
 
-				$arrData[] = [
-					'id'             => $keyImpo,
-					'id_posicion'    => $rowImpo['id_posicion'],
-					'posicion'       => $rowImpo['posicion'],
-					'pais'           => $rowImpo['pais'],
-					'arancel_pagado' => (float)$rowImpo[$columnValue2],
-					'valorarancel'   => (float)$rowImpo[$columnValue1],
-					//'valor_impo'     => (float)$rowImpo[$columnValue3],
-					'participacion'  => ( $rate * 100 )
-				];
-			}
-			$arrSeries = [
-				'valorarancel' => Lang::get('indicador.columns_title.participacion_arancel')
-			];
-
-			$pieChart = Helpers::jsonChart(
-				$arrData,
-				'posicion',
-				$arrSeries,
-				PIE
-			);
-			$result = [
-				'success'         => true,
-				'data'            => $arrData,
-				'average'         => $average,
-				'pieChartData'    => $pieChart,
-				'total'           => count($arrData)
+			$arrData[] = [
+				'id'             => $keyImpo,
+				'id_posicion'    => $rowImpo['id_posicion'],
+				'posicion'       => $rowImpo['posicion'],
+				'pais'           => $rowImpo['pais'],
+				'arancel_pagado' => (float)$rowImpo[$columnValue2],
+				'valorarancel'   => (float)$rowImpo[$columnValue1],
+				//'valor_impo'     => (float)$rowImpo[$columnValue3],
+				'participacion'  => ( $rate * 100 )
 			];
 		}
+		$arrSeries = [
+			'valorarancel' => Lang::get('indicador.columns_title.participacion_arancel')
+		];
+
+		$chartData = Helpers::jsonChart(
+			$arrData,
+			'posicion',
+			$arrSeries,
+			$this->chartType,
+			'',
+			$this->pYAxisName
+		);
+
+		$result = [
+			'success'   => true,
+			'data'      => $arrData,
+			'total'     => count($arrData),
+			'chartData' => $chartData,
+			'average'   => $average,
+		];
 
 		return $result;
 	}

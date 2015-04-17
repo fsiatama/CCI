@@ -158,39 +158,22 @@
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 
-	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
-		typeAhead:false
-		,forceSelection:true
-		,selectOnFocus:true
-		,allowBlank:false
-		,triggerAction:'all'
+	var MonthPicker = Ext.extend(Ext.ux.MonthYearPicker, {
+		allowBlank:false
 		,flex:true
+		,format : 'Y-m'
 	});
 
-	var comboAnio_ini = new Ext.ux.MonthYearPicker({
+	var comboAnio_ini = new MonthPicker({
 		name:'anio_ini'
 		,id:module+'comboAnio_ini'
-		,store:arrYears
-		,fieldLabel:Ext.ux.lang.reports.selectYearFrom
-		,format : 'Y-m'
-		/*,listeners : {
-			select : function(me, date) {
-				console.debug(date.format("Y-m-d H:i:s"));
-			}
-		}*/
+		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
 	});
 
-	var comboAnio_fin = new Ext.ux.MonthYearPicker({
+	var comboAnio_fin = new MonthPicker({
 		name:'anio_fin'
 		,id:module+'comboAnio_fin'
-		,store:arrYears
-		,fieldLabel:Ext.ux.lang.reports.selectYearTo
-		,format : 'Y-m'
-		/*,listeners : {
-			select : function(me, date) {
-				console.debug(date.format("Y-m-d H:i:s"));
-			}
-		}*/
+		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
 	});
 
 	var formIndicador = new Ext.FormPanel({

@@ -156,29 +156,22 @@
 		,displayFieldTpl:'{mercado_nombre}'
 	});
 
-	var arrYears = <?= json_encode($yearsAvailable); ?>;
-
-	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
-		typeAhead:false
-		,forceSelection:true
-		,selectOnFocus:true
-		,allowBlank:false
-		,triggerAction:'all'
+	var MonthPicker = Ext.extend(Ext.ux.MonthYearPicker, {
+		allowBlank:false
 		,flex:true
+		,format : 'Y-m'
 	});
 
-	var comboAnio_ini = new simpleCombo({
-		hiddenName:'anio_ini'
+	var comboAnio_ini = new MonthPicker({
+		name:'anio_ini'
 		,id:module+'comboAnio_ini'
-		,store:arrYears
-		,fieldLabel:Ext.ux.lang.reports.selectYearFrom
+		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
 	});
 
-	var comboAnio_fin = new simpleCombo({
-		hiddenName:'anio_fin'
+	var comboAnio_fin = new MonthPicker({
+		name:'anio_fin'
 		,id:module+'comboAnio_fin'
-		,store:arrYears
-		,fieldLabel:Ext.ux.lang.reports.selectYearTo
+		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
 	});
 
 	var formIndicador = new Ext.FormPanel({
@@ -202,8 +195,8 @@
 				{name:'sector_id', mapping:'sector_id', type:'string'},
 				{name:'id_pais', mapping:'id_pais', type:'string'},
 				{name:'mercado_id', mapping:'mercado_id', type:'string'},
-				{name:'anio_ini', mapping:'anio_ini', type:'float'},
-				{name:'anio_fin', mapping:'anio_fin', type:'float'}
+				{name:'anio_ini', mapping:'anio_ini', type:'string', dateFormat: 'Y-m'},
+				{name:'anio_fin', mapping:'anio_fin', type:'string', dateFormat: 'Y-m'},
 			]
 		})
 		,defaults: {anchor:'97%'}
@@ -395,12 +388,11 @@
 		};
 
 
-		arrValues     = [];
-		var yearIni      = Ext.getCmp(module+'comboAnio_ini').getValue();
-		var yearFin      = Ext.getCmp(module+'comboAnio_fin').getValue();
-		arrValues     = [];
+		var yearIni = Ext.getCmp(module+'comboAnio_ini').getValue();
+		var yearFin = Ext.getCmp(module+'comboAnio_fin').getValue();
+		arrValues   = [];
 
-		arrValues.push(yearIni + ' - ' + yearFin);
+		arrValues.push(yearIni.format('M, Y') + ' - ' + yearFin.format('M, Y'));
 
 		arrDescription.push({
 			label: Ext.ux.lang.reports.period

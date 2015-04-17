@@ -156,48 +156,21 @@
 		,displayFieldTpl:'{mercado_nombre}'
 	});*/
 
-	var arrYears = <?= json_encode($yearsAvailable); ?>;
-	var arrMonths = [
-		[1, Date.monthNames[0]],
-		[2, Date.monthNames[1]],
-		[3, Date.monthNames[2]],
-		[4, Date.monthNames[3]],
-		[5, Date.monthNames[4]],
-		[6, Date.monthNames[5]],
-		[7, Date.monthNames[6]],
-		[8, Date.monthNames[7]],
-		[9, Date.monthNames[8]],
-		[10, Date.monthNames[9]],
-		[11, Date.monthNames[10]],
-		[12, Date.monthNames[11]]
-	];
-
-	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
-		typeAhead:false
-		,forceSelection:true
-		,selectOnFocus:true
-		,allowBlank:false
-		,triggerAction:'all'
+	var MonthPicker = Ext.extend(Ext.ux.MonthYearPicker, {
+		allowBlank:false
 		,flex:true
+		,format : 'Y-m'
 	});
 
-	var comboAnio_ini = new simpleCombo({
-		hiddenName:'anio_ini'
-		,id:module+'comboAnio_ini'
-		,store:arrYears
-		,fieldLabel:Ext.ux.lang.reports.selectYearFrom
-	});
-	var comboDesde_ini = new simpleCombo({
-		hiddenName:'desde_ini'
+	var comboDesde_ini = new MonthPicker({
+		name:'desde_ini'
 		,id:module+'comboDesde_ini'
-		,store:arrMonths
-		,fieldLabel:Ext.ux.lang.reports.selectMonthFrom
+		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
 	});
-	var comboHasta_ini = new simpleCombo({
-		hiddenName:'hasta_ini'
+	var comboHasta_ini = new MonthPicker({
+		name:'hasta_ini'
 		,id:module+'comboHasta_ini'
-		,store:arrMonths
-		,fieldLabel:Ext.ux.lang.reports.selectMonthTo
+		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
 	});
 
 	var formIndicador = new Ext.FormPanel({
@@ -221,9 +194,8 @@
 				{name:'sector_id', mapping:'sector_id', type:'string'},
 				//{name:'id_pais', mapping:'id_pais', type:'string'},
 				//{name:'mercado_id', mapping:'mercado_id', type:'string'},
-				{name:'anio_ini', mapping:'anio_ini', type:'float'},
-				{name:'desde_ini', mapping:'desde_ini', type:'float'},
-				{name:'hasta_ini', mapping:'hasta_ini', type:'float'},
+				{name:'desde_ini', mapping:'desde_ini', type:'string', dateFormat: 'Y-m'},
+				{name:'hasta_ini', mapping:'hasta_ini', type:'string', dateFormat: 'Y-m'},
 			]
 		})
 		,defaults: {anchor:'97%'}
@@ -264,10 +236,6 @@
 			}
 			,items:[{
 				defaults:{anchor:'100%'}
-				,columnWidth:.2
-				,items:[comboAnio_ini]
-			},{
-				defaults:{anchor:'100%'}
 				,items:[comboDesde_ini]
 			},{
 				defaults:{anchor:'100%'}
@@ -287,12 +255,6 @@
 				,bodyStyle:'padding:0 18px 0 0'
 			}
 			,items:[{
-				/*defaults:{anchor:'100%'}
-				,items:[comboPais]
-			},{
-				defaults:{anchor:'100%'}
-				,items:[comboMercado]
-			},{*/
 				defaults:{anchor:'100%'}
 				,items:[comboPosicion]
 			},{
@@ -400,9 +362,9 @@
 			});
 		};
 
-		arrValues      = [];
-		selection      = Ext.getCmp(module+'comboSector').getSelectedRecords();
-		label          = Ext.getCmp(module+'comboSector').fieldLabel;
+		arrValues = [];
+		selection = Ext.getCmp(module+'comboSector').getSelectedRecords();
+		label     = Ext.getCmp(module+'comboSector').fieldLabel;
 
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('sector_nombre'));
@@ -414,12 +376,11 @@
 			});
 		};
 
-		arrValues     = [];
-		var year      = Ext.getCmp(module+'comboAnio_ini').getValue();
-		var perIni    = Ext.getCmp(module+'comboDesde_ini').getRawValue();
-		var perFin    = Ext.getCmp(module+'comboHasta_ini').getRawValue();
+		var perIni = Ext.getCmp(module+'comboDesde_ini').getValue();
+		var perFin = Ext.getCmp(module+'comboHasta_ini').getValue();
+		arrValues  = [];
 
-		arrValues.push(year + ' ' + perIni + ' - ' + perFin);
+		arrValues.push(perIni.format('M, Y') + ' - ' + perFin.format('M, Y'));
 
 		arrDescription.push({
 			label: Ext.ux.lang.reports.period

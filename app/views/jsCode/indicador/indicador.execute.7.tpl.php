@@ -39,7 +39,6 @@ $htmlDescription .= '</ol>';
 		]
 	});
 
-
 	storeIndicador.on('beforeload', function(){
 		var scale         = Ext.getCmp(module + 'comboScale').getValue();
 		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();

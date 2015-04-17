@@ -43,6 +43,13 @@ $htmlDescription .= '</ol>';
 	});
 
 	storeIndicador.on('beforeload', function(){
+		var scale     = Ext.getCmp(module + 'comboScale').getValue();
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		if (!scale || !chartType) {
+			return false;
+		}
+		this.setBaseParam('scale', scale);
+		this.setBaseParam('chartType', chartType);
 		Ext.ux.bodyMask.show();
 	});
 
@@ -52,17 +59,24 @@ $htmlDescription .= '</ol>';
 		var average = numberFormat(store.reader.jsonData.average);
 
 		el.update(average);
-		var height = (store.reader.jsonData.total * 33) + 50;
-		Ext.getCmp(module+'gridIndicador').setHeight(height);
-		if (typeof(store.reader.jsonData.pieChartData) === 'object') {
-			var chart = new FusionCharts('<?= PIE; ?>', module + 'PieChartId', '100%', '100%', '0', '1');
-			chart.setTransparent(true);
-			chart.setJSONData(store.reader.jsonData.pieChartData);
-			chart.render(module + 'PieChart');
-		}
-		Ext.ux.bodyMask.hide();
 
+		var height = (store.reader.jsonData.total * 23);
+		Ext.getCmp(module+'gridIndicador').setHeight(height);
+
+		FusionCharts.setCurrentRenderer('javascript');
+
+		disposeCharts();
+
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		var chart     = new FusionCharts(chartType, module + 'ChartId', '100%', '100%', '0', '1');
+
+		chart.setTransparent(true);
+		chart.setJSONData(store.reader.jsonData.chartData);
+		chart.render(module + 'Chart');
+
+		Ext.ux.bodyMask.hide();
 	});
+
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.posicion'); ?>', dataIndex:'id_posicion', align: 'left'},
@@ -102,7 +116,8 @@ $htmlDescription .= '</ol>';
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
-	var arrPeriods = <?= json_encode($periods); ?>;
+	var arrScales    = <?= json_encode($scales); ?>;
+	var arrCharts  = <?= json_encode($charts); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -131,11 +146,66 @@ $htmlDescription .= '</ol>';
 				'</div>' +
 			'</div>'
 		},{
+			style:{padding:'0px'}
+			,border:true
+			,html: ''
+			,tbar:[{
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectScale + ': '
+				},{
+					xtype: 'combo'
+					,store: arrScales
+					,id: module + 'comboScale'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: 1
+					,width: 150
+				}]
+			},{
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectChart + ': '
+				},{
+					xtype: 'combo'
+					,store: arrCharts
+					,id: module + 'comboCharts'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= AREA; ?>'
+					,width: 150
+				}]
+			},{
+				xtype:'buttongroup',
+				items: [{
+					text: Ext.ux.lang.buttons.generate
+					,iconCls: 'icon-refresh'
+					,iconAlign: 'top'
+					,handler: function () {
+						storeIndicador.load();
+					}
+				}]
+			}]
+		},{
 			height:430
-			,html:'<div id="' + module + 'PieChart"></div>'
+			,html:'<div id="' + module + 'Chart"></div>'
 			,items:[{
 				xtype:'panel'
-				,id: module + 'PieChart'
+				,id: module + 'Chart'
 				,plain:true
 			}]
 		},{
@@ -161,13 +231,23 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
+	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
+		disposeCharts();
+	}, this);
+
+	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
+		storeIndicador.load();
+	}, this);
+
 	storeIndicador.load();
 
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-
+		if(FusionCharts(module + 'ChartId')){
+			FusionCharts(module + 'ChartId').dispose();
+		}
 	}
 
 	/*********************************************** End functions***********************************************/

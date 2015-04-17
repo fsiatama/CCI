@@ -31,6 +31,8 @@ Ext.ux.lang.reports = {
 	,selectYearFrom: 'Año desde'
 	,selectYearTo: 'Año Hasta'
 	,selectPeriod: 'Seleccione el Periodo'
+	,selectPeriodFrom: 'Seleccione el Periodo Inicial'
+	,selectPeriodTo: 'Seleccione el Periodo Final'
 	,selectMonth: 'Seleccione el Mes'
 	,selectMonthFrom: 'Mes desde'
 	,selectMonthTo: 'Mes Hasta'

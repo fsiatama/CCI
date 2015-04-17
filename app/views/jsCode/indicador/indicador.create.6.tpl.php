@@ -190,42 +190,33 @@
 		,fieldLabel:Ext.ux.lang.reports.trade
 	});
 
-	var comboAnio_ini = new simpleCombo({
-		hiddenName:'anio_ini'
-		,id:module+'comboAnio_ini'
-		,store:arrYears
-		,fieldLabel:Ext.ux.lang.reports.selectYearFrom
-	});
-	var comboDesde_ini = new simpleCombo({
-		hiddenName:'desde_ini'
-		,id:module+'comboDesde_ini'
-		,store:arrMonths
-		,fieldLabel:Ext.ux.lang.reports.selectMonthFrom
-	});
-	var comboHasta_ini = new simpleCombo({
-		hiddenName:'hasta_ini'
-		,id:module+'comboHasta_ini'
-		,store:arrMonths
-		,fieldLabel:Ext.ux.lang.reports.selectMonthTo
+	var MonthPicker = Ext.extend(Ext.ux.MonthYearPicker, {
+		allowBlank:false
+		,flex:true
+		,format : 'Y-m'
 	});
 
-	var comboAnio_fin = new simpleCombo({
-		hiddenName:'anio_fin'
-		,id:module+'comboAnio_fin'
-		,store:arrYears
-		,fieldLabel:Ext.ux.lang.reports.selectYearFrom
+	var comboDesde_ini = new MonthPicker({
+		name:'desde_ini'
+		,id:module+'comboDesde_ini'
+		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
 	});
-	var comboDesde_fin = new simpleCombo({
-		hiddenName:'desde_fin'
+	var comboHasta_ini = new MonthPicker({
+		name:'hasta_ini'
+		,id:module+'comboHasta_ini'
+		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
+	});
+
+	var comboDesde_fin = new MonthPicker({
+		name:'desde_fin'
 		,id:module+'comboDesde_fin'
-		,store:arrMonths
-		,fieldLabel:Ext.ux.lang.reports.selectMonthFrom
+		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
 	});
-	var comboHasta_fin = new simpleCombo({
-		hiddenName:'hasta_fin'
+
+	var comboHasta_fin = new MonthPicker({
+		name:'hasta_fin'
 		,id:module+'comboHasta_fin'
-		,store:arrMonths
-		,fieldLabel:Ext.ux.lang.reports.selectMonthTo
+		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
 	});
 
 	var formIndicador = new Ext.FormPanel({
@@ -250,12 +241,10 @@
 				{name:'id_pais', mapping:'id_pais', type:'string'},
 				{name:'mercado_id', mapping:'mercado_id', type:'string'},
 				{name:'intercambio', mapping:'intercambio', type:'string'},
-				{name:'anio_ini', mapping:'anio_ini', type:'float'},
-				{name:'anio_fin', mapping:'anio_fin', type:'float'},
-				{name:'desde_ini', mapping:'desde_ini', type:'float'},
-				{name:'hasta_ini', mapping:'hasta_ini', type:'float'},
-				{name:'desde_fin', mapping:'desde_fin', type:'float'},
-				{name:'hasta_fin', mapping:'hasta_fin', type:'float'}
+				{name:'desde_ini', mapping:'desde_ini', type:'string', dateFormat: 'Y-m'},
+				{name:'hasta_ini', mapping:'hasta_ini', type:'string', dateFormat: 'Y-m'},
+				{name:'desde_fin', mapping:'desde_fin', type:'string', dateFormat: 'Y-m'},
+				{name:'hasta_fin', mapping:'hasta_fin', type:'string', dateFormat: 'Y-m'}
 			]
 		})
 		,defaults: {anchor:'97%'}
@@ -300,10 +289,6 @@
 			}
 			,items:[{
 				defaults:{anchor:'100%'}
-				,columnWidth:.2
-				,items:[comboAnio_ini]
-			},{
-				defaults:{anchor:'100%'}
 				,items:[comboDesde_ini]
 			},{
 				defaults:{anchor:'100%'}
@@ -322,10 +307,6 @@
 				,bodyStyle:'padding:0 18px 0 0'
 			}
 			,items:[{
-				defaults:{anchor:'100%'}
-				,columnWidth:.2
-				,items:[comboAnio_fin]
-			},{
 				defaults:{anchor:'100%'}
 				,items:[comboDesde_fin]
 			},{
@@ -431,9 +412,9 @@
 			});
 		};
 
-		arrValues      = [];
-		selection      = Ext.getCmp(module+'comboMercado').getSelectedRecords();
-		label          = Ext.getCmp(module+'comboMercado').fieldLabel;
+		arrValues = [];
+		selection = Ext.getCmp(module+'comboMercado').getSelectedRecords();
+		label     = Ext.getCmp(module+'comboMercado').fieldLabel;
 
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('mercado_nombre'));
@@ -445,9 +426,9 @@
 			});
 		};
 
-		arrValues      = [];
-		selection      = Ext.getCmp(module+'comboPosicion').getSelectedRecords();
-		label          = Ext.getCmp(module+'comboPosicion').fieldLabel;
+		arrValues = [];
+		selection = Ext.getCmp(module+'comboPosicion').getSelectedRecords();
+		label     = Ext.getCmp(module+'comboPosicion').fieldLabel;
 
 		Ext.each(selection,function(row){
 			arrValues.push('['+row.get('id_posicion')+'] ' + row.get('posicion'));
@@ -459,9 +440,9 @@
 			});
 		};
 
-		arrValues      = [];
-		selection      = Ext.getCmp(module+'comboSector').getSelectedRecords();
-		label          = Ext.getCmp(module+'comboSector').fieldLabel;
+		arrValues = [];
+		selection = Ext.getCmp(module+'comboSector').getSelectedRecords();
+		label     = Ext.getCmp(module+'comboSector').fieldLabel;
 
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('sector_nombre'));
@@ -481,24 +462,22 @@
 			,values: arrValues
 		});
 
-		var year      = Ext.getCmp(module+'comboAnio_ini').getValue();
-		var perIni    = Ext.getCmp(module+'comboDesde_ini').getRawValue();
-		var perFin    = Ext.getCmp(module+'comboHasta_ini').getRawValue();
-		arrValues     = [];
+		var perIni = Ext.getCmp(module+'comboDesde_ini').getValue();
+		var perFin = Ext.getCmp(module+'comboHasta_ini').getValue();
+		arrValues  = [];
 
-		arrValues.push(year + ' ' + perIni + ' - ' + perFin);
+		arrValues.push(perIni.format('M, Y') + ' - ' + perFin.format('M, Y'));
 
 		arrDescription.push({
 			label: Ext.ux.lang.reports.initialRange
 			,values: arrValues
 		});
 
-		year      = Ext.getCmp(module+'comboAnio_fin').getValue();
-		perIni    = Ext.getCmp(module+'comboDesde_fin').getRawValue();
-		perFin    = Ext.getCmp(module+'comboHasta_fin').getRawValue();
-		arrValues     = [];
+		perIni    = Ext.getCmp(module+'comboDesde_fin').getValue();
+		perFin    = Ext.getCmp(module+'comboHasta_fin').getValue();
+		arrValues = [];
 
-		arrValues.push(year + ' ' + perIni + ' - ' + perFin);
+		arrValues.push(perIni.format('M, Y') + ' - ' + perFin.format('M, Y'));
 
 		arrDescription.push({
 			label: Ext.ux.lang.reports.finalRange
@@ -538,6 +517,7 @@
 			});
 			return false;
 		}
+
 		if(formIndicador.form.isValid()){
 			var description = getDescription();
 			params = {

@@ -29,13 +29,14 @@
 		,baseParams:{id:'<?= $id; ?>'}
 		,fields:[
 			{name:'id_pais', type:'float'},
-			{name:'pais', type:'string'}
+			{name:'pais', type:'string'},
+			{name:'pais_iata', type:'string'},
 		]
 	});
 	var resultTplPais = new Ext.XTemplate(
 		'<tpl for=".">' +
-			'<div class="search-item x-combo-list-item" ext:qtip="{id_pais}">' +
-				'<span><b>{id_pais}</b>&nbsp;-&nbsp;{pais}</span>' +
+			'<div class="search-item x-combo-list-item" ext:qtip="{pais_iata}">' +
+				'<span><b>{pais_iata}</b>&nbsp;-&nbsp;{pais}</span>' +
 			'</div>' +
 		'</tpl>'
 	);
@@ -48,7 +49,7 @@
 		,displayField:'pais'
 		,valueField:'id_pais'
 		,tpl: resultTplPais
-		,displayFieldTpl:'({id_pais}) - {pais}'
+		,displayFieldTpl:'({pais_iata}) - {pais}'
 	});
 
 	var storeMercado = new Ext.data.JsonStore({

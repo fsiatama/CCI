@@ -20,10 +20,10 @@ $htmlDescription .= '</ol>';
 	var module = '<?= $module.'_'.$indicador_id; ?>';
 	var panelHeight = Math.floor(Ext.getCmp('tabpanel').getInnerHeight() - 260);
 
-	var storeBalanza = new Ext.data.JsonStore({
+	var storeIndicador = new Ext.data.JsonStore({
 		url:'indicador/execute'
 		,root:'data'
-		,id:module+'storeBalanza'
+		,id:module+'storeIndicador'
 		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
@@ -39,7 +39,7 @@ $htmlDescription .= '</ol>';
 		]
 	});
 
-	storeBalanza.on('beforeload', function(){
+	storeIndicador.on('beforeload', function(){
 		//var year          = Ext.getCmp(module + 'comboYear').getValue();
 		var period        = Ext.getCmp(module + 'comboPeriod').getValue();
 		var scale         = Ext.getCmp(module + 'comboScale').getValue();
@@ -61,7 +61,7 @@ $htmlDescription .= '</ol>';
 		Ext.ux.bodyMask.show();
 	});
 
-	storeBalanza.on('load', function(store){
+	storeIndicador.on('load', function(store){
 		FusionCharts.setCurrentRenderer('javascript');
 
 		disposeCharts();
@@ -75,7 +75,7 @@ $htmlDescription .= '</ol>';
 
 		Ext.ux.bodyMask.hide();
 	});
-	var colModelBalanza = new Ext.grid.ColumnModel({
+	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_expo'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
@@ -88,11 +88,11 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
-	var gridBalanza = new Ext.grid.GridPanel({
+	var gridIndicador = new Ext.grid.GridPanel({
 		border:true
 		,monitorResize:true
-		,store:storeBalanza
-		,colModel:colModelBalanza
+		,store:storeIndicador
+		,colModel:colModelIndicador
 		,stateful:true
 		,columnLines:true
 		,stripeRows:true
@@ -100,9 +100,9 @@ $htmlDescription .= '</ol>';
 			forceFit:true
 		}
 		,enableColumnMove:false
-		,id:module+'gridBalanza'
+		,id:module+'gridIndicador'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeBalanza, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeIndicador, displayInfo:true})
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
@@ -111,7 +111,7 @@ $htmlDescription .= '</ol>';
 		,margins:'10 15 5 0'
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
-	Ext.state.Manager.clear(gridBalanza.getItemId());
+	Ext.state.Manager.clear(gridIndicador.getItemId());
 
 	var arrYears     = <?= json_encode($yearsAvailable); ?>;
 	var defaultYear  = <?= end($yearsAvailable); ?>;
@@ -170,35 +170,7 @@ $htmlDescription .= '</ol>';
 					,selectOnFocus:true
 					,value: 12
 					,width: 120
-					/*,listeners:{
-						select: {
-							fn: function(combo,reg){
-								Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
-							}
-						}
-					}*/
 				}]
-			/*},{
-				xtype: 'buttongroup'
-				,columns: 1
-				,defaults: {
-					scale: 'small'
-				},
-				items: [{
-					xtype: 'label'
-					,text: Ext.ux.lang.reports.selectYear + ': '
-				},{
-					xtype: 'combo'
-					,store: arrYears
-					,id: module + 'comboYear'
-					,typeAhead: true
-					,forceSelection: true
-					,triggerAction: 'all'
-					,selectOnFocus:true
-					,value: defaultYear
-					,disabled: true
-					,width: 120
-				}]*/
 			},{
 				xtype: 'buttongroup'
 				,columns: 1
@@ -266,18 +238,10 @@ $htmlDescription .= '</ol>';
 					,iconCls: 'icon-refresh'
 					,iconAlign: 'top'
 					,handler: function () {
-						storeBalanza.load();
+						storeIndicador.load();
 					}
 				}]
 			}]
-		/*},{
-			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'ColumnChart'
-				,plain:true
-			}]*/
 		},{
 			height:430
 			,html:'<div id="' + module + 'Chart"></div>'
@@ -288,7 +252,7 @@ $htmlDescription .= '</ol>';
 			}]
 		},{
 			defaults:{anchor:'100%'}
-			,items:[gridBalanza]
+			,items:[gridIndicador]
 		}]
 		,listeners:{
 			beforedestroy: {
@@ -304,10 +268,10 @@ $htmlDescription .= '</ol>';
 	});
 
 	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
-		storeBalanza.load();
+		storeIndicador.load();
 	});
 
-	storeBalanza.load();
+	storeIndicador.load();
 
 	return indicadorContainer;
 
@@ -323,8 +287,8 @@ $htmlDescription .= '</ol>';
 		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
 		var titleImpo = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_impo'); ?>' : '<?= Lang::get('indicador.columns_title.peso_impo'); ?>' ;
 		var titleExpo = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_expo'); ?>' : '<?= Lang::get('indicador.columns_title.peso_expo'); ?>' ;
-		colModelBalanza.setColumnHeader( 1, titleImpo );
-		colModelBalanza.setColumnHeader( 2, titleExpo );
+		colModelIndicador.setColumnHeader( 1, titleImpo );
+		colModelIndicador.setColumnHeader( 2, titleExpo );
 	}
 
 
