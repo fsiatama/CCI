@@ -527,41 +527,6 @@ return [
 				'itComplements' => true, //son complemento del filtro desde_ini
 			]
 		],
-		/*'14' => [
-			[
-				'field'              => 'id_pais',
-				'field_expo'         => 'id_paisdestino',
-				'field_impo'         => 'id_paisprocedencia',
-				'required'   		 => false,
-				'requiredComplement' => true,
-				'complement'         => ['mercado_id'],
-			],[
-				'field'         => 'mercado_id',
-				'field_expo'    => 'mercado_id',
-				'field_impo'    => 'mercado_id',
-				'required'      => false,
-				'itComplements' => true, //son complemento del filtro id_pais
-			],[
-				'field'      => 'id_posicion',
-				'field_expo' => 'id_posicion',
-				'field_impo' => 'id_posicion',
-				'required'   => false,
-				'multivalue' => true,
-			],[
-				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
-				'required'   => true,
-				'yearRange'  => ['anio_fin'],
-			],[
-				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
-				'required'      => true,
-				'itComplements' => true, //son complemento del filtro anio_ini
-			]
-		],*/
-
 		'14' => [
 			[
 				'field'      => 'id_subpartida',
@@ -616,14 +581,14 @@ return [
 				'multivalue' => false,
 			],[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
@@ -631,14 +596,14 @@ return [
 		'16' => [
 			[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
@@ -661,14 +626,14 @@ return [
 				'itComplements' => true, //son complemento del filtro id_posicion
 			],[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
@@ -682,14 +647,14 @@ return [
 				'multivalue' => true,
 			],[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
@@ -703,14 +668,14 @@ return [
 				'multivalue' => true,
 			],[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
@@ -729,14 +694,14 @@ return [
 				'required'   => false,
 			],[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
@@ -750,14 +715,14 @@ return [
 				'multivalue' => true,
 			],[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]

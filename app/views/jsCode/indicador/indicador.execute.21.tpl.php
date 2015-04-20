@@ -43,27 +43,32 @@ $htmlDescription .= '</ol>';
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var scale  = Ext.getCmp(module + 'comboScale').getValue();
-		if (!scale) {
+		var scale     = Ext.getCmp(module + 'comboScale').getValue();
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		if (!scale || !chartType) {
 			return false;
-		};
+		}
 		this.setBaseParam('scale', scale);
+		this.setBaseParam('chartType', chartType);
 		Ext.ux.bodyMask.show();
 	});
 
 	storeIndicador.on('load', function(store){
 
 		FusionCharts.setCurrentRenderer('javascript');
-		
+
 		disposeCharts();
 
-		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.columnChartData);
-		chart.render(module + 'ColumnChart');
-		Ext.ux.bodyMask.hide();
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		var chart     = new FusionCharts(chartType, module + 'ChartId', '100%', '100%', '0', '1');
 
+		chart.setTransparent(true);
+		chart.setJSONData(store.reader.jsonData.chartData);
+		chart.render(module + 'Chart');
+
+		Ext.ux.bodyMask.hide();
 	});
+
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
@@ -104,8 +109,9 @@ $htmlDescription .= '</ol>';
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
-	var arrScales = <?= json_encode($scales); ?>;
-	
+	var arrScales    = <?= json_encode($scales); ?>;
+	var arrCharts  = <?= json_encode($charts); ?>;
+
 	/******************************************************************************************************************************************************************************/
 
 	var indicadorContainer = new Ext.Panel({
@@ -137,31 +143,62 @@ $htmlDescription .= '</ol>';
 			,border:true
 			,html: ''
 			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectScale + ': '
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectScale + ': '
+				},{
+					xtype: 'combo'
+					,store: arrScales
+					,id: module + 'comboScale'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: 1
+					,width: 150
+				}]
 			},{
-				xtype: 'combo'
-				,store: arrScales
-				,id: module + 'comboScale'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 1
-				,width: 150
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeIndicador.load();
-				}
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectChart + ': '
+				},{
+					xtype: 'combo'
+					,store: arrCharts
+					,id: module + 'comboCharts'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= AREA; ?>'
+					,width: 150
+				}]
+			},{
+				xtype:'buttongroup',
+				items: [{
+					text: Ext.ux.lang.buttons.generate
+					,iconCls: 'icon-refresh'
+					,iconAlign: 'top'
+					,handler: function () {
+						storeIndicador.load();
+					}
+				}]
 			}]
 		},{
 			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
+			,html:'<div id="' + module + 'Chart"></div>'
 			,items:[{
 				xtype:'panel'
-				,id: module + 'ColumnChart'
+				,id: module + 'Chart'
 				,plain:true
 			}]
 		},{
@@ -191,8 +228,8 @@ $htmlDescription .= '</ol>';
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-		if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
+		if(FusionCharts(module + 'ChartId')){
+			FusionCharts(module + 'ChartId').dispose();
 		}
 	}
 

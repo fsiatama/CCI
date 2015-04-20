@@ -42,30 +42,33 @@ array_splice($periods, -1);//elimina el periodo mensual
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var year   = Ext.getCmp(module + 'comboYear').getValue();
-		var period = Ext.getCmp(module + 'comboPeriod').getValue();
-		var scale  = Ext.getCmp(module + 'comboScale').getValue();
-		if (!year || !period || !scale) {
+		//var year   = Ext.getCmp(module + 'comboYear').getValue();
+		var period    = Ext.getCmp(module + 'comboPeriod').getValue();
+		var scale     = Ext.getCmp(module + 'comboScale').getValue();
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		if (!period || !scale || !chartType) {
 			return false;
 		};
-		this.setBaseParam('year', year);
+		//this.setBaseParam('year', year);
 		this.setBaseParam('period', period);
 		this.setBaseParam('scale', scale);
+		this.setBaseParam('chartType', chartType);
 		Ext.ux.bodyMask.show();
 	});
 
 	storeIndicador.on('load', function(store){
-
 		FusionCharts.setCurrentRenderer('javascript');
-		
+
 		disposeCharts();
 
-		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.columnChartData);
-		chart.render(module + 'ColumnChart');
-		Ext.ux.bodyMask.hide();
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		var chart     = new FusionCharts(chartType, module + 'ChartId', '100%', '100%', '0', '1');
 
+		chart.setTransparent(true);
+		chart.setJSONData(store.reader.jsonData.chartData);
+		chart.render(module + 'Chart');
+
+		Ext.ux.bodyMask.hide();
 	});
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
@@ -98,7 +101,7 @@ array_splice($periods, -1);//elimina el periodo mensual
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:300
+		,height:350
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
@@ -107,15 +110,17 @@ array_splice($periods, -1);//elimina el periodo mensual
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 	var defaultYear = <?= end($yearsAvailable); ?>;
-	
+
 	var arrPeriods = <?= json_encode($periods); ?>;
 	var arrScales = <?= json_encode($scales); ?>;
+	var arrCharts    = <?= json_encode($charts); ?>;
+
 
 	/******************************************************************************************************************************************************************************/
 
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
-		,id:module + 'excuteIndicadorContainer'
+		,id:module + 'executeIndicadorContainer'
 		,layout:'column'
 		,border:false
 		,baseCls:'x-plain'
@@ -142,65 +147,82 @@ array_splice($periods, -1);//elimina el periodo mensual
 			,border:true
 			,html: ''
 			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				}
+				,items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectPeriod + ': '
+				},{
+					xtype: 'combo'
+					,store: arrPeriods
+					,id: module + 'comboPeriod'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: 12
+					,width: 120
+				}]
 			},{
-				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 12
-				,width: 100
-				,listeners:{
-					select: {
-						fn: function(combo,reg){
-							Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
-						}
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectScale + ': '
+				},{
+					xtype: 'combo'
+					,store: arrScales
+					,id: module + 'comboScale'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: 1
+					,width: 150
+				}]
+			},{
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectChart + ': '
+				},{
+					xtype: 'combo'
+					,store: arrCharts
+					,id: module + 'comboCharts'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= AREA; ?>'
+					,width: 150
+				}]
+			},{
+				xtype:'buttongroup',
+				items: [{
+					text: Ext.ux.lang.buttons.generate
+					,iconCls: 'icon-refresh'
+					,iconAlign: 'top'
+					,handler: function () {
+						storeIndicador.load();
 					}
-				}
-			},'-',{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectYear + ': '
-			},{
-				xtype: 'combo'
-				,store: arrYears
-				,id: module + 'comboYear'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: defaultYear
-				,disabled: true
-				,width: 100
-			},'-',{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectScale + ': '
-			},{
-				xtype: 'combo'
-				,store: arrScales
-				,id: module + 'comboScale'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 1
-				,width: 150
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeIndicador.load();
-				}
+				}]
 			}]
 		},{
 			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
+			,html:'<div id="' + module + 'Chart"></div>'
 			,items:[{
 				xtype:'panel'
-				,id: module + 'ColumnChart'
+				,id: module + 'Chart'
 				,plain:true
 			}]
 		},{
@@ -229,9 +251,10 @@ array_splice($periods, -1);//elimina el periodo mensual
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
+
 	function disposeCharts () {
-		if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
+		if(FusionCharts(module + 'ChartId')){
+			FusionCharts(module + 'ChartId').dispose();
 		}
 	}
 

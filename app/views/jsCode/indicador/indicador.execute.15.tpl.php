@@ -28,7 +28,6 @@ $htmlExplanation = '
   </div>
 ';
 $htmlExplanation = Inflector::compress($htmlExplanation);
-
 ?>
 
 /*<script>*/
@@ -61,11 +60,13 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 	storeIndicador.on('beforeload', function(){
 		var scale         = Ext.getCmp(module + 'comboScale').getValue();
 		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
-		if (!scale || !typeIndicator) {
+		var chartType     = Ext.getCmp(module + 'comboCharts').getValue();
+		if (!scale || !typeIndicator || !chartType) {
 			return false;
 		}
 		this.setBaseParam('scale', scale);
 		this.setBaseParam('typeIndicator', typeIndicator);
+		this.setBaseParam('chartType', chartType);
 		setColumnsTitle();
 		Ext.ux.bodyMask.show();
 	});
@@ -95,14 +96,16 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 
 		disposeCharts();
 
-		var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		var chart     = new FusionCharts(chartType, module + 'ChartId', '100%', '100%', '0', '1');
+
 		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.columnChartData);
-		chart.render(module + 'ColumnChart');
+		chart.setJSONData(store.reader.jsonData.chartData);
+		chart.render(module + 'Chart');
 
 		Ext.ux.bodyMask.hide();
-
 	});
+
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align: 'left'},
@@ -139,12 +142,13 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 
 	var arrScales    = <?= json_encode($scales); ?>;
 	var arrActivator = <?= json_encode($activator); ?>;
+	var arrCharts  = <?= json_encode($charts); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
-		,id:module + 'excuteIndicadorContainer'
+		,id:module + 'executeIndicadorContainer'
 		,layout:'column'
 		,border:false
 		,baseCls:'x-plain'
@@ -198,44 +202,82 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 			,border:true
 			,html: ''
 			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectScale + ': '
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectScale + ': '
+				},{
+					xtype: 'combo'
+					,store: arrScales
+					,id: module + 'comboScale'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: 1
+					,width: 150
+				}]
 			},{
-				xtype: 'combo'
-				,store: arrScales
-				,id: module + 'comboScale'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 1
-				,width: 150
-			},'-',{
-				xtype: 'label'
-				,text: '<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador')?>: '
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: '<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador')?>: '
+				},{
+					xtype: 'combo'
+					,store: arrActivator
+					,id: module + 'comboActivator'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= $tipo_indicador_activador; ?>'
+					,width: 150
+				}]
 			},{
-				xtype: 'combo'
-				,store: arrActivator
-				,id: module + 'comboActivator'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: '<?= $tipo_indicador_activador; ?>'
-				,width: 150
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeIndicador.load();
-				}
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectChart + ': '
+				},{
+					xtype: 'combo'
+					,store: arrCharts
+					,id: module + 'comboCharts'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= AREA; ?>'
+					,width: 150
+				}]
+			},{
+				xtype: 'buttongroup'
+				,items: [{
+					text: Ext.ux.lang.buttons.generate
+					,iconCls: 'icon-refresh'
+					,iconAlign: 'top'
+					,handler: function () {
+						storeIndicador.load();
+					}
+				}]
 			}]
 		},{
 			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
+			,html:'<div id="' + module + 'Chart"></div>'
 			,items:[{
 				xtype:'panel'
-				,id: module + 'ColumnChart'
+				,id: module + 'Chart'
 				,plain:true
 			}]
 		},{
@@ -265,8 +307,8 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-		if(FusionCharts(module + 'ColumnChartId')){
-			FusionCharts(module + 'ColumnChartId').dispose();
+		if(FusionCharts(module + 'ChartId')){
+			FusionCharts(module + 'ChartId').dispose();
 		}
 	}
 

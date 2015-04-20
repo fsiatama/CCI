@@ -126,7 +126,7 @@ $htmlDescription .= '</ol>';
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
-	
+
 	var arrPeriods = <?= json_encode($periods); ?>;
 	var arrScales = <?= json_encode($scales); ?>;
 	var arrActivator = <?= json_encode($activator); ?>;
@@ -137,7 +137,7 @@ $htmlDescription .= '</ol>';
 
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
-		,id:module + 'excuteIndicadorContainer'
+		,id:module + 'executeIndicadorContainer'
 		,layout:'column'
 		,border:false
 		,baseCls:'x-plain'

@@ -123,7 +123,7 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
-		,id:module + 'excuteIndicadorContainer'
+		,id:module + 'executeIndicadorContainer'
 		,layout:'column'
 		,border:false
 		,baseCls:'x-plain'
@@ -170,8 +170,8 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 					,width: 150
 				}]
 			},{
-				xtype:'buttongroup',
-				items: [{
+				xtype: 'buttongroup'
+				,items: [{
 					text: Ext.ux.lang.buttons.generate
 					,iconCls: 'icon-refresh'
 					,iconAlign: 'top'

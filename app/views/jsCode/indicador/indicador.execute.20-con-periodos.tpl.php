@@ -115,7 +115,7 @@ $htmlDescription .= '</ol>';
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
 	var defaultYear = <?= end($yearsAvailable); ?>;
-	
+
 	var arrPeriods = <?= json_encode($periods); ?>;
 	var arrScales = <?= json_encode($scales); ?>;
 
@@ -123,7 +123,7 @@ $htmlDescription .= '</ol>';
 
 	var indicadorContainer = new Ext.Panel({
 		xtype:'panel'
-		,id:module + 'excuteIndicadorContainer'
+		,id:module + 'executeIndicadorContainer'
 		,layout:'column'
 		,border:false
 		,baseCls:'x-plain'

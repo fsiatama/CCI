@@ -42,10 +42,12 @@ $htmlDescription .= '</ol>';
 
 	storeIndicador.on('beforeload', function(){
 		var year   = Ext.getCmp(module + 'comboYear').getValue();
-		if (!year) {
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		if (!year || !chartType) {
 			return false;
 		};
 		this.setBaseParam('year', year);
+		this.setBaseParam('chartType', chartType);
 		Ext.ux.bodyMask.show();
 	});
 
@@ -55,14 +57,16 @@ $htmlDescription .= '</ol>';
 
 		disposeCharts();
 
-		//var chart = new FusionCharts('<?= COLUMNAS; ?>', module + 'ColumnChartId', '100%', '100%', '0', '1');
-		var chart = new FusionCharts('<?= PIE; ?>', module + 'PieChartId', '100%', '100%', '0', '1');
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.pieChartData);
-		chart.render(module + 'ColumnChart');
-		Ext.ux.bodyMask.hide();
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		var chart     = new FusionCharts(chartType, module + 'ChartId', '100%', '100%', '0', '1');
 
+		chart.setTransparent(true);
+		chart.setJSONData(store.reader.jsonData.chartData);
+		chart.render(module + 'Chart');
+
+		Ext.ux.bodyMask.hide();
 	});
+
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.reports.position'); ?>', dataIndex:'position', align:'left'},
@@ -101,8 +105,9 @@ $htmlDescription .= '</ol>';
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
-	var arrYears = <?= json_encode($yearsAvailable); ?>;
+	var arrYears    = <?= json_encode($yearsAvailable); ?>;
 	var defaultYear = <?= end($yearsAvailable); ?> - 1;
+	var arrCharts   = <?= json_encode($charts); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -135,52 +140,63 @@ $htmlDescription .= '</ol>';
 			,border:true
 			,html: ''
 			,tbar:[{
-				/*xtype: 'label'
-				,text: Ext.ux.lang.reports.selectPeriod + ': '
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectYear + ': '
+				},{
+					xtype: 'combo'
+					,store: arrYears
+					,id: module + 'comboYear'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: defaultYear
+					,disabled: false
+					,width: 100
+				}]
 			},{
-				xtype: 'combo'
-				,store: arrPeriods
-				,id: module + 'comboPeriod'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 12
-				,width: 100
-				,listeners:{
-					select: {
-						fn: function(combo,reg){
-							Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
-						}
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectChart + ': '
+				},{
+					xtype: 'combo'
+					,store: arrCharts
+					,id: module + 'comboCharts'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= AREA; ?>'
+					,width: 150
+				}]
+			},{
+				xtype:'buttongroup',
+				items: [{
+					text: Ext.ux.lang.buttons.generate
+					,iconCls: 'icon-refresh'
+					,iconAlign: 'top'
+					,handler: function () {
+						storeIndicador.load();
 					}
-				}
-			},'-',{*/
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectYear + ': '
-			},{
-				xtype: 'combo'
-				,store: arrYears
-				,id: module + 'comboYear'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: defaultYear
-				,disabled: false
-				,width: 100
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeIndicador.load();
-				}
+				}]
 			}]
 		},{
 			height:430
-			,html:'<div id="' + module + 'ColumnChart"></div>'
+			,html:'<div id="' + module + 'Chart"></div>'
 			,items:[{
 				xtype:'panel'
-				,id: module + 'ColumnChart'
+				,id: module + 'Chart'
 				,plain:true
 			}]
 		},{
@@ -210,8 +226,8 @@ $htmlDescription .= '</ol>';
 
 	/*********************************************** Start functions***********************************************/
 	function disposeCharts () {
-		if(FusionCharts(module + 'PieChartId')){
-			FusionCharts(module + 'PieChartId').dispose();
+		if(FusionCharts(module + 'ChartId')){
+			FusionCharts(module + 'ChartId').dispose();
 		}
 	}
 
