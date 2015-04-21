@@ -10,7 +10,7 @@ jQuery(function($) {
 
 	if ( $('#full-slider').length > 0 ) {
 		$('footer').hide();
-		$( '.navbar' ).addClass( 'bottom' )
+		//$( '.navbar' ).addClass( 'bottom' )
 		
 		$('#full-slider').maximage({
 			cycleOptions: {

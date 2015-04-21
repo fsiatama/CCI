@@ -34,6 +34,72 @@ html, body {overflow-x:hidden; }
 html {position: relative; min-height: 100%; }
 body {color:#333; font-family:'Open Sans', Arial, sans-serif; background:#B4B8BA url('../img/bg.png') no-repeat fixed center; letter-spacing:0px; font-size:15px; line-height:23px; }
 
+@font-face {
+	font-family: 'madr';
+	src:url('../fonts/madr.eot?4khj3w');
+	src:url('../fonts/madr.eot?#iefix4khj3w') format('embedded-opentype'),
+		url('../fonts/madr.woff?4khj3w') format('woff'),
+		url('../fonts/madr.ttf?4khj3w') format('truetype'),
+		url('../fonts/madr.svg?4khj3w#madr') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+i {
+	font-family: 'madr';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-paso7:before {
+	content: "\e600";
+}
+
+.icon-paso1:before {
+	content: "\e601";
+}
+
+.icon-paso2:before {
+	content: "\e602";
+}
+
+.icon-paso3:before {
+	content: "\e603";
+}
+
+.icon-paso5:before {
+	content: "\e604";
+}
+
+.icon-paso6:before {
+	content: "\e605";
+}
+
+.icon-paso8:before {
+	content: "\e606";
+}
+
+.icon-paso9:before {
+	content: "\e607";
+}
+
+.icon-paso10:before {
+	content: "\e608";
+}
+
+.icon-paso4:before {
+	content: "\e609";
+}
+
+
 /**	01. Resets
 *************************************************** **/
 button::-moz-focus-inner, 
@@ -463,6 +529,7 @@ div.thumbnail h4 {
 
 .half-spacer{ display:block; margin:15px 0; }
 .spacer		{ display:block; margin:30px 0; }
+.flight-grey{color: #dadada}
 .fsize11 	{ font-size:11px !important; line-height:15px !important; }
 .fsize12 	{ font-size:12px !important; line-height:16px !important; }
 .fsize13 	{ font-size:13px !important; line-height:17px !important; }
@@ -1154,6 +1221,12 @@ body.modal-open {
 }
 
 #data-table tbody > tr > td {white-space: nowrap;}
+
+.table-guide td:first-child, 
+.table-guide td:nth-child(2),
+.table-guide td:nth-child(4) {min-width: 75px; vertical-align: middle; text-align: center;}
+.table-guide td:nth-child(2) {padding: 0 10px;}
+.table-guide td>h4 {text-transform:uppercase; margin: 20px;}
 
 
 /** --. Responsive

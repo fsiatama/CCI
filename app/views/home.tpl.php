@@ -24,6 +24,9 @@
                                 En este sitio encontraras toda la información necesaria para que puedas llevar <br> tus productos a otros lugares del mundo
                         </p>
                     </div>
+                    <div class="block">
+                        <a class="btn btn-success btn-lg" href="<?= URL_RAIZ; ?>auth">INGRESAR</a>
+                    </div>
 
                 </div>
             </li>
@@ -41,7 +44,7 @@
                     </div>
 
                     <div class="block">
-                        <a class="btn btn-danger" href="<?= URL_RAIZ; ?>informacion-general">INGRESAR</a>
+                        <a class="btn btn-danger btn-lg" href="<?= URL_RAIZ; ?>informacion-general">INGRESAR</a>
                     </div>
 
                 </div>
@@ -60,7 +63,7 @@
                     </div>
 
                     <div class="block">
-                        <a class="btn btn-warning" href="<?= URL_RAIZ; ?>guia-basica-exportar">INGRESAR</a>
+                        <a class="btn btn-warning btn-lg" href="<?= URL_RAIZ; ?>guia-basica-exportar">INGRESAR</a>
                     </div>
 
                 </div>
@@ -79,7 +82,7 @@
                     </div>
 
                     <div class="block">
-                        <a class="btn btn-success" href="<?= URL_RAIZ; ?>herramientas">INGRESAR</a>
+                        <a class="btn btn-success  btn-lg" href="<?= URL_RAIZ; ?>herramientas">INGRESAR</a>
                     </div>
 
                 </div>
