@@ -830,14 +830,14 @@ return [
 				'multivalue' => false,
 			],[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
@@ -845,14 +845,14 @@ return [
 		'colombiaAlMundo' => [
 			[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
@@ -860,14 +860,14 @@ return [
 		'principalesDestinos' => [
 			[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]
@@ -875,14 +875,14 @@ return [
 		'principalesOrigenes' => [
 			[
 				'field'      => 'anio_ini',
-				'field_expo' => 'anio',
-				'field_impo' => 'anio',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
 				'required'   => true,
-				'yearRange'  => ['anio_fin'],
+				'dateRange'  => ['anio_fin'],
 			],[
 				'field'         => 'anio_fin',
-				'field_expo'    => 'anio',
-				'field_impo'    => 'anio',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro anio_ini
 			]

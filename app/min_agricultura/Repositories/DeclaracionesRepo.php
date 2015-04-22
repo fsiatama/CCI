@@ -29,7 +29,15 @@ class DeclaracionesRepo extends BaseRepo {
 	private $divisor = 1;
 	private $pYAxisName;
 
-	public function __construct($rowIndicador, $filtersConfig, $year, $period, $scope, $scale = '1', $typeIndicator = '', $chartType = '')
+	public function __construct(
+		$rowIndicador,
+		$filtersConfig,
+		$year,
+		$period,
+		$scope,
+		$scale = '1',
+		$typeIndicator = '',
+		$chartType = '')
 	{
 		$this->rowIndicador  = $rowIndicador;
 		$this->filtersConfig = $filtersConfig;

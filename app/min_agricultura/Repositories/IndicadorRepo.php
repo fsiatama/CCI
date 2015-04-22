@@ -686,9 +686,11 @@ class IndicadorRepo extends BaseRepo {
   		$yearFirst = $updateInfo['dateTo']->format('Y'); //toma 5 hacia a tras
 
 		$arrFilters = [
-			'anio_ini:'       . $yearFirst,
-			'anio_fin:'       . $yearLast,
+			'anio_ini:' . $yearFirst,
+			'anio_fin:' . $yearLast,
 		];
+
+		//var_dump($arrFilters);
 		$params       = [
 			'indicador_filtros'        => implode('||', $arrFilters),
 			'tipo_indicador_activador' => 'volumen',
