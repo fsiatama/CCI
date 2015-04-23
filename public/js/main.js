@@ -460,34 +460,25 @@ jQuery(function($) {
 	
 	if ( $('#grid-trade-info').length > 0 ) {
 
-		$("#trade-reports > li > a").on("click", function(e) {
+		$('#publicReportsForm').on('submit', function(event){
+			
+			var report        = $('#publicReportsForm input[name=report]:checked').val();
+			var typeIndicator = $('#publicReportsForm input[name=typeIndicator]:checked').val();
 
-			var report = $(this).data('report');
-
+			var form = $(this);
+			var btn  = $('#publicReportsSubmit');
 			$.ajax({
 				type:'POST'
 				,url:'indicador/public-reports'
 				,data:{
 					report: report
+					,typeIndicator: typeIndicator
 				}
 				,dataType:'json'
 				,success:function(data){
 					if(data.success){
 
-						/*if (report == 'colombia-al-mundo') {
-
-							processReport1(data);
-
-						} else if (report == 'principales-destinos') {
-
-							processReport1(data);
-
-						} else {
-
-						}*/
-
 						processReport(data);
-						
 						
 					} else {
 						$('#modal-error-msg').html(data.error);
@@ -496,10 +487,10 @@ jQuery(function($) {
 				}
 			}).always(function(){
 			});
-
-		    e.preventDefault();
-
+			event.preventDefault();
 		});
+
+		
 
 	}// End of if ( $('#grid-trade-info').length > 0 )
 

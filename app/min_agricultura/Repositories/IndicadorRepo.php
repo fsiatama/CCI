@@ -648,7 +648,7 @@ class IndicadorRepo extends BaseRepo {
 	{
 		extract($params);
 
-		if (empty($report)) {
+		if (empty($report) || empty($typeIndicator)) {
 			$result = [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
@@ -692,8 +692,7 @@ class IndicadorRepo extends BaseRepo {
 
 		//var_dump($arrFilters);
 		$params       = [
-			'indicador_filtros'        => implode('||', $arrFilters),
-			'tipo_indicador_activador' => 'volumen',
+			'indicador_filtros'        => implode('||', $arrFilters)
 		];
 
 		$repo = new $repoClassName(
@@ -702,7 +701,8 @@ class IndicadorRepo extends BaseRepo {
 			'',
 			12,
 			1,
-			2
+			2,
+			$typeIndicator
 		);
 		if (!method_exists($repo, $repoMethodName)) {
 			return [

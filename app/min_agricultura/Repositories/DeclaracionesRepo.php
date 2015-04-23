@@ -4192,8 +4192,8 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->model    = $this->getModelExpo();
 		$this->modelAdo = $this->getModelExpoAdo();
-		$columnValue    = $this->getColumnValueExpo();
-		$columnVolume   = $this->getColumnVolumeExpo();
+		$columnValue    = $this->columnValueExpo;
+		//$columnVolume   = $this->getColumnVolumeExpo();
 
 		//Trae los productos configurados como agricolas
 		$result = $this->findProductsBySector('sectorIdAgriculture');
@@ -4240,7 +4240,7 @@ class DeclaracionesRepo extends BaseRepo {
 					if (empty($arrTotals[$key])) {
 						$arrTotals[$key] = 0;
 					}
-					$arrTotals[$key] += (float)($value / $this->divisor);
+					$arrTotals[$key] += $this->getFloatValue($value);
 					$arrSeries[]      = $key;
 				}
 			}
@@ -4258,7 +4258,6 @@ class DeclaracionesRepo extends BaseRepo {
 		$htmlColumns['id_posicion'] = Lang::get('indicador.columns_title.posicion');
 		$htmlColumns['posicion']    = Lang::get('indicador.columns_title.desc_posicion');
 
-
 		foreach ($rsDeclaraciones['data'] as $row) {
 			$arr = [];
 			$includeRow = true;
@@ -4266,12 +4265,13 @@ class DeclaracionesRepo extends BaseRepo {
 			$growthRate = 0;
 			foreach ($row as $key => $value) {
 				//suprimir la palabra " peso_neto" que le pone por defecto la clase pivottable a las columnas calculadas
+				//$index = str_replace(''.$columnValue, ' '.$this->pYAxisName, $key);
 				$index = str_replace(' '.$columnValue, '', $key);
 				
 				if (in_array($key, $arrSeries)) {
 					
-					$value = (float)($value / $this->divisor);
-					$title = $index;
+					$value = $this->getFloatValue($value);
+					$title = ($index == $columnValue) ? 'Total ' . $this->pYAxisName : $index . ' ' . $this->pYAxisName;
 
 					if ( empty($htmlColumns[$index]) ) {
 						$htmlColumns[$index] = $title;
@@ -4290,13 +4290,9 @@ class DeclaracionesRepo extends BaseRepo {
 						if ( empty($htmlColumns['rate_'.$index]) ) {
 							$htmlColumns['rate_'.$index] = $title;
 						}
-						$title = Lang::get('indicador.columns_title.valor_expo');
-						//calcula la participacion y la agrega como columna
 						$arr[$index] = $value;
 						$arr['rate_'.$index] = $rate * 100;
 					} else {
-
-						//if ($index == $yearFirst) {
 						if ( $value > 0 && !$assignFirst ) {
 							$valueFirst  = $value;
 							$assignFirst = true;
@@ -4364,8 +4360,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->model    = $this->getModelExpo();
 		$this->modelAdo = $this->getModelExpoAdo();
-		$columnValue    = $this->getColumnValueExpo();
-		$columnVolume   = $this->getColumnVolumeExpo();
+		$columnValue    = $this->columnValueExpo;
 
 		//Trae los productos configurados como agricolas
 		$result = $this->findProductsBySector('sectorIdAgriculture');
@@ -4412,7 +4407,7 @@ class DeclaracionesRepo extends BaseRepo {
 					if (empty($arrTotals[$key])) {
 						$arrTotals[$key] = 0;
 					}
-					$arrTotals[$key] += (float)($value / $this->divisor);
+					$arrTotals[$key] += $this->getFloatValue($value);
 					$arrSeries[]      = $key;
 				}
 			}
@@ -4441,8 +4436,8 @@ class DeclaracionesRepo extends BaseRepo {
 				
 				if (in_array($key, $arrSeries)) {
 					
-					$value = (float)($value / $this->divisor);
-					$title = $index;
+					$value = $this->getFloatValue($value);
+					$title = ($index == $columnValue) ? 'Total ' . $this->pYAxisName : $index . ' ' . $this->pYAxisName;
 
 					if ( empty($htmlColumns[$index]) ) {
 						$htmlColumns[$index] = $title;
@@ -4456,13 +4451,11 @@ class DeclaracionesRepo extends BaseRepo {
 							$includeRow = false;
 						}
 
+						//calcula la participacion y la agrega como columna
 						$title = Lang::get('indicador.columns_title.participacion');
-
 						if ( empty($htmlColumns['rate_'.$index]) ) {
 							$htmlColumns['rate_'.$index] = $title;
 						}
-						$title = Lang::get('indicador.columns_title.valor_expo');
-						//calcula la participacion y la agrega como columna
 						$arr[$index] = $value;
 						$arr['rate_'.$index] = $rate * 100;
 					} else {
@@ -4536,8 +4529,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->model    = $this->getModelImpo();
 		$this->modelAdo = $this->getModelImpoAdo();
-		$columnValue    = $this->getColumnValueImpo();
-		$columnVolume   = $this->getColumnVolumeImpo();
+		$columnValue    = $this->columnValueExpo;
 
 		//Trae los productos configurados como agricolas
 		$result = $this->findProductsBySector('sectorIdAgriculture');
@@ -4584,7 +4576,7 @@ class DeclaracionesRepo extends BaseRepo {
 					if (empty($arrTotals[$key])) {
 						$arrTotals[$key] = 0;
 					}
-					$arrTotals[$key] += (float)($value / $this->divisor);
+					$arrTotals[$key] += $this->getFloatValue($value);
 					$arrSeries[]      = $key;
 				}
 			}
@@ -4613,8 +4605,8 @@ class DeclaracionesRepo extends BaseRepo {
 				
 				if (in_array($key, $arrSeries)) {
 					
-					$value = (float)($value / $this->divisor);
-					$title = $index;
+					$value = $this->getFloatValue($value);
+					$title = ($index == $columnValue) ? 'Total ' . $this->pYAxisName : $index . ' ' . $this->pYAxisName;
 
 					if ( empty($htmlColumns[$index]) ) {
 						$htmlColumns[$index] = $title;
@@ -4628,13 +4620,11 @@ class DeclaracionesRepo extends BaseRepo {
 							$includeRow = false;
 						}
 
+						//calcula la participacion y la agrega como columna
 						$title = Lang::get('indicador.columns_title.participacion');
-
 						if ( empty($htmlColumns['rate_'.$index]) ) {
 							$htmlColumns['rate_'.$index] = $title;
 						}
-						$title = Lang::get('indicador.columns_title.valor_expo');
-						//calcula la participacion y la agrega como columna
 						$arr[$index] = $value;
 						$arr['rate_'.$index] = $rate * 100;
 					} else {

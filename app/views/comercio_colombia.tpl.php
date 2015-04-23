@@ -11,6 +11,21 @@ $updateInfo = '
 
 $updateInfo = Inflector::compress($updateInfo);
 
+$htmlActivator = '';
+//var_dump($activator);
+foreach ($activator as $key => $row) {
+
+	$checked = ($key == 0) ?  'checked="checked"' : '';
+	$htmlActivator .= '
+		<div class="radio">
+		  <label>
+		    <input type="radio" name="typeIndicator" value="' . $row[0] . '" '.$checked.'>
+		    ' . $row[1] . '
+		  </label>
+		</div>
+	';
+}
+
 ?>
 
 <div class="container white">
@@ -21,13 +36,39 @@ $updateInfo = Inflector::compress($updateInfo);
 
 		<aside class="col-md-3">
 
-			<h4>REPORTES</h4>
-			<ul class="nav nav-list" id="trade-reports">
-				<li><a href="#" data-report="colombia-al-mundo"><i class="fa fa-angle-right"></i> Colombia al Mundo</a></li>
-				<li><a href="#" data-report="principales-destinos"><i class="fa fa-angle-right"></i> Principales destinos</a></li>
-				<li><a href="#" data-report="principales-origenes"><i class="fa fa-angle-right"></i> Principales orígenes</a></li>
-			</ul>
+			<form action="#" method="POST" role="form" id="publicReportsForm">
 
+				<div class="form-group">
+					<legend>REPORTES</legend>
+
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="report" value="colombia-al-mundo" checked="checked">
+					    Colombia al Mundo
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="report" value="principales-destinos">
+					    Principales destinos
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="report" value="principales-origenes">
+					    Principales orígenes
+					  </label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="radios"><?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador'); ?></label>
+					<?= $htmlActivator; ?>
+				</div>
+
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary" id="publicReportsSubmit">Consultar</button>
+				</div>
+			</form>
 		</aside>
 
 		<div class="col-md-9">

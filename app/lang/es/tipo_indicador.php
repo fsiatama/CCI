@@ -1,7 +1,7 @@
 <?php
 return [
 	'tipo_indicador_activador' => [
-	    'precio' => 'Por precio (Valor FOB $)',
+	    'precio' => 'Por precio (USD $)',
 	    'volumen' => 'Por Volumen (Kg)'
 	],
     'columns_title' => [
