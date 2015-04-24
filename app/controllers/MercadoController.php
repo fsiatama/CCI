@@ -90,6 +90,25 @@ class MercadoController {
 		return $result;
 	}
 
+	public function jscodeListAction($urlParams, $postParams)
+	{
+		$action = 'list';
+		$result = $this->userRepo->validateMenu($action, $postParams);
+
+		if ($result['success']) {
+			
+			$postParams['is_template'] = true;
+			$params = array_merge($postParams, $result, compact('action'));
+			
+			//el template de adicionar y editar son los mismos
+			$action = ($action == 'modify') ? 'create' : $action;
+
+			return new View('jsCode/mercado.'.$action.'2', $params);
+		}
+		
+		return $result;
+	}
+
 }
 	
 
