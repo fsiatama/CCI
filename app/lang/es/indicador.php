@@ -90,6 +90,9 @@ return [
 		'valuesPresentedIn' => 'Los valores se presentan en',
 		'BCR'               => 'índice de BCR',
 		'convention'        => 'Convención',
+		'source'            => 'Fuente de Información',
+		'customs'           => 'Declaraciones de Aduana',
+		'bol'               => 'Conocimientos de Embarque',
     ],
     'charts' => [
 		'columns' => 'Columnas',

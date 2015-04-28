@@ -2,7 +2,7 @@
 
 require_once ('BaseAdo.php');
 
-class DeclaraexpAdo extends BaseAdo {
+class SobordoexpAdo extends BaseAdo {
 
 	protected $pivotRowFields        = '';
 	protected $pivotColumnFields     = '';
@@ -38,7 +38,7 @@ class DeclaraexpAdo extends BaseAdo {
 
 	protected function setTable()
 	{
-		$table = 'declaraexp AS decl';
+		$table = 'sobordoexp AS sob';
 		$this->setJoins();
 		foreach ($this->arrJoins as $tbl => $join) {
 			$table .= ' LEFT JOIN ' . $tbl . ' ON ' . $join;
@@ -49,8 +49,8 @@ class DeclaraexpAdo extends BaseAdo {
 	protected function setJoins()
 	{
 		$this->arrJoins = [
-			'posicion' => 'decl.id_posicion = posicion.id_posicion',
-			'pais'     => 'decl.id_paisdestino = pais.id_pais',
+			'subpartida' => 'sob.id_subpartida  = subpartida.id_subpartida',
+			'pais'       => 'sob.id_paisdestino = pais.pais_iata',
 		];
 	}
 
@@ -61,68 +61,47 @@ class DeclaraexpAdo extends BaseAdo {
 
 	protected function setData()
 	{
-		$declaraexp = $this->getModel();
+		$sobordoexp = $this->getModel();
 
-		$id = $declaraexp->getId();
-		$anio = $declaraexp->getAnio();
-		$periodo = $declaraexp->getPeriodo();
-		$fecha = $declaraexp->getFecha();
-		$id_empresa = $declaraexp->getId_empresa();
-		$id_paisdestino = $declaraexp->getId_paisdestino();
-		$id_deptorigen = $declaraexp->getId_deptorigen();
-		$id_capitulo = $declaraexp->getId_capitulo();
-		$id_partida = $declaraexp->getId_partida();
-		$id_subpartida = $declaraexp->getId_subpartida();
-		$id_posicion = $declaraexp->getId_posicion();
-		$id_ciiu = $declaraexp->getId_ciiu();
-		$valorfob = $declaraexp->getValorfob();
-		$valorcif = $declaraexp->getValorcif();
-		$valor_pesos = $declaraexp->getValor_pesos();
-		$peso_neto = $declaraexp->getPeso_neto();
+		$id = $sobordoexp->getId();
+		$anio = $sobordoexp->getAnio();
+		$periodo = $sobordoexp->getPeriodo();
+		$fecha = $sobordoexp->getFecha();
+		$id_paisdestino = $sobordoexp->getId_paisdestino();
+		$id_capitulo = $sobordoexp->getId_capitulo();
+		$id_partida = $sobordoexp->getId_partida();
+		$id_subpartida = $sobordoexp->getId_subpartida();
+		$peso_neto = $sobordoexp->getPeso_neto();
 
 		$this->data = compact(
 			'id',
 			'anio',
 			'periodo',
 			'fecha',
-			'id_empresa',
 			'id_paisdestino',
-			'id_deptorigen',
 			'id_capitulo',
 			'id_partida',
 			'id_subpartida',
-			'id_posicion',
-			'id_ciiu',
-			'valorfob',
-			'valorcif',
-			'valor_pesos',
 			'peso_neto'
 		);
 	}
 
-	public function create($declaraexp)
+	public function create($sobordoexp)
 	{
 		$conn = $this->getConnection();
-		$this->setModel($declaraexp);
+		$this->setModel($sobordoexp);
 		$this->setData();
 
 		$sql = '
-			INSERT INTO declaraexp (
+			INSERT INTO sobordoexp (
 				id,
 				anio,
 				periodo,
 				fecha,
-				id_empresa,
 				id_paisdestino,
-				id_deptorigen,
 				id_capitulo,
 				id_partida,
 				id_subpartida,
-				id_posicion,
-				id_ciiu,
-				valorfob,
-				valorcif,
-				valor_pesos,
 				peso_neto
 			)
 			VALUES (
@@ -130,17 +109,10 @@ class DeclaraexpAdo extends BaseAdo {
 				"'.$this->data['anio'].'",
 				"'.$this->data['periodo'].'",
 				"'.$this->data['fecha'].'",
-				"'.$this->data['id_empresa'].'",
 				"'.$this->data['id_paisdestino'].'",
-				"'.$this->data['id_deptorigen'].'",
 				"'.$this->data['id_capitulo'].'",
 				"'.$this->data['id_partida'].'",
 				"'.$this->data['id_subpartida'].'",
-				"'.$this->data['id_posicion'].'",
-				"'.$this->data['id_ciiu'].'",
-				"'.$this->data['valorfob'].'",
-				"'.$this->data['valorcif'].'",
-				"'.$this->data['valor_pesos'].'",
 				"'.$this->data['peso_neto'].'"
 			)
 		';
@@ -200,20 +172,16 @@ class DeclaraexpAdo extends BaseAdo {
 	public function buildSelect()
 	{
 		$sql = 'SELECT
-			 decl.id,
-			 decl.anio,
-			 decl.periodo,
-			 decl.id_empresa,
-			 decl.id_paisdestino,
-			 decl.id_capitulo,
-			 decl.id_partida,
-			 decl.id_subpartida,
-			 decl.id_posicion,
-			 decl.id_ciiu,
-			 decl.valorfob,
-			 decl.valorcif,
-			 decl.peso_neto
-			FROM declaraexp as decl
+			 id,
+			 anio,
+			 periodo,
+			 fecha,
+			 id_paisdestino,
+			 id_capitulo,
+			 id_partida,
+			 id_subpartida,
+			 peso_neto
+			FROM sobordoexp
 		';
 
 		$sql .= $this->buildSelectWhere();
@@ -223,31 +191,37 @@ class DeclaraexpAdo extends BaseAdo {
 
 	public function buildSelectWhere()
 	{
-		$filter = array();
-		$filterPosicion = array();
-		$operator = $this->getOperator();
-		$joinOperator = ' AND ';
+		$filter         = [];
+		$filterPosicion = [];
+		$operator       = $this->getOperator();
+		$joinOperator   = ' AND ';
+
 		foreach($this->data as $key => $data){
 			if ($data <> ''){
 				if ($operator == '=') {
-					$filter[] = 'decl.' . $key . ' ' . $operator . ' "' . $data . '"';
+					$filter[] = 'sob.' . $key . ' ' . $operator . ' "' . $data . '"';
 				}
 				elseif ($operator == 'IN') {
 					if ($key == 'fecha') {
 						
-						$filter[] = 'decl.' . $key . ' BETWEEN ' . $data;
+						$filter[] = 'sob.' . $key . ' BETWEEN ' . $data;
 
-					} elseif ($key == 'id_capitulo' || $key == 'id_partida' || $key == 'id_subpartida' || $key == 'id_posicion') {
+					} elseif ($key == 'id_paisprocedencia') {
+
+						$filter[] = 'pais.id_pais ' . $operator . '(' . $data . ')';
+
+					} elseif ($key == 'id_capitulo' || $key == 'id_partida' || $key == 'id_subpartida') {
+
 						//debe colocarle comillas a cada valor dentro del IN
 						$arr              = explode(',', $data);
-						$filterPosicion[] = 'decl.' . $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
+						$filterPosicion[] = 'sob.' . $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
 					} else {
 						$arr      = explode(',', $data);
-						$filter[] = 'decl.' . $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
+						$filter[] = 'sob.' . $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
 					}
 				}
 				else {
-					$filter[] = 'decl.' . $key . ' ' . $operator . ' "%' . $data . '%"';
+					$filter[] = 'sob.' . $key . ' ' . $operator . ' "%' . $data . '%"';
 					$joinOperator = ' OR ';
 				}
 			}
@@ -255,11 +229,6 @@ class DeclaraexpAdo extends BaseAdo {
 
 		$sql             = '';
 		$whereAssignment = false;
-
-		/*if (!empty($this->arrJoins)) {
-			$sql            .= ' WHERE ('. implode( ' AND ', $this->arrJoins ).')';
-			$whereAssignment = true;
-		}*/
 
 		if(!empty($filter)){
 			$sql 			.= ($whereAssignment) ? ' AND ' : ' WHERE ' ;

@@ -63,13 +63,20 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		,width:30
 		,resizable:false
 		,actions:[{
-			iconCls:'silk-graph-line'
-			,qtip: '<?= Lang::get('contingente.analyze_quota'); ?>'
+			iconCls:'silk-lorry'
+			,qtip: '<?= Lang::get('contingente.analyze_quota_customs'); ?>'
+			,align:'left'
+		},{
+			iconCls:'silk-anchor'
+			,qtip: '<?= Lang::get('contingente.analyze_quota_bol'); ?>'
 			,align:'left'
 		}]
 		,callbacks:{
-			'silk-graph-line':function(grid, record, action, row, col) {
-				fnOpenDetail(record);
+			'silk-lorry':function(grid, record, action, row, col) {
+				fnOpenDetail(record, 'customs');
+			}
+			,'silk-anchor':function(grid, record, action, row, col) {
+				fnOpenDetail(record, 'bol');
 			}
 		}
 	});
@@ -92,8 +99,6 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			'</tpl>' +
 		'</div>'
 	);
-
-
 
 	var colModelAcuerdo_det = new Ext.grid.ColumnModel({
 		defaultSortable: true
@@ -206,10 +211,11 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 	return panelAcuerdo_det;
 	/*********************************************** Start functions***********************************************/
 
-	function fnOpenDetail (record) {
+	function fnOpenDetail (record, source) {
 		var contingente_id = record.get('contingente_id');
 		var acuerdo_id     = record.get('acuerdo_id');
 		var acuerdo_det_id = record.get('acuerdo_det_id');
+
 		if(Ext.getCmp('tab-detail_'+module)){
 			Ext.Msg.show({
 				 title:Ext.ux.lang.messages.warning
@@ -232,6 +238,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 					,contingente_id: contingente_id
 					,acuerdo_id: acuerdo_id
 					,acuerdo_det_id: acuerdo_det_id
+					,source: source
 				}
 			};
 			Ext.getCmp('oeste').addTab(this,this,data);

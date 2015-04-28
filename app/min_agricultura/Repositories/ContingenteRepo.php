@@ -445,11 +445,11 @@ class ContingenteRepo extends BaseRepo {
 	{
 		extract($params);
 
-		$year    = (empty($year)) ? '' : $year ;
-		$period  = (empty($period)) ? 12 : $period ;
-		$format  = (empty($format)) ? false : $format ;
-		$fields  = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
-		$scope   = (empty($scope)) ? 1 : $scope ;
+		$year   = (empty($year)) ? '' : $year ;
+		$period = (empty($period)) ? 12 : $period ;
+		$format = (empty($format)) ? false : $format ;
+		$fields = (empty($fields)) ? [] : json_decode(stripslashes($fields), true) ;
+		$scope  = (empty($scope)) ? 1 : $scope ;
 
 		if (
 			empty($acuerdo_id) ||
@@ -495,7 +495,9 @@ class ContingenteRepo extends BaseRepo {
 		}
 
 		$lines            = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-		$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.acuerdo_det');
+		$methodName       = ( $source == 'bol' ) ? 'acuerdo_det_bol' : 'acuerdo_det';
+		//var_dump($methodName, $source);
+		$arrExecuteConfig = Helpers::arrayGet($lines, 'executeConfig.'. $methodName );
 		$arrFiltersName   = Helpers::arrayGet($lines, 'filters.acuerdo_det');
 
 		if (empty($arrExecuteConfig)) {

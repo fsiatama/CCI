@@ -116,41 +116,45 @@ class ContingenteController {
 	{
 		$action = array_shift($urlParams);
 		$action = (empty($action)) ? 'list' : $action;
+		$source = ($postParams['source'] == 'bol') ? $postParams['source'] : '' ;
 
 		$result = $this->userRepo->validateMenu($action, $postParams);
 
-		if ($result['success']) {
-			//verifica que exista el acuerdo y trae los datos
-			$result = $this->contingenteRepo->validateModify($postParams);
-			if (!$result['success']) {
-				return $result;
-			}
-			$rowContingente = array_shift($result['data']);
-
-			$acuerdo_detRepo = new Acuerdo_detRepo;
-
-			$result = $acuerdo_detRepo->listId($postParams);
-			if (!$result['success']) {
-				return $result;
-			}
-			$rowAcuerdo_det = array_shift($result['data']);
-
-			$productsData   = $result['productsData'];
-
-			$postParams['is_template'] = true;
-
-			$lines          = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-			$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
-			$periods        = Helpers::arrayGet($lines, 'periods');
-
-			$updateInfo     = Helpers::getUpdateInfo('aduanas', 'impo');
-			$yearsAvailable = ($updateInfo !== false) ? $updateInfo['yearsAvailable'] : $yearsAvailable ;
-
-			$params = array_merge($postParams, $rowContingente, $rowAcuerdo_det, compact('productsData', 'yearsAvailable', 'periods', 'updateInfo'));
-
-			$postParams['is_template'] = true;
-			return new View('jsCode/contingente.execute', $params);
+		if (!$result['success']) {
+			return $result;
 		}
+
+		//verifica que exista el acuerdo y trae los datos
+		$result = $this->contingenteRepo->validateModify($postParams);
+		if (!$result['success']) {
+			return $result;
+		}
+		$rowContingente = array_shift($result['data']);
+
+		$acuerdo_detRepo = new Acuerdo_detRepo;
+
+		$result = $acuerdo_detRepo->listId($postParams);
+		if (!$result['success']) {
+			return $result;
+		}
+		$rowAcuerdo_det = array_shift($result['data']);
+
+		$productsData   = $result['productsData'];
+
+		$postParams['is_template'] = true;
+
+		$lines          = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		$yearsAvailable = Helpers::arrayGet($lines, 'yearsAvailable');
+		$periods        = Helpers::arrayGet($lines, 'periods');
+
+		$updateInfo     = Helpers::getUpdateInfo('aduanas', 'impo');
+		$yearsAvailable = ($updateInfo !== false) ? $updateInfo['yearsAvailable'] : $yearsAvailable ;
+
+		$params = array_merge($postParams, $rowContingente, $rowAcuerdo_det, compact('productsData', 'yearsAvailable', 'periods', 'updateInfo'));
+
+		$postParams['is_template'] = true;
+
+		return new View('jsCode/contingente.execute'.$source, $params);
 	}
 
 	public function executeAction($urlParams, $postParams)

@@ -1,9 +1,10 @@
 <?php
 return [
-	'table_name'   => 'Contingente Arancelario',
-	'salvaguardia' => 'Salvaguardia',
-	'contingente'  => 'Contingente',
-	'analyze_quota'  => 'Analizar Contingente',
+	'table_name'               => 'Contingente Arancelario',
+	'salvaguardia'             => 'Salvaguardia',
+	'contingente'              => 'Contingente',
+	'analyze_quota_customs'    => 'Analizar Contingente Vs Aduanas',
+	'analyze_quota_bol'        => 'Analizar Contingente Vs Sodordos',
 	'contingente_mcontingente' => [
 		'0' => 'No',
 		'1' => 'Si'

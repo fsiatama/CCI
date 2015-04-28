@@ -914,6 +914,7 @@ return [
 		'23' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ComtradePuestoColombiaProveedor'],
 		'contingente' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'AcumuladoContingente'],
 		'acuerdo_det' => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'AcumuladoPosicionPais'],
+		'acuerdo_det_bol' => ['repoClassName' => 'SobordosRepo', 'methodName' => 'AcumuladoSubpartidaPais'],
 		'cuadrantes'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ComtradeCuadrantes'],
 		'colombiaAlMundo'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'ColombiaAlMundo'],
 		'principalesDestinos'  => ['repoClassName' => 'DeclaracionesRepo', 'methodName' => 'PrincipalesDestinos'],

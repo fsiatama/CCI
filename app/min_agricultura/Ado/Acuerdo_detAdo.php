@@ -151,15 +151,15 @@ class Acuerdo_detAdo extends BaseAdo {
 			alerta_salvaguardia_verde,
 			alerta_salvaguardia_amarilla,
 			alerta_salvaguardia_roja
-			FROM acuerdo_det 
+			FROM acuerdo_det
 			LEFT JOIN acuerdo ON acuerdo_det_acuerdo_id = acuerdo_id
 			LEFT JOIN mercado ON acuerdo_mercado_id = mercado_id
 			LEFT JOIN contingente ON acuerdo_det_id = contingente_acuerdo_det_id
 			LEFT JOIN alerta ON contingente_id = alerta_contingente_id
 			LEFT JOIN pais ON contingente_id_pais = id_pais
 			LEFT JOIN (
-				SELECT contingente_det_id, contingente_det_contingente_id, contingente_det_peso_neto 
-				FROM contingente_det 
+				SELECT contingente_det_id, contingente_det_contingente_id, contingente_det_peso_neto
+				FROM contingente_det
 				WHERE  '.$year.' >= contingente_det_anio_ini AND '.$year.' <= contingente_det_anio_fin
 			) AS contingente_det ON contingente_id = contingente_det_contingente_id
 		';

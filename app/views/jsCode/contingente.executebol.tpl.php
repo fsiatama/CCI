@@ -30,7 +30,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			,contingente_id: '<?= $contingente_id; ?>'
 			,acuerdo_det_id: '<?= $acuerdo_det_id; ?>'
 			,acuerdo_id: '<?= $acuerdo_id; ?>'
-			,source:'customs'
+			,source:'bol'
 		}
 		,fields:[
 			{name:'id', type:'float'},
@@ -164,7 +164,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 								'<dt><?= Lang::get('update_info.table_name') . " " . Lang::get('update_info.columns_title.update_info_to') . ":"; ?></dt>' +
 								'<dd><?= $updateInfo; ?></dd>' +
 								'<dt><?= Lang::get('indicador.reports.source') . ":"; ?></dt>' +
-								'<dd><?= Lang::get('indicador.reports.customs'); ?></dd>' +
+								'<dd><?= Lang::get('indicador.reports.bol'); ?></dd>' +
 							'</dl>' +
 						'</div>' +
 					'</div>' +

@@ -34,12 +34,6 @@ class Desgravacion_det {
 		return $this->desgravacion_det_anio_fin;
 	}
 
-	public function getDesgravacionDetAnioFinTitleAttribute($key)
-	{
-		$value = ($key == _UNDEFINEDYEAR) ? Lang::get('desgravacion_det.undefined_year') : $key ;
-		return $value;
-	}
-
 	public function setDesgravacion_det_tasa($desgravacion_det_tasa){
 		$this->desgravacion_det_tasa = $desgravacion_det_tasa;
 	}
