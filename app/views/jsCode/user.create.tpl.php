@@ -89,7 +89,7 @@
 					,id:module+'user_email'
 					,allowBlank:false
 				}]
-			},{
+			/*},{
 				defaults:{anchor:'100%'}
 				,items:[{
 					xtype:'radiogroup'
@@ -106,13 +106,13 @@
 						, inputValue:0
 						, name:'user_active'
 					}]
-				}]
+				}]*/
 			},{
 				defaults:{anchor:'100%'}
 				,items:[comboProfile]
 			},{
 	<?php
-	$disabled = ($action == 'modify') ? 'true' : 'false' ;
+	/*$disabled = ($action == 'modify') ? 'true' : 'false' ;
 	echo "
 				defaults:{anchor:'100%'}
 				,columnWidth:.5
@@ -173,9 +173,9 @@
 					}
 				}]
 	";
-	};
+	};*/
 	?>
-			},{
+			/*},{*/
 				xtype:'hidden'
 				,name:'user_id'
 				,id:module+'user_id'
@@ -237,8 +237,8 @@
 	function fnSave () {
 		if(formUser.form.isValid()){
 			params = {
-				user_password:Ext.ux.util.MD5(Ext.getCmp(module+'user_password').getValue())
-				,id: '<?= $id; ?>'
+				/*user_password:Ext.ux.util.MD5(Ext.getCmp(module+'user_password').getValue()),*/
+				id: '<?= $id; ?>'
 			};
 			formUser.getForm().submit({
 				waitMsg: 'Saving....'

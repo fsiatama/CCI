@@ -4,7 +4,6 @@ require PATH_APP.'min_agricultura/Entities/User.php';
 require PATH_APP.'min_agricultura/Ado/UserAdo.php';
 require PATH_APP.'min_agricultura/Repositories/PermissionsRepo.php';
 
-
 require_once ('BaseRepo.php');
 
 class UserRepo extends BaseRepo {
@@ -84,8 +83,8 @@ class UserRepo extends BaseRepo {
 
 
 		$user->setUser_email($userName);
-		$user->setUser_password($password);
-		$user->setUser_active('1');
+		//$user->setUser_password($password);
+		//$user->setUser_active('1');
 
 		$result = $userAdo->exactSearch($user);
 
@@ -278,6 +277,8 @@ class UserRepo extends BaseRepo {
 	public function setData($params, $action)
 	{
 		extract($params);
+
+		$user_active = ( empty($user_active) ) ? '1' : $user_active ;
 
 		if ($action == 'modify') {
 			$result = $this->findPrimaryKey($user_id);

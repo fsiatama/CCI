@@ -221,6 +221,8 @@ class UserRepo extends BaseRepo {
 	{
 		extract($params);
 
+		$user_active = ( empty($user_active) ) ? '1' : $user_active ;
+
 		if ($action == 'modify') {
 			$result = $this->findPrimaryKey($user_id);
 
