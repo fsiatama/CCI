@@ -93,12 +93,12 @@ class UserRepo extends BaseRepo {
 			if ($result['total'] == 0) {
 				//si el usuario no existe, lo crea
 				//$this->model     = $this->getModel();
-				$admin_user = explode(',', _ADMIN_USERS);
-				$profile_id = in_array($userName, $admin_user) ? 1 : 2 ;
+				//$admin_user = explode(',', _ADMIN_USERS);
+				//$profile_id = in_array($userName, $admin_user) ? 1 : 2 ;
 				$user_full_name  = $userInfo['displayname'][0];
 				$user_email      = $userName;
 				$user_password   = $password;
-				$user_profile_id = $profile_id;
+				$user_profile_id = '2';
 				$user_active     = '1';
 
 				$result = $this->create( compact('user_full_name', 'user_email', 'user_password', 'user_profile_id', 'user_active') );

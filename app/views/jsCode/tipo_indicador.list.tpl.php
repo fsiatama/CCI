@@ -45,6 +45,7 @@ $updateInfo = Inflector::compress($updateInfo);
 		 header: Ext.ux.lang.grid.options
 		,keepSelection:true
 		,autoWidth:false
+		,width:20
 		,actions:[{
 			iconCls:'silk-chart-bar-link'
 			,qtip: Ext.ux.lang.buttons.generate_tt
@@ -69,7 +70,7 @@ $updateInfo = Inflector::compress($updateInfo);
 			gridTipo_indicadorExpander,
 			{header:'Id', align:'left', hidden:true, dataIndex:'tipo_indicador_id' ,width:20},
 			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_nombre'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_nombre'},
-			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_abrev'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_abrev'},
+			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_abrev'); ?>', align:'left', hidden:false, dataIndex:'tipo_indicador_abrev', width:50},
 			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador'); ?>', align:'left', hidden:true, dataIndex:'tipo_indicador_activador_title',hideable: false},
 			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_calculo'); ?>', align:'left', hidden:true, dataIndex:'tipo_indicador_calculo',hideable: false},
 			{header:'<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_definicion'); ?>', align:'left', hidden:true, dataIndex:'tipo_indicador_definicion',hideable: false},

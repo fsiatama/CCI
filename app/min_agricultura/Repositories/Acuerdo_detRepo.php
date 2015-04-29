@@ -474,7 +474,7 @@ class Acuerdo_detRepo extends BaseRepo {
 				'error'   => 'unavailable repo '. $repoClassName
 			];
 		}
-		require $repoFileName;
+		require_once $repoFileName;
 
 		$arrData = [];
 
@@ -487,7 +487,6 @@ class Acuerdo_detRepo extends BaseRepo {
 				'tipo_indicador_activador' => 'volumen',
 			];
 
-
 			$repo = new $repoClassName(
 				$params,
 				$arrFiltersName,
@@ -495,6 +494,7 @@ class Acuerdo_detRepo extends BaseRepo {
 				12,
 				1
 			);
+
 			if (!method_exists($repo, $repoMethodName)) {
 				return [
 					'success' => false,

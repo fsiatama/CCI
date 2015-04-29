@@ -1,6 +1,6 @@
 /*
 SQLyog Community v12.09 (64 bit)
-MySQL - 5.6.17 : Database - min_agricultura
+MySQL - 5.6.19 : Database - min_agricultura
 *********************************************************************
 */
 
@@ -40,7 +40,7 @@ CREATE TABLE `acuerdo` (
   PRIMARY KEY (`acuerdo_id`),
   KEY `fk_acuerdo_mercado1_idx` (`acuerdo_mercado_id`),
   KEY `fk_acuerdo_pais1_idx` (`acuerdo_id_pais`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `acuerdo_det` */
 
@@ -50,7 +50,7 @@ CREATE TABLE `acuerdo_det` (
   `acuerdo_det_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `acuerdo_det_arancel_base` smallint(5) NOT NULL,
   `acuerdo_det_productos` text NOT NULL,
-  `acuerdo_det_productos_desc` varchar(45) NOT NULL,
+  `acuerdo_det_productos_desc` varchar(150) NOT NULL,
   `acuerdo_det_administracion` text NOT NULL,
   `acuerdo_det_administrador` varchar(150) NOT NULL,
   `acuerdo_det_nperiodos` smallint(4) unsigned NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE `acuerdo_det` (
   `acuerdo_det_desgravacion_igual_pais` enum('0','1') NOT NULL,
   PRIMARY KEY (`acuerdo_det_id`,`acuerdo_det_acuerdo_id`),
   KEY `fk_acuerdo_det_acuerdo_idx` (`acuerdo_det_acuerdo_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=123 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `alerta` */
 
@@ -85,7 +85,7 @@ CREATE TABLE `alerta` (
   `alerta_disp6` char(1) NOT NULL,
   PRIMARY KEY (`alerta_id`,`alerta_contingente_id`,`alerta_contingente_acuerdo_det_id`,`alerta_contingente_acuerdo_det_acuerdo_id`),
   UNIQUE KEY `fk_alerta_contingente1_idx` (`alerta_contingente_id`,`alerta_contingente_acuerdo_det_id`,`alerta_contingente_acuerdo_det_acuerdo_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=242 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=250 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `arancel` */
 
@@ -104,10 +104,8 @@ CREATE TABLE `arancel` (
   `cuode` int(5) DEFAULT NULL,
   `notas` longtext,
   KEY `idx_posicion` (`cod_capitulo`,`cod_partida`,`cod_subpartida`,`cod_posicion`),
-  KEY `cod_capitulo` (`cod_capitulo`),
-  KEY `cod_partida` (`cod_partida`),
-  KEY `cod_subpartida` (`cod_subpartida`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `descripcion` (`descripcion`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `audit` */
 
@@ -122,7 +120,7 @@ CREATE TABLE `audit` (
   `audit_uinsert` int(10) unsigned NOT NULL,
   `audit_finsert` datetime NOT NULL,
   PRIMARY KEY (`audit_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4909 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=14071 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `category_menu` */
 
@@ -172,7 +170,7 @@ CREATE TABLE `contingente` (
   PRIMARY KEY (`contingente_id`,`contingente_acuerdo_det_id`,`contingente_acuerdo_det_acuerdo_id`),
   KEY `fk_contingente_acuerdo_det1_idx` (`contingente_acuerdo_det_id`,`contingente_acuerdo_det_acuerdo_id`),
   KEY `fk_contingente_pais1_idx` (`contingente_id_pais`)
-) ENGINE=MyISAM AUTO_INCREMENT=219 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=226 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `contingente_det` */
 
@@ -189,7 +187,7 @@ CREATE TABLE `contingente_det` (
   `contingente_det_contingente_acuerdo_det_acuerdo_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`contingente_det_id`,`contingente_det_contingente_id`,`contingente_det_contingente_acuerdo_det_id`,`contingente_det_contingente_acuerdo_det_acuerdo_id`),
   KEY `fk_contingente_det_contingente1_idx` (`contingente_det_contingente_id`,`contingente_det_contingente_acuerdo_det_id`,`contingente_det_contingente_acuerdo_det_acuerdo_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7140 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=7175 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `correlativa` */
 
@@ -217,6 +215,7 @@ CREATE TABLE `declaraexp` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `anio` smallint(4) unsigned NOT NULL,
   `periodo` smallint(2) unsigned NOT NULL,
+  `fecha` date NOT NULL,
   `id_empresa` varchar(20) NOT NULL,
   `id_paisdestino` smallint(3) unsigned NOT NULL,
   `id_deptorigen` smallint(4) unsigned NOT NULL,
@@ -236,8 +235,9 @@ CREATE TABLE `declaraexp` (
   KEY `anio` (`anio`),
   KEY `id_deptorigen` (`id_deptorigen`),
   KEY `id_capitulo` (`id_capitulo`),
+  KEY `id_subpartida` (`id_subpartida`),
   KEY `id_partida` (`id_partida`),
-  KEY `id_subpartida` (`id_subpartida`)
+  KEY `fecha` (`fecha`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3039311 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `declaraimp` */
@@ -248,6 +248,7 @@ CREATE TABLE `declaraimp` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `anio` smallint(4) unsigned NOT NULL,
   `periodo` smallint(2) unsigned NOT NULL,
+  `fecha` date NOT NULL,
   `id_empresa` varchar(20) NOT NULL,
   `id_paisorigen` smallint(3) unsigned NOT NULL,
   `id_paiscompra` smallint(3) unsigned NOT NULL,
@@ -271,9 +272,10 @@ CREATE TABLE `declaraimp` (
   KEY `id_ciiu` (`id_ciiu`),
   KEY `id_deptorigen` (`id_deptorigen`),
   KEY `id_capitulo` (`id_capitulo`),
+  KEY `id_subpartida` (`id_subpartida`),
   KEY `id_partida` (`id_partida`),
-  KEY `id_subpartida` (`id_subpartida`)
-) ENGINE=MyISAM AUTO_INCREMENT=12733341 DEFAULT CHARSET=utf8;
+  KEY `fecha` (`fecha`)
+) ENGINE=MyISAM AUTO_INCREMENT=17320856 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `departamento` */
 
@@ -300,7 +302,7 @@ CREATE TABLE `desgravacion` (
   PRIMARY KEY (`desgravacion_id`,`desgravacion_acuerdo_det_id`,`desgravacion_acuerdo_det_acuerdo_id`),
   KEY `fk_desgravacion_acuerdo_det1_idx` (`desgravacion_acuerdo_det_id`,`desgravacion_acuerdo_det_acuerdo_id`),
   KEY `fk_desgravacion_pais1_idx` (`desgravacion_id_pais`)
-) ENGINE=MyISAM AUTO_INCREMENT=211 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=219 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `desgravacion_det` */
 
@@ -317,7 +319,7 @@ CREATE TABLE `desgravacion_det` (
   `desgravacion_det_desgravacion_acuerdo_det_acuerdo_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`desgravacion_det_id`,`desgravacion_det_desgravacion_id`,`desgravacion_det_desgravacion_acuerdo_det_id`,`desgravacion_det_desgravacion_acuerdo_det_acuerdo_id`),
   KEY `fk_desgravacion_det_desgravacion1_idx` (`desgravacion_det_desgravacion_id`,`desgravacion_det_desgravacion_acuerdo_det_id`,`desgravacion_det_desgravacion_acuerdo_det_acuerdo_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5472 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5533 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `empresa` */
 
@@ -368,7 +370,7 @@ CREATE TABLE `indicador` (
   `indicador_finsert` datetime NOT NULL,
   `indicador_fupdate` datetime NOT NULL,
   PRIMARY KEY (`indicador_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=151 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=182 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `menu` */
 
@@ -382,7 +384,7 @@ CREATE TABLE `menu` (
   `menu_order` int(11) NOT NULL DEFAULT '1',
   `menu_hidden` enum('0','1') NOT NULL,
   PRIMARY KEY (`menu_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `mercado` */
 
@@ -398,7 +400,7 @@ CREATE TABLE `mercado` (
   `mercado_uupdate` int(10) unsigned NOT NULL,
   `mercado_fupdate` datetime NOT NULL,
   PRIMARY KEY (`mercado_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `pais` */
 
@@ -426,7 +428,7 @@ CREATE TABLE `permissions` (
   `permissions_export` enum('0','1') NOT NULL,
   PRIMARY KEY (`permissions_id`),
   UNIQUE KEY `permissions_profile_id` (`permissions_profile_id`,`permissions_menu_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `pib` */
 
@@ -443,7 +445,7 @@ CREATE TABLE `pib` (
   `pib_fupdate` datetime NOT NULL,
   `pib_uupdate` int(10) unsigned NOT NULL,
   PRIMARY KEY (`pib_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `posicion` */
 
@@ -524,6 +526,52 @@ CREATE TABLE `session` (
   PRIMARY KEY (`session_user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+/*Table structure for table `sobordoexp` */
+
+DROP TABLE IF EXISTS `sobordoexp`;
+
+CREATE TABLE `sobordoexp` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `anio` smallint(4) unsigned NOT NULL,
+  `periodo` smallint(2) unsigned NOT NULL,
+  `fecha` date NOT NULL,
+  `id_paisdestino` char(3) NOT NULL,
+  `id_capitulo` char(2) NOT NULL,
+  `id_partida` char(4) NOT NULL,
+  `id_subpartida` char(6) NOT NULL,
+  `peso_neto` decimal(13,2) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `anio` (`anio`),
+  KEY `fecha` (`fecha`),
+  KEY `id_paisdestino` (`id_paisdestino`),
+  KEY `id_capitulo` (`id_capitulo`),
+  KEY `id_partida` (`id_partida`),
+  KEY `id_subpartida` (`id_subpartida`)
+) ENGINE=MyISAM AUTO_INCREMENT=191209 DEFAULT CHARSET=utf8;
+
+/*Table structure for table `sobordoimp` */
+
+DROP TABLE IF EXISTS `sobordoimp`;
+
+CREATE TABLE `sobordoimp` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `anio` smallint(4) unsigned NOT NULL,
+  `periodo` smallint(2) unsigned NOT NULL,
+  `fecha` date NOT NULL,
+  `id_paisprocedencia` char(3) NOT NULL,
+  `id_capitulo` char(2) NOT NULL,
+  `id_partida` char(4) NOT NULL,
+  `id_subpartida` char(6) NOT NULL,
+  `peso_neto` float(13,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `anio` (`anio`),
+  KEY `id_paisprocedencia` (`id_paisprocedencia`),
+  KEY `id_capitulo` (`id_capitulo`),
+  KEY `id_partida` (`id_partida`),
+  KEY `id_subpartida` (`id_subpartida`),
+  KEY `fecha` (`fecha`)
+) ENGINE=MyISAM AUTO_INCREMENT=476341 DEFAULT CHARSET=utf8;
+
 /*Table structure for table `subpartida` */
 
 DROP TABLE IF EXISTS `subpartida`;
@@ -557,7 +605,7 @@ DROP TABLE IF EXISTS `tipo_indicador`;
 
 CREATE TABLE `tipo_indicador` (
   `tipo_indicador_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `tipo_indicador_nombre` varchar(100) NOT NULL,
+  `tipo_indicador_nombre` varchar(200) NOT NULL,
   `tipo_indicador_abrev` varchar(30) NOT NULL,
   `tipo_indicador_activador` enum('precio','volumen') NOT NULL,
   `tipo_indicador_calculo` text NOT NULL,
@@ -595,7 +643,7 @@ CREATE TABLE `user` (
   `user_uupdate` int(10) unsigned NOT NULL,
   `user_fupdate` datetime NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

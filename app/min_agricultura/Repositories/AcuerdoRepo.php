@@ -349,6 +349,18 @@ class AcuerdoRepo extends BaseRepo {
 		
 	}
 
+	public function listByTrade($params)
+	{
+		extract($params);
+
+		$trade = ( empty($trade) ) ? 'impo' : $trade ;
+		
+		$this->model->setAcuerdo_intercambio($trade);
+		
+		return $this->modelAdo->exactSearch($this->model);
+		
+	}
+
 	public function publicSearch($params)
 	{
 
