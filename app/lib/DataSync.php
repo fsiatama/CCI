@@ -469,10 +469,10 @@ class DataSync extends Connection {
 
 $dataSync = new DataSync();
 $dataSync->Syncronize("arancel");
-/*$dataSync->Syncronize("posicion");
+$dataSync->Syncronize("posicion");
 $dataSync->Syncronize("subpartida");
 $dataSync->Syncronize("empresa");
 $dataSync->Syncronize("departamento");
-$dataSync->Syncronize("pais");*/
+$dataSync->Syncronize("pais");
 $dataSync->Syncronize("declaraimp");
 $dataSync->Syncronize("declaraexp");

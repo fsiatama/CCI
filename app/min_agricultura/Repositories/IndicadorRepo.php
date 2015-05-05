@@ -648,13 +648,15 @@ class IndicadorRepo extends BaseRepo {
 	{
 		extract($params);
 
-		if (empty($report) || empty($typeIndicator)) {
+		if ( empty($report) || empty($typeIndicator) || empty($pareto) ) {
 			$result = [
 				'success' => false,
 				'error'   => 'Incomplete data for this request.'
 			];
 			return $result;
 		}
+
+		$pareto = (int) $pareto;
 
 		$methodName       = Inflector::lowerCamel($report);
 		$lines            = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
@@ -682,7 +684,7 @@ class IndicadorRepo extends BaseRepo {
 
 		$updateInfo = Helpers::getUpdateInfo('aduanas', 'impo');
 		$yearLast   = $updateInfo['dateTo']->format('Y');
-  		$updateInfo['dateTo']->modify( '-4year' );
+  		$updateInfo['dateTo']->modify( '-5year' );
   		$yearFirst = $updateInfo['dateTo']->format('Y'); //toma 5 hacia a tras
 
 		$arrFilters = [
@@ -710,7 +712,7 @@ class IndicadorRepo extends BaseRepo {
 				'error'   => 'unavailable method '. $repoMethodName
 			];
 		}
-		$rsExecuted = call_user_func_array([$repo, $repoMethodName], []);
+		$rsExecuted = call_user_func_array([$repo, $repoMethodName], compact('pareto'));
 		//if ( ! $rsExecuted['success'] ) {
 			return $rsExecuted;
 		//}

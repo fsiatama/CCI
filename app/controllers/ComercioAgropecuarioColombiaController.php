@@ -9,8 +9,9 @@ class ComercioAgropecuarioColombiaController {
 
 
 		$lines     = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
-		$activator = Helpers::arrayGet($lines, 'activator');
-		$params    = array_merge(compact('is_template', 'updateInfoImpo', 'updateInfoExpo', 'activator'));
+        $activator = Helpers::arrayGet($lines, 'activator');
+		$pareto    = Helpers::arrayGet($lines, 'pareto');
+		$params    = array_merge(compact('is_template', 'updateInfoImpo', 'updateInfoExpo', 'activator', 'pareto'));
 		
         return new View('comercio_colombia', $params);
     }

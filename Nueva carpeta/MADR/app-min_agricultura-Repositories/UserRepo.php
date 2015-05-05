@@ -52,122 +52,109 @@ class UserRepo extends BaseRepo {
 			);
 			return $result;
 		}
-		try {
-			$adldap = new \adLDAP\adLDAP();
-		}
-		catch (adLDAPException $e) {
-			$result = array(
-				'success' => false,
-				'error'   => $e
-			);
-			return $result;
-		}
-
-		$authUser = $adldap->user()->authenticate($userName, $password);
-		if ($authUser !== true) {
-			$result = array(
-				'success' => false,
-				'error'   => $adldap->getLastError()
-			);
-			return $result;
-		}
-
-		$userInfo = $adldap->user()->info($userName);
-		//toma solo el primer registro
-		$userInfo  = $userInfo[0];
-		//print_r($userInfo['displayname'][0]);
-
-		//exit();
-
-		$password = md5($password);
-
 
 		$user->setUser_email($userName);
-		//$user->setUser_password($password);
-		//$user->setUser_active('1');
-
+		$user->setUser_password(md5($password));
 		$result = $userAdo->exactSearch($user);
 
-		if ($result['success']) {
-
-			if ($result['total'] == 0) {
-				//si el usuario no existe, lo crea
-				//$this->model     = $this->getModel();
-				//$admin_user = explode(',', _ADMIN_USERS);
-				//$profile_id = in_array($userName, $admin_user) ? 1 : 2 ;
-				$user_full_name  = $userInfo['displayname'][0];
-				$user_email      = $userName;
-				$user_password   = $password;
-				$user_profile_id = '2';
-				$user_active     = '1';
-
-				$result = $this->create( compact('user_full_name', 'user_email', 'user_password', 'user_profile_id', 'user_active') );
-
-				if (!$result['success']) {
-					$result = [
-						'success'  => false,
-						'error'    => $result['error']
-					];
-					return $result;
-				}
-				$result = $userAdo->exactSearch($user);
-				if (!$result['success']) {
-					$result = [
-						'success'  => false,
-						'error'    => $result['error']
-					];
-					return $result;
-				}
+		if (!$result['success']) {
+			$result = [
+				'success' => false,
+				'error'   => $result['error']
+			];
+			return $result;
+		}
+		if ($result['total'] == 0) {
+			//si el usuario no existe, valida contra el directorio activo y posteriormente crea el usuario
+			try {
+				$adldap = new \adLDAP\adLDAP();
 			}
-
-				$row = array_shift($result['data']);
-				$permissionsRepo = new PermissionsRepo;
-				$result = $permissionsRepo->listProfileMenu($row['user_profile_id']);
-
-				if ($result['success'] && $result['total'] > 0) {
-
-					$_SESSION['user_id']         = $row['user_id'];
-					$_SESSION['session_name']    = $row['user_full_name'];
-					$_SESSION['session_email']   = $row['user_email'];
-					$_SESSION['session_profile'] = $row['user_profile_id'];
-					$_SESSION['lang']            = DEFAULT_LANGUAGE;
-					$_SESSION['start']           = time();
-					$_SESSION['user_token']      = uniqid();
-
-					foreach ($result['data'] as $key => $value) {
-
-						$_SESSION['session_menu'][$value['menu_id']]['list']   = $value['permissions_list'];
-						$_SESSION['session_menu'][$value['menu_id']]['modify'] = $value['permissions_modify'];
-						$_SESSION['session_menu'][$value['menu_id']]['create'] = $value['permissions_create'];
-						$_SESSION['session_menu'][$value['menu_id']]['delete'] = $value['permissions_delete'];
-						$_SESSION['session_menu'][$value['menu_id']]['export'] = $value['permissions_export'];
-
-					}
-
-					//crea o actualiza el registro de session
-					$sessionRepo = new SessionRepo;
-					$result = $sessionRepo->login($row);
-
-					if ($result['success']) {
-						$result['url'] = URL_INGRESO;
-					}
-				}
-				elseif ($result['total'] == 0) {
-					$result = array(
-						'success' => false,
-						'error'   => 'You have not enabled products'
-					);
-				}
-			/*}
-			else {
+			catch (adLDAPException $e) {
 				$result = array(
 					'success' => false,
-					'error'   => 'Your email address and password did not match. Please try again.'
+					'error'   => $e
 				);
-			}*/
+				return $result;
+			}
+
+			$authUser = $adldap->user()->authenticate($userName, $password);
+			if ($authUser !== true) {
+				$result = array(
+					'success' => false,
+					'error'   => $adldap->getLastError()
+				);
+				return $result;
+			}
+			$userInfo = $adldap->user()->info($userName);
+			$userInfo = $userInfo[0];
+			$password = md5($password);
+
+			$user_full_name  = $userInfo['displayname'][0];
+			$user_email      = $userName;
+			$user_password   = $password;
+			$user_profile_id = '2';
+			$user_active     = '1';
+
+			$result = $this->create( compact('user_full_name', 'user_email', 'user_password', 'user_profile_id', 'user_active') );
+
+			if (!$result['success']) {
+				$result = [
+					'success'  => false,
+					'error'    => $result['error']
+				];
+				return $result;
+			}
+			$result = $userAdo->exactSearch($user);
+			if (!$result['success']) {
+				$result = [
+					'success'  => false,
+					'error'    => $result['error']
+				];
+				return $result;
+			}
+		}
+
+		$row = array_shift($result['data']);
+		$permissionsRepo = new PermissionsRepo;
+		$result = $permissionsRepo->listProfileMenu($row['user_profile_id']);
+
+		if ($result['success'] && $result['total'] > 0) {
+
+			$_SESSION['user_id']         = $row['user_id'];
+			$_SESSION['session_name']    = $row['user_full_name'];
+			$_SESSION['session_email']   = $row['user_email'];
+			$_SESSION['session_profile'] = $row['user_profile_id'];
+			$_SESSION['lang']            = DEFAULT_LANGUAGE;
+			$_SESSION['start']           = time();
+			$_SESSION['user_token']      = uniqid();
+
+			foreach ($result['data'] as $key => $value) {
+
+				$_SESSION['session_menu'][$value['menu_id']]['list']   = $value['permissions_list'];
+				$_SESSION['session_menu'][$value['menu_id']]['modify'] = $value['permissions_modify'];
+				$_SESSION['session_menu'][$value['menu_id']]['create'] = $value['permissions_create'];
+				$_SESSION['session_menu'][$value['menu_id']]['delete'] = $value['permissions_delete'];
+				$_SESSION['session_menu'][$value['menu_id']]['export'] = $value['permissions_export'];
+
+			}
+
+			//crea o actualiza el registro de session
+			$sessionRepo = new SessionRepo;
+			$result = $sessionRepo->login($row);
+
+			if ($result['success']) {
+				$result['url'] = URL_INGRESO;
+			}
+		}
+		elseif ($result['total'] == 0) {
+			$result = array(
+				'success' => false,
+				'error'   => 'You have not enabled products'
+			);
 		}
 
 		return $result;
+
 	}
 
 	public function headerMenu()

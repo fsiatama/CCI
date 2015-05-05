@@ -945,6 +945,11 @@ return [
 		['precio', Lang::get('tipo_indicador.tipo_indicador_activador.precio')],
 		['volumen', Lang::get('tipo_indicador.tipo_indicador_activador.volumen')],
 	],
+	'pareto' => [
+		[5,  Lang::get('indicador.pareto.5')],
+		[10, Lang::get('indicador.pareto.10')],
+		[20, Lang::get('indicador.pareto.20')],
+	],
 	'charts' => [
 		[COLUMNAS, Lang::get('indicador.charts.columns')],
 		[LINEAL, Lang::get('indicador.charts.lines')],

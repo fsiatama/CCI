@@ -287,7 +287,7 @@ Ext.onReady(function(){
 
 Ext.ns('Ext.ux', 'Ext.ux.routes');
 Ext.ux.routes = {
-	 url_index: 'http://172.20.51.78'
+	 url_index: 'http://agrocomercio.minagricultura.gov.co'
 }
 function unsignedFormat(value){
 	if(value > 0){
@@ -355,7 +355,7 @@ function integerFormat (value) {
 	}
 }
 //valida en conjunto que exista un pais o un mercado seleccionado
-function isValidCountry (fieldId1, fieldId2) {
+function isValidComplement (fieldId1, fieldId2) {
 	var field1 = Ext.getCmp(fieldId1);
 	var field2 = Ext.getCmp(fieldId2);
 	if (!field1 || !field2) {

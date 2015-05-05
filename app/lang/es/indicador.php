@@ -93,6 +93,7 @@ return [
 		'source'            => 'Fuente de Información',
 		'customs'           => 'Declaraciones de Aduana',
 		'bol'               => 'Conocimientos de Embarque',
+		'pareto'            => 'Mostrar',
     ],
     'charts' => [
 		'columns' => 'Columnas',
@@ -113,5 +114,10 @@ return [
 		'10' => 'Octubre',
 		'11' => 'Noviembre',
 		'12' => 'Diciembre'
+    ],
+    'pareto' => [
+		'5'  => 'Principales 5 ',
+		'10' => 'Principales 10',
+		'20' => 'Principales 20',
     ]
 ];

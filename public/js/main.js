@@ -464,6 +464,7 @@ jQuery(function($) {
 			
 			var report        = $('#publicReportsForm input[name=report]:checked').val();
 			var typeIndicator = $('#publicReportsForm input[name=typeIndicator]:checked').val();
+			var pareto        = $('#publicReportsForm select[name=pareto]').val();
 
 			var form = $(this);
 			var btn  = $('#publicReportsSubmit');
@@ -473,6 +474,7 @@ jQuery(function($) {
 				,data:{
 					report: report
 					,typeIndicator: typeIndicator
+					,pareto: pareto
 				}
 				,dataType:'json'
 				,success:function(data){

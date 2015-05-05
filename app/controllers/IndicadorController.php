@@ -242,6 +242,7 @@ class IndicadorController {
 	{
 
 		$result = $this->indicadorRepo->executePublicReports($postParams);
+
 		if ($result['success']) {
 
 			$template    = Inflector::lowerCamel($postParams['report']);

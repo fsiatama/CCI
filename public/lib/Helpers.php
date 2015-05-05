@@ -594,19 +594,19 @@ class Helpers
 		//Ask for HTML-friendly debug output
 		$mail->Debugoutput = 'html';
 		//Set the hostname of the mail server
-		$mail->Host = 'smtp.gmail.com';
+		$mail->Host = 'correo.minagricultura.gov.co';
 		//Set the SMTP port number - likely to be 25, 465 or 587
-		$mail->Port = 587;
+		$mail->Port = 25;
 		//Set the encryption system to use - ssl (deprecated) or tls
-		$mail->SMTPSecure = 'tls';
+		//$mail->SMTPSecure = 'tls';
 		//Whether to use SMTP authentication
-		$mail->SMTPAuth = true;
+		$mail->SMTPAuth = false;
 		//Username to use for SMTP authentication
-		$mail->Username = "sales@sicex.com";
+		//$mail->Username = "";
 		//Password to use for SMTP authentication
-		$mail->Password = "sicex.com";
+		//$mail->Password = "";
 		//Set who the message is to be sent from
-		$mail->setFrom('sales@sicex.com', 'Sicex.com');
+		$mail->setFrom('agrocomercio@minagricultura.gov.co', 'Agrocomercio - Minagricultura');
 		//Set an alternative reply-to address
 		//$mail->addReplyTo('replyto@example.com', 'First Last');
 		//Set who the message is to be sent to

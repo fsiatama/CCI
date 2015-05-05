@@ -1254,6 +1254,11 @@ body.modal-open {
 .table-guide td:nth-child(2) {padding: 0 10px;}
 .table-guide td>h4 {text-transform:uppercase; margin: 20px;}
 
+.table-tools td>h4 {text-transform:uppercase; margin: 20px;}
+.table-tools td {vertical-align: middle;}
+.table-tools td>p {margin: 10px 0;}
+.table-tools td:nth-child(2) {vertical-align: middle; min-width: 75px; text-align: center;}
+
 
 /** --. Responsive
  **************************************************************** **/

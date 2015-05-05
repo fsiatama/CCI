@@ -4185,7 +4185,7 @@ class DeclaracionesRepo extends BaseRepo {
 		return $result;
 	}
 
-	public function executeColombiaAlMundo()
+	public function executeColombiaAlMundo( $pareto )
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
 		$this->setTrade('expo');
@@ -4193,7 +4193,6 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->model    = $this->getModelExpo();
 		$this->modelAdo = $this->getModelExpoAdo();
 		$columnValue    = $this->columnValueExpo;
-		//$columnVolume   = $this->getColumnVolumeExpo();
 
 		//Trae los productos configurados como agricolas
 		$result = $this->findProductsBySector('sectorIdAgriculture');
@@ -4226,104 +4225,108 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 
-		$arrFieldAlias = ['id', 'id_posicion', 'posicion'];;
+		$arrFields    = ['id' => 'id', 'id_posicion' => 'id_posicion', 'posicion' => 'posicion', $columnValue => $columnValue];
 		$arrData      = [];
 		$arrChartData = [];
-		$arrTotals    = [];
-		$arrSeries    = [];
+		$counter      = 0;
+		$othersValue  = 0;
+		$arrOthersVal = [];
+
+		$arrColumnValue = Helpers::arrayColumn($rsDeclaraciones['data'], $columnValue);
+		$totalValue     = $this->getFloatValue( array_sum($arrColumnValue) );
+
+		$htmlColumns                       = [];
+		$htmlColumns['id_posicion']        = Lang::get('indicador.columns_title.posicion');
+		$htmlColumns['posicion']           = Lang::get('indicador.columns_title.desc_posicion');
+
 
 		foreach ($rsDeclaraciones['data'] as $row) {
-			foreach ($row as $key => $value) {
-				if ( !in_array($key, $arrFieldAlias) ) {
-					//suma las columnas que no estan en array de filas
-					//es decir las columnas calculadas
-					if (empty($arrTotals[$key])) {
-						$arrTotals[$key] = 0;
-					}
-					$arrTotals[$key] += $this->getFloatValue($value);
-					$arrSeries[]      = $key;
-				}
-			}
-		}
 
-		$yearFirst     = $arrFiltersValues['anio_ini'];
-		$yearLast      = $arrFiltersValues['anio_fin'];
-		$rangeYear     = range($yearFirst, $yearLast);
-		$numberPeriods = count($rangeYear);
-		$valueLast     = 0;
-		$valueFirst    = 0;
+			$arrCalculatedColumns = array_diff_key($row, $arrFields);
 
+			if( $counter < $pareto ) {
 
-		$htmlColumns   = [];
-		$htmlColumns['id_posicion'] = Lang::get('indicador.columns_title.posicion');
-		$htmlColumns['posicion']    = Lang::get('indicador.columns_title.desc_posicion');
-
-		foreach ($rsDeclaraciones['data'] as $row) {
-			$arr = [];
-			$includeRow = true;
-			$assignFirst = false;
-			$growthRate = 0;
-			foreach ($row as $key => $value) {
-				//suprimir la palabra " peso_neto" que le pone por defecto la clase pivottable a las columnas calculadas
-				//$index = str_replace(''.$columnValue, ' '.$this->pYAxisName, $key);
-				$index = str_replace(' '.$columnValue, '', $key);
+				$counter += 1;
+				$arr      = [];
 				
-				if (in_array($key, $arrSeries)) {
-					
-					$value = $this->getFloatValue($value);
-					$title = ($index == $columnValue) ? 'Total ' . $this->pYAxisName : $index . ' ' . $this->pYAxisName;
-
-					if ( empty($htmlColumns[$index]) ) {
-						$htmlColumns[$index] = $title;
+				foreach ($arrFields as $key => $val) {
+					if ( $key != $columnValue ) {
+						$arr[$key] = $row[$key];
 					}
-
-					if ($key == $columnValue) {
-
-						$rate = ($arrTotals[$key] == 0) ? 0 : ( $value / $arrTotals[$key]) ;
-						if ($rate < 0.003) {
-							//descartar los productos con poca participacion inferior al 0.3%
-							$includeRow = false;
-						}
-
-						$title = Lang::get('indicador.columns_title.participacion');
-
-						if ( empty($htmlColumns['rate_'.$index]) ) {
-							$htmlColumns['rate_'.$index] = $title;
-						}
-						$arr[$index] = $value;
-						$arr['rate_'.$index] = $rate * 100;
-					} else {
-						if ( $value > 0 && !$assignFirst ) {
-							$valueFirst  = $value;
-							$assignFirst = true;
-						}
-						$valueLast = $value;
-						$arr[$index] = $value;
-					}
-					
-				} else {
-					$arr[$index] = $value;
 				}
-			}
-			if ($includeRow) {
-				$posicion          = '(' . $row['id_posicion'] . ') ' . $row['posicion'];
-				$valueFirst        = ($valueFirst == 0) ? 1 : $valueFirst ;
-				$growthRate        = ( pow(($valueLast / $valueFirst), (1 / $numberPeriods)) - 1);
-				$arr['growthRate'] = ( $growthRate * 100 );
-				$arrData[]         = $arr;
 
+				foreach ($arrCalculatedColumns as $key => $val) {
+					$index               = str_replace(' '.$columnValue, '', $key);
+					$arr[$index]         = $row[$key];
+					$htmlColumns[$index] = $index . ' ' . $this->pYAxisName;
+				}
+
+				$value = $this->getFloatValue( $row[$columnValue] );
+
+				$arrY                      = array_map('Helpers::naturalLogarithm', $arrCalculatedColumns);
+				$linearRegression          = Helpers::linearRegression($arrY);
+				$slope                     = ( $linearRegression['m'] * 100 );
+				$rate                      = ($totalValue == 0) ? 0 : ( $value / $totalValue) ;
+				$arr[$columnValue]         = $value;
+				$arr['rate_'.$columnValue] = $rate * 100;
+				$arr['growthRate']         = $slope;
+
+				$arrData[]      = $arr;
+				$posicion       = '(' . $row['id_posicion'] . ') ' . $row['posicion'];
 				$arrChartData[] = [
 					'id_posicion' => $row['id_posicion'] ,
 					'posicion'    => $posicion,
-					'valor_expo'  => (float)($row[$columnValue] / $this->divisor),
-					'growthRate'  => ( $growthRate * 100 )
+					'valor_expo'  => $value,
+					'growthRate'  => $slope
 				];
+			} else {
+
+				$othersValue += $this->getFloatValue( $row[$columnValue] );
+
+				foreach ($arrCalculatedColumns as $key => $val) {
+					$index = str_replace(' '.$columnValue, '', $key);
+					
+					if ( empty($arrOthersVal[$index]) ) {
+						$arrOthersVal[$index] = 0;
+					}
+
+					$arrOthersVal[$index] += $row[$key];
+				}
+
 			}
 		}
 
+		$htmlColumns[$columnValue]         = 'Total ' . $this->pYAxisName;
+		$htmlColumns['rate_'.$columnValue] = Lang::get('indicador.columns_title.participacion');
+		$htmlColumns['growthRate']         = Lang::get('indicador.reports.growRate');
+
+		//inserta la fila "otros"
+		$arr                = [];
+		$arr['id']          = 0;
+		$arr['id_posicion'] = '';
+		$arr['posicion']    = Lang::get('indicador.reports.others');
+
+		$arr = $arr + $arrOthersVal;
+
+		$arrY                      = array_map('Helpers::naturalLogarithm', $arrOthersVal);
+		$linearRegression          = Helpers::linearRegression($arrY);
+		$slope                     = ( $linearRegression['m'] * 100 );
+		$rate                      = ($totalValue == 0) ? 0 : ( $othersValue / $totalValue) ;
+		$arr[$columnValue]         = $othersValue;
+		$arr['rate_'.$columnValue] = $rate * 100;
+		$arr['growthRate']         = $slope;
+		$arrData[]                 = $arr;
+		$arrChartData[]            = [
+			'id_posicion' => Lang::get('indicador.reports.others') ,
+			'posicion'    => Lang::get('indicador.reports.others'),
+			'valor_expo'  => $othersValue,
+			'growthRate'  => $slope
+		];
+
+
 		$pieChart              = [];
 		$pieChart['cols'][]    = ['id' => 'posicion', 'label' => Lang::get('indicador.columns_title.posicion'), 'type' => 'string'];
-		$pieChart['cols'][]    = ['id' => 'valor_expo', 'label' => Lang::get('indicador.columns_title.valor_expo'), 'type' => 'number'];
+		$pieChart['cols'][]    = ['id' => 'valor_expo', 'label' => $this->pYAxisName, 'type' => 'number'];
 		$columnChart           = [];
 		$columnChart['cols'][] = ['id' => 'posicion', 'label' => Lang::get('indicador.columns_title.posicion'), 'type' => 'string'];
 		$columnChart['cols'][] = ['id' => 'growthRate', 'label' => Lang::get('indicador.reports.growRate'), 'type' => 'number'];
@@ -4348,7 +4351,6 @@ class DeclaracionesRepo extends BaseRepo {
 			'pieChart'    => $pieChart,
 			'htmlColumns' => $htmlColumns,
 		];
-		//print_r(json_encode($pieChart));
 
 		return $result;
 	}

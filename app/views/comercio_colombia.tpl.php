@@ -12,7 +12,6 @@ $updateInfo = '
 $updateInfo = Inflector::compress($updateInfo);
 
 $htmlActivator = '';
-//var_dump($activator);
 foreach ($activator as $key => $row) {
 
 	$checked = ($key == 0) ?  'checked="checked"' : '';
@@ -26,6 +25,14 @@ foreach ($activator as $key => $row) {
 	';
 }
 
+$htmlPareto = '';
+foreach ($pareto as $key => $row) {
+
+	$htmlPareto .= '
+		<option value="' . $row[0] . '">' . $row[1] . '</option>
+	';
+}
+
 ?>
 
 <div class="container white">
@@ -33,6 +40,15 @@ foreach ($activator as $key => $row) {
 		<h3>Comercio agropecuario de <strong>Colombia</strong></h3>
 	</header>
 	<div class="row">
+		<div class="col-md-12">
+			<blockquote class="blockquote-reverse">
+				<p>
+					<cite title="Sicex.com">Fuente de información
+						<a href="http://sicex.com/" target="_blank">Sicex</a>
+					</cite>
+				</p>
+			</blockquote>
+		</div>
 
 		<aside class="col-md-3">
 
@@ -63,6 +79,17 @@ foreach ($activator as $key => $row) {
 				<div class="form-group">
 					<label class="control-label" for="radios"><?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador'); ?></label>
 					<?= $htmlActivator; ?>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<div class="col-sm-10">
+						<label class="control-label" for="radios">
+							<?= Lang::get('indicador.reports.pareto'); ?>
+						</label>
+						<select name="pareto" class="form-control" required="required">
+							<?= $htmlPareto; ?>
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group">

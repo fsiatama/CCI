@@ -28,7 +28,7 @@ define("COLUMNAS", "mscolumn3d");     //GRAFICA DE BARRAS
 define("BARRAS", "msbar3d");     //GRAFICA DE BARRAS
 define("PIE", "pie3d");        //GRAFICA DE PIE
 define("LINEAL", "msline");      //GRAFICA LINEAL
-define("AREA", "stackedarea2d");      //GRAFICA LINEAL
+define("AREA", "msarea");      //GRAFICA LINEAL
 
 
 define("_UNDEFINEDYEAR", 65535); //anio indefinido ( maximo numero soportado por SMALLINT(4) )

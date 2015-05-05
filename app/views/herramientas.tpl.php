@@ -6,15 +6,41 @@
                     <strong class="">Herramientas</strong>
                 </div>
                 <div class="panel-body">
-                        <h2>Comercio agropecuario de <strong>Colombia</strong></h2>
-                        <p>
-                            Esta herramienta presenta reportes de actualización mensual, con los flujos comerciales del país para el sector agropecuario.
-                        </p>
-                        <ul>
-                            <li>
-                                <a href="<?= URL_RAIZ; ?>comercio-agropecuario-colombia">Haz click aqui</a>
-                            </li>
-                        </ul>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-tools">
+                            <tr>
+                                <td class="bg-success" colspan="3">
+                                    <h4 class="text-center">Comercio agropecuario de <strong>Colombia</strong></h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><p>Esta herramienta presenta reportes de actualización mensual, con los flujos comerciales del país para el sector agropecuario.</p></td>
+                                <td>
+                                    <a href="<?= URL_RAIZ; ?>comercio-agropecuario-colombia">
+                                        <i class="fa fa-2x fa-external-link"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-tools">
+                            <tr>
+                                <td class="bg-success" colspan="3">
+                                    <h4 class="text-center">Posicionamiento y dinamismo de los <strong>productos</strong></h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><p>Priorización de productos a partir de la demanda “Metodología de cuadrantes” – exploración preliminar de mercados</p></td>
+                                <td>
+                                    <a href="<?= URL_RAIZ; ?>posicionamiento-dinamismo-productos">
+                                        <i class="fa fa-2x fa-external-link"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                        
                         <hr class="half-margins">
                         <h2>Posicionamiento y dinamismo de los <strong>productos</strong></h2>
                         <p>

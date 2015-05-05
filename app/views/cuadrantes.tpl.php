@@ -11,16 +11,23 @@
 				Para la búsqueda se debe seleccionar :
 				<ul>
 					<li>
-						Primero (Opcional), un país, para esta herramienta los nombres de los países están en ingles. Por ejemplo (USA).
+						Primero, un producto de la lista, la cual contiene todos los productos del arancel de aduanas a 6 dígitos
 					</li>
 					<li>
-						Segundo, un producto de la lista, la cual contiene todos los productos del arancel de aduanas a 6 dígitos
+						Segundo (Opcional), un socio comercial, para esta herramienta los nombres de los países están en ingles. Por ejemplo (USA).
 					</li>
 				</ul>
 
 
 				<hr class="half-margins">
 			</p>
+			<blockquote class="blockquote-reverse">
+				<p>
+					<cite title="Comtrade">Fuente de información
+						<a href="http://comtrade.un.org/data/" target="_blank">Comtrade</a>
+					</cite>
+				</p>
+			</blockquote>
 		</div>
 
 		<aside class="col-md-3">
@@ -28,16 +35,16 @@
 			<form action="#" method="POST" role="form" id="searchQuadrantForm">
 				<legend>Filtros</legend>
 
-				<div class="form-group">
-					<label for="ms-filter-country" class="margin-bottom10">Socio Comercial</label>
-					<input type="text" class="form-control" id="ms-filter-country">
-				</div>
 
 				<div class="form-group">
 					<label for="ms-filter-product" class="margin-bottom10">Productos</label>
 					<input type="text" class="form-control" id="ms-filter-product">
 				</div>
 
+				<div class="form-group">
+					<label for="ms-filter-country" class="margin-bottom10">Socio Comercial</label>
+					<input type="text" class="form-control" id="ms-filter-country">
+				</div>
 
 				<button type="submit" class="btn btn-primary" id="searchQuadrantSubmit">Buscar</button>
 			</form>
