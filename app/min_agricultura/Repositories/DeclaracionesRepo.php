@@ -4206,7 +4206,7 @@ class DeclaracionesRepo extends BaseRepo {
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
 
-		$this->modelAdo->setPivotRowFields('id, decl.id_posicion, posicion');
+		$this->modelAdo->setPivotRowFields('id, decl.id_subpartida, subpartida');
 		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotColumnFields('anio');
 		$this->modelAdo->setPivotGroupingFunction('SUM');
@@ -4225,7 +4225,7 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 
-		$arrFields        = ['id' => 'id', 'id_posicion' => 'id_posicion', 'posicion' => 'posicion', $columnValue => $columnValue];
+		$arrFields        = ['id' => 'id', 'id_subpartida' => 'id_subpartida', 'subpartida' => 'subpartida', $columnValue => $columnValue];
 		$arrDeclaraciones = $rsDeclaraciones['data'];
 		$arrData      = [];
 		$arrChartData = [];
@@ -4237,8 +4237,8 @@ class DeclaracionesRepo extends BaseRepo {
 		$totalValue     = $this->getFloatValue( array_sum($arrColumnValue) );
 
 		$htmlColumns                = [];
-		$htmlColumns['id_posicion'] = Lang::get('indicador.columns_title.posicion');
-		$htmlColumns['posicion']    = Lang::get('indicador.columns_title.desc_posicion');
+		$htmlColumns['id_subpartida'] = Lang::get('indicador.columns_title.subpartida');
+		$htmlColumns['subpartida']    = Lang::get('indicador.columns_title.desc_posicion');
 		$arrCalculatedColumns       = array_diff_key($arrDeclaraciones[0], $arrFields);
 
 		foreach ($arrCalculatedColumns as $key => $val) {
@@ -4281,12 +4281,12 @@ class DeclaracionesRepo extends BaseRepo {
 				$arr['growthRate']         = $slope;
 
 				$arrData[]      = $arr;
-				$posicion       = '(' . $row['id_posicion'] . ') ' . $row['posicion'];
+				$subpartida     = '(' . $row['id_subpartida'] . ') ' . $row['subpartida'];
 				$arrChartData[] = [
-					'id_posicion' => $row['id_posicion'] ,
-					'posicion'    => $posicion,
-					'valor_expo'  => $value,
-					'growthRate'  => $slope
+					'id_subpartida' => $row['id_subpartida'] ,
+					'subpartida'    => $subpartida,
+					'valor_expo'    => $value,
+					'growthRate'    => $slope
 				];
 			} else {
 
@@ -4306,10 +4306,10 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		//inserta la fila "otros"
-		$arr                = [];
-		$arr['id']          = 0;
-		$arr['id_posicion'] = '';
-		$arr['posicion']    = Lang::get('indicador.reports.others');
+		$arr                  = [];
+		$arr['id']            = 0;
+		$arr['id_subpartida'] = '';
+		$arr['subpartida']    = Lang::get('indicador.reports.others');
 
 		$arr = $arr + $arrOthersVal;
 
@@ -4322,28 +4322,28 @@ class DeclaracionesRepo extends BaseRepo {
 		$arr['growthRate']         = $slope;
 		$arrData[]                 = $arr;
 		$arrChartData[]            = [
-			'id_posicion' => Lang::get('indicador.reports.others') ,
-			'posicion'    => Lang::get('indicador.reports.others'),
-			'valor_expo'  => $othersValue,
-			'growthRate'  => $slope
+			'id_subpartida' => Lang::get('indicador.reports.others') ,
+			'subpartida'    => Lang::get('indicador.reports.others'),
+			'valor_expo'    => $othersValue,
+			'growthRate'    => $slope
 		];
 
 
 		$pieChart              = [];
-		$pieChart['cols'][]    = ['id' => 'posicion', 'label' => Lang::get('indicador.columns_title.posicion'), 'type' => 'string'];
+		$pieChart['cols'][]    = ['id' => 'subpartida', 'label' => Lang::get('indicador.columns_title.subpartida'), 'type' => 'string'];
 		$pieChart['cols'][]    = ['id' => 'valor_expo', 'label' => $this->pYAxisName, 'type' => 'number'];
 		$columnChart           = [];
-		$columnChart['cols'][] = ['id' => 'posicion', 'label' => Lang::get('indicador.columns_title.posicion'), 'type' => 'string'];
+		$columnChart['cols'][] = ['id' => 'subpartida', 'label' => Lang::get('indicador.columns_title.subpartida'), 'type' => 'string'];
 		$columnChart['cols'][] = ['id' => 'growthRate', 'label' => Lang::get('indicador.reports.growRate'), 'type' => 'number'];
 
 		foreach ($arrChartData as $key => $row) {
 			$arr                = [];
-			$arr['c'][]         = [ 'v' => $row['posicion'], 'f' => null ];
+			$arr['c'][]         = [ 'v' => $row['subpartida'], 'f' => null ];
 			$arr['c'][]         = [ 'v' => $row['valor_expo'], 'f' => null ];
 			$pieChart['rows'][] = $arr;
 
 			$arr                   = [];
-			$arr['c'][]            = [ 'v' => $row['posicion'], 'f' => null ];
+			$arr['c'][]            = [ 'v' => $row['subpartida'], 'f' => null ];
 			$arr['c'][]            = [ 'v' => $row['growthRate'], 'f' => null ];
 			$columnChart['rows'][] = $arr;
 		}

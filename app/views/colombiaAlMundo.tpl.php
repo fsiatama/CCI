@@ -7,7 +7,7 @@ $tableHtml = '
 ';
 
 foreach ($htmlColumns as $key => $value) {
-	if ($key != 'posicion' && $key != 'id_posicion') {
+	if ($key != 'subpartida' && $key != 'id_subpartida') {
 		$tableHtml .= '<th class="text-right" data-dynatable-column="'.$key.'">' . $value . '</th>';
 	} else {
 		$tableHtml .= '<th data-dynatable-column="'.$key.'">' . $value . '</th>';
@@ -25,7 +25,7 @@ foreach ($data as $row) {
 	foreach ($row as $key => $value) {
 		
 		if ( ! empty($htmlColumns[$key]) ) {
-			if (is_numeric($value) && $key != 'id_posicion') {
+			if (is_numeric($value) && $key != 'id_subpartida') {
 				$tableHtml .= '<td>' . number_format($value, 2) . '</td>';
 			} else {
 				$tableHtml .= '<td>' . substr($value, 0, 50) . '</td>';

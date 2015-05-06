@@ -50,6 +50,7 @@ class DeclaraexpAdo extends BaseAdo {
 	{
 		$this->arrJoins = [
 			'posicion' => 'decl.id_posicion = posicion.id_posicion',
+			'subpartida' => 'decl.id_subpartida = subpartida.id_subpartida',
 			'pais'     => 'decl.id_paisdestino = pais.id_pais',
 		];
 	}
