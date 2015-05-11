@@ -44,7 +44,7 @@
 	$('#loginForm').on('submit', function(event){
 		var $form = $(this);
 		var $btn = $('#loginFormSubmit');
-		$btn.button('loading');
+		//$btn.button('loading');
 		$.ajax({
 			type:'POST'
 			,url:$form.attr('action')
@@ -64,7 +64,7 @@
 				}
 			}
 		}).always(function(){
-			$btn.button('reset');
+			//$btn.button('reset');
 		});
  
 		event.preventDefault();
@@ -151,7 +151,7 @@
 
 				var form = $(this);
 				var btn = $('#searchAgreementSubmit');
-				btn.button('loading');
+				//btn.button('loading');
 
 				$.ajax({
 					type:'POST'
@@ -190,7 +190,7 @@
 						}
 					}
 				}).always(function(){
-					btn.button('reset');
+					//btn.button('reset');
 				});
 			}
 			event.preventDefault();
@@ -287,7 +287,7 @@
 				
 				var form = $(this);
 				var btn = $('#searchQuotaSubmit');
-				btn.button('loading');
+				//btn.button('loading');
 
 				$.ajax({
 					type:'POST'
@@ -327,7 +327,7 @@
 						}
 					}
 				}).always(function(){
-					btn.button('reset');
+					//btn.button('reset');
 				});
 			}
 			event.preventDefault();

@@ -1,5 +1,5 @@
 /*
-SQLyog Community v12.09 (64 bit)
+SQLyog Community v12.11 (64 bit)
 MySQL - 5.6.19 : Database - min_agricultura
 *********************************************************************
 */
@@ -105,7 +105,7 @@ CREATE TABLE `arancel` (
   `notas` longtext,
   KEY `idx_posicion` (`cod_capitulo`,`cod_partida`,`cod_subpartida`,`cod_posicion`),
   KEY `descripcion` (`descripcion`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*Table structure for table `audit` */
 
@@ -113,10 +113,10 @@ DROP TABLE IF EXISTS `audit`;
 
 CREATE TABLE `audit` (
   `audit_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `audit_table` varchar(30) CHARACTER SET latin1 NOT NULL,
-  `audit_script` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `audit_method` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `audit_parameters` text CHARACTER SET latin1 NOT NULL,
+  `audit_table` varchar(30) NOT NULL,
+  `audit_script` varchar(100) NOT NULL,
+  `audit_method` varchar(100) NOT NULL,
+  `audit_parameters` text NOT NULL,
   `audit_uinsert` int(10) unsigned NOT NULL,
   `audit_finsert` datetime NOT NULL,
   PRIMARY KEY (`audit_id`)
@@ -139,7 +139,7 @@ DROP TABLE IF EXISTS `ciiu`;
 
 CREATE TABLE `ciiu` (
   `id_ciiu` smallint(4) unsigned NOT NULL DEFAULT '0',
-  `ciiu` varchar(100) CHARACTER SET latin1 NOT NULL DEFAULT '0',
+  `ciiu` varchar(100) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_ciiu`),
   UNIQUE KEY `ciiu` (`ciiu`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -283,7 +283,7 @@ DROP TABLE IF EXISTS `departamento`;
 
 CREATE TABLE `departamento` (
   `id_departamento` smallint(4) unsigned NOT NULL DEFAULT '0',
-  `departamento` varchar(35) CHARACTER SET latin1 NOT NULL,
+  `departamento` varchar(35) NOT NULL,
   `id_region` smallint(2) unsigned NOT NULL,
   PRIMARY KEY (`id_departamento`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -495,7 +495,7 @@ DROP TABLE IF EXISTS `region`;
 
 CREATE TABLE `region` (
   `id_region` smallint(2) unsigned NOT NULL,
-  `region` varchar(30) CHARACTER SET latin1 NOT NULL,
+  `region` varchar(30) NOT NULL,
   PRIMARY KEY (`id_region`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -577,8 +577,8 @@ CREATE TABLE `sobordoimp` (
 DROP TABLE IF EXISTS `subpartida`;
 
 CREATE TABLE `subpartida` (
-  `id_subpartida` char(6) CHARACTER SET latin1 NOT NULL,
-  `subpartida` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `id_subpartida` char(6) NOT NULL,
+  `subpartida` varchar(100) NOT NULL,
   `id_capitulo` char(2) NOT NULL,
   `id_partida` char(4) NOT NULL,
   PRIMARY KEY (`id_subpartida`),

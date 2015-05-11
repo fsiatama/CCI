@@ -1,1 +1,1 @@
-"E:\wamp\bin\php\php5.5.12\php.exe" DataSync.php
+"D:\wamp\bin\php\php5.5.12\php.exe" DataSync.php
