@@ -1,3 +1,6 @@
+<style>
+    /* html {position: inherit!important;} */
+</style>
         <img id="cycle-loader" src="img/spinner.gif" alt="loader" />
 
                 <!-- controlls -->
