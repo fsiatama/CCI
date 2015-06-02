@@ -82,6 +82,8 @@ class DataSync extends Connection {
 			return;
 		}
 
+		ftp_pasv($ftpSession, true);
+
 		$this->Log("Comprueba si existe un archivo disponible");
 		$ftpFileName = $this->tableName . ".zip";
 		$ok = (ftp_size($ftpSession, $ftpFileName) != -1);
@@ -409,7 +411,7 @@ class DataSync extends Connection {
 		$fp = fopen($filename, "a+");
 
 		chmod($filename, 0777);
-		$text = date("Y-m-d H:i:s")." - ". $message."\xA";
+		$text = date("Y-m-d H:i:s")." - ". $message."\r\n";
 		if($fp) {
 			fwrite($fp, $text, strlen($text));
 			fclose($fp);

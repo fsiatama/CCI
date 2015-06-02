@@ -41,6 +41,11 @@
 		});
 	}
 
+	if ( $('footer').is(':hidden') == false ) {
+		$('html').css({'min-height': '100%' });
+		$('html').css({'position': 'relative' });
+	}
+
 	$('#loginForm').on('submit', function(event){
 		var $form = $(this);
 		var $btn = $('#loginFormSubmit');

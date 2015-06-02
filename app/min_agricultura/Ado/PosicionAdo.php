@@ -136,9 +136,9 @@ class PosicionAdo extends BaseAdo {
 				SELECT CONCAT("",cod_capitulo) AS id_posicion, descripcion
 				FROM arancel
 				WHERE cod_capitulo IN (\''.$arrArancel['capitulos'].'\')
-				  AND cod_partida    IS NULL
-				  AND cod_subpartida IS NULL
-				  AND cod_posicion   IS NULL 
+				  AND cod_partida    = "00"
+				  AND cod_subpartida = "00"
+				  AND cod_posicion   = "0000"
 			  ) AS capitulos 
 			';
 			if (!empty($arrArancel['partidas'])) {
@@ -147,8 +147,8 @@ class PosicionAdo extends BaseAdo {
 						SELECT CONCAT(cod_capitulo,cod_partida)  AS id_posicion, descripcion
 						FROM arancel
 						WHERE CONCAT(cod_capitulo,cod_partida) IN (\''.$arrArancel['partidas'].'\')
-						AND cod_subpartida IS NULL
-						AND cod_posicion  IS NULL
+						AND cod_subpartida = "00"
+						AND cod_posicion  = "0000"
 					  ) AS partidas 
 				';
 				if (!empty($arrArancel['subpartidas'])) {
@@ -157,7 +157,7 @@ class PosicionAdo extends BaseAdo {
 							SELECT CONCAT(cod_capitulo,cod_partida,cod_subpartida)  AS id_posicion, descripcion
 							FROM arancel
 							WHERE CONCAT(cod_capitulo,cod_partida,cod_subpartida) IN (\''.$arrArancel['subpartidas'].'\')
-							AND cod_posicion  IS NULL
+							AND cod_posicion  = "0000"
 						  ) AS subpartidas
 					';
 				}

@@ -1,0 +1,329 @@
+2015-05-22 09:01:31 - Inicia proceso para actualizar datos en la tabla arancel
+2015-05-22 09:01:31 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:31 - Comprueba si existe un archivo disponible
+2015-05-22 09:01:31 - Inicia descarga de archivo arancel.zip
+2015-05-22 09:01:31 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:31 - Preparando carpeta temporal
+2015-05-22 09:01:31 - Descomprimiendo datos
+2015-05-22 09:01:31 - Inicia carga de datos nuevos
+2015-05-22 09:01:35 - Elimina archivos y carpetas temporales
+2015-05-22 09:01:35 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:35 - Renombrando archivo el servidor FTP
+2015-05-22 09:01:35 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:35 - Finaliza proceso de actualización para la tabla arancel
+2015-05-22 09:01:35 - ====================================================================================
+2015-05-22 09:01:35 - ====================================================================================
+2015-05-22 09:01:35 - Inicia proceso para actualizar datos en la tabla posicion
+2015-05-22 09:01:35 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:35 - Comprueba si existe un archivo disponible
+2015-05-22 09:01:35 - Inicia descarga de archivo posicion.zip
+2015-05-22 09:01:35 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:35 - Preparando carpeta temporal
+2015-05-22 09:01:35 - Descomprimiendo datos
+2015-05-22 09:01:35 - Inicia carga de datos nuevos
+2015-05-22 09:01:36 - Elimina archivos y carpetas temporales
+2015-05-22 09:01:36 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:36 - Renombrando archivo el servidor FTP
+2015-05-22 09:01:36 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:36 - Finaliza proceso de actualización para la tabla posicion
+2015-05-22 09:01:36 - ====================================================================================
+2015-05-22 09:01:36 - ====================================================================================
+2015-05-22 09:01:36 - Inicia proceso para actualizar datos en la tabla subpartida
+2015-05-22 09:01:36 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:36 - Comprueba si existe un archivo disponible
+2015-05-22 09:01:36 - Inicia descarga de archivo subpartida.zip
+2015-05-22 09:01:36 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:36 - Preparando carpeta temporal
+2015-05-22 09:01:36 - Descomprimiendo datos
+2015-05-22 09:01:36 - Inicia carga de datos nuevos
+2015-05-22 09:01:37 - Elimina archivos y carpetas temporales
+2015-05-22 09:01:37 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:37 - Renombrando archivo el servidor FTP
+2015-05-22 09:01:37 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:37 - Finaliza proceso de actualización para la tabla subpartida
+2015-05-22 09:01:37 - ====================================================================================
+2015-05-22 09:01:37 - ====================================================================================
+2015-05-22 09:01:37 - Inicia proceso para actualizar datos en la tabla empresa
+2015-05-22 09:01:37 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:37 - Comprueba si existe un archivo disponible
+2015-05-22 09:01:37 - Inicia descarga de archivo empresa.zip
+2015-05-22 09:01:38 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:38 - Preparando carpeta temporal
+2015-05-22 09:01:38 - Descomprimiendo datos
+2015-05-22 09:01:38 - Inicia carga de datos nuevos
+2015-05-22 09:01:57 - Elimina archivos y carpetas temporales
+2015-05-22 09:01:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:57 - Renombrando archivo el servidor FTP
+2015-05-22 09:01:57 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:57 - Finaliza proceso de actualización para la tabla empresa
+2015-05-22 09:01:57 - ====================================================================================
+2015-05-22 09:01:57 - ====================================================================================
+2015-05-22 09:01:57 - Inicia proceso para actualizar datos en la tabla departamento
+2015-05-22 09:01:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:57 - Comprueba si existe un archivo disponible
+2015-05-22 09:01:57 - Inicia descarga de archivo departamento.zip
+2015-05-22 09:01:57 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:57 - Preparando carpeta temporal
+2015-05-22 09:01:57 - Descomprimiendo datos
+2015-05-22 09:01:57 - Inicia carga de datos nuevos
+2015-05-22 09:01:57 - Elimina archivos y carpetas temporales
+2015-05-22 09:01:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:57 - Renombrando archivo el servidor FTP
+2015-05-22 09:01:57 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:57 - Finaliza proceso de actualización para la tabla departamento
+2015-05-22 09:01:57 - ====================================================================================
+2015-05-22 09:01:57 - ====================================================================================
+2015-05-22 09:01:57 - Inicia proceso para actualizar datos en la tabla pais
+2015-05-22 09:01:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:57 - Comprueba si existe un archivo disponible
+2015-05-22 09:01:57 - Inicia descarga de archivo pais.zip
+2015-05-22 09:01:57 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:57 - Preparando carpeta temporal
+2015-05-22 09:01:57 - Descomprimiendo datos
+2015-05-22 09:01:57 - Inicia carga de datos nuevos
+2015-05-22 09:01:57 - Elimina archivos y carpetas temporales
+2015-05-22 09:01:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:57 - Renombrando archivo el servidor FTP
+2015-05-22 09:01:57 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:57 - Finaliza proceso de actualización para la tabla pais
+2015-05-22 09:01:57 - ====================================================================================
+2015-05-22 09:01:57 - ====================================================================================
+2015-05-22 09:01:57 - Inicia proceso para actualizar datos en la tabla declaraimp
+2015-05-22 09:01:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:01:57 - Comprueba si existe un archivo disponible
+2015-05-22 09:01:57 - Inicia descarga de archivo declaraimp.zip
+2015-05-22 09:01:58 - Cerrando conexión con el servidor FTP
+2015-05-22 09:01:58 - Preparando carpeta temporal
+2015-05-22 09:01:58 - Descomprimiendo datos
+2015-05-22 09:01:59 - Inicia carga de datos nuevos
+2015-05-22 09:03:42 - Elimina archivos y carpetas temporales
+2015-05-22 09:03:42 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:03:42 - Renombrando archivo el servidor FTP
+2015-05-22 09:03:42 - Cerrando conexión con el servidor FTP
+2015-05-22 09:03:42 - Finaliza proceso de actualización para la tabla declaraimp
+2015-05-22 09:03:42 - Inicia proceso de alertas para los contingentes de declaraimp Intercambio impo
+2015-05-22 09:03:42 - ====================================================================================
+2015-05-22 09:03:42 - ====================================================================================
+2015-05-22 09:03:42 - Inicia proceso para actualizar datos en la tabla declaraexp
+2015-05-22 09:03:42 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:03:42 - Comprueba si existe un archivo disponible
+2015-05-22 09:03:42 - Inicia descarga de archivo declaraexp.zip
+2015-05-22 09:03:42 - Cerrando conexión con el servidor FTP
+2015-05-22 09:03:42 - Preparando carpeta temporal
+2015-05-22 09:03:42 - Descomprimiendo datos
+2015-05-22 09:03:42 - Inicia carga de datos nuevos
+2015-05-22 09:04:43 - Elimina archivos y carpetas temporales
+2015-05-22 09:04:43 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-05-22 09:04:44 - Renombrando archivo el servidor FTP
+2015-05-22 09:04:44 - Cerrando conexión con el servidor FTP
+2015-05-22 09:04:44 - Finaliza proceso de actualización para la tabla declaraexp
+2015-05-22 09:04:44 - Inicia proceso de alertas para los contingentes de declaraexp Intercambio expo
+2015-05-22 09:04:44 - ====================================================================================
+2015-05-22 09:04:44 - ====================================================================================
+2015-06-02 08:59:52 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 08:59:52 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 08:59:52 - Comprueba si existe un archivo disponible
+2015-06-02 08:59:52 - Inicia descarga de archivo arancel.zip
+2015-06-02 08:59:52 - Cerrando conexión con el servidor FTP
+2015-06-02 08:59:52 - Preparando carpeta temporal
+2015-06-02 08:59:52 - Descomprimiendo datos
+2015-06-02 08:59:52 - Inicia carga de datos nuevos
+2015-06-02 08:59:52 - ERROR. Fallo durante carga de datos nuevos
+2015-06-02 08:59:52 - ====================================================================================
+2015-06-02 08:59:52 - ====================================================================================
+2015-06-02 09:01:08 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 09:01:08 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:01:08 - Comprueba si existe un archivo disponible
+2015-06-02 09:01:08 - Inicia descarga de archivo arancel.zip
+2015-06-02 09:01:08 - Cerrando conexión con el servidor FTP
+2015-06-02 09:01:08 - Preparando carpeta temporal
+2015-06-02 09:01:08 - Descomprimiendo datos
+2015-06-02 09:01:08 - Inicia carga de datos nuevos
+2015-06-02 09:01:09 - ERROR. Fallo durante carga de datos nuevos
+2015-06-02 09:01:09 - ====================================================================================
+2015-06-02 09:01:09 - ====================================================================================
+2015-06-02 09:10:18 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 09:10:18 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:10:18 - Comprueba si existe un archivo disponible
+2015-06-02 09:10:18 - Inicia descarga de archivo arancel.zip
+2015-06-02 09:10:18 - Cerrando conexión con el servidor FTP
+2015-06-02 09:10:18 - Preparando carpeta temporal
+2015-06-02 09:10:18 - Descomprimiendo datos
+2015-06-02 09:10:18 - Inicia carga de datos nuevos
+2015-06-02 09:10:19 - ERROR. Fallo durante carga de datos nuevos
+2015-06-02 09:10:19 - ====================================================================================
+2015-06-02 09:10:19 - ====================================================================================
+2015-06-02 09:12:42 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 09:12:42 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:12:42 - Comprueba si existe un archivo disponible
+2015-06-02 09:12:42 - Inicia descarga de archivo arancel.zip
+2015-06-02 09:12:42 - Cerrando conexión con el servidor FTP
+2015-06-02 09:12:42 - Preparando carpeta temporal
+2015-06-02 09:12:42 - Descomprimiendo datos
+2015-06-02 09:12:42 - Inicia carga de datos nuevos
+2015-06-02 09:12:42 - ERROR. Fallo durante carga de datos nuevos
+2015-06-02 09:12:42 - ====================================================================================
+2015-06-02 09:12:42 - ====================================================================================
+2015-06-02 09:13:50 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 09:13:50 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:13:50 - Comprueba si existe un archivo disponible
+2015-06-02 09:13:50 - Inicia descarga de archivo arancel.zip
+2015-06-02 09:13:50 - Cerrando conexión con el servidor FTP
+2015-06-02 09:13:50 - Preparando carpeta temporal
+2015-06-02 09:13:50 - Descomprimiendo datos
+2015-06-02 09:13:50 - Inicia carga de datos nuevos
+2015-06-02 09:13:54 - Elimina archivos y carpetas temporales
+2015-06-02 09:13:54 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:13:54 - Renombrando archivo el servidor FTP
+2015-06-02 09:13:54 - Cerrando conexión con el servidor FTP
+2015-06-02 09:13:55 - Finaliza proceso de actualización para la tabla arancel
+2015-06-02 09:13:55 - ====================================================================================
+2015-06-02 09:13:55 - ====================================================================================
+2015-06-02 09:14:53 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 09:14:53 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:14:53 - Comprueba si existe un archivo disponible
+2015-06-02 09:14:53 - No hay archivo disponible
+2015-06-02 09:14:53 - Cerrando conexión con el servidor FTP
+2015-06-02 09:14:53 - ====================================================================================
+2015-06-02 09:14:53 - ====================================================================================
+2015-06-02 09:19:01 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 09:19:01 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:19:01 - Comprueba si existe un archivo disponible
+2015-06-02 09:19:01 - No hay archivo disponible
+2015-06-02 09:19:01 - Cerrando conexión con el servidor FTP
+2015-06-02 09:19:01 - ====================================================================================
+2015-06-02 09:19:01 - ====================================================================================
+2015-06-02 09:23:29 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 09:23:29 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:23:29 - Comprueba si existe un archivo disponible
+2015-06-02 09:23:29 - No hay archivo disponible
+2015-06-02 09:23:29 - Cerrando conexión con el servidor FTP
+2015-06-02 09:23:29 - ====================================================================================
+2015-06-02 09:23:29 - ====================================================================================
+2015-06-02 09:26:53 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 09:26:53 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:26:53 - Comprueba si existe un archivo disponible
+2015-06-02 09:26:53 - No hay archivo disponible
+2015-06-02 09:26:53 - Cerrando conexión con el servidor FTP
+2015-06-02 09:26:53 - ====================================================================================
+2015-06-02 09:26:53 - ====================================================================================
+2015-06-02 09:28:24 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 09:28:24 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:28:24 - Comprueba si existe un archivo disponible
+2015-06-02 09:28:24 - No hay archivo disponible
+2015-06-02 09:28:24 - Cerrando conexión con el servidor FTP
+2015-06-02 09:28:24 - ====================================================================================
+2015-06-02 09:28:24 - ====================================================================================
+2015-06-02 09:34:10 - Inicia proceso para actualizar datos en la tabla arancel
+2015-06-02 09:34:10 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:10 - Comprueba si existe un archivo disponible
+2015-06-02 09:34:10 - Inicia descarga de archivo arancel.zip
+2015-06-02 09:34:10 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:10 - Preparando carpeta temporal
+2015-06-02 09:34:10 - Descomprimiendo datos
+2015-06-02 09:34:10 - Inicia carga de datos nuevos
+2015-06-02 09:34:13 - Elimina archivos y carpetas temporales
+2015-06-02 09:34:13 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:13 - Renombrando archivo el servidor FTP
+2015-06-02 09:34:13 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:13 - Finaliza proceso de actualización para la tabla arancel
+2015-06-02 09:34:13 - ====================================================================================
+2015-06-02 09:34:13 - ====================================================================================
+2015-06-02 09:34:13 - Inicia proceso para actualizar datos en la tabla posicion
+2015-06-02 09:34:13 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:13 - Comprueba si existe un archivo disponible
+2015-06-02 09:34:13 - Inicia descarga de archivo posicion.zip
+2015-06-02 09:34:13 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:13 - Preparando carpeta temporal
+2015-06-02 09:34:13 - Descomprimiendo datos
+2015-06-02 09:34:13 - Inicia carga de datos nuevos
+2015-06-02 09:34:15 - Elimina archivos y carpetas temporales
+2015-06-02 09:34:15 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:15 - Renombrando archivo el servidor FTP
+2015-06-02 09:34:15 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:15 - Finaliza proceso de actualización para la tabla posicion
+2015-06-02 09:34:15 - ====================================================================================
+2015-06-02 09:34:15 - ====================================================================================
+2015-06-02 09:34:15 - Inicia proceso para actualizar datos en la tabla subpartida
+2015-06-02 09:34:15 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:15 - Comprueba si existe un archivo disponible
+2015-06-02 09:34:15 - Inicia descarga de archivo subpartida.zip
+2015-06-02 09:34:15 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:15 - Preparando carpeta temporal
+2015-06-02 09:34:15 - Descomprimiendo datos
+2015-06-02 09:34:15 - Inicia carga de datos nuevos
+2015-06-02 09:34:16 - Elimina archivos y carpetas temporales
+2015-06-02 09:34:16 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:16 - Renombrando archivo el servidor FTP
+2015-06-02 09:34:16 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:16 - Finaliza proceso de actualización para la tabla subpartida
+2015-06-02 09:34:16 - ====================================================================================
+2015-06-02 09:34:16 - ====================================================================================
+2015-06-02 09:34:16 - Inicia proceso para actualizar datos en la tabla empresa
+2015-06-02 09:34:16 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:16 - Comprueba si existe un archivo disponible
+2015-06-02 09:34:16 - Inicia descarga de archivo empresa.zip
+2015-06-02 09:34:17 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:17 - Preparando carpeta temporal
+2015-06-02 09:34:17 - Descomprimiendo datos
+2015-06-02 09:34:17 - Inicia carga de datos nuevos
+2015-06-02 09:34:49 - Elimina archivos y carpetas temporales
+2015-06-02 09:34:49 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:49 - Renombrando archivo el servidor FTP
+2015-06-02 09:34:49 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:49 - Finaliza proceso de actualización para la tabla empresa
+2015-06-02 09:34:49 - ====================================================================================
+2015-06-02 09:34:49 - ====================================================================================
+2015-06-02 09:34:49 - Inicia proceso para actualizar datos en la tabla departamento
+2015-06-02 09:34:49 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:49 - Comprueba si existe un archivo disponible
+2015-06-02 09:34:49 - Inicia descarga de archivo departamento.zip
+2015-06-02 09:34:49 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:49 - Preparando carpeta temporal
+2015-06-02 09:34:49 - Descomprimiendo datos
+2015-06-02 09:34:49 - Inicia carga de datos nuevos
+2015-06-02 09:34:49 - Elimina archivos y carpetas temporales
+2015-06-02 09:34:49 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:49 - Renombrando archivo el servidor FTP
+2015-06-02 09:34:49 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:49 - Finaliza proceso de actualización para la tabla departamento
+2015-06-02 09:34:49 - ====================================================================================
+2015-06-02 09:34:49 - ====================================================================================
+2015-06-02 09:34:49 - Inicia proceso para actualizar datos en la tabla pais
+2015-06-02 09:34:49 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:49 - Comprueba si existe un archivo disponible
+2015-06-02 09:34:49 - Inicia descarga de archivo pais.zip
+2015-06-02 09:34:49 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:49 - Preparando carpeta temporal
+2015-06-02 09:34:49 - Descomprimiendo datos
+2015-06-02 09:34:49 - Inicia carga de datos nuevos
+2015-06-02 09:34:49 - Elimina archivos y carpetas temporales
+2015-06-02 09:34:49 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:49 - Renombrando archivo el servidor FTP
+2015-06-02 09:34:49 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:49 - Finaliza proceso de actualización para la tabla pais
+2015-06-02 09:34:49 - ====================================================================================
+2015-06-02 09:34:49 - ====================================================================================
+2015-06-02 09:34:49 - Inicia proceso para actualizar datos en la tabla declaraimp
+2015-06-02 09:34:49 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:34:49 - Comprueba si existe un archivo disponible
+2015-06-02 09:34:49 - Inicia descarga de archivo declaraimp.zip
+2015-06-02 09:34:51 - Cerrando conexión con el servidor FTP
+2015-06-02 09:34:51 - Preparando carpeta temporal
+2015-06-02 09:34:51 - Descomprimiendo datos
+2015-06-02 09:34:52 - Inicia carga de datos nuevos
+2015-06-02 09:45:20 - Elimina archivos y carpetas temporales
+2015-06-02 09:45:20 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:45:20 - Renombrando archivo el servidor FTP
+2015-06-02 09:45:20 - Cerrando conexión con el servidor FTP
+2015-06-02 09:45:20 - Finaliza proceso de actualización para la tabla declaraimp
+2015-06-02 09:45:20 - Inicia proceso de alertas para los contingentes de declaraimp Intercambio impo
+2015-06-02 09:45:25 - ====================================================================================
+2015-06-02 09:45:25 - ====================================================================================
+2015-06-02 09:45:25 - Inicia proceso para actualizar datos en la tabla declaraexp
+2015-06-02 09:45:25 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2015-06-02 09:45:25 - Comprueba si existe un archivo disponible
+2015-06-02 09:45:25 - No hay archivo disponible
+2015-06-02 09:45:25 - Cerrando conexión con el servidor FTP
+2015-06-02 09:45:25 - ====================================================================================
+2015-06-02 09:45:25 - ====================================================================================

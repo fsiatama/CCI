@@ -2,7 +2,7 @@
 return [
 	'alerts' => [
 		'change_partner'   => '¡Advertencia!  Modificar el país o el mercado eliminará toda la información de los productos relacionados, así como la información de contingentes, si existen.',
-    ],
+	],
 	'table_name'          => 'Acuerdo Comercial',
 	'partner_title'       => 'Socio comercial',
 	'analyze_agreement'   => 'Analizar acuerdo comercial',
@@ -18,5 +18,5 @@ return [
 		'acuerdo_decreto'      => 'Decreto de implementación',
 		'acuerdo_url'          => 'Enlace al texto original del acuerdo',
 		'acuerdo_tipo_acuerdo' => 'Tipo de acuerdo',
-    ]
+	]
 ];
