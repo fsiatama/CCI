@@ -7,14 +7,14 @@ return [
 				'field_expo'         => 'id_paisdestino',
 				'field_impo'         => 'id_paisprocedencia',
 				'required'   		 => false,
-				'requiredComplement' => true,
-				'complement'         => ['mercado_id'],
+				//'requiredComplement' => true,
+				//'complement'         => ['mercado_id'],
 			],[
 				'field'         => 'mercado_id',
 				'field_expo'    => 'mercado_id',
 				'field_impo'    => 'mercado_id',
 				'required'      => false,
-				'itComplements' => true, //son complemento del filtro id_pais
+				//'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',
@@ -47,14 +47,14 @@ return [
 				'field_expo'         => 'id_paisdestino',
 				'field_impo'         => 'id_paisprocedencia',
 				'required'   		 => false,
-				'requiredComplement' => true,
-				'complement'         => ['mercado_id'],
+				//'requiredComplement' => true,
+				//'complement'         => ['mercado_id'],
 			],[
 				'field'         => 'mercado_id',
 				'field_expo'    => 'mercado_id',
 				'field_impo'    => 'mercado_id',
 				'required'      => false,
-				'itComplements' => true, //son complemento del filtro id_pais
+				//'itComplements' => true, //son complemento del filtro id_pais
 			],[
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',

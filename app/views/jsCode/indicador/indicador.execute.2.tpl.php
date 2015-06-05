@@ -24,6 +24,7 @@ $htmlDescription .= '</ol>';
 		url:'indicador/execute'
 		,root:'data'
 		,id:module+'storeIndicador'
+		,autoDestroy:true
 		,sortInfo:{field:'id',direction:'ASC'}
 		,totalProperty:'total'
 		,baseParams: {
@@ -263,13 +264,13 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
-	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p){
+	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
 		disposeCharts();
-	});
+	}, this);
 
-	Ext.getCmp('<?= $panel; ?>').on('activate', function(p){
+	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
 		storeIndicador.load();
-	});
+	}, this);
 
 	storeIndicador.load();
 
@@ -287,8 +288,8 @@ $htmlDescription .= '</ol>';
 		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
 		var titleImpo = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_impo'); ?>' : '<?= Lang::get('indicador.columns_title.peso_impo'); ?>' ;
 		var titleExpo = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_expo'); ?>' : '<?= Lang::get('indicador.columns_title.peso_expo'); ?>' ;
-		colModelIndicador.setColumnHeader( 1, titleImpo );
-		colModelIndicador.setColumnHeader( 2, titleExpo );
+		colModelIndicador.setColumnHeader( 1, titleExpo );
+		colModelIndicador.setColumnHeader( 2, titleImpo );
 	}
 
 

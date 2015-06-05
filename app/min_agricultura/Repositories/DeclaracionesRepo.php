@@ -431,6 +431,8 @@ class DeclaracionesRepo extends BaseRepo {
 			$columnValueLower  = $this->columnValueExpo;
 		}
 
+		var_dump($rsHigher, $rsLower);
+
 		foreach ($rsHigher as $rowHigher) {
 
 			$valueLower = 0;

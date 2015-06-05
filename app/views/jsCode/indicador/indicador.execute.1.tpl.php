@@ -171,35 +171,7 @@ $htmlDescription .= '</ol>';
 					,selectOnFocus:true
 					,value: 12
 					,width: 120
-					/*,listeners:{
-						select: {
-							fn: function(combo,reg){
-								Ext.getCmp(module + 'comboYear').setDisabled(combo.getValue() == 12);
-							}
-						}
-					}*/
 				}]
-			/*},{
-				xtype: 'buttongroup'
-				,columns: 1
-				,defaults: {
-					scale: 'small'
-				},
-				items: [{
-					xtype: 'label'
-					,text: Ext.ux.lang.reports.selectYear + ': '
-				},{
-					xtype: 'combo'
-					,store: arrYears
-					,id: module + 'comboYear'
-					,typeAhead: true
-					,forceSelection: true
-					,triggerAction: 'all'
-					,selectOnFocus:true
-					,value: defaultYear
-					,disabled: true
-					,width: 120
-				}]*/
 			},{
 				xtype: 'buttongroup'
 				,columns: 1
@@ -316,8 +288,8 @@ $htmlDescription .= '</ol>';
 		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
 		var titleImpo = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_impo'); ?>' : '<?= Lang::get('indicador.columns_title.peso_impo'); ?>' ;
 		var titleExpo = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_expo'); ?>' : '<?= Lang::get('indicador.columns_title.peso_expo'); ?>' ;
-		colModelIndicador.setColumnHeader( 1, titleImpo );
-		colModelIndicador.setColumnHeader( 2, titleExpo );
+		colModelIndicador.setColumnHeader( 1, titleExpo );
+		colModelIndicador.setColumnHeader( 2, titleImpo );
 	}
 
 

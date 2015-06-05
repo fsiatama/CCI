@@ -193,7 +193,7 @@ class DeclaraexpAdo extends BaseAdo {
 		$sql .= ' ORDER BY ';
 		$sql .= (empty($this->pivotSortColumn)) ? 'id' : $this->pivotSortColumn ;
 
-		//echo '<pre>'.$sql.'</pre>';
+		echo '<pre>'.$sql.'</pre>';
 
 		return $sql;
 	}

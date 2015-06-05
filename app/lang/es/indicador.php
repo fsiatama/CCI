@@ -94,6 +94,7 @@ return [
 		'customs'           => 'Declaraciones de Aduana',
 		'bol'               => 'Conocimientos de Embarque',
 		'pareto'            => 'Mostrar',
+		'world'             => 'Mundo',
     ],
     'charts' => [
 		'columns' => 'Columnas',
