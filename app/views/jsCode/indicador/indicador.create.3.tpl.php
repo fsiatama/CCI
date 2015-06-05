@@ -157,20 +157,6 @@
 	});
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
-	var arrMonths = [
-		[1, Date.monthNames[0]],
-		[2, Date.monthNames[1]],
-		[3, Date.monthNames[2]],
-		[4, Date.monthNames[3]],
-		[5, Date.monthNames[4]],
-		[6, Date.monthNames[5]],
-		[7, Date.monthNames[6]],
-		[8, Date.monthNames[7]],
-		[9, Date.monthNames[8]],
-		[10, Date.monthNames[9]],
-		[11, Date.monthNames[10]],
-		[12, Date.monthNames[11]]
-	];
 
 	var MonthPicker = Ext.extend(Ext.ux.MonthYearPicker, {
 		allowBlank:false
@@ -182,23 +168,31 @@
 		name:'desde_ini'
 		,id:module+'comboDesde_ini'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
+		,vtype: 'daterange'
+		,endDateField: module+'comboHasta_ini'
 	});
 	var comboHasta_ini = new MonthPicker({
 		name:'hasta_ini'
 		,id:module+'comboHasta_ini'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
+		,vtype: 'daterange'
+		,startDateField: module+'comboDesde_ini'
 	});
 
 	var comboDesde_fin = new MonthPicker({
 		name:'desde_fin'
 		,id:module+'comboDesde_fin'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
+		,vtype: 'daterange'
+		,endDateField: module+'comboHasta_fin'
 	});
 
 	var comboHasta_fin = new MonthPicker({
 		name:'hasta_fin'
 		,id:module+'comboHasta_fin'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
+		,vtype: 'daterange'
+		,startDateField: module+'comboDesde_fin'
 	});
 
 	var formIndicador = new Ext.FormPanel({

@@ -168,12 +168,16 @@
 		name:'anio_ini'
 		,id:module+'comboAnio_ini'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
+		,vtype: 'daterange'
+		,endDateField: module+'comboAnio_fin'
 	});
 
 	var comboAnio_fin = new MonthPicker({
 		name:'anio_fin'
 		,id:module+'comboAnio_fin'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
+		,vtype: 'daterange'
+		,startDateField: module+'comboAnio_ini'
 	});
 
 	var formIndicador = new Ext.FormPanel({

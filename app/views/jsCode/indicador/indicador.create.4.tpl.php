@@ -166,11 +166,15 @@
 		name:'desde_ini'
 		,id:module+'comboDesde_ini'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
+		,vtype: 'daterange'
+		,endDateField: module+'comboHasta_ini'
 	});
 	var comboHasta_ini = new MonthPicker({
 		name:'hasta_ini'
 		,id:module+'comboHasta_ini'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
+		,vtype: 'daterange'
+		,startDateField: module+'comboDesde_ini'
 	});
 
 	var formIndicador = new Ext.FormPanel({
