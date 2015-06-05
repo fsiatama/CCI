@@ -842,7 +842,9 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 		$indexId  += 1;
-		$totalTitle = $this->getColumnValueExpoTitle() . ' [ ' . $productsAgricultureName . ']';
+		//$totalTitle = $this->getColumnValueExpoTitle() . ' [ ' . $productsAgricultureName . ' ]';
+		$totalTitle =  $productsAgricultureName;
+		
 		$arrData[] = [
 			'id'            => $indexId,
 			'numero'        => '',
