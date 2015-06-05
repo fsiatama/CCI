@@ -738,13 +738,14 @@ class DeclaracionesRepo extends BaseRepo {
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
 
+		$result = $this->findProductsBySector('sectorIdAgriculture');
+		if (!$result['success']) {
+			return $result;
+		}
+		$productsAgriculture = $result['data'];
+
 		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
-			$result = $this->findProductsBySector('sectorIdAgriculture');
-			if (!$result['success']) {
-				return $result;
-			}
-			$productsAgriculture = $result['data'];
 			$this->model->setId_posicion($productsAgriculture);
 		}
 
@@ -769,7 +770,20 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$totalValue = 0;
 
-		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
+		if (array_key_exists('id_posicion', $arrFiltersValues) || array_key_exists('sector_id', $arrFiltersValues)) {
+			//si el reporte tiene un producto seleccionado, debe sacar el total de todo el sector agropecuario
+			$this->model->setId_posicion($productsAgriculture);
+			$rsDeclaraexpTotal = $this->modelAdo->pivotSearch($this->model);
+			if (!$rsDeclaraexpTotal['success']) {
+				return $rsDeclaraexpTotal;
+			}
+			$arrDataTotal = $rsDeclaraexpTotal['data'];
+		} else {
+			$arrDataTotal = $rsDeclaraexp['data'];
+		}
+
+
+		foreach ($arrDataTotal as $keyExpo => $rowExpo) {
 			$totalValue += ( (float)$rowExpo[$this->columnValueExpo] / $this->divisor );
 		}
 
