@@ -823,15 +823,17 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		//agrega la fila con el registro acumulado de las demas posiciones
-		$indexId  += 1;
-		$arrData[] = [
-			'id'            => $indexId,
-			'numero'        => '',
-			'id_posicion'   => '*************************',
-			'posicion'      => Lang::get('indicador.reports.others'),
-			'valor_expo'    => $othersValue,
-			'participacion' => $othersRate
-		];
+		if ($othersValue > 0) {
+			$indexId  += 1;
+			$arrData[] = [
+				'id'            => $indexId,
+				'numero'        => '',
+				'id_posicion'   => '*************************',
+				'posicion'      => Lang::get('indicador.reports.others'),
+				'valor_expo'    => $othersValue,
+				'participacion' => $othersRate
+			];
+		}
 		$indexId  += 1;
 		$arrData[] = [
 			'id'            => $indexId,
