@@ -318,7 +318,8 @@ class DeclaracionesRepo extends BaseRepo {
 		$row = array_shift($result['data']);
 		return [
 			'success' => true,
-			'data'    => $row['sector_productos']
+			'data'    => $row['sector_productos'],
+			'name'    => $row['sector_nombre']
 		];
 	}
 
@@ -742,7 +743,8 @@ class DeclaracionesRepo extends BaseRepo {
 		if (!$result['success']) {
 			return $result;
 		}
-		$productsAgriculture = $result['data'];
+		$productsAgriculture     = $result['data'];
+		$productsAgricultureName = $result['name'];
 
 		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
@@ -840,17 +842,18 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 		$indexId  += 1;
+		$totalTitle = $this->getColumnValueExpoTitle() . ' [ ' . $productsAgricultureName . ']';
 		$arrData[] = [
 			'id'            => $indexId,
 			'numero'        => '',
 			'id_posicion'   => '*************************',
-			'posicion'      => $this->getColumnValueExpoTitle(),
+			'posicion'      => $totalTitle,
 			'valor_expo'    => $totalValue,
 			'participacion' => 100
 		];
 
 		$arrSeries = [
-			'valor_expo' => $this->getColumnValueExpoTitle()
+			'valor_expo' => $totalTitle
 		];
 
 		$chartData = Helpers::jsonChart(
