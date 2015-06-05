@@ -788,7 +788,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 			$rate = round( ( $valueExpo / $totalValue ) * 100 , 2 );
 			$cumulativeRate += $rate;
-			if ($cumulativeRate <= 80 || $index === 1) {
+			if ($cumulativeRate <= 80 || $indexId === 1) {
 				$arrData[] = [
 					'id'            => $indexId,
 					'numero'        => $indexId,
