@@ -833,6 +833,11 @@ class DeclaracionesRepo extends BaseRepo {
 				'valor_expo'    => $othersValue,
 				'participacion' => $othersRate
 			];
+			$arrChartData[] = [
+				'posicion'      => Lang::get('indicador.reports.others'),
+				'valor_expo'    => $othersValue,
+				'participacion' => $othersRate
+			];
 		}
 		$indexId  += 1;
 		$arrData[] = [
@@ -842,11 +847,6 @@ class DeclaracionesRepo extends BaseRepo {
 			'posicion'      => $this->getColumnValueExpoTitle(),
 			'valor_expo'    => $totalValue,
 			'participacion' => 100
-		];
-		$arrChartData[] = [
-			'posicion'      => Lang::get('indicador.reports.others'),
-			'valor_expo'    => $othersValue,
-			'participacion' => $othersRate
 		];
 
 		$arrSeries = [
