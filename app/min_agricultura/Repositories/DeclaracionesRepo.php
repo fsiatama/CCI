@@ -968,6 +968,13 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 
+		if (count($arrData) == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
 		$arrSeries = [
 			/*'id_posicion' => Lang::get('indicador.columns_title.numero_productos'),*/
 			'variation'   => Lang::get('indicador.columns_title.posicion'),
@@ -1223,6 +1230,13 @@ class DeclaracionesRepo extends BaseRepo {
 				'valueLast'      => $rowLast[$columnValue],
 				'variation'      => $variation,
 				'rateVariation'  => ( $rateVariation * 100 ),
+			];
+		}
+
+		if (count($arrData) == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
 			];
 		}
 
