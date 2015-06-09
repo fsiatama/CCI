@@ -146,5 +146,20 @@ class ProduccionRepo extends BaseRepo {
 		return $this->modelAdo->exactSearch($this->model);
 	}
 
+	public function listSector($params)
+	{
+		extract($params);
+		if (empty($sector_id)) {
+			return [
+				'success' => false,
+				'error'   => 'Incomplete data for this request.'
+			];
+		}
+
+		$this->model->setProduccion_sector_id($sector_id);
+
+		return $this->modelAdo->exactSearch($this->model);
+	}
+
 }
 

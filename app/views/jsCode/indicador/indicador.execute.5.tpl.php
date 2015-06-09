@@ -25,7 +25,7 @@ $htmlDescription .= '</ol>';
 		,root:'data'
 		,id:module+'storeIndicador'
 		,autoDestroy:true
-		,sortInfo:{field:'id',direction:'ASC'}
+		,sortInfo:{field:'valueLast',direction:'DESC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
@@ -33,22 +33,20 @@ $htmlDescription .= '</ol>';
 		}
 		,fields:[
 			{name:'id', type:'float'},
-			{name:'impoPeriod', type:'string'},
-			{name:'impoValue', type:'float'},
-			{name:'expoPeriod', type:'string'},
-			{name:'expoValue', type:'float'},
+			{name:'id_posicion', type:'string'},
+			{name:'posicion', type:'string'},
+			{name:'valueFirst', type:'float'},
+			{name:'valueLast', type:'float'},
 			{name:'variation', type:'float'},
 			{name:'rateVariation', type:'float'},
 		]
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var period    = Ext.getCmp(module + 'comboPeriod').getValue();
 		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
-		if (!period || !chartType) {
+		if (!chartType) {
 			return false;
 		};
-		this.setBaseParam('period', period);
 		this.setBaseParam('chartType', chartType);
 		Ext.ux.bodyMask.show();
 	});
@@ -65,32 +63,21 @@ $htmlDescription .= '</ol>';
 		chart.setJSONData(store.reader.jsonData.chartData);
 		chart.render(module + 'Chart');
 
+		var el = Ext.Element.get(module + 'total_records');
+		el.update(store.reader.jsonData.newProducts);
+
 		Ext.ux.bodyMask.hide();
-	});
-
-	var titles = [
-		{header: Ext.ux.lang.reports.initialRange, colspan: 2, align: 'center'},
-		{header: Ext.ux.lang.reports.finalRange, colspan: 2, align: 'center'},
-		{header: '', colspan: 2, align: 'center'}
-	];
-
-	var group = new Ext.ux.grid.ColumnHeaderGroup({
-		rows: [titles]
 	});
 
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'impoPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_productos_impo'); ?>', dataIndex:'impoValue' ,'renderer':integerFormat},
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'expoPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_productos_expo'); ?>', dataIndex:'expoValue' ,'renderer':integerFormat},
-			{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat},
-			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':unsignedFormat}
+			{header:'<?= Lang::get('indicador.columns_title.posicion'); ?>', dataIndex:'id_posicion', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.desc_posicion'); ?>', dataIndex:'posicion', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.numero_declaraciones') . ' ' . Lang::get('indicador.reports.initialRange'); ?>', dataIndex:'valueFirst','renderer':integerFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.columns_title.numero_declaraciones') . ' ' . Lang::get('indicador.reports.finalRange'); ?>', dataIndex:'valueLast','renderer':integerFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':rateFormat, align:'right'}
 		]
-		,defaults: {
-			sortable: true
-			,align: 'right'
-		}
 	});
 
 	var gridIndicador = new Ext.grid.GridPanel({
@@ -109,7 +96,7 @@ $htmlDescription .= '</ol>';
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
 		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeIndicador, displayInfo:true})
 		,iconCls:'silk-grid'
-		,plugins:[group, new Ext.ux.grid.Excel()]
+		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
 		,height:400
 		,autoWidth:true
@@ -118,7 +105,6 @@ $htmlDescription .= '</ol>';
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
-	var arrPeriods = <?= json_encode($periods); ?>;
 	var arrCharts  = <?= json_encode($charts); ?>;
 
 
@@ -160,26 +146,6 @@ $htmlDescription .= '</ol>';
 				},
 				items: [{
 					xtype: 'label'
-					,text: Ext.ux.lang.reports.selectPeriod + ': '
-				},{
-					xtype: 'combo'
-					,store: arrPeriods
-					,id: module + 'comboPeriod'
-					,typeAhead: true
-					,forceSelection: true
-					,triggerAction: 'all'
-					,selectOnFocus:true
-					,value: 12
-					,width: 100
-				}]
-			},{
-				xtype: 'buttongroup'
-				,columns: 1
-				,defaults: {
-					scale: 'small'
-				},
-				items: [{
-					xtype: 'label'
 					,text: Ext.ux.lang.reports.selectChart + ': '
 				},{
 					xtype: 'combo'
@@ -211,6 +177,16 @@ $htmlDescription .= '</ol>';
 				,id: module + 'Chart'
 				,plain:true
 			}]
+		},{
+			style:{padding:'10px 0'}
+			,html: '<div class="bootstrap-styles">' +
+				'<div class="row text-center countTo">' +
+					'<div class="col-md-4 col-md-offset-4">' +
+						'<label><?= Lang::get('indicador.columns_title.numero_productos_nuevos'); ?></label>' +
+						'<strong id="' + module + 'total_records">0</strong>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridIndicador]

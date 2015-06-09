@@ -2,6 +2,8 @@
 
 require PATH_MODELS.'Entities/Sector.php';
 require PATH_MODELS.'Ado/SectorAdo.php';
+require 'ProduccionRepo.php';
+
 require_once ('BaseRepo.php');
 
 class SectorRepo extends BaseRepo {
@@ -117,6 +119,39 @@ class SectorRepo extends BaseRepo {
 		}
 		$result = array('success' => true);
 		return $result;
+	}
+
+	public function delete($params)
+	{
+		$primaryKey  = $params[$this->primaryKey];
+		$linesConfig = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
+		
+		$arrInvalidSectors   = [];
+		$arrInvalidSectors[] = Helpers::arrayGet($linesConfig, 'sectorIdAgriculture');
+		$arrInvalidSectors[] = Helpers::arrayGet($linesConfig, 'sectorIdTraditional');
+		$arrInvalidSectors[] = Helpers::arrayGet($linesConfig, 'sectorIdMiningSector');
+
+		if ( in_array($primaryKey, $arrInvalidSectors)) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.sector_can_not_be_deleted')
+			];
+		}
+
+		$produccionRepo = new ProduccionRepo;
+		$result         = $produccionRepo->listSector(['sector_id' => $primaryKey]);
+
+		if ( ! $result['success']) {
+			return $result;
+		}
+		if ($result['total'] > 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.sector_can_not_be_deleted')
+			];
+		}
+
+		return parent::delete($params);
 	}
 
 }

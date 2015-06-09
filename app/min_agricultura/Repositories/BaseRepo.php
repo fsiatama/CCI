@@ -101,19 +101,21 @@ abstract class BaseRepo {
 	{
 		$primaryKey = $params[$this->primaryKey];
 
+		$result = $this->findPrimaryKey($primaryKey);
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$row    = array_shift($result['data']);
+		$params = array_merge($params, $row);
+		
 		//insertar registro de auditoria
 		$result = $this->createAudit($params);
 		if (!$result['success']) {
 			return $result;
 		}
-		
-		$result = $this->findPrimaryKey($primaryKey);
 
-		if ($result['success']) {
-			$result = $this->modelAdo->delete($this->model);
-		}
-
-		return $result;
+		return $this->modelAdo->delete($this->model);
 	}
 
 	protected function createAudit($params)

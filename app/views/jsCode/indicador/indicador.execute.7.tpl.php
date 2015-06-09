@@ -25,7 +25,7 @@ $htmlDescription .= '</ol>';
 		,root:'data'
 		,id:module+'storeIndicador'
 		,autoDestroy:true
-		,sortInfo:{field:'id',direction:'ASC'}
+		,sortInfo:{field:'valueLast',direction:'DESC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
@@ -33,43 +33,49 @@ $htmlDescription .= '</ol>';
 		}
 		,fields:[
 			{name:'id', type:'float'},
+			{name:'id_paisdestino', type:'string'},
 			{name:'pais', type:'string'},
-			{name:'valor_expo', type:'float'},
-			{name:'participacion', type:'float'}
+			{name:'valueFirst', type:'float'},
+			{name:'valueLast', type:'float'},
+			{name:'variation', type:'float'},
+			{name:'rateVariation', type:'float'},
 		]
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var scale         = Ext.getCmp(module + 'comboScale').getValue();
-		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
-		if (!scale || !typeIndicator) {
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		if (!chartType) {
 			return false;
-		}
-		this.setBaseParam('scale', scale);
-		this.setBaseParam('typeIndicator', typeIndicator);
-		setColumnsTitle();
+		};
+		this.setBaseParam('chartType', chartType);
 		Ext.ux.bodyMask.show();
 	});
 
 	storeIndicador.on('load', function(store){
+		FusionCharts.setCurrentRenderer('javascript');
 
-		var height = (store.reader.jsonData.total * 23);
+		disposeCharts();
+
+		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
+		var chart     = new FusionCharts(chartType, module + 'ChartId', '100%', '100%', '0', '1');
+
+		chart.setTransparent(true);
+		chart.setJSONData(store.reader.jsonData.chartData);
+		chart.render(module + 'Chart');
 
 		var el = Ext.Element.get(module + 'total_records');
+		el.update(store.reader.jsonData.newProducts);
 
-		el.update(store.reader.jsonData.total);
 		Ext.ux.bodyMask.hide();
 	});
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.pais'); ?>', dataIndex:'pais', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.valor_expo_agricola'); ?>', dataIndex:'valor_expo' ,'renderer':numberFormat},
-			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat},
+			{header:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>', dataIndex:'pais', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.numero_declaraciones') . ' ' . Lang::get('indicador.reports.initialRange'); ?>', dataIndex:'valueFirst','renderer':integerFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.columns_title.numero_declaraciones') . ' ' . Lang::get('indicador.reports.finalRange'); ?>', dataIndex:'valueLast','renderer':integerFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':rateFormat, align:'right'}
 		]
-		,defaults: {
-			sortable: true
-			,align: 'right'
-		}
 	});
 
 	var gridIndicador = new Ext.grid.GridPanel({
@@ -90,15 +96,15 @@ $htmlDescription .= '</ol>';
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:350
+		,height:400
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
-	var arrScales    = <?= json_encode($scales); ?>;
-	var arrActivator = <?= json_encode($activator); ?>;
+	var arrCharts  = <?= json_encode($charts); ?>;
+
 
 	/******************************************************************************************************************************************************************************/
 
@@ -131,44 +137,50 @@ $htmlDescription .= '</ol>';
 			,border:true
 			,html: ''
 			,tbar:[{
-				xtype: 'label'
-				,text: Ext.ux.lang.reports.selectScale + ': '
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectChart + ': '
+				},{
+					xtype: 'combo'
+					,store: arrCharts
+					,id: module + 'comboCharts'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= AREA; ?>'
+					,width: 150
+				}]
 			},{
-				xtype: 'combo'
-				,store: arrScales
-				,id: module + 'comboScale'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: 1
-				,width: 150
-			},'-',{
-				xtype: 'label'
-				,text: '<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador')?>: '
-			},{
-				xtype: 'combo'
-				,store: arrActivator
-				,id: module + 'comboActivator'
-				,typeAhead: true
-				,forceSelection: true
-				,triggerAction: 'all'
-				,selectOnFocus:true
-				,value: '<?= $tipo_indicador_activador; ?>'
-				,width: 150
-			},'-',{
-				text: Ext.ux.lang.buttons.generate
-				,iconCls: 'icon-refresh'
-				,handler: function () {
-					storeIndicador.load();
-				}
+				xtype:'buttongroup',
+				items: [{
+					text: Ext.ux.lang.buttons.generate
+					,iconCls: 'icon-refresh'
+					,iconAlign: 'top'
+					,handler: function () {
+						storeIndicador.load();
+					}
+				}]
+			}]
+		},{
+			height:430
+			,html:'<div id="' + module + 'Chart"></div>'
+			,items:[{
+				xtype:'panel'
+				,id: module + 'Chart'
+				,plain:true
 			}]
 		},{
 			style:{padding:'10px 0'}
 			,html: '<div class="bootstrap-styles">' +
 				'<div class="row text-center countTo">' +
 					'<div class="col-md-4 col-md-offset-4">' +
-						'<label>' + Ext.ux.lang.reports.total_records + '</label>' +
+						'<label><?= Lang::get('indicador.columns_title.numero_paises_destino_nuevos'); ?></label>' +
 						'<strong id="' + module + 'total_records">0</strong>' +
 					'</div>' +
 				'</div>' +
@@ -186,20 +198,24 @@ $htmlDescription .= '</ol>';
 		}
 	});
 
+	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
+		disposeCharts();
+	}, this);
+
+	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
+		storeIndicador.load();
+	}, this);
 
 	storeIndicador.load();
 
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
+
 	function disposeCharts () {
-
-	}
-
-	function setColumnsTitle () {
-		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
-		var titleExpo = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_expo_agricola'); ?>' : '<?= Lang::get('indicador.columns_title.peso_expo_agricola'); ?>' ;
-		colModelIndicador.setColumnHeader( 1, titleExpo );
+		if(FusionCharts(module + 'ChartId')){
+			FusionCharts(module + 'ChartId').dispose();
+		}
 	}
 
 	/*********************************************** End functions***********************************************/

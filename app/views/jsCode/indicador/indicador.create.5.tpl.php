@@ -172,6 +172,23 @@
 		[12, Date.monthNames[11]]
 	];
 
+	var arrTrade = <?= json_encode($trade); ?>;
+	var simpleCombo = Ext.extend(Ext.form.ComboBox, {
+		typeAhead:false
+		,forceSelection:true
+		,selectOnFocus:true
+		,allowBlank:false
+		,triggerAction:'all'
+		,flex:true
+	});
+
+	var comboIntercambio = new simpleCombo({
+		hiddenName:'intercambio'
+		,id:module+'comboIntercambio'
+		,store:arrTrade
+		,fieldLabel:Ext.ux.lang.reports.trade
+	});
+
 	var MonthPicker = Ext.extend(Ext.ux.MonthYearPicker, {
 		allowBlank:false
 		,flex:true
@@ -182,23 +199,31 @@
 		name:'desde_ini'
 		,id:module+'comboDesde_ini'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
+		,vtype: 'daterange'
+		,endDateField: module+'comboHasta_ini'
 	});
 	var comboHasta_ini = new MonthPicker({
 		name:'hasta_ini'
 		,id:module+'comboHasta_ini'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
+		,vtype: 'daterange'
+		,startDateField: module+'comboDesde_ini'
 	});
 
 	var comboDesde_fin = new MonthPicker({
 		name:'desde_fin'
 		,id:module+'comboDesde_fin'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
+		,vtype: 'daterange'
+		,endDateField: module+'comboHasta_fin'
 	});
 
 	var comboHasta_fin = new MonthPicker({
 		name:'hasta_fin'
 		,id:module+'comboHasta_fin'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
+		,vtype: 'daterange'
+		,startDateField: module+'comboDesde_fin'
 	});
 
 	var formIndicador = new Ext.FormPanel({
@@ -222,6 +247,7 @@
 				{name:'sector_id', mapping:'sector_id', type:'string'},
 				{name:'id_pais', mapping:'id_pais', type:'string'},
 				{name:'mercado_id', mapping:'mercado_id', type:'string'},
+				{name:'intercambio', mapping:'intercambio', type:'string'},
 				{name:'desde_ini', mapping:'desde_ini', type:'string', dateFormat: 'Y-m'},
 				{name:'hasta_ini', mapping:'hasta_ini', type:'string', dateFormat: 'Y-m'},
 				{name:'desde_fin', mapping:'desde_fin', type:'string', dateFormat: 'Y-m'},
@@ -251,6 +277,10 @@
 					,id:module+'indicador_nombre'
 					,allowBlank:false
 				}]
+			},{
+				defaults:{anchor:'100%'}
+				,columnWidth:.4
+				,items:[comboIntercambio]
 			}]
 		},{
 			xtype:'fieldset'
@@ -430,6 +460,14 @@
 				,values: arrValues
 			});
 		};
+
+		var trade     = Ext.getCmp(module+'comboIntercambio').getRawValue();
+		arrValues     = [];
+		arrValues.push(trade);
+		arrDescription.push({
+			label: Ext.ux.lang.reports.trade
+			,values: arrValues
+		});
 
 		var perIni = Ext.getCmp(module+'comboDesde_ini').getValue();
 		var perFin = Ext.getCmp(module+'comboHasta_ini').getValue();

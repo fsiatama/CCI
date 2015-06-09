@@ -178,6 +178,12 @@ return [
 		],
 		'5' => [
 			[
+				'field'      => 'intercambio',
+				'field_expo' => 'intercambio',
+				'field_impo' => 'intercambio',
+				'required'   => true,
+				'multivalue' => false,
+			],[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
 				'field_impo'         => 'id_paisprocedencia',
@@ -299,6 +305,18 @@ return [
 				'field_impo'    => 'fecha',
 				'required'      => true,
 				'itComplements' => true, //son complemento del filtro desde_ini
+			],[
+				'field'      => 'desde_fin',
+				'field_expo' => 'fecha',
+				'field_impo' => 'fecha',
+				'required'   => true,
+				'dateRange'  => ['hasta_fin'],
+			],[
+				'field'         => 'hasta_fin',
+				'field_expo'    => 'fecha',
+				'field_impo'    => 'fecha',
+				'required'      => true,
+				'itComplements' => true, //son complemento del filtro desde_fin
 			],[
 				'field'      => 'id_posicion',
 				'field_expo' => 'id_posicion',

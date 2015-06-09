@@ -200,23 +200,31 @@
 		name:'desde_ini'
 		,id:module+'comboDesde_ini'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
+		,vtype: 'daterange'
+		,endDateField: module+'comboHasta_ini'
 	});
 	var comboHasta_ini = new MonthPicker({
 		name:'hasta_ini'
 		,id:module+'comboHasta_ini'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
+		,vtype: 'daterange'
+		,startDateField: module+'comboDesde_ini'
 	});
 
 	var comboDesde_fin = new MonthPicker({
 		name:'desde_fin'
 		,id:module+'comboDesde_fin'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodFrom
+		,vtype: 'daterange'
+		,endDateField: module+'comboHasta_fin'
 	});
 
 	var comboHasta_fin = new MonthPicker({
 		name:'hasta_fin'
 		,id:module+'comboHasta_fin'
 		,fieldLabel:Ext.ux.lang.reports.selectPeriodTo
+		,vtype: 'daterange'
+		,startDateField: module+'comboDesde_fin'
 	});
 
 	var formIndicador = new Ext.FormPanel({

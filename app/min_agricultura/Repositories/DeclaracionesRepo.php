@@ -883,12 +883,19 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrRangeIni = range($arrFiltersValues['desde_ini'], $arrFiltersValues['hasta_ini']);
 		$arrRangeFin = range($arrFiltersValues['desde_fin'], $arrFiltersValues['hasta_fin']);
+		$trade       = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
 
-		$this->setTrade('impo');
+		$this->setTrade($trade);
 		$this->setRange('ini');
 
-		$this->model      = $this->getModelImpo();
-		$this->modelAdo   = $this->getModelImpoAdo();
+		if ($trade == 'impo') {
+			$this->model      = $this->getModelImpo();
+			$this->modelAdo   = $this->getModelImpoAdo();
+		} else {
+			$this->model      = $this->getModelExpo();
+			$this->modelAdo   = $this->getModelExpoAdo();
+		}
+
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
 		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
@@ -901,133 +908,94 @@ class DeclaracionesRepo extends BaseRepo {
 			$this->model->setId_posicion($productsAgriculture);
 		}
 
-		$columnValue = 'decl.id_posicion';
-
-		$rowField = Helpers::getPeriodColumnSql($this->period);
-		$row = 'fecha AS id';
-
-		$arrRowField   = [$row, $rowField];
+		$columnValue = 'decl.id';
+		$arrRowField = ['id', 'decl.id_posicion', 'posicion'];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($columnValue);
-		$this->modelAdo->setPivotGroupingFunction('COUNT_DISTINCT');
+		$this->modelAdo->setPivotGroupingFunction('COUNT');
+		$this->modelAdo->setPivotSortColumn('COUNT(' . $columnValue . ') DESC');
 
-		//busca los datos del primer rango de fechas en importaciones
-		$rsDeclaraimp = $this->modelAdo->pivotSearch($this->model);
-		if (!$rsDeclaraimp['success']) {
-			return $rsDeclaraimp;
+		//busca los datos del primer rango de fechas
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraciones['success']) {
+			return $rsDeclaraciones;
 		}
 
-		$arrDataImp = $rsDeclaraimp['data'];
+		$arrDataFirst = $rsDeclaraciones['data'];
 
-		//var_dump($arrDataImp);
-
-		$this->setTrade('expo');
 		$this->setRange('fin');
-
-		$this->model      = $this->getModelExpo();
-		$this->modelAdo   = $this->getModelExpoAdo();
-		//asigna los valores de filtro del indicador al modelo
+		//asigna los valores de fecha del rango final al indicador
 		$this->setFiltersValues();
 
-		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
-			$this->model->setId_posicion($productsAgriculture);
-		}
-		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields($columnValue);
-		$this->modelAdo->setPivotGroupingFunction('COUNT_DISTINCT');
-
-		//busca los datos del primer rango de fechas en exportaciones
-		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
-		if (!$rsDeclaraexp['success']) {
-			return $rsDeclaraexp;
+		//busca los datos del segundo rango de fechas
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraciones['success']) {
+			return $rsDeclaraciones;
 		}
 
-		$arrDataExp = $rsDeclaraexp['data'];
+		$arrDataLast = $rsDeclaraciones['data'];
+		$newProducts = 0;
+		$arrData     = [];
 
-		//var_dump($arrDataExp);
+		foreach ($arrDataLast as $rowLast) {
+			$rowFirst = Helpers::findKeyInArrayMulti(
+				$arrDataFirst,
+				'id_posicion',
+				$rowLast['id_posicion']
+			);
 
-		//une los conjuntos de resultados
-		$arrKeys      = [];
-		$arrData      = [];
-		$rowIndex     = 0;
-		foreach ($arrDataImp as $keyImpo => $rowImpo) {
+			$valueFirst = 0;
 
-			$expoPeriod = '';
-			$expoValue  = 0;
-
-			foreach ($arrDataExp as $keyExpo => $rowExpo) {
-
-				if ($keyImpo == $keyExpo) {
-					$expoPeriod = $rowExpo['periodo'];
-					$expoValue  = $rowExpo[$columnValue];
-					$arrKeys[]  = $keyExpo;
-				}
-
+			if ($rowFirst === false) {
+				$newProducts += 1;
+			} else {
+				$valueFirst = $rowFirst[$columnValue];
 			}
 
-			$variation     = $rowImpo[$columnValue] - $expoValue;
-			$rateVariation = ( $rowImpo[$columnValue] == 0 ) ? 0: ( $variation / $rowImpo[$columnValue] );
-			$rowIndex     += 1;
+
+			$variation     = $rowLast[$columnValue] - $valueFirst;
+			$rateVariation = ( $rowLast[$columnValue] == 0 ) ? 0: ( $variation / $rowLast[$columnValue] );
 
 			$arrData[] = [
-				'id'            => $rowImpo['id'],
-				'rowIndex'      => 'Q'.$rowIndex,
-				'impoPeriod'    => $rowImpo['periodo'],
-				'impoValue'     => $rowImpo[$columnValue],
-				'expoPeriod'    => $expoPeriod,
-				'expoValue'     => $expoValue,
+				'id'            => $rowLast['id'],
+				'id_posicion'   => $rowLast['id_posicion'],
+				'posicion'      => $rowLast['posicion'],
+				'valueFirst'    => $valueFirst,
+				'valueLast'     => $rowLast[$columnValue],
 				'variation'     => $variation,
-				'rateVariation' => $rateVariation,
+				'rateVariation' => ( $rateVariation * 100 ),
 			];
-
-		}
-
-		foreach ($arrDataExp as $keyExpo => $rowExpo) {
-			if (!in_array($keyExpo, $arrKeys)) {
-				$rowIndex += 1;
-				$arrData[] = [
-					'id'         => $rowExpo['id'],
-					'rowIndex'   => 'Q'.$rowIndex,
-					'impoPeriod' => $rowExpo['periodo'],
-					'impoValue'  => 0,
-					'expoPeriod' => $rowExpo['periodo'],
-					'expoValue'  => $rowExpo[$columnValue],
-					'variation'  => (0 - $rowExpo[$columnValue])
-				];
-			}
 		}
 
 		$arrSeries = [
-			'impoValue' => Lang::get('indicador.columns_title.numero_productos_impo'),
-			'expoValue' => Lang::get('indicador.columns_title.numero_productos_expo'),
-			'variation' => Lang::get('indicador.reports.diferencia'),
+			/*'id_posicion' => Lang::get('indicador.columns_title.numero_productos'),*/
+			'variation'   => Lang::get('indicador.columns_title.posicion'),
 		];
 
 		$chartData = Helpers::jsonChart(
 			$arrData,
-			'rowIndex',
+			'id_posicion',
 			$arrSeries,
 			$this->chartType,
 			'',
-			Lang::get('indicador.columns_title.numero_productos')
+			Lang::get('indicador.reports.diferencia')
 		);
 
 		$result = [
-			'success'   => true,
-			'data'      => $arrData,
-			'total'     => count($arrData),
-			'chartData' => $chartData,
+			'success'     => true,
+			'data'        => $arrData,
+			'total'       => count($arrData),
+			'chartData'   => $chartData,
+			'newProducts' => $newProducts,
 		];
 
 		return $result;
-
 	}
 
 	public function executeTasaCrecimientoProductosNuevos()
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
-
 		$trade            = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
 
 		$this->setTrade($trade);
@@ -1064,33 +1032,17 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotGroupingFunction('COUNT_DISTINCT');
 
-		//busca los datos del primer rango de fechas en importaciones
-		$rsDeclaraimp = $this->modelAdo->pivotSearch($this->model);
-		if (!$rsDeclaraimp['success']) {
-			return $rsDeclaraimp;
+		//busca los datos del primer rango de fechas
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraciones['success']) {
+			return $rsDeclaraciones;
 		}
 
-		$arrDataFirst = $rsDeclaraimp['data'];
+		$arrDataFirst = $rsDeclaraciones['data'];
 
 		$this->setRange('fin');
-
-		if ($trade == 'impo') {
-			$this->model    = $this->getModelImpo();
-			$this->modelAdo = $this->getModelImpoAdo();
-		} else {
-			$this->model    = $this->getModelExpo();
-			$this->modelAdo = $this->getModelExpoAdo();
-		}
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
-
-		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
-			$this->model->setId_posicion($productsAgriculture);
-		}
-
-		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields($columnValue);
-		$this->modelAdo->setPivotGroupingFunction('COUNT_DISTINCT');
 
 		//busca los datos del primer rango de fechas en exportaciones
 		$rsDeclaraimp = $this->modelAdo->pivotSearch($this->model);
@@ -1184,6 +1136,117 @@ class DeclaracionesRepo extends BaseRepo {
 	public function executeNumeroPaisesDestino()
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
+
+		$arrRangeIni = range($arrFiltersValues['desde_ini'], $arrFiltersValues['hasta_ini']);
+		$arrRangeFin = range($arrFiltersValues['desde_fin'], $arrFiltersValues['hasta_fin']);
+		$trade       = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
+
+		$this->setTrade('expo');
+		$this->setRange('ini');
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues();
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
+			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
+			$result = $this->findProductsBySector('sectorIdAgriculture');
+			if (!$result['success']) {
+				return $result;
+			}
+			$productsAgriculture = $result['data'];
+			$this->model->setId_posicion($productsAgriculture);
+		}
+
+		$columnValue = 'decl.id';
+		$arrRowField = ['id', 'decl.id_paisdestino', 'pais'];
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotGroupingFunction('COUNT');
+		$this->modelAdo->setPivotSortColumn('COUNT(' . $columnValue . ') DESC');
+
+		//busca los datos del primer rango de fechas
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraciones['success']) {
+			return $rsDeclaraciones;
+		}
+
+		$arrDataFirst = $rsDeclaraciones['data'];
+
+		$this->setRange('fin');
+		//asigna los valores de fecha del rango final al indicador
+		$this->setFiltersValues();
+
+		//busca los datos del segundo rango de fechas
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraciones['success']) {
+			return $rsDeclaraciones;
+		}
+
+		$arrDataLast = $rsDeclaraciones['data'];
+		$newProducts = 0;
+		$arrData     = [];
+
+		foreach ($arrDataLast as $rowLast) {
+			$rowFirst = Helpers::findKeyInArrayMulti(
+				$arrDataFirst,
+				'id_paisdestino',
+				$rowLast['id_paisdestino']
+			);
+
+			$valueFirst = 0;
+
+			if ($rowFirst === false) {
+				$newProducts += 1;
+			} else {
+				$valueFirst = $rowFirst[$columnValue];
+			}
+
+
+			$variation     = $rowLast[$columnValue] - $valueFirst;
+			$rateVariation = ( $rowLast[$columnValue] == 0 ) ? 0: ( $variation / $rowLast[$columnValue] );
+
+			$arrData[] = [
+				'id'             => $rowLast['id'],
+				'id_paisdestino' => $rowLast['id_paisdestino'],
+				'pais'           => $rowLast['pais'],
+				'valueFirst'     => $valueFirst,
+				'valueLast'      => $rowLast[$columnValue],
+				'variation'      => $variation,
+				'rateVariation'  => ( $rateVariation * 100 ),
+			];
+		}
+
+		$arrSeries = [
+			/*'id_posicion' => Lang::get('indicador.columns_title.numero_productos'),*/
+			'variation'   => Lang::get('indicador.columns_title.pais_destino'),
+		];
+
+		$chartData = Helpers::jsonChart(
+			$arrData,
+			'pais',
+			$arrSeries,
+			$this->chartType,
+			'',
+			Lang::get('indicador.reports.diferencia')
+		);
+
+		$result = [
+			'success'     => true,
+			'data'        => $arrData,
+			'total'       => count($arrData),
+			'chartData'   => $chartData,
+			'newProducts' => $newProducts,
+		];
+
+		return $result;
+	}
+
+	/*public function executeNumeroPaisesDestino()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
 		$this->setTrade('expo');
 		$this->setRange('ini');
 
@@ -1252,7 +1315,7 @@ class DeclaracionesRepo extends BaseRepo {
 		];
 		return $result;
 
-	}
+	}*/
 
 	public function executeIHH()
 	{
