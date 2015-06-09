@@ -71,8 +71,8 @@ $htmlDescription .= '</ol>';
 
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.id_empresa'); ?>', dataIndex:'id_posicion', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.empresa'); ?>', dataIndex:'posicion', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.id_empresa'); ?>', dataIndex:'id_empresa', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.empresa'); ?>', dataIndex:'empresa', align:'left'},
 			{header:'<?= Lang::get('indicador.columns_title.numero_declaraciones') . ' ' . Lang::get('indicador.reports.initialRange'); ?>', dataIndex:'valueFirst','renderer':integerFormat, align:'right'},
 			{header:'<?= Lang::get('indicador.columns_title.numero_declaraciones') . ' ' . Lang::get('indicador.reports.finalRange'); ?>', dataIndex:'valueLast','renderer':integerFormat, align:'right'},
 			{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat, align:'right'},
