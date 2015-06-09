@@ -76,6 +76,9 @@ $htmlDescription .= '</ol>';
 			{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat, align:'right'},
 			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':rateFormat, align:'right'}
 		]
+		,defaults: {
+			sortable: true
+		}
 	});
 
 	var gridIndicador = new Ext.grid.GridPanel({
