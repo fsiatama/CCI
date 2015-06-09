@@ -56,7 +56,7 @@ return [
 		'numero_productos_impo'        => 'Número Productos Importados',
 		'numero_productos'             => 'Número Productos',
 		'numero_productos_nuevos'      => 'Número de nuevos productos',
-		'numero_empresas_nuevos'       => 'Número de nuevos exportadores',
+		'numero_empresas_nuevas'       => 'Número de nuevos exportadores',
 		'numero_paises_destino_nuevos' => 'Número de nuevos mercados de destino',
 		'numero_declaraciones'         => 'Número de declaraciones',
 		'numero_exportaciones'         => 'Número de exportaciones',

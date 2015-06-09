@@ -185,7 +185,7 @@ $htmlDescription .= '</ol>';
 			,html: '<div class="bootstrap-styles">' +
 				'<div class="row text-center countTo">' +
 					'<div class="col-md-4 col-md-offset-4">' +
-						'<label><?= Lang::get('indicador.columns_title.numero_productos_nuevos'); ?></label>' +
+						'<label><?= Lang::get('indicador.columns_title.numero_empresas_nuevas'); ?></label>' +
 						'<strong id="' + module + 'total_records">0</strong>' +
 					'</div>' +
 				'</div>' +
