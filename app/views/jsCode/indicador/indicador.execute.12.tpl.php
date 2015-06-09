@@ -80,7 +80,6 @@ $htmlDescription .= '</ol>';
 		]
 		,defaults: {
 			sortable: true
-			,align: 'right'
 		}
 	});
 
@@ -100,7 +99,7 @@ $htmlDescription .= '</ol>';
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
 		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeIndicador, displayInfo:true})
 		,iconCls:'silk-grid'
-		,plugins:[group, new Ext.ux.grid.Excel()]
+		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
 		,height:400
 		,autoWidth:true
@@ -109,7 +108,6 @@ $htmlDescription .= '</ol>';
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
-	var arrPeriods = <?= json_encode($periods); ?>;
 	var arrCharts  = <?= json_encode($charts); ?>;
 
 
@@ -151,26 +149,6 @@ $htmlDescription .= '</ol>';
 				},
 				items: [{
 					xtype: 'label'
-					,text: Ext.ux.lang.reports.selectPeriod + ': '
-				},{
-					xtype: 'combo'
-					,store: arrPeriods
-					,id: module + 'comboPeriod'
-					,typeAhead: true
-					,forceSelection: true
-					,triggerAction: 'all'
-					,selectOnFocus:true
-					,value: 12
-					,width: 100
-				}]
-			},{
-				xtype: 'buttongroup'
-				,columns: 1
-				,defaults: {
-					scale: 'small'
-				},
-				items: [{
-					xtype: 'label'
 					,text: Ext.ux.lang.reports.selectChart + ': '
 				},{
 					xtype: 'combo'
@@ -202,6 +180,16 @@ $htmlDescription .= '</ol>';
 				,id: module + 'Chart'
 				,plain:true
 			}]
+		},{
+			style:{padding:'10px 0'}
+			,html: '<div class="bootstrap-styles">' +
+				'<div class="row text-center countTo">' +
+					'<div class="col-md-4 col-md-offset-4">' +
+						'<label><?= Lang::get('indicador.columns_title.numero_productos_nuevos'); ?></label>' +
+						'<strong id="' + module + 'total_records">0</strong>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridIndicador]
