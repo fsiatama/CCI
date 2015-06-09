@@ -1925,7 +1925,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrSeries = [
 			/*'id_posicion' => Lang::get('indicador.columns_title.numero_productos'),*/
-			'variation'   => Lang::get('indicador.columns_title.empresa'),
+			'variation'   => Lang::get('indicador.columns_title.id_empresa'),
 		];
 
 		$chartData = Helpers::jsonChart(

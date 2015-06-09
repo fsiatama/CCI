@@ -59,6 +59,7 @@ return [
 		'numero_empresas_nuevos'       => 'Número de nuevos exportadores',
 		'numero_paises_destino_nuevos' => 'Número de nuevos mercados de destino',
 		'numero_declaraciones'         => 'Número de declaraciones',
+		'numero_exportaciones'         => 'Número de exportaciones',
 		'numero'                       => 'Número',
     ],
     'reports' => [
