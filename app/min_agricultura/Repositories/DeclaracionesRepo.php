@@ -1137,6 +1137,13 @@ class DeclaracionesRepo extends BaseRepo {
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
 
+		if (empty($arrFiltersValues['desde_fin']) || empty($arrFiltersValues['hasta_fin'])) {
+			return [
+				'success' => false,
+				'error'   => 'Por favor edite este reporte para adicionar un periodo inicial y uno final'
+			];
+		}
+
 		$arrRangeIni = range($arrFiltersValues['desde_ini'], $arrFiltersValues['hasta_ini']);
 		$arrRangeFin = range($arrFiltersValues['desde_fin'], $arrFiltersValues['hasta_fin']);
 		$trade       = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
