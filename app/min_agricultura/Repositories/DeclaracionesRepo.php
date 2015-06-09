@@ -1834,6 +1834,123 @@ class DeclaracionesRepo extends BaseRepo {
 	public function executeCrecimientoExportadores()
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
+
+		$arrRangeIni = range($arrFiltersValues['desde_ini'], $arrFiltersValues['hasta_ini']);
+		$arrRangeFin = range($arrFiltersValues['desde_fin'], $arrFiltersValues['hasta_fin']);
+
+		$this->setTrade('expo');
+		$this->setRange('ini');
+
+		$this->model      = $this->getModelExpo();
+		$this->modelAdo   = $this->getModelExpoAdo();
+		
+		//asigna los valores de filtro del indicador al modelo
+		$this->setFiltersValues();
+		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
+			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
+			$result = $this->findProductsBySector('sectorIdAgriculture');
+			if (!$result['success']) {
+				return $result;
+			}
+			$productsAgriculture = $result['data'];
+			$this->model->setId_posicion($productsAgriculture);
+		}
+
+		$columnValue = 'decl.id';
+		$arrRowField = ['id', 'decl.id_empresa', 'empresa'];
+
+		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
+		$this->modelAdo->setPivotTotalFields($columnValue);
+		$this->modelAdo->setPivotGroupingFunction('COUNT');
+		$this->modelAdo->setPivotSortColumn('COUNT(' . $columnValue . ') DESC');
+
+		//busca los datos del primer rango de fechas
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraciones['success']) {
+			return $rsDeclaraciones;
+		}
+
+		$arrDataFirst = $rsDeclaraciones['data'];
+
+		$this->setRange('fin');
+		//asigna los valores de fecha del rango final al indicador
+		$this->setFiltersValues();
+
+		//busca los datos del segundo rango de fechas
+		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
+		if (!$rsDeclaraciones['success']) {
+			return $rsDeclaraciones;
+		}
+
+		$arrDataLast = $rsDeclaraciones['data'];
+		$newProducts = 0;
+		$arrData     = [];
+
+		foreach ($arrDataLast as $rowLast) {
+			$rowFirst = Helpers::findKeyInArrayMulti(
+				$arrDataFirst,
+				'id_empresa',
+				$rowLast['id_empresa']
+			);
+
+			$valueFirst = 0;
+
+			if ($rowFirst === false) {
+				$newProducts += 1;
+			} else {
+				$valueFirst = $rowFirst[$columnValue];
+			}
+
+
+			$variation     = $rowLast[$columnValue] - $valueFirst;
+			$rateVariation = ( $rowLast[$columnValue] == 0 ) ? 0: ( $variation / $rowLast[$columnValue] );
+
+			$arrData[] = [
+				'id'            => $rowLast['id'],
+				'id_empresa'    => $rowLast['id_empresa'],
+				'empresa'       => $rowLast['empresa'],
+				'valueFirst'    => $valueFirst,
+				'valueLast'     => $rowLast[$columnValue],
+				'variation'     => $variation,
+				'rateVariation' => ( $rateVariation * 100 ),
+			];
+		}
+
+		if (count($arrData) == 0) {
+			return [
+				'success' => false,
+				'error'   => Lang::get('error.no_records_found')
+			];
+		}
+
+		$arrSeries = [
+			/*'id_posicion' => Lang::get('indicador.columns_title.numero_productos'),*/
+			'variation'   => Lang::get('indicador.columns_title.empresa'),
+		];
+
+		$chartData = Helpers::jsonChart(
+			$arrData,
+			'id_empresa',
+			$arrSeries,
+			$this->chartType,
+			'',
+			Lang::get('indicador.reports.diferencia')
+		);
+
+		$result = [
+			'success'     => true,
+			'data'        => $arrData,
+			'total'       => count($arrData),
+			'chartData'   => $chartData,
+			'newProducts' => $newProducts,
+		];
+
+		return $result;
+	}
+
+	/*public function executeCrecimientoExportadores()
+	{
+		$arrFiltersValues = $this->arrFiltersValues;
 		$this->setTrade('expo');
 		$this->setRange('ini');
 
@@ -1953,7 +2070,8 @@ class DeclaracionesRepo extends BaseRepo {
 		];
 
 		return $result;
-	}
+	}*/
+
 	public function executePromedioPonderadoArancel()
 	{
 		$arrFiltersValues = $this->arrFiltersValues;

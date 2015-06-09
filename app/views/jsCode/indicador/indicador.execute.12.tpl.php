@@ -25,7 +25,7 @@ $htmlDescription .= '</ol>';
 		,root:'data'
 		,id:module+'storeIndicador'
 		,autoDestroy:true
-		,sortInfo:{field:'id',direction:'ASC'}
+		,sortInfo:{field:'valueLast',direction:'DESC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
@@ -33,21 +33,20 @@ $htmlDescription .= '</ol>';
 		}
 		,fields:[
 			{name:'id', type:'float'},
-			{name:'firstPeriod', type:'string'},
-			{name:'firstValue', type:'float'},
-			{name:'lastPeriod', type:'string'},
-			{name:'lastValue', type:'float'},
-			{name:'rateVariation', type:'float'}
+			{name:'id_empresa', type:'string'},
+			{name:'empresa', type:'string'},
+			{name:'valueFirst', type:'float'},
+			{name:'valueLast', type:'float'},
+			{name:'variation', type:'float'},
+			{name:'rateVariation', type:'float'},
 		]
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var period    = Ext.getCmp(module + 'comboPeriod').getValue();
 		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
-		if (!period || !chartType) {
+		if (!chartType) {
 			return false;
 		};
-		this.setBaseParam('period', period);
 		this.setBaseParam('chartType', chartType);
 		Ext.ux.bodyMask.show();
 	});
@@ -64,26 +63,20 @@ $htmlDescription .= '</ol>';
 		chart.setJSONData(store.reader.jsonData.chartData);
 		chart.render(module + 'Chart');
 
+		var el = Ext.Element.get(module + 'total_records');
+		el.update(store.reader.jsonData.newProducts);
+
 		Ext.ux.bodyMask.hide();
-	});
-
-	var titles = [
-		{header: Ext.ux.lang.reports.initialRange, colspan: 2, align: 'center'},
-		{header: Ext.ux.lang.reports.finalRange, colspan: 2, align: 'center'},
-		{header: '', colspan: 1, align: 'center'}
-	];
-
-	var group = new Ext.ux.grid.ColumnHeaderGroup({
-		rows: [titles]
 	});
 
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'firstPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_empresas_expo'); ?>', dataIndex:'firstValue' ,'renderer':integerFormat},
-			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'lastPeriod', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_empresas_expo'); ?>', dataIndex:'lastValue' ,'renderer':integerFormat},
-			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':rateFormat}
+			{header:'<?= Lang::get('indicador.columns_title.id_empresa'); ?>', dataIndex:'id_posicion', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.empresa'); ?>', dataIndex:'posicion', align:'left'},
+			{header:'<?= Lang::get('indicador.columns_title.numero_declaraciones') . ' ' . Lang::get('indicador.reports.initialRange'); ?>', dataIndex:'valueFirst','renderer':integerFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.columns_title.numero_declaraciones') . ' ' . Lang::get('indicador.reports.finalRange'); ?>', dataIndex:'valueLast','renderer':integerFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':rateFormat, align:'right'}
 		]
 		,defaults: {
 			sortable: true

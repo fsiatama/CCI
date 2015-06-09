@@ -49,9 +49,10 @@ class DeclaraexpAdo extends BaseAdo {
 	protected function setJoins()
 	{
 		$this->arrJoins = [
-			'posicion' => 'decl.id_posicion = posicion.id_posicion',
+			'posicion'   => 'decl.id_posicion = posicion.id_posicion',
 			'subpartida' => 'decl.id_subpartida = subpartida.id_subpartida',
-			'pais'     => 'decl.id_paisdestino = pais.id_pais',
+			'pais'       => 'decl.id_paisdestino = pais.id_pais',
+			'empresa'    => 'decl.id_empresa = empresa.id_empresa',
 		];
 	}
 
@@ -193,7 +194,7 @@ class DeclaraexpAdo extends BaseAdo {
 		$sql .= ' ORDER BY ';
 		$sql .= (empty($this->pivotSortColumn)) ? 'id' : $this->pivotSortColumn ;
 
-		//echo '<pre>'.$sql.'</pre>';
+		echo '<pre>'.$sql.'</pre>';
 
 		return $sql;
 	}
