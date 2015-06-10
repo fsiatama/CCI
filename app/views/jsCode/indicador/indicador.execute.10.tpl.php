@@ -179,27 +179,6 @@ $htmlDescription .= '</ol>';
 						}
 					}*/
 				}]
-			/*},{
-				xtype: 'buttongroup'
-				,columns: 1
-				,defaults: {
-					scale: 'small'
-				},
-				items: [{
-					xtype: 'label'
-					,text: Ext.ux.lang.reports.selectYear + ': '
-				},{
-					xtype: 'combo'
-					,store: arrYears
-					,id: module + 'comboYear'
-					,typeAhead: true
-					,forceSelection: true
-					,triggerAction: 'all'
-					,selectOnFocus:true
-					,value: defaultYear
-					,disabled: true
-					,width: 120
-				}]*/
 			},{
 				xtype: 'buttongroup'
 				,columns: 1

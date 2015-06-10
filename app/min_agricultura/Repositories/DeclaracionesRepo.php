@@ -889,11 +889,13 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->setRange('ini');
 
 		if ($trade == 'impo') {
-			$this->model      = $this->getModelImpo();
-			$this->modelAdo   = $this->getModelImpoAdo();
+			$this->model    = $this->getModelImpo();
+			$this->modelAdo = $this->getModelImpoAdo();
+			$columnValue    = $this->columnValueImpo;
 		} else {
-			$this->model      = $this->getModelExpo();
-			$this->modelAdo   = $this->getModelExpoAdo();
+			$this->model    = $this->getModelExpo();
+			$this->modelAdo = $this->getModelExpoAdo();
+			$columnValue    = $this->columnValueExpo;
 		}
 
 		//asigna los valores de filtro del indicador al modelo
@@ -908,13 +910,13 @@ class DeclaracionesRepo extends BaseRepo {
 			$this->model->setId_posicion($productsAgriculture);
 		}
 
-		$columnValue = 'decl.id';
+		//$columnValue = 'decl.id';
 		$arrRowField = ['id', 'decl.id_posicion', 'posicion'];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($columnValue);
-		$this->modelAdo->setPivotGroupingFunction('COUNT');
-		$this->modelAdo->setPivotSortColumn('COUNT(' . $columnValue . ') DESC');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn($columnValue .' DESC');
 
 		//busca los datos del primer rango de fechas
 		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
@@ -953,9 +955,8 @@ class DeclaracionesRepo extends BaseRepo {
 				$valueFirst = $rowFirst[$columnValue];
 			}
 
-
-			$variation     = $rowLast[$columnValue] - $valueFirst;
-			$rateVariation = ( $rowLast[$columnValue] == 0 ) ? 0: ( $variation / $rowLast[$columnValue] );
+			//$variation     = $rowLast[$columnValue] - $valueFirst;
+			//$rateVariation = ( $rowLast[$columnValue] == 0 ) ? 0: ( $variation / $rowLast[$columnValue] );
 
 			$arrData[] = [
 				'id'            => $rowLast['id'],
@@ -963,8 +964,8 @@ class DeclaracionesRepo extends BaseRepo {
 				'posicion'      => $rowLast['posicion'],
 				'valueFirst'    => $valueFirst,
 				'valueLast'     => $rowLast[$columnValue],
-				'variation'     => $variation,
-				'rateVariation' => ( $rateVariation * 100 ),
+				//'variation'     => $variation,
+				//'rateVariation' => ( $rateVariation * 100 ),
 			];
 		}
 
@@ -977,7 +978,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrSeries = [
 			/*'id_posicion' => Lang::get('indicador.columns_title.numero_productos'),*/
-			'variation'   => Lang::get('indicador.columns_title.posicion'),
+			'valueLast'   => Lang::get('indicador.columns_title.posicion'),
 		];
 
 		$chartData = Helpers::jsonChart(
@@ -986,15 +987,19 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrSeries,
 			$this->chartType,
 			'',
-			Lang::get('indicador.reports.diferencia')
+			$this->pYAxisName . ' ' . Lang::get('indicador.reports.finalRange')
 		);
 
+		$title = Lang::get('indicador.reports.total') . ' ' . $this->pYAxisName;
+
 		$result = [
-			'success'     => true,
-			'data'        => $arrData,
-			'total'       => count($arrData),
-			'chartData'   => $chartData,
-			'newProducts' => $newProducts,
+			'success'         => true,
+			'data'            => $arrData,
+			'total'           => count($arrData),
+			'chartData'       => $chartData,
+			'newProducts'     => $newProducts,
+			'titleValueFirst' => $title . ' ' . Lang::get('indicador.reports.initialRange'),
+			'titleValueLast'  => $title . ' ' . Lang::get('indicador.reports.finalRange')
 		];
 
 		return $result;
@@ -1173,13 +1178,13 @@ class DeclaracionesRepo extends BaseRepo {
 			$this->model->setId_posicion($productsAgriculture);
 		}
 
-		$columnValue = 'decl.id';
+		$columnValue = $this->getColumnValueExpo();
 		$arrRowField = ['id', 'decl.id_paisdestino', 'pais'];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($columnValue);
-		$this->modelAdo->setPivotGroupingFunction('COUNT');
-		$this->modelAdo->setPivotSortColumn('COUNT(' . $columnValue . ') DESC');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
 
 		//busca los datos del primer rango de fechas
 		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
@@ -1218,9 +1223,8 @@ class DeclaracionesRepo extends BaseRepo {
 				$valueFirst = $rowFirst[$columnValue];
 			}
 
-
-			$variation     = $rowLast[$columnValue] - $valueFirst;
-			$rateVariation = ( $rowLast[$columnValue] == 0 ) ? 0: ( $variation / $rowLast[$columnValue] );
+			//$variation     = $rowLast[$columnValue] - $valueFirst;
+			//$rateVariation = ( $rowLast[$columnValue] == 0 ) ? 0: ( $variation / $rowLast[$columnValue] );
 
 			$arrData[] = [
 				'id'             => $rowLast['id'],
@@ -1228,8 +1232,8 @@ class DeclaracionesRepo extends BaseRepo {
 				'pais'           => $rowLast['pais'],
 				'valueFirst'     => $valueFirst,
 				'valueLast'      => $rowLast[$columnValue],
-				'variation'      => $variation,
-				'rateVariation'  => ( $rateVariation * 100 ),
+				//'variation'      => $variation,
+				//'rateVariation'  => ( $rateVariation * 100 ),
 			];
 		}
 
@@ -1242,7 +1246,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrSeries = [
 			/*'id_posicion' => Lang::get('indicador.columns_title.numero_productos'),*/
-			'variation'   => Lang::get('indicador.columns_title.pais_destino'),
+			'valueLast'   => Lang::get('indicador.columns_title.pais_destino'),
 		];
 
 		$chartData = Helpers::jsonChart(
@@ -1251,15 +1255,19 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrSeries,
 			$this->chartType,
 			'',
-			Lang::get('indicador.reports.diferencia')
+			$this->pYAxisName . ' ' . Lang::get('indicador.reports.finalRange')
 		);
 
+		$title = Lang::get('indicador.reports.total') . ' ' . $this->pYAxisName;
+
 		$result = [
-			'success'     => true,
-			'data'        => $arrData,
-			'total'       => count($arrData),
-			'chartData'   => $chartData,
-			'newProducts' => $newProducts,
+			'success'         => true,
+			'data'            => $arrData,
+			'total'           => count($arrData),
+			'chartData'       => $chartData,
+			'newProducts'     => $newProducts,
+			'titleValueFirst' => $title . ' ' . Lang::get('indicador.reports.initialRange'),
+			'titleValueLast'  => $title . ' ' . Lang::get('indicador.reports.finalRange')
 		];
 
 		return $result;
@@ -1856,13 +1864,13 @@ class DeclaracionesRepo extends BaseRepo {
 			$this->model->setId_posicion($productsAgriculture);
 		}
 
-		$columnValue = 'decl.id';
+		$columnValue = $this->getColumnValueExpo();
 		$arrRowField = ['id', 'decl.id_empresa', 'empresa'];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($columnValue);
-		$this->modelAdo->setPivotGroupingFunction('COUNT');
-		$this->modelAdo->setPivotSortColumn('COUNT(' . $columnValue . ') DESC');
+		$this->modelAdo->setPivotGroupingFunction('SUM');
+		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
 
 		//busca los datos del primer rango de fechas
 		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
@@ -1901,9 +1909,8 @@ class DeclaracionesRepo extends BaseRepo {
 				$valueFirst = $rowFirst[$columnValue];
 			}
 
-
-			$variation     = $rowLast[$columnValue] - $valueFirst;
-			$rateVariation = ( $rowLast[$columnValue] == 0 ) ? 0: ( $variation / $rowLast[$columnValue] );
+			//$variation     = $rowLast[$columnValue] - $valueFirst;
+			//$rateVariation = ( $rowLast[$columnValue] == 0 ) ? 0: ( $variation / $rowLast[$columnValue] );
 
 			$arrData[] = [
 				'id'            => $rowLast['id'],
@@ -1911,8 +1918,8 @@ class DeclaracionesRepo extends BaseRepo {
 				'empresa'       => $rowLast['empresa'],
 				'valueFirst'    => $valueFirst,
 				'valueLast'     => $rowLast[$columnValue],
-				'variation'     => $variation,
-				'rateVariation' => ( $rateVariation * 100 ),
+				//'variation'     => $variation,
+				//'rateVariation' => ( $rateVariation * 100 ),
 			];
 		}
 
@@ -1924,8 +1931,7 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		$arrSeries = [
-			/*'id_posicion' => Lang::get('indicador.columns_title.numero_productos'),*/
-			'variation'   => Lang::get('indicador.columns_title.id_empresa'),
+			'valueLast' => Lang::get('indicador.columns_title.id_empresa'),
 		];
 
 		$chartData = Helpers::jsonChart(
@@ -1934,17 +1940,21 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrSeries,
 			$this->chartType,
 			'',
-			Lang::get('indicador.reports.diferencia')
+			$this->pYAxisName . ' ' . Lang::get('indicador.reports.finalRange')
 		);
 
-		$result = [
-			'success'     => true,
-			'data'        => $arrData,
-			'total'       => count($arrData),
-			'chartData'   => $chartData,
-			'newProducts' => $newProducts,
-		];
+		$title = Lang::get('indicador.reports.total') . ' ' . $this->pYAxisName;
 
+		$result = [
+			'success'         => true,
+			'data'            => $arrData,
+			'total'           => count($arrData),
+			'chartData'       => $chartData,
+			'newProducts'     => $newProducts,
+			'titleValueFirst' => $title . ' ' . Lang::get('indicador.reports.initialRange'),
+			'titleValueLast'  => $title . ' ' . Lang::get('indicador.reports.finalRange')
+		];
+		
 		return $result;
 	}
 

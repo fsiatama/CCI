@@ -63,6 +63,7 @@ return [
 		'numero'                       => 'Número',
     ],
     'reports' => [
+		'total'             => 'Total',
 		'annual'            => 'Anual',
 		'semester'          => 'Semestre',
 		'quarter'           => 'Trimestre',

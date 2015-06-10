@@ -37,16 +37,22 @@ $htmlDescription .= '</ol>';
 			{name:'pais', type:'string'},
 			{name:'valueFirst', type:'float'},
 			{name:'valueLast', type:'float'},
-			{name:'variation', type:'float'},
-			{name:'rateVariation', type:'float'},
+			//{name:'variation', type:'float'},
+			//{name:'rateVariation', type:'float'},
 		]
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
-		if (!chartType) {
+		var scale         = Ext.getCmp(module + 'comboScale').getValue();
+		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
+		var chartType     = Ext.getCmp(module + 'comboCharts').getValue();
+
+		if (!scale || !typeIndicator || !chartType) {
 			return false;
-		};
+		}
+
+		this.setBaseParam('scale', scale);
+		this.setBaseParam('typeIndicator', typeIndicator);
 		this.setBaseParam('chartType', chartType);
 		Ext.ux.bodyMask.show();
 	});
@@ -66,15 +72,20 @@ $htmlDescription .= '</ol>';
 		var el = Ext.Element.get(module + 'total_records');
 		el.update(store.reader.jsonData.newProducts);
 
+		var titleValueFirst = store.reader.jsonData.titleValueFirst;
+		var titleValueLast  = store.reader.jsonData.titleValueLast;
+
+		setColumnsTitle(titleValueFirst, titleValueLast);
+
 		Ext.ux.bodyMask.hide();
 	});
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.pais_destino'); ?>', dataIndex:'pais', align:'left'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_declaraciones') . ' ' . Lang::get('indicador.reports.initialRange'); ?>', dataIndex:'valueFirst','renderer':integerFormat, align:'right'},
-			{header:'<?= Lang::get('indicador.columns_title.numero_declaraciones') . ' ' . Lang::get('indicador.reports.finalRange'); ?>', dataIndex:'valueLast','renderer':integerFormat, align:'right'},
-			{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat, align:'right'},
-			{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':rateFormat, align:'right'}
+			{header:'<?= Lang::get('indicador.reports.total') . ' ' . Lang::get('indicador.reports.initialRange'); ?>', dataIndex:'valueFirst','renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.reports.total') . ' ' . Lang::get('indicador.reports.finalRange'); ?>', dataIndex:'valueLast','renderer':numberFormat, align:'right'},
+			//{header:'<?= Lang::get('indicador.reports.diferencia'); ?>', dataIndex:'variation' ,'renderer':unsignedIntegerFormat, align:'right'},
+			//{header:'<?= Lang::get('indicador.reports.variation'); ?>', dataIndex:'rateVariation' ,'renderer':rateFormat, align:'right'}
 		]
 		,defaults: {
 			sortable: true
@@ -106,7 +117,9 @@ $htmlDescription .= '</ol>';
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
-	var arrCharts  = <?= json_encode($charts); ?>;
+	var arrScales    = <?= json_encode($scales); ?>;
+	var arrActivator = <?= json_encode($activator); ?>;
+	var arrCharts    = <?= json_encode($charts); ?>;
 
 
 	/******************************************************************************************************************************************************************************/
@@ -140,6 +153,46 @@ $htmlDescription .= '</ol>';
 			,border:true
 			,html: ''
 			,tbar:[{
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: Ext.ux.lang.reports.selectScale + ': '
+				},{
+					xtype: 'combo'
+					,store: arrScales
+					,id: module + 'comboScale'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: 1
+					,width: 150
+				}]
+			},{
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: '<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador')?>: '
+				},{
+					xtype: 'combo'
+					,store: arrActivator
+					,id: module + 'comboActivator'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= $tipo_indicador_activador; ?>'
+					,width: 150
+				}]
+			},{
 				xtype: 'buttongroup'
 				,columns: 1
 				,defaults: {
@@ -220,6 +273,12 @@ $htmlDescription .= '</ol>';
 			FusionCharts(module + 'ChartId').dispose();
 		}
 	}
+
+	function setColumnsTitle (titleValueFirst, titleValueLast) {
+		colModelIndicador.setColumnHeader( 1, titleValueFirst );
+		colModelIndicador.setColumnHeader( 2, titleValueLast );
+	}
+
 
 	/*********************************************** End functions***********************************************/
 })()
