@@ -57,8 +57,6 @@ $htmlDescription .= '</ol>';
 		this.setBaseParam('typeIndicator', typeIndicator);
 		this.setBaseParam('chartType', chartType);
 
-		setColumnsTitle();
-
 		Ext.ux.bodyMask.show();
 	});
 
@@ -73,6 +71,14 @@ $htmlDescription .= '</ol>';
 		chart.setTransparent(true);
 		chart.setJSONData(store.reader.jsonData.chartData);
 		chart.render(module + 'Chart');
+
+
+		if (store.reader.jsonData.titleSector && store.reader.jsonData.titleTotal) {
+			var titleSector = store.reader.jsonData.titleSector;
+			var titleTotal  = store.reader.jsonData.titleTotal;
+			setColumnsTitle(titleSector, titleTotal);
+		}
+
 
 		Ext.ux.bodyMask.hide();
 	});
@@ -312,12 +318,9 @@ $htmlDescription .= '</ol>';
 		}
 	}
 
-	function setColumnsTitle () {
-		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
-		var titleExpoNT   = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_expo_sector'); ?>' : '<?= Lang::get('indicador.columns_title.peso_expo_sector'); ?>' ;
-		var titleExpoAgro = ( typeIndicator == '<?= $tipo_indicador_activador; ?>' ) ? '<?= Lang::get('indicador.columns_title.valor_expo_agricola'); ?>' : '<?= Lang::get('indicador.columns_title.peso_expo_agricola'); ?>' ;
-		colModelIndicador.setColumnHeader( 1, titleExpoNT );
-		colModelIndicador.setColumnHeader( 2, titleExpoAgro );
+	function setColumnsTitle (titleSector, titleTotal) {
+		colModelIndicador.setColumnHeader( 1, titleSector );
+		colModelIndicador.setColumnHeader( 2, titleTotal );
 	}
 
 

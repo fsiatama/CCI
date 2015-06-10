@@ -64,6 +64,8 @@ return [
     ],
     'reports' => [
 		'total'             => 'Total',
+		'sectorSelected'    => 'Sector producto o sector seleccionado',
+		'sectorAgriculture' => 'Sector agropecuario y agroindustrial',
 		'annual'            => 'Anual',
 		'semester'          => 'Semestre',
 		'quarter'           => 'Trimestre',

@@ -1376,8 +1376,8 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->model->setId_posicion($productsAgriculture);
 
-		$arrRowField   = ['id', 'decl.id_capitulo'];
-		$arrFieldAlias = ['id', 'id_capitulo', $columnValue];
+		$arrRowField   = ['id', 'decl.id_posicion'];
+		$arrFieldAlias = ['id', 'id_posicion', $columnValue];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotColumnFields('anio');
@@ -1390,6 +1390,7 @@ class DeclaracionesRepo extends BaseRepo {
 		if (!$rsDeclaraciones['success']) {
 			return $rsDeclaraciones;
 		}
+
 		if ($rsDeclaraciones['total'] == 0) {
 			return [
 				'success' => false,
@@ -1427,7 +1428,8 @@ class DeclaracionesRepo extends BaseRepo {
 					$index = str_replace(' '.$columnValue, '', $key);
 
 					$IHH = ( $value / $arrTotals[$key] );
-					$IHH = pow($IHH, 2);
+					$IHH = ( $IHH * $IHH );
+
 					if (empty($arrIHH[$index])) {
 						$arrIHH[$index] = 0;
 					}
@@ -1437,7 +1439,6 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		$arrData = [];
-
 		foreach ($arrIHH as $key => $value) {
 			$arrData[] = [
 				'periodo' => $key,
@@ -1813,7 +1814,11 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 
-		$titleSector = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_sector') : Lang::get('indicador.columns_title.peso_expo_sector') ;
+
+		$titleSector = Lang::get('indicador.reports.total') . ' ' . $this->pYAxisName . ' ' . Lang::get('indicador.reports.sectorSelected');
+		$titleTotal  = Lang::get('indicador.reports.total') . ' ' . $this->pYAxisName . ' ' . Lang::get('indicador.reports.sectorAgriculture');
+
+		//$titleSector = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_sector') : Lang::get('indicador.columns_title.peso_expo_sector') ;
 
 		$arrSeries = [
 			'valor_expo_sector' => $titleSector,
@@ -1830,10 +1835,12 @@ class DeclaracionesRepo extends BaseRepo {
 		);
 
 		$result = [
-			'success'   => true,
-			'data'      => $arrData,
-			'total'     => count($arrData),
-			'chartData' => $chartData,
+			'success'     => true,
+			'data'        => $arrData,
+			'total'       => count($arrData),
+			'chartData'   => $chartData,
+			'titleSector' => $titleSector,
+			'titleTotal'  => $titleTotal
 		];
 
 		return $result;
@@ -1954,7 +1961,7 @@ class DeclaracionesRepo extends BaseRepo {
 			'titleValueFirst' => $title . ' ' . Lang::get('indicador.reports.initialRange'),
 			'titleValueLast'  => $title . ' ' . Lang::get('indicador.reports.finalRange')
 		];
-		
+
 		return $result;
 	}
 

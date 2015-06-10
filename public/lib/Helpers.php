@@ -89,7 +89,7 @@ class Helpers
 	 *
 	 * @return mixed Value.
 	 */
-	public static function jsonChart($arr_data, $eje_x, $series, $typeChart, $xAxisname = '', $pYAxisName = '')
+	public static function jsonChart($arr_data, $eje_x, $series, $typeChart, $xAxisname = '', $pYAxisName = '', $subCaption = '', $caption = '')
 	{
 		$arrCategories = [];
 		$rowData       = [];
@@ -99,26 +99,32 @@ class Helpers
 		$arr_chart['xAxis'] = $eje_x;
 		$arr_chart['series'] = $series;
 
+		$caption    = (empty($caption)) ? 'Fuente de información' : $caption ;
+		$subCaption = (empty($subCaption)) ? 'Sicex' : $subCaption ;
+
 		$arr_chart['chart'] = [
-			'decimalprecision'     => '4'
-			,'palette'             => '4'
-			,'formatnumberscale'   => '0'
-			/*,'numberscalevalue'    => '1000000'
-			,'numberscaleunit'     => 'M'*/
-			,'theme'               => 'fint'
-			,'xAxisname'           => $xAxisname
-			,'yaxisname'           => $pYAxisName
-			,'theme'               => 'fint'
-			,'rotatevalues'        => '1'
-			,'divlineisdashed'     => '1'
-			,'placevaluesinside'   => '1'
-			,'exportenabled'       => '1'
-			,'showPercentValues'   => '1'
-			,'areaovercolumns'     => '0'
-			,'showaboutmenuitem'   => '0'
-			,'showlabels'          => '1'
-			,'showBorder'          => '0'
-			,'palettecolors'       => '#008ee4,#6baa01,#f8bd19,#e44a00,#33bdda,#d35400,#bdc3c7,#95a5a6,#34495e,#1abc9c'
+			'decimalprecision'        => '4'
+			,'palette'                => '4'
+			,'formatnumberscale'      => '0'
+			,'theme'                  => 'fint'
+			,'xAxisname'              => $xAxisname
+			,'yaxisname'              => $pYAxisName
+			,'theme'                  => 'fint'
+			,'rotatevalues'           => '1'
+			,'divlineisdashed'        => '1'
+			,'placevaluesinside'      => '1'
+			,'exportenabled'          => '1'
+			,'showPercentValues'      => '1'
+			,'areaovercolumns'        => '0'
+			,'showaboutmenuitem'      => '0'
+			,'showlabels'             => '1'
+			,'showBorder'             => '0'
+			,'caption'                => $caption
+			,'subCaption'             => $subCaption
+			,'alignCaptionWithCanvas' => '1'
+			,'captionOnTop'           => '0'
+			,'captionAlignment'       => 'right'
+			,'palettecolors'          => '#008ee4,#6baa01,#f8bd19,#e44a00,#33bdda,#d35400,#bdc3c7,#95a5a6,#34495e,#1abc9c'
 		];
 
 		if ($typeChart == LINEAL || $typeChart == AREA) {
