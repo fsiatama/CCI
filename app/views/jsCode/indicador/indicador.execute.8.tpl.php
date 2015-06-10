@@ -58,10 +58,13 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
-		if ( !chartType ) {
+		var chartType     = Ext.getCmp(module + 'comboCharts').getValue();
+		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
+
+		if ( ! typeIndicator || ! chartType ) {
 			return false;
 		};
+		this.setBaseParam('typeIndicator', typeIndicator);
 		this.setBaseParam('chartType', chartType);
 		Ext.ux.bodyMask.show();
 	});
@@ -117,7 +120,8 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
-	var arrCharts  = <?= json_encode($charts); ?>;
+	var arrCharts    = <?= json_encode($charts); ?>;
+	var arrActivator = <?= json_encode($activator); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -150,6 +154,26 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 			,border:true
 			,html: ''
 			,tbar:[{
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: '<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador')?>: '
+				},{
+					xtype: 'combo'
+					,store: arrActivator
+					,id: module + 'comboActivator'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= $tipo_indicador_activador; ?>'
+					,width: 150
+				}]
+			},{
 				xtype: 'buttongroup'
 				,columns: 1
 				,defaults: {

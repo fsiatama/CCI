@@ -1422,13 +1422,17 @@ class DeclaracionesRepo extends BaseRepo {
 			foreach ($row as $key => $value) {
 				if (in_array($key, $arrSeries)) {
 
+					$val   = (float)$value;
+					$total = (float)$arrTotals[$key];
+					$rate  = ( $val / $total ) * 100;
+
 					//var_dump($key, $value, $arrTotals[$key], ( $value / $arrTotals[$key] ),  (( $value / $arrTotals[$key] ) * ( $value / $arrTotals[$key] )) );
 
 					//en este caso el indice es el año, debe suprimir el nombre de la column de totales que le pone por defecto la clase pivottable
 					$index = str_replace(' '.$columnValue, '', $key);
 
-					$IHH = ( $value / $arrTotals[$key] );
-					$IHH = ( $IHH * $IHH );
+					$IHH = ( pow($rate, 2) );
+					//var_dump(compact('val', 'total', 'rate', 'IHH'));
 
 					if (empty($arrIHH[$index])) {
 						$arrIHH[$index] = 0;
@@ -1442,7 +1446,7 @@ class DeclaracionesRepo extends BaseRepo {
 		foreach ($arrIHH as $key => $value) {
 			$arrData[] = [
 				'periodo' => $key,
-				'IHH'     => round($value * 100, 2)
+				'IHH'     => round($value, 2)
 			];
 		}
 
