@@ -211,7 +211,6 @@ class SobordosRepo extends BaseRepo {
 
 					//si es un rango de fechas debe unir el valor inicial y el final
 
-
 					$setFilterValue = false;
 
 					if ( substr($filter['field'], -3) == $range || empty($range) ) {
@@ -224,8 +223,9 @@ class SobordosRepo extends BaseRepo {
 						$yearFin  = $arrDate[0];
 						$monthFin = empty($arrDate[1]) ? '12' : $arrDate[1];
 
+						$endDate  = new DateTime($yearFin . '-' . $monthFin . '-01');
 
-						$filterValue = 'DATE("' . $yearIni . '-' . $monthIni . '-01") AND DATE("' . $yearFin . '-' . $monthFin . '-01")';
+						$filterValue = 'DATE("' . $yearIni . '-' . $monthIni . '-01") AND DATE("' . $endDate->format('Y-m-t') . '")';
 
 						$methodName = $this->getColumnMethodName('set', 'fecha');
 

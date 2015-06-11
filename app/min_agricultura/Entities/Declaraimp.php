@@ -20,6 +20,9 @@ class Declaraimp {
 	private $peso_neto;
 	private $arancel_pagado;
 	private $valorarancel;
+	private $porcentaje_arancel;
+	private $cantidad;
+	private $unidad;
 
 	public function setId($id){
 		$this->id = $id;
@@ -206,6 +209,30 @@ class Declaraimp {
 
 	public function getValorarancel(){
 		return $this->valorarancel;
+	}
+
+	public function setPorcentaje_arancel($porcentaje_arancel){
+		$this->porcentaje_arancel = $porcentaje_arancel;
+	}
+
+	public function getPorcentaje_arancel(){
+		return $this->porcentaje_arancel;
+	}
+
+	public function setCantidad($cantidad){
+		$this->cantidad = $cantidad;
+	}
+
+	public function getCantidad(){
+		return $this->cantidad;
+	}
+
+	public function setUnidad($unidad){
+		$this->unidad = $unidad;
+	}
+
+	public function getUnidad(){
+		return $this->unidad;
 	}
 
 }

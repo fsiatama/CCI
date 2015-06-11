@@ -74,7 +74,10 @@ class DeclaraimpRepo extends BaseRepo {
 			empty($valorfob) ||
 			empty($peso_neto) ||
 			empty($arancel_pagado) ||
-			empty($valorarancel)
+			empty($valorarancel) ||
+			empty($porcentaje_arancel) ||
+			empty($cantidad) ||
+			empty($unidad)
 		) {
 			$result = [
 				'success' => false,
@@ -101,6 +104,9 @@ class DeclaraimpRepo extends BaseRepo {
 		$this->model->setPeso_neto($peso_neto);
 		$this->model->setArancel_pagado($arancel_pagado);
 		$this->model->setValorarancel($valorarancel);
+		$this->model->setPorcentaje_arancel($porcentaje_arancel);
+		$this->model->setCantidad($cantidad);
+		$this->model->setUnidad($unidad);
 
 		if ($action == 'create') {
 		} elseif ($action == 'modify') {
@@ -137,6 +143,9 @@ class DeclaraimpRepo extends BaseRepo {
 			$this->model->setPeso_neto(implode('", "', $query));
 			$this->model->setArancel_pagado(implode('", "', $query));
 			$this->model->setValorarancel(implode('", "', $query));
+			$this->model->setPorcentaje_arancel(implode('", "', $query));
+			$this->model->setCantidad(implode('", "', $query));
+			$this->model->setUnidad(implode('", "', $query));
 
 			return $this->modelAdo->inSearch($this->model);
 		}
@@ -160,6 +169,9 @@ class DeclaraimpRepo extends BaseRepo {
 			$this->model->setPeso_neto($query);
 			$this->model->setArancel_pagado($query);
 			$this->model->setValorarancel($query);
+			$this->model->setPorcentaje_arancel($query);
+			$this->model->setCantidad($query);
+			$this->model->setUnidad($query);
 
 			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 		}

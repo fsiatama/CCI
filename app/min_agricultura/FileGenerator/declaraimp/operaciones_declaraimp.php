@@ -29,6 +29,9 @@ if(isset($accion)){
 			$declaraimp->setPeso_neto($peso_neto);
 			$declaraimp->setArancel_pagado($arancel_pagado);
 			$declaraimp->setValorarancel($valorarancel);
+			$declaraimp->setPorcentaje_arancel($porcentaje_arancel);
+			$declaraimp->setCantidad($cantidad);
+			$declaraimp->setUnidad($unidad);
 			$rs_declaraimp = $declaraimpAdo->actualizar($declaraimp);
 			if($rs_declaraimp !== true){
 				$success = false;
@@ -79,6 +82,9 @@ if(isset($accion)){
 			$declaraimp->setPeso_neto($peso_neto);
 			$declaraimp->setArancel_pagado($arancel_pagado);
 			$declaraimp->setValorarancel($valorarancel);
+			$declaraimp->setPorcentaje_arancel($porcentaje_arancel);
+			$declaraimp->setCantidad($cantidad);
+			$declaraimp->setUnidad($unidad);
 			$rs_declaraimp = $declaraimpAdo->insertar($declaraimp);
 			if($rs_declaraimp["success"] !== true){
 				$respuesta = array(
@@ -117,6 +123,9 @@ if(isset($accion)){
 			$declaraimp->setPeso_neto($peso_neto);
 			$declaraimp->setArancel_pagado($arancel_pagado);
 			$declaraimp->setValorarancel($valorarancel);
+			$declaraimp->setPorcentaje_arancel($porcentaje_arancel);
+			$declaraimp->setCantidad($cantidad);
+			$declaraimp->setUnidad($unidad);
 			$rs_declaraimp = $declaraimpAdo->lista($declaraimp);
 			if(!is_array($rs_declaraimp)){
 				$respuesta = array(

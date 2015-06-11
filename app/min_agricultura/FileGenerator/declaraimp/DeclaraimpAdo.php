@@ -37,6 +37,9 @@ class DeclaraimpAdo extends BaseAdo {
 		$peso_neto = $declaraimp->getPeso_neto();
 		$arancel_pagado = $declaraimp->getArancel_pagado();
 		$valorarancel = $declaraimp->getValorarancel();
+		$porcentaje_arancel = $declaraimp->getPorcentaje_arancel();
+		$cantidad = $declaraimp->getCantidad();
+		$unidad = $declaraimp->getUnidad();
 
 		$this->data = compact(
 			'id',
@@ -57,7 +60,10 @@ class DeclaraimpAdo extends BaseAdo {
 			'valorfob',
 			'peso_neto',
 			'arancel_pagado',
-			'valorarancel'
+			'valorarancel',
+			'porcentaje_arancel',
+			'cantidad',
+			'unidad'
 		);
 	}
 
@@ -87,7 +93,10 @@ class DeclaraimpAdo extends BaseAdo {
 				valorfob,
 				peso_neto,
 				arancel_pagado,
-				valorarancel
+				valorarancel,
+				porcentaje_arancel,
+				cantidad,
+				unidad
 			)
 			VALUES (
 				"'.$this->data['id'].'",
@@ -108,7 +117,10 @@ class DeclaraimpAdo extends BaseAdo {
 				"'.$this->data['valorfob'].'",
 				"'.$this->data['peso_neto'].'",
 				"'.$this->data['arancel_pagado'].'",
-				"'.$this->data['valorarancel'].'"
+				"'.$this->data['valorarancel'].'",
+				"'.$this->data['porcentaje_arancel'].'",
+				"'.$this->data['cantidad'].'",
+				"'.$this->data['unidad'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -139,7 +151,10 @@ class DeclaraimpAdo extends BaseAdo {
 			 valorfob,
 			 peso_neto,
 			 arancel_pagado,
-			 valorarancel
+			 valorarancel,
+			 porcentaje_arancel,
+			 cantidad,
+			 unidad
 			FROM declaraimp
 		';
 

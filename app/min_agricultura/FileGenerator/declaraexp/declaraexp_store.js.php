@@ -25,13 +25,15 @@ var storeDeclaraexp = new Ext.data.JsonStore({
 		{name:'valorfob', type:'string'},
 		{name:'valorcif', type:'string'},
 		{name:'valor_pesos', type:'string'},
-		{name:'peso_neto', type:'string'}
+		{name:'peso_neto', type:'string'},
+		{name:'cantidad', type:'string'},
+		{name:'unidad', type:'string'}
 	]
 });
 var comboDeclaraexp = new Ext.form.ComboBox({
 	hiddenName:'declaraexp'
 	,id:module+'comboDeclaraexp'
-	,fieldLabel:'<?= Lang::get('declaraexp.columns_title.peso_neto'); ?>'
+	,fieldLabel:'<?= Lang::get('declaraexp.columns_title.unidad'); ?>'
 	,store:storeDeclaraexp
 	,valueField:'id'
 	,displayField:'declaraexp_name'
@@ -65,7 +67,9 @@ var cmDeclaraexp = new Ext.grid.ColumnModel({
 		{header:'<?= Lang::get('declaraexp.columns_title.valorfob'); ?>', align:'left', hidden:false, dataIndex:'valorfob'},
 		{header:'<?= Lang::get('declaraexp.columns_title.valorcif'); ?>', align:'left', hidden:false, dataIndex:'valorcif'},
 		{header:'<?= Lang::get('declaraexp.columns_title.valor_pesos'); ?>', align:'left', hidden:false, dataIndex:'valor_pesos'},
-		{header:'<?= Lang::get('declaraexp.columns_title.peso_neto'); ?>', align:'left', hidden:false, dataIndex:'peso_neto'}
+		{header:'<?= Lang::get('declaraexp.columns_title.peso_neto'); ?>', align:'left', hidden:false, dataIndex:'peso_neto'},
+		{header:'<?= Lang::get('declaraexp.columns_title.cantidad'); ?>', align:'left', hidden:false, dataIndex:'cantidad'},
+		{header:'<?= Lang::get('declaraexp.columns_title.unidad'); ?>', align:'left', hidden:false, dataIndex:'unidad'}
 	]
 	,defaults:{
 		sortable:true
@@ -119,7 +123,9 @@ var formDeclaraexp = new Ext.FormPanel({
 			{name:'valorfob', mapping:'valorfob', type:'string'},
 			{name:'valorcif', mapping:'valorcif', type:'string'},
 			{name:'valor_pesos', mapping:'valor_pesos', type:'string'},
-			{name:'peso_neto', mapping:'peso_neto', type:'string'}
+			{name:'peso_neto', mapping:'peso_neto', type:'string'},
+			{name:'cantidad', mapping:'cantidad', type:'string'},
+			{name:'unidad', mapping:'unidad', type:'string'}
 		]
 	})
 	,items:[{
@@ -276,6 +282,24 @@ var formDeclaraexp = new Ext.FormPanel({
 				,name:'peso_neto'
 				,fieldLabel:'<?= Lang::get('declaraexp.columns_title.peso_neto'); ?>'
 				,id:module+'peso_neto'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'numberfield'
+				,name:'cantidad'
+				,fieldLabel:'<?= Lang::get('declaraexp.columns_title.cantidad'); ?>'
+				,id:module+'cantidad'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'unidad'
+				,fieldLabel:'<?= Lang::get('declaraexp.columns_title.unidad'); ?>'
+				,id:module+'unidad'
 				,allowBlank:false
 			}]
 		}]

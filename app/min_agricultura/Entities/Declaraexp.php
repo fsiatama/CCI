@@ -17,6 +17,8 @@ class Declaraexp {
 	private $valorcif;
 	private $valor_pesos;
 	private $peso_neto;
+	private $cantidad;
+	private $unidad;
 
 	public function setId($id){
 		$this->id = $id;
@@ -177,6 +179,22 @@ class Declaraexp {
 
 	public function getPeso_neto(){
 		return $this->peso_neto;
+	}
+
+	public function setCantidad($cantidad){
+		$this->cantidad = $cantidad;
+	}
+
+	public function getCantidad(){
+		return $this->cantidad;
+	}
+
+	public function setUnidad($unidad){
+		$this->unidad = $unidad;
+	}
+
+	public function getUnidad(){
+		return $this->unidad;
 	}
 
 }

@@ -28,13 +28,16 @@ var storeDeclaraimp = new Ext.data.JsonStore({
 		{name:'valorfob', type:'string'},
 		{name:'peso_neto', type:'string'},
 		{name:'arancel_pagado', type:'string'},
-		{name:'valorarancel', type:'string'}
+		{name:'valorarancel', type:'string'},
+		{name:'porcentaje_arancel', type:'string'},
+		{name:'cantidad', type:'string'},
+		{name:'unidad', type:'string'}
 	]
 });
 var comboDeclaraimp = new Ext.form.ComboBox({
 	hiddenName:'declaraimp'
 	,id:module+'comboDeclaraimp'
-	,fieldLabel:'<?= Lang::get('declaraimp.columns_title.valorarancel'); ?>'
+	,fieldLabel:'<?= Lang::get('declaraimp.columns_title.unidad'); ?>'
 	,store:storeDeclaraimp
 	,valueField:'id'
 	,displayField:'declaraimp_name'
@@ -71,7 +74,10 @@ var cmDeclaraimp = new Ext.grid.ColumnModel({
 		{header:'<?= Lang::get('declaraimp.columns_title.valorfob'); ?>', align:'left', hidden:false, dataIndex:'valorfob'},
 		{header:'<?= Lang::get('declaraimp.columns_title.peso_neto'); ?>', align:'left', hidden:false, dataIndex:'peso_neto'},
 		{header:'<?= Lang::get('declaraimp.columns_title.arancel_pagado'); ?>', align:'left', hidden:false, dataIndex:'arancel_pagado'},
-		{header:'<?= Lang::get('declaraimp.columns_title.valorarancel'); ?>', align:'left', hidden:false, dataIndex:'valorarancel'}
+		{header:'<?= Lang::get('declaraimp.columns_title.valorarancel'); ?>', align:'left', hidden:false, dataIndex:'valorarancel'},
+		{header:'<?= Lang::get('declaraimp.columns_title.porcentaje_arancel'); ?>', align:'left', hidden:false, dataIndex:'porcentaje_arancel'},
+		{header:'<?= Lang::get('declaraimp.columns_title.cantidad'); ?>', align:'left', hidden:false, dataIndex:'cantidad'},
+		{header:'<?= Lang::get('declaraimp.columns_title.unidad'); ?>', align:'left', hidden:false, dataIndex:'unidad'}
 	]
 	,defaults:{
 		sortable:true
@@ -128,7 +134,10 @@ var formDeclaraimp = new Ext.FormPanel({
 			{name:'valorfob', mapping:'valorfob', type:'string'},
 			{name:'peso_neto', mapping:'peso_neto', type:'string'},
 			{name:'arancel_pagado', mapping:'arancel_pagado', type:'string'},
-			{name:'valorarancel', mapping:'valorarancel', type:'string'}
+			{name:'valorarancel', mapping:'valorarancel', type:'string'},
+			{name:'porcentaje_arancel', mapping:'porcentaje_arancel', type:'string'},
+			{name:'cantidad', mapping:'cantidad', type:'string'},
+			{name:'unidad', mapping:'unidad', type:'string'}
 		]
 	})
 	,items:[{
@@ -312,6 +321,33 @@ var formDeclaraimp = new Ext.FormPanel({
 				,name:'valorarancel'
 				,fieldLabel:'<?= Lang::get('declaraimp.columns_title.valorarancel'); ?>'
 				,id:module+'valorarancel'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'numberfield'
+				,name:'porcentaje_arancel'
+				,fieldLabel:'<?= Lang::get('declaraimp.columns_title.porcentaje_arancel'); ?>'
+				,id:module+'porcentaje_arancel'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'numberfield'
+				,name:'cantidad'
+				,fieldLabel:'<?= Lang::get('declaraimp.columns_title.cantidad'); ?>'
+				,id:module+'cantidad'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'textfield'
+				,name:'unidad'
+				,fieldLabel:'<?= Lang::get('declaraimp.columns_title.unidad'); ?>'
+				,id:module+'unidad'
 				,allowBlank:false
 			}]
 		}]

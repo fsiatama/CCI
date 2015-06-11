@@ -5,6 +5,7 @@ require_once ('BaseAdo.php');
 class DeclaraexpAdo extends BaseAdo {
 
 	protected $pivotRowFields        = '';
+	protected $pivotColumnValues     = [];
 	protected $pivotColumnFields     = '';
 	protected $pivotTotalFields      = [];
 	protected $pivotGroupingFunction = '';
@@ -19,6 +20,11 @@ class DeclaraexpAdo extends BaseAdo {
 	public function setPivotColumnFields($pivotColumnFields)
 	{
 		$this->pivotColumnFields = $pivotColumnFields;
+	}
+
+	public function setPivotColumnValues($pivotColumnValues)
+	{
+		$this->pivotColumnValues = $pivotColumnValues;
 	}
 
 	public function setPivotTotalFields($pivotTotalFields)
@@ -81,6 +87,8 @@ class DeclaraexpAdo extends BaseAdo {
 		$valorcif = $declaraexp->getValorcif();
 		$valor_pesos = $declaraexp->getValor_pesos();
 		$peso_neto = $declaraexp->getPeso_neto();
+		$cantidad = $declaraexp->getCantidad();
+		$unidad = $declaraexp->getUnidad();
 
 		$this->data = compact(
 			'id',
@@ -98,7 +106,9 @@ class DeclaraexpAdo extends BaseAdo {
 			'valorfob',
 			'valorcif',
 			'valor_pesos',
-			'peso_neto'
+			'peso_neto',
+			'cantidad',
+			'unidad'
 		);
 	}
 
@@ -125,7 +135,9 @@ class DeclaraexpAdo extends BaseAdo {
 				valorfob,
 				valorcif,
 				valor_pesos,
-				peso_neto
+				peso_neto,
+				cantidad,
+				unidad
 			)
 			VALUES (
 				"'.$this->data['id'].'",
@@ -143,7 +155,9 @@ class DeclaraexpAdo extends BaseAdo {
 				"'.$this->data['valorfob'].'",
 				"'.$this->data['valorcif'].'",
 				"'.$this->data['valor_pesos'].'",
-				"'.$this->data['peso_neto'].'"
+				"'.$this->data['peso_neto'].'",
+				"'.$this->data['cantidad'].'",
+				"'.$this->data['unidad'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -188,7 +202,8 @@ class DeclaraexpAdo extends BaseAdo {
 			$this->pivotTotalFields, 						# SUM fields
 			'',												# Function Label
 			$this->pivotGroupingFunction,					# Function (SUM, COUNT, AGV)
-			false
+			false,
+			$this->pivotColumnValues                        # array with column Values for discard select distinct
 		);
 
 		$sql .= ' ORDER BY ';
@@ -205,8 +220,10 @@ class DeclaraexpAdo extends BaseAdo {
 			 decl.id,
 			 decl.anio,
 			 decl.periodo,
+			 decl.fecha,
 			 decl.id_empresa,
 			 decl.id_paisdestino,
+			 decl.id_deptorigen,
 			 decl.id_capitulo,
 			 decl.id_partida,
 			 decl.id_subpartida,
@@ -214,8 +231,11 @@ class DeclaraexpAdo extends BaseAdo {
 			 decl.id_ciiu,
 			 decl.valorfob,
 			 decl.valorcif,
-			 decl.peso_neto
-			FROM declaraexp as decl
+			 decl.valor_pesos,
+			 decl.peso_neto,
+			 decl.cantidad,
+			 decl.unidad
+			FROM declaraexp AS decl
 		';
 
 		$sql .= $this->buildSelectWhere();

@@ -29,7 +29,7 @@
  */
 
  function PivotTableSQL(&$db,$tables,$rowfields,$colfield, $where=false,
- 	$aggfield = false,$sumlabel='Sum ',$aggfn ='SUM', $showcount = true)
+ 	$aggfield = false,$sumlabel='Sum ',$aggfn ='SUM', $showcount = true, $arrColumnValues = [])
  {
 
 	if ($aggfield) {
@@ -46,7 +46,11 @@
  	$where = "\n $where";
 
 	if (!is_array($colfield)) {
-		$colarr = $db->GetCol("select distinct $colfield from $tables $where order by 1");
+		if (empty($arrColumnValues)) {
+			$colarr = $db->GetCol("select distinct $colfield from $tables $where order by 1");
+		} else {
+			$colarr = $arrColumnValues;
+		}
 	}
 	if (!$aggfield) {
 		$hidecnt = false;

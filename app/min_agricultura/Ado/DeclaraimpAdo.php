@@ -1,13 +1,11 @@
 <?php
 
-/*include_once(PATH_APP.'adodb5/toexport.inc.php');
-include_once(PATH_APP.'lib/pivottable.inc.php'); */
-
 require_once ('BaseAdo.php');
 
 class DeclaraimpAdo extends BaseAdo {
 
 	protected $pivotRowFields        = '';
+	protected $pivotColumnValues     = [];
 	protected $pivotColumnFields     = '';
 	protected $pivotTotalFields      = [];
 	protected $pivotGroupingFunction = '';
@@ -22,6 +20,11 @@ class DeclaraimpAdo extends BaseAdo {
 	public function setPivotColumnFields($pivotColumnFields)
 	{
 		$this->pivotColumnFields = $pivotColumnFields;
+	}
+
+	public function setPivotColumnValues($pivotColumnValues)
+	{
+		$this->pivotColumnValues = $pivotColumnValues;
 	}
 
 	public function setPivotTotalFields($pivotTotalFields)
@@ -86,6 +89,9 @@ class DeclaraimpAdo extends BaseAdo {
 		$peso_neto = $declaraimp->getPeso_neto();
 		$arancel_pagado = $declaraimp->getArancel_pagado();
 		$valorarancel = $declaraimp->getValorarancel();
+		$porcentaje_arancel = $declaraimp->getPorcentaje_arancel();
+		$cantidad = $declaraimp->getCantidad();
+		$unidad = $declaraimp->getUnidad();
 
 		$this->data = compact(
 			'id',
@@ -106,7 +112,10 @@ class DeclaraimpAdo extends BaseAdo {
 			'valorfob',
 			'peso_neto',
 			'arancel_pagado',
-			'valorarancel'
+			'valorarancel',
+			'porcentaje_arancel',
+			'cantidad',
+			'unidad'
 		);
 	}
 
@@ -136,7 +145,10 @@ class DeclaraimpAdo extends BaseAdo {
 				valorfob,
 				peso_neto,
 				arancel_pagado,
-				valorarancel
+				valorarancel,
+				porcentaje_arancel,
+				cantidad,
+				unidad
 			)
 			VALUES (
 				"'.$this->data['id'].'",
@@ -157,7 +169,10 @@ class DeclaraimpAdo extends BaseAdo {
 				"'.$this->data['valorfob'].'",
 				"'.$this->data['peso_neto'].'",
 				"'.$this->data['arancel_pagado'].'",
-				"'.$this->data['valorarancel'].'"
+				"'.$this->data['valorarancel'].'",
+				"'.$this->data['porcentaje_arancel'].'",
+				"'.$this->data['cantidad'].'",
+				"'.$this->data['unidad'].'"
 			)
 		';
 		$resultSet = $conn->Execute($sql);
@@ -199,7 +214,8 @@ class DeclaraimpAdo extends BaseAdo {
 			$this->pivotTotalFields, 						# SUM fields
 			'',												# Function Label
 			$this->pivotGroupingFunction,					# Function (SUM, COUNT, AGV)
-			false
+			false,
+			$this->pivotColumnValues                        # array with column Values for discard select distinct
 		);
 
 		$sql .= ' ORDER BY ';
@@ -216,10 +232,12 @@ class DeclaraimpAdo extends BaseAdo {
 			 decl.id,
 			 decl.anio,
 			 decl.periodo,
+			 decl.fecha,
 			 decl.id_empresa,
 			 decl.id_paisorigen,
 			 decl.id_paiscompra,
 			 decl.id_paisprocedencia,
+			 decl.id_deptorigen,
 			 decl.id_capitulo,
 			 decl.id_partida,
 			 decl.id_subpartida,
@@ -227,7 +245,12 @@ class DeclaraimpAdo extends BaseAdo {
 			 decl.id_ciiu,
 			 decl.valorcif,
 			 decl.valorfob,
-			 decl.peso_neto
+			 decl.peso_neto,
+			 decl.arancel_pagado,
+			 decl.valorarancel,
+			 decl.porcentaje_arancel,
+			 decl.cantidad,
+			 decl.unidad
 			FROM declaraimp AS decl
 		';
 

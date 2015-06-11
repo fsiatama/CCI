@@ -26,6 +26,8 @@ if(isset($accion)){
 			$declaraexp->setValorcif($valorcif);
 			$declaraexp->setValor_pesos($valor_pesos);
 			$declaraexp->setPeso_neto($peso_neto);
+			$declaraexp->setCantidad($cantidad);
+			$declaraexp->setUnidad($unidad);
 			$rs_declaraexp = $declaraexpAdo->actualizar($declaraexp);
 			if($rs_declaraexp !== true){
 				$success = false;
@@ -73,6 +75,8 @@ if(isset($accion)){
 			$declaraexp->setValorcif($valorcif);
 			$declaraexp->setValor_pesos($valor_pesos);
 			$declaraexp->setPeso_neto($peso_neto);
+			$declaraexp->setCantidad($cantidad);
+			$declaraexp->setUnidad($unidad);
 			$rs_declaraexp = $declaraexpAdo->insertar($declaraexp);
 			if($rs_declaraexp["success"] !== true){
 				$respuesta = array(
@@ -108,6 +112,8 @@ if(isset($accion)){
 			$declaraexp->setValorcif($valorcif);
 			$declaraexp->setValor_pesos($valor_pesos);
 			$declaraexp->setPeso_neto($peso_neto);
+			$declaraexp->setCantidad($cantidad);
+			$declaraexp->setUnidad($unidad);
 			$rs_declaraexp = $declaraexpAdo->lista($declaraexp);
 			if(!is_array($rs_declaraexp)){
 				$respuesta = array(

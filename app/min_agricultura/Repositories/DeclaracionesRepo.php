@@ -255,8 +255,9 @@ class DeclaracionesRepo extends BaseRepo {
 						$yearFin  = $arrDate[0];
 						$monthFin = empty($arrDate[1]) ? '12' : $arrDate[1];
 
+						$endDate  = new DateTime($yearFin . '-' . $monthFin . '-01');
 
-						$filterValue = 'DATE("' . $yearIni . '-' . $monthIni . '-01") AND DATE("' . $yearFin . '-' . $monthFin . '-01")';
+						$filterValue = 'DATE("' . $yearIni . '-' . $monthIni . '-01") AND DATE("' . $endDate->format('Y-m-t') . '")';
 
 						$methodName = $this->getColumnMethodName('set', 'fecha');
 
@@ -1349,6 +1350,7 @@ class DeclaracionesRepo extends BaseRepo {
 	public function executeIHH()
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
+		$arrYear          = range($arrFiltersValues['anio_ini'], $arrFiltersValues['anio_fin']);
 		$trade            = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
 
 		$this->setTrade($trade);
@@ -1381,6 +1383,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotColumnFields('anio');
+		$this->modelAdo->setPivotColumnValues($arrYear);
 		$this->modelAdo->setPivotTotalFields([$columnValue]);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');

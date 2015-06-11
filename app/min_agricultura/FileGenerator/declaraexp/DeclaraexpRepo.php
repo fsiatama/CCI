@@ -71,7 +71,9 @@ class DeclaraexpRepo extends BaseRepo {
 			empty($valorfob) ||
 			empty($valorcif) ||
 			empty($valor_pesos) ||
-			empty($peso_neto)
+			empty($peso_neto) ||
+			empty($cantidad) ||
+			empty($unidad)
 		) {
 			$result = [
 				'success' => false,
@@ -95,6 +97,8 @@ class DeclaraexpRepo extends BaseRepo {
 		$this->model->setValorcif($valorcif);
 		$this->model->setValor_pesos($valor_pesos);
 		$this->model->setPeso_neto($peso_neto);
+		$this->model->setCantidad($cantidad);
+		$this->model->setUnidad($unidad);
 
 		if ($action == 'create') {
 		} elseif ($action == 'modify') {
@@ -128,6 +132,8 @@ class DeclaraexpRepo extends BaseRepo {
 			$this->model->setValorcif(implode('", "', $query));
 			$this->model->setValor_pesos(implode('", "', $query));
 			$this->model->setPeso_neto(implode('", "', $query));
+			$this->model->setCantidad(implode('", "', $query));
+			$this->model->setUnidad(implode('", "', $query));
 
 			return $this->modelAdo->inSearch($this->model);
 		}
@@ -148,6 +154,8 @@ class DeclaraexpRepo extends BaseRepo {
 			$this->model->setValorcif($query);
 			$this->model->setValor_pesos($query);
 			$this->model->setPeso_neto($query);
+			$this->model->setCantidad($query);
+			$this->model->setUnidad($query);
 
 			return $this->modelAdo->paginate($this->model, 'LIKE', $limit, $page);
 		}
