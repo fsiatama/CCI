@@ -174,11 +174,9 @@ class DeclaraexpAdo extends BaseAdo {
 		$conn = $this->getConnection();
 		$this->setData();
 
-		$cache = phpFastCache();
-
+		$cache  = phpFastCache();
 		$sql    = $this->buildPivotSelect();
-		$sql    = Inflector::compress($sql);
-		$key    = md5($sql);
+		$key    = md5(Inflector::compress($sql));
 		$result = $cache->get($key);
 
 		if (is_null($result)) {

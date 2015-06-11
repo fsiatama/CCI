@@ -91,7 +91,7 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 		columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
 			{header:'<?= Lang::get('indicador.comtrade_columns_title.valor_impo_desde_col'); ?>', dataIndex:'valor_impo_colombia' ,'renderer':numberFormat, align:'right'},
-			{header:'<?= Lang::get('indicador.comtrade_columns_title.valor_impo'); ?>', dataIndex:'valor_impo_world' ,'renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.comtrade_columns_title.valor_impo') . ' ' . Lang::get('indicador.reports.countrySelected'); ?>', dataIndex:'valor_impo_world' ,'renderer':numberFormat, align:'right'},
 		]
 		,defaults: {
 		}
@@ -160,7 +160,7 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 						'<strong id="' + module + 'growthRateColombia">0</strong>' +
 					'</div>' +
 					'<div class="col-md-4">' +
-						'<label>' + Ext.ux.lang.reports.growthRateWorld + '</label>' +
+						'<label>' + Ext.ux.lang.reports.growthRateWorld + ' <?= Lang::get('indicador.reports.countrySelected'); ?></label>' +
 						'<strong id="' + module + 'growthRateWorld">0</strong>' +
 					'</div>' +
 					/*'<div class="col-md-4">' +

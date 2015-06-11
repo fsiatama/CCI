@@ -2228,14 +2228,22 @@ class DeclaracionesRepo extends BaseRepo {
 			'cc'   => $id_subpartida,
 		];
 
-		$url = $baseUrl . '?' . http_build_query($parameters);
+		$cache  = phpFastCache();
+		$url    = $baseUrl . '?' . http_build_query($parameters);
+		$key    = md5($url);
+		$result = $cache->get($key);
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		$result = json_decode(curl_exec($ch), true);
+		if (is_null($result)) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			$result = json_decode(curl_exec($ch), true);
+			curl_close($ch);
+			$cache->set($key, $result, 3600*24*30);
+		}
+
 
 		$validation = ( empty($result['validation']['status']['name']) ) ? 'ok' : $result['validation']['status']['name'] ;
 		$message = ( empty($result['validation']['message']) ) ? '' : $result['validation']['message'] ;
@@ -3393,14 +3401,21 @@ class DeclaracionesRepo extends BaseRepo {
 			'cc'   => $id_subpartida,
 		];
 
-		$url = $baseUrl . '?' . http_build_query($parameters);
+		$cache  = phpFastCache();
+		$url    = $baseUrl . '?' . http_build_query($parameters);
+		$key    = md5($url);
+		$result = $cache->get($key);
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		$result = json_decode(curl_exec($ch), true);
+		if (is_null($result)) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			$result = json_decode(curl_exec($ch), true);
+			curl_close($ch);
+			$cache->set($key, $result, 3600*24*30);
+		}
 
 		if (empty($result['dataset'])) {
 			$result = [
@@ -3566,14 +3581,21 @@ class DeclaracionesRepo extends BaseRepo {
 			'cc'   => $id_subpartida,
 		];
 
-		$url = $baseUrl . '?' . http_build_query($parameters);
+		$cache  = phpFastCache();
+		$url    = $baseUrl . '?' . http_build_query($parameters);
+		$key    = md5($url);
+		$result = $cache->get($key);
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		$result = json_decode(curl_exec($ch), true);
+		if (is_null($result)) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			$result = json_decode(curl_exec($ch), true);
+			curl_close($ch);
+			$cache->set($key, $result, 3600*24*30);
+		}
 
 		if (empty($result['dataset'])) {
 			$result = [
@@ -3964,14 +3986,21 @@ class DeclaracionesRepo extends BaseRepo {
 			'cc'   => $id_subpartida,
 		];
 
-		$url = $baseUrl . http_build_query($parameters);
+		$cache  = phpFastCache();
+		$url    = $baseUrl . '?' . http_build_query($parameters);
+		$key    = md5($url);
+		$result = $cache->get($key);
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		$result = json_decode(curl_exec($ch), true);
+		if (is_null($result)) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			$result = json_decode(curl_exec($ch), true);
+			curl_close($ch);
+			$cache->set($key, $result, 3600*24*30);
+		}
 
 		//var_dump($result, $url);
 
@@ -4216,6 +4245,7 @@ class DeclaracionesRepo extends BaseRepo {
 	public function executeColombiaAlMundo( $pareto )
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
+		$arrYear          = range($arrFiltersValues['anio_ini'], $arrFiltersValues['anio_fin']);
 		$this->setTrade('expo');
 
 		$this->model    = $this->getModelExpo();
@@ -4237,6 +4267,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo->setPivotRowFields('id, decl.id_subpartida, subpartida');
 		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotColumnFields('anio');
+		$this->modelAdo->setPivotColumnValues($arrYear);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
 
@@ -4391,6 +4422,7 @@ class DeclaracionesRepo extends BaseRepo {
 	public function executePrincipalesDestinos( $pareto )
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
+		$arrYear          = range($arrFiltersValues['anio_ini'], $arrFiltersValues['anio_fin']);
 		$this->setTrade('expo');
 
 		$this->model    = $this->getModelExpo();
@@ -4412,6 +4444,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo->setPivotRowFields('id, decl.id_paisdestino, pais');
 		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotColumnFields('anio');
+		$this->modelAdo->setPivotColumnValues($arrYear);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
 
@@ -4560,6 +4593,7 @@ class DeclaracionesRepo extends BaseRepo {
 	public function executePrincipalesOrigenes( $pareto )
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
+		$arrYear          = range($arrFiltersValues['anio_ini'], $arrFiltersValues['anio_fin']);
 		$this->setTrade('impo');
 
 		$this->model    = $this->getModelImpo();
@@ -4581,6 +4615,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo->setPivotRowFields('id, decl.id_paisprocedencia, pais');
 		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotColumnFields('anio');
+		$this->modelAdo->setPivotColumnValues($arrYear);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
 
