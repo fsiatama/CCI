@@ -17,6 +17,11 @@ $htmlDescription .= '</ol>';
 
 $htmlExplanation = '
   <div class="well bs-component">
+  	<blockquote class="blockquote-reverse">
+	  	<cite title="Comtrade">Fuente de información
+	  		<a href="http://www.sicex.com/" target="_blank"> Sicex</a>
+	  	</cite>
+	</blockquote>
     <ul class="list-group">
       <li class="list-group-item">
         Por encima de 100%, las exportaciones agropecuarias y agroindustriales están creciendo por encima de las exportaciones totales del país al mundo o a un mercado específico.
@@ -56,7 +61,6 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 		]
 	});
 
-
 	storeIndicador.on('beforeload', function(){
 		var scale         = Ext.getCmp(module + 'comboScale').getValue();
 		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
@@ -86,10 +90,6 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 
 		el         = Ext.Element.get(module + 'growthRateExpoWithoutMining');
 		growthRate = rateFormat(store.reader.jsonData.growthRateExpoWithoutMining);
-		el.update(growthRate);
-
-		el         = Ext.Element.get(module + 'rateVariation');
-		growthRate = rateFormat(store.reader.jsonData.rateVariation);
 		el.update(growthRate);
 
 		FusionCharts.setCurrentRenderer('javascript');
@@ -174,21 +174,17 @@ $htmlExplanation = Inflector::compress($htmlExplanation);
 			style:{padding:'0px'}
 			,html: '<div class="bootstrap-styles">' +
 				'<div class="row text-center countTo">' +
-					'<div class="col-lg-3 col-md-6">' +
+					'<div class="col-lg-4 col-md-6">' +
 						'<label>' + Ext.ux.lang.reports.growthRateAgriculture + '</label>' +
 						'<strong id="' + module + 'growthRateAgriculture">0</strong>' +
 					'</div>' +
-					'<div class="col-lg-3 col-md-6">' +
+					'<div class="col-lg-4 col-md-6">' +
 						'<label>' + Ext.ux.lang.reports.growthRateExpoWithoutMining + '</label>' +
 						'<strong id="' + module + 'growthRateExpoWithoutMining">0</strong>' +
 					'</div>' +
-					'<div class="col-lg-3 col-md-6">' +
+					'<div class="col-lg-4 col-md-6">' +
 						'<label>' + Ext.ux.lang.reports.growthRateExpo + '</label>' +
 						'<strong id="' + module + 'growthRateExpo">0</strong>' +
-					'</div>' +
-					'<div class="col-lg-3 col-md-6">' +
-						'<label><?= Lang::get('indicador.reports.growVariation'); ?></label>' +
-						'<strong id="' + module + 'rateVariation">0</strong>' +
 					'</div>' +
 				'</div>' +
 			'</div>'

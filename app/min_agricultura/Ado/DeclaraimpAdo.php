@@ -189,10 +189,19 @@ class DeclaraimpAdo extends BaseAdo {
 		$conn = $this->getConnection();
 		$this->setData();
 
-		$sql = $this->buildPivotSelect();
+		$cache = phpFastCache();
 
-		$resultSet = $conn->Execute($sql);
-		$result = $this->buildResult($resultSet);
+		$sql    = $this->buildPivotSelect();
+		$sql    = Inflector::compress($sql);
+		$key    = md5($sql);
+		$result = $cache->get($key);
+
+		if (is_null($result)) {
+			$resultSet = $conn->Execute($sql);
+			$result = $this->buildResult($resultSet);
+			$cache->set($key, $result, 3600*24);
+		}
+
 
 		return $result;
 	}

@@ -14,6 +14,11 @@ $htmlDescription .= '</ol>';
 
 $htmlExplanation = '
   <div class="well bs-component">
+  	<blockquote class="blockquote-reverse">
+	  	<cite title="Comtrade">Fuente de información
+	  		<a href="http://comtrade.un.org/data/" target="_blank"> Comtrade</a>
+	  	</cite>
+	</blockquote>
     <ul class="list-group">
       <li class="list-group-item">
         Por encima de 100%, el producto colombiano está ganando participación en el mercado.

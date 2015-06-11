@@ -423,13 +423,13 @@ class Helpers
 		return false;
 	}
 
-	public static function arrayColumn( array $array, $column_key, $index_key = null )
+	public static function arrayColumn( array $array, $columnKey, $indexKey = null )
 	{
 		$result = [];
 		foreach ($array as $key => $row) {
-			if ( isset($row[$column_key]) ) {
+			if ( isset($row[$columnKey]) ) {
 
-				$result[ $index_key ? $v[$index_key] : $key ] = $row[$column_key];
+				$result[ $indexKey ? $v[$indexKey] : $key ] = $row[$columnKey];
 
 			}
 		}
@@ -518,7 +518,7 @@ class Helpers
 	 * @param $y array y-coords
 	 * @returns array() m=>slope, b=>intercept
 	 */
-	public static function linearRegression(array $y, $x =[]) {
+	public static function linearRegression(array $y, $x = []) {
 
 		// calculate number points
 		$n = count($y);

@@ -8,6 +8,7 @@
         "mpdf/mpdf": "5.*",
         "adodb/adodb-php": "5.19",
         "adldap/adldap": "4.0.*",
-        "raveren/kint": "v0.9"
+        "raveren/kint": "v0.9",
+        "phpfastcache/phpfastcache": "3.0.*"
     }
 }

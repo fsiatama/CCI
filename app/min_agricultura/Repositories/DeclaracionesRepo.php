@@ -2189,165 +2189,6 @@ class DeclaracionesRepo extends BaseRepo {
 	public function executeComtradeRelacionCrecimientoExpoColombiaImpoPais()
 	{
 
-		//este indicador se debe redefinir, pero se espera informacion adicional por parte del MADR Abril 2015
-
-		/*
-		$arrFiltersValues = $this->arrFiltersValues;
-		//var_dump($arrFiltersValues);
-		$this->setRange('ini');
-
-		$yearFirst = $arrFiltersValues['anio_ini'];
-		$yearLast  = $arrFiltersValues['anio_fin'];
-		$rangeYear = range($yearFirst, $yearLast);
-
-		$id_pais_destino = $arrFiltersValues['id_pais_destino'];
-		$id_subpartida   = $arrFiltersValues['id_subpartida'];
-
-		if (
-			empty($yearFirst) ||
-			empty($yearLast) ||
-			( empty($id_subpartida) && empty($id_pais_destino) )
-		) {
-			$result = [
-				'success' => false,
-				'error'   => 'Incomplete data for this request.'
-			];
-			return $result;
-		}
-		
-		$baseUrl = Helpers::arrayGet($this->linesConfig, 'urlApiComtrade');
-
-		$reporter = 'all';
-		$partner  = '0';
-
-		if ( !empty($id_pais_destino) ) {
-			$reporter = $id_pais_destino;
-			$partner  = 'all';
-		}
-
-		$parameters = [
-			'max'  => 5000,
-			'type' => 'C',
-			'freq' => 'A', //frecuancia anual
-			'px'   => 'HS',
-			'rg'   => '1', //impo
-			'ps'   => implode(',', $rangeYear),
-			'r'    => $reporter,
-			'p'    => $partner,
-			'cc'   => $id_subpartida,
-		];
-
-		$url = $baseUrl . http_build_query($parameters);
-
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		$result = json_decode(curl_exec($ch), true);
-
-		//var_dump($result, $url);
-
-		if (empty($result['dataset'])) {
-			$result = [
-				'success' => false,
-				'error'   => Lang::get('error.no_records_found_comtrade')
-			];
-			return $result;
-		}
-
-		$arrFields = [
-			'id'         => 'SMALLINT(4) UNSIGNED NOT NULL',
-			'yr'         => 'SMALLINT(4) UNSIGNED NOT NULL',
-			'rtCode'     => 'SMALLINT(4) UNSIGNED NOT NULL',
-			'rtTitle'    => 'VARCHAR(100) NOT NULL',
-			'ptCode'     => 'SMALLINT(4) UNSIGNED NOT NULL',
-			'ptTitle'    => 'VARCHAR(100) NOT NULL',
-			'TradeValue' => 'DECIMAL(20,2) UNSIGNED NOT NULL',
-		];
-
-		$this->modelAdo = new ComtradeTempAdo ('', $arrFields, $result['dataset']);
-
-		//$rowFields   = ( empty($id_pais_destino) ) ? 'rtCode, rtTitle' : 'ptCode, ptTitle' ;
-		//$rowFieldId  = ( empty($id_pais_destino) ) ? 'rtCode' : 'ptCode' ;
-		$rowFields   = 'rtCode, rtTitle';
-		$rowFieldId  = 'rtCode';
-
-		if ( !empty($id_pais_destino) ) {
-			$rowFields  = 'ptCode, ptTitle';
-			$rowFieldId = 'ptCode';
-		}
-
-		$columnValue = 'TradeValue';
-
-		$this->modelAdo->setPivotRowFields('id, '.$rowFields);
-		$this->modelAdo->setPivotTotalFields($columnValue);
-		$this->modelAdo->setPivotGroupingFunction('SUM');
-		$this->modelAdo->setPivotSortColumn($columnValue . ' DESC');
-		$this->modelAdo->setPivotColumnFields('yr');
-
-		$result = $this->modelAdo->pivotSearch();
-
-		if (!$result['success']) {
-			return $result;
-		}
-
-		$arrData = [];
-		$acummulatedAvg   = 0;
-		$acummulatedSlope = 0;
-		$numberRecords    = 0;
-
-		//var_dump($result);
-
-		foreach ($result['data'] as $row) {
-
-			$arrCalculatedColumns = array_diff_key($row, $arrFields);
-
-			//verifica que no existan registros con valores en cero
-			$isValid = true;
-			foreach ($arrCalculatedColumns as $key => $value) {
-				if ( empty($value) ) {
-					$isValid = false;
-				}
-				$row[$key] = $this->getFloatValue( $value );
-			}
-			if ($isValid) {
-				if ( $row[$rowFieldId] == '0' ) {
-					//captura la fila acumulada del todo el mundo
-
-					//var_dump($row);
-
-				} else {
-
-					$totalValue = $this->getFloatValue( array_sum($arrCalculatedColumns) );
-					$avg        = $totalValue / count($arrCalculatedColumns);
-					$arrY       = array_map('Helpers::naturalLogarithm', $arrCalculatedColumns);
-
-					$linearRegression = Helpers::linearRegression($arrY);
-					$slope            = ( $linearRegression['m'] * 100 );
-					$acummulatedAvg   += $avg;
-					$acummulatedSlope += $slope;
-					$numberRecords    += 1;
-
-					//if ( ( !empty($id_pais_destino) && in_array($row[$rowFieldId], explode(',', $id_pais_destino))) || empty($id_pais_destino) ) {
-						$arrData[] = array_merge( $row, compact('slope', 'avg') );
-					//}
-
-				}
-			}
-		}
-
-
-		var_dump($arrData);
-		exit();
-
-		*/
-
-
-
-
-
-
 		$arrFiltersValues = $this->arrFiltersValues;
 		$this->setRange('ini');
 		$yearFirst = empty($arrFiltersValues['anio_ini']) ? '' : $arrFiltersValues['anio_ini'];
@@ -2419,49 +2260,37 @@ class DeclaracionesRepo extends BaseRepo {
 		$arrDataWorld       = [];
 		$arrData            = [];
 		$columnValue        = 'TradeValue';
-		$valueColombiaFirst = 1;
-		$valueWorldFirst    = 1;
-		$valueColombiaLast  = 0;
-		$valueWorldLast     = 0;
 
 		usort($result['dataset'], Helpers::arraySortByValue('yr'));
 
 		foreach ($result['dataset'] as $key => $row) {
+
 			$totalValue = ( (float)$row[$columnValue] / $this->divisor );
+			$naturalLog = Helpers::naturalLogarithm($totalValue);
+			
 			if ($row['ptCode'] == $colombiaIdComtrade) { //datos de importaciones acumuladas de colombia
 				$arrDataColombia[] = [
 					'id'         => $row['yr'],
 					'periodo'    => $row['period'],
 					'valor_impo' => $totalValue,
+					'naturalLog' => $naturalLog,
 				];
-
-				if ($row['yr'] == $yearFirst) {
-					$valueColombiaFirst = $totalValue;
-				}
-				
-				$valueColombiaLast = $totalValue;
 
 			} else { //datos de importaciones acumuladas del mundo
 				$arrDataWorld[] = [
 					'id'         => $row['yr'],
 					'periodo'    => $row['period'],
 					'valor_impo' => $totalValue,
+					'naturalLog' => $naturalLog,
 				];
-
-				if ($row['yr'] == $yearFirst) {
-					$valueWorldFirst = $totalValue;
-				}
-				
-				$valueWorldLast = $totalValue;
 			}
 		}
 
-		$rangeYear     = range($yearFirst, $yearLast);
-		$numberPeriods = count($rangeYear);
+		$arrNaturalLog      = Helpers::arrayColumn( $arrDataColombia, 'naturalLog');
+		$growthRateColombia = Helpers::linearRegression($arrNaturalLog);
 
-		$growthRateColombia = ( pow(($valueColombiaLast / $valueColombiaFirst), (1 / $numberPeriods)) - 1);
-		$growthRateWorld    = ( pow(($valueWorldLast / $valueWorldFirst), (1 / $numberPeriods)) - 1);
-
+		$arrNaturalLog      = Helpers::arrayColumn( $arrDataWorld, 'naturalLog');
+		$growthRateWorld    = Helpers::linearRegression($arrNaturalLog);
 
 		foreach ($arrDataWorld as $key => $rowImpo) {
 			
@@ -2491,55 +2320,14 @@ class DeclaracionesRepo extends BaseRepo {
 		$result = [
 			'success'            => true,
 			'data'               => $arrData,
-			'growthRateColombia' => ($growthRateColombia * 100),
-			'growthRateWorld'    => ($growthRateWorld * 100),
+			'growthRateColombia' => ($growthRateColombia['m'] * 100),
+			'growthRateWorld'    => ($growthRateWorld['m'] * 100),
 			'total'              => count($arrData)
 		];
 
 		return $result;
 
 	}
-
-	/*public function executeRelacionCrecimientoImpoExpo()
-	{
-		$result = $this->findBalanzaData();
-
-		if (!$result['success']) {
-			return $result;
-		}
-		$yearFirst = $this->arrFiltersValues['anio_ini'];
-
-		foreach ($result['data'] as $key => $value) {
-
-			if ($value['periodo'] == $yearFirst) {
-				$valueExpoFirst = $value['valor_expo'];
-				$valueImpoFirst = $value['valor_impo'];
-			}
-			$yearLast      = $value['periodo'];
-			$valueExpoLast = $value['valor_expo'];
-			$valueImpoLast = $value['valor_impo'];
-		}
-
-		$rangeYear     = range($yearFirst, $yearLast);
-		$numberPeriods = count($rangeYear);
-
-		$growthRateImpo = ( pow(($valueImpoLast / $valueImpoFirst), (1 / $numberPeriods)) - 1);
-		$growthRateExpo = ( pow(($valueExpoLast / $valueExpoFirst), (1 / $numberPeriods)) - 1);
-
-		//var_dump($growthRateImpo, $growthRateExpo);
-
-		$result = [
-			'success'        => true,
-			'data'           => $result['data'],
-			'growthRateImpo' => ($growthRateImpo * 100),
-			'growthRateExpo' => ($growthRateExpo * 100),
-			'rateVariation'  => ($growthRateExpo / $growthRateImpo),
-			'total'          => count($result['data'])
-		];
-
-		return $result;
-
-	}*/
 
 	public function executeRelacionCrecimientoExpoAgroExpoTot()
 	{
@@ -2615,12 +2403,6 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrDataTotal = $result['data'];
 
-		$yearFirst = $arrFiltersValues['anio_ini'];
-
-		$valueAgricultureFirst        = 0;
-		$valueFirstTotal              = 0;
-		$valueFirstTotalWithoutMining = 0;
-
 		foreach ($arrDataTotal as $rowTotal) {
 
 			$rowProductsAgriculture = Helpers::findKeyInArrayMulti(
@@ -2634,18 +2416,11 @@ class DeclaracionesRepo extends BaseRepo {
 				$rowTotal['periodo']
 			);
 
-			$yearLast                    = $rowTotal['periodo'];
 			$valueLastTotal              = $this->getFloatValue( $rowTotal[$columnValue] );
 			$valueLastAgriculture        = ( $rowProductsAgriculture   !== false ) ? $this->getFloatValue( $rowProductsAgriculture[$columnValue] ) : 0 ;
 			$totalEnergeticMiningSector  = ( $rowEnergeticMiningSector !== false ) ? $this->getFloatValue( $rowEnergeticMiningSector[$columnValue] ) : 0 ;
 			$valueLastTotalWithoutMining = ( $valueLastTotal - $totalEnergeticMiningSector );
 			$valueLastTotalWithoutMining = ( $valueLastTotalWithoutMining == 0 ) ? 1 : $valueLastTotalWithoutMining ;
-
-			if ($rowTotal['periodo'] == $yearFirst) {
-				$valueAgricultureFirst        = $valueLastAgriculture;
-				$valueFirstTotalWithoutMining = $valueLastTotalWithoutMining;
-				$valueFirstTotal              = $valueLastTotal;
-			}
 
 			$arrData[] = [
 				'id'                    => $rowTotal['id'],
@@ -2656,14 +2431,17 @@ class DeclaracionesRepo extends BaseRepo {
 			];
 		}
 
-		$rangeYear     = range($yearFirst, $yearLast);
-		$numberPeriods = count($rangeYear);
+		$arrY                  = Helpers::arrayColumn( $arrData, 'valor_expo_agricola');
+		$arrNaturalLog         = array_map('Helpers::naturalLogarithm', $arrY);
+		$growthRateAgriculture = Helpers::linearRegression($arrNaturalLog);
 
-		$growthRateAgriculture       = ( pow(($valueLastAgriculture / $valueAgricultureFirst), (1 / $numberPeriods)) - 1);
-		$growthRateExpoWithoutMining = ( pow(($valueLastTotalWithoutMining / $valueFirstTotalWithoutMining), (1 / $numberPeriods)) - 1);
-		$growthRateExpo              = ( pow(($valueLastTotal / $valueFirstTotal), (1 / $numberPeriods)) - 1);
+		$arrY                  = Helpers::arrayColumn( $arrData, 'valor_expo_sin_minero');
+		$arrNaturalLog         = array_map('Helpers::naturalLogarithm', $arrY);
+		$growthRateExpoWithoutMining = Helpers::linearRegression($arrNaturalLog);
 
-
+		$arrY                  = Helpers::arrayColumn( $arrData, 'valor_expo');
+		$arrNaturalLog         = array_map('Helpers::naturalLogarithm', $arrY);
+		$growthRateExpo        = Helpers::linearRegression($arrNaturalLog);
 
 		$titleMiningSector = ( $this->typeIndicator == 'precio' ) ? Lang::get('indicador.columns_title.valor_expo_sin_minero') : Lang::get('indicador.columns_title.peso_expo_sin_minero') ;
 
@@ -2685,10 +2463,9 @@ class DeclaracionesRepo extends BaseRepo {
 		$result = [
 			'success'                     => true,
 			'data'                        => $arrData,
-			'growthRateAgriculture'       => ( $growthRateAgriculture * 100 ),
-			'growthRateExpo'              => ( $growthRateExpo * 100 ),
-			'growthRateExpoWithoutMining' => ( $growthRateExpoWithoutMining * 100 ),
-			'rateVariation'               => ( $growthRateAgriculture / $growthRateExpo ),
+			'growthRateAgriculture'       => ( $growthRateAgriculture['m'] * 100 ),
+			'growthRateExpo'              => ( $growthRateExpo['m'] * 100 ),
+			'growthRateExpoWithoutMining' => ( $growthRateExpoWithoutMining['m'] * 100 ),
 			'chartData'                   => $chartData,
 			'total'                       => count($arrData)
 		];
@@ -2982,7 +2759,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$arrPeriods = [];
 		$sector_id  = $arrFiltersValues['sector_id'];
 
-		include PATH_MODELS.'Repositories/ProduccionRepo.php';
+		include_once PATH_MODELS.'Repositories/ProduccionRepo.php';
 		$produccionRepo = new ProduccionRepo;
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
@@ -3450,7 +3227,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$arrPeriods = [];
 		$sector_id  = $arrFiltersValues['sector_id'];
 
-		include PATH_MODELS.'Repositories/ProduccionRepo.php';
+		include_once(PATH_MODELS.'Repositories/ProduccionRepo.php');
 		$produccionRepo = new ProduccionRepo;
 
 		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
@@ -3732,7 +3509,8 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrSeries,
 			$this->chartType,
 			'',
-			Lang::get('indicador.columns_title.IEI')
+			Lang::get('indicador.columns_title.IEI'),
+			'COMTRADE'
 		);
 
 		$result = [
@@ -3889,7 +3667,8 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrSeries,
 			$this->chartType,
 			'',
-			$this->pYAxisName
+			$this->pYAxisName,
+			'COMTRADE'
 		);
 
 		/*$columnChart = Helpers::jsonChart(

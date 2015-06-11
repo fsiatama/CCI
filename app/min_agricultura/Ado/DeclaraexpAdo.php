@@ -170,14 +170,22 @@ class DeclaraexpAdo extends BaseAdo {
 	{
 		$this->setModel($model);
 		$this->setOperator('IN');
-		
+
 		$conn = $this->getConnection();
 		$this->setData();
 
-		$sql = $this->buildPivotSelect();
+		$cache = phpFastCache();
 
-		$resultSet = $conn->Execute($sql);
-		$result = $this->buildResult($resultSet);
+		$sql    = $this->buildPivotSelect();
+		$sql    = Inflector::compress($sql);
+		$key    = md5($sql);
+		$result = $cache->get($key);
+
+		if (is_null($result)) {
+			$resultSet = $conn->Execute($sql);
+			$result = $this->buildResult($resultSet);
+			$cache->set($key, $result, 3600*24);
+		}
 
 		return $result;
 	}
@@ -185,7 +193,7 @@ class DeclaraexpAdo extends BaseAdo {
 	public function buildPivotSelect()
 	{
 		require_once PATH_APP.'lib/pivottable.inc.php';
-		
+
 		$conn  = $this->getConnection();
 		$table = $this->getTable();
 		
