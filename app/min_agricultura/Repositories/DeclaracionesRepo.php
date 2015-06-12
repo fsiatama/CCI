@@ -3491,7 +3491,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$totalImpoCol = ($rowImpoCol !== false) ? $rowImpoCol['valor_impo'] : 0 ;
 			$totalExpoCol = ($rowExpoCol !== false) ? $rowExpoCol['valor_expo'] : 1 ;
 
-			$rate = ($totalExpoCol == 0) ? 0 : (($totalExpo - $rowImpo['valor_impo']) / $totalExpoCol) ;
+			$rate = ($totalExpoCol == 0) ? 0 : (($rowImpo['valor_impo'] - $totalExpo) / $totalExpoCol) ;
 
 			$arrData[] = [
 				'id'             => $rowImpo['id'],
@@ -3500,7 +3500,7 @@ class DeclaracionesRepo extends BaseRepo {
 				'valor_expo'     => $totalExpo,
 				'valor_expo_col' => $totalExpoCol,
 				'valor_impo_col' => $totalImpoCol,
-				'IEI'  => ($rate * 100)
+				'IEI'  => $rate
 			];
 
 		}
