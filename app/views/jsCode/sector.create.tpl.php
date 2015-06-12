@@ -51,6 +51,7 @@
 		,valueField:'id_posicion'
 		,tpl: resultTpl
 		,displayFieldTpl:'({id_posicion}) - {posicion}'
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.posicion_help'); ?>')]
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {

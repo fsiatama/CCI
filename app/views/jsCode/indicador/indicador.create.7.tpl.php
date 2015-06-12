@@ -52,6 +52,7 @@
 		,tpl: resultTplPosicion
 		,displayFieldTpl:'({id_posicion}) - {posicion}'
 		,allowBlank:true
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.posicion_help'); ?>')]
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {
@@ -91,6 +92,7 @@
 		,valueField:'sector_id'
 		,tpl: resultTplSector
 		,displayFieldTpl:'{sector_nombre}'
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.sector_help'); ?>')]
 	});
 
 	var MonthPicker = Ext.extend(Ext.ux.MonthYearPicker, {
@@ -177,6 +179,7 @@
 					,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_nombre'); ?>'
 					,id:module+'indicador_nombre'
 					,allowBlank:false
+					,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.indicador_nombre_help'); ?>')]
 				}]
 			}]
 		},{

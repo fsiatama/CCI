@@ -52,6 +52,7 @@
 		,tpl: resultTplSubpartida
 		,displayFieldTpl:'({id_subpartida}) - {subpartida}'
 		,allowBlank:false
+		,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.hsCode)]
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {
@@ -92,6 +93,7 @@
 		,tpl: resultTplPais
 		,allowBlank:false
 		,displayFieldTpl:'{country}'
+		,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.countryOriginHelp)]
 	});
 
 	var formIndicador = new Ext.FormPanel({
@@ -137,6 +139,7 @@
 					,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_nombre'); ?>'
 					,id:module+'indicador_nombre'
 					,allowBlank:false
+					,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.indicador_nombre_help'); ?>')]
 				}]
 			}]
 		},{
@@ -155,12 +158,10 @@
 			,items:[{
 				defaults:{anchor:'100%'}
 				,items:[comboPaisOrigen]
-				,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.countryOriginHelp)]
 			},{
 				defaults:{anchor:'100%'}
 				,columnWidth:1
 				,items:[comboSubpartida]
-				,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.hsCode)]
 			},{
 				xtype:'hidden'
 				,name:'indicador_tipo_indicador_id'

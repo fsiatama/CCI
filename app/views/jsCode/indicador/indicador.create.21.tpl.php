@@ -50,6 +50,7 @@
 		,valueField:'sector_id'
 		,tpl: resultTplSector
 		,displayFieldTpl:'{sector_nombre}'
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.sector_help'); ?>')]
 	});
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
@@ -76,7 +77,7 @@
 		,store:arrYears
 		,fieldLabel:Ext.ux.lang.reports.selectYearTo
 	});
-	
+
 	var formIndicador = new Ext.FormPanel({
 		baseCls:'x-plain'
 		,id:module + 'formIndicador'
@@ -121,6 +122,7 @@
 					,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_nombre'); ?>'
 					,id:module+'indicador_nombre'
 					,allowBlank:false
+					,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.indicador_nombre_help'); ?>')]
 				}]
 			}]
 		},{
@@ -137,11 +139,11 @@
 			}
 			,items:[{
 				defaults:{anchor:'100%'}
-				,columnWidth:.2
+				//,columnWidth:.2
 				,items:[comboAnio_ini]
 			},{
 				defaults:{anchor:'100%'}
-				,columnWidth:.2
+				//,columnWidth:.2
 				,items:[comboAnio_fin]
 			}]
 		},{
@@ -222,7 +224,7 @@
 		var arrValues      = [];
 		var selection      = Ext.getCmp(module+'comboSector').getSelectedRecords();
 		var label          = Ext.getCmp(module+'comboSector').fieldLabel;
-		
+
 		Ext.each(selection,function(row){
 			arrValues.push(row.get('sector_nombre'));
 		});
@@ -237,7 +239,7 @@
 		arrValues     = [];
 
 		arrValues.push(yearIni + ' - ' + yearFin);
-		
+
 		arrDescription.push({
 			label: Ext.ux.lang.reports.period
 			,values: arrValues

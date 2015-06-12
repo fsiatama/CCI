@@ -53,6 +53,7 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 		,valueField:'id_pais'
 		,tpl: resultTplPais
 		,displayFieldTpl:'{pais}'
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.pais_help'); ?>')]
 	});
 
 	var storeMercado = new Ext.data.JsonStore({
@@ -83,6 +84,7 @@ $acuerdo_id = ($action == 'modify') ? $acuerdo_id : '' ;
 		,valueField:'mercado_id'
 		,tpl: resultTplMercado
 		,displayFieldTpl:'{mercado_nombre}'
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.mercado_nombre_help'); ?>')]
 	});
 
 	var arrTrade = <?= json_encode($trade); ?>;

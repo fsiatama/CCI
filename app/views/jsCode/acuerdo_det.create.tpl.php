@@ -25,7 +25,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 		,itemSelector:'.search-item'
 		,pageSize:10
 	});
-	
+
 	var configStorePosicion = {
 		url:'posicion/list'
 		,root:'data'
@@ -57,6 +57,7 @@ $acuerdo_descripcion = Inflector::compress($acuerdo_descripcion);
 		,tpl: resultTplPosicion
 		,displayFieldTpl:'({id_posicion}) - {posicion}'
 		//,allowBlank:true
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.posicion_help'); ?>')]
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {

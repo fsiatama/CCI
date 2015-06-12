@@ -51,6 +51,7 @@
 		,valueField:'id_subpartida'
 		,tpl: resultTplSubpartida
 		,displayFieldTpl:'({id_subpartida}) - {subpartida}'
+		,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.hsCode)]
 		,listeners:{
 			'beforequery':{
 				fn: function(queryEvent) {
@@ -91,6 +92,7 @@
 		,valueField:'id_country'
 		,tpl: resultTplPais
 		,displayFieldTpl:'{country}'
+		,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.countryPartnerHelp)]
 	});
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
@@ -163,6 +165,7 @@
 					,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_nombre'); ?>'
 					,id:module+'indicador_nombre'
 					,allowBlank:false
+					,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.indicador_nombre_help'); ?>')]
 				}]
 			}]
 		},{
@@ -179,11 +182,11 @@
 			}
 			,items:[{
 				defaults:{anchor:'100%'}
-				,columnWidth:.2
+				//,columnWidth:.2
 				,items:[comboAnio_ini]
 			},{
 				defaults:{anchor:'100%'}
-				,columnWidth:.2
+				//,columnWidth:.2
 				,items:[comboAnio_fin]
 			}]
 		},{
@@ -202,12 +205,10 @@
 			,items:[{
 				defaults:{anchor:'100%'}
 				,items:[comboPaisDestino]
-				,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.countryPartnerHelp)]
 			},{
 				defaults:{anchor:'100%'}
 				,columnWidth:1
 				,items:[comboSubpartida]
-				,plugins:[new Ext.ux.FieldHelp(Ext.ux.lang.reports.hsCode)]
 			},{
 				xtype:'hidden'
 				,name:'indicador_tipo_indicador_id'

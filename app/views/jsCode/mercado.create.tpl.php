@@ -48,6 +48,7 @@
 		,valueField:'id_pais'
 		,tpl: resultTplPais
 		,displayFieldTpl:'{pais}'
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.pais_help'); ?>')]
 	});
 
 	var formMercado = new Ext.FormPanel({

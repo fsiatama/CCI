@@ -27,7 +27,7 @@
 		,store:arrYears
 		,fieldLabel:Ext.ux.lang.reports.selectYearTo
 	});
-	
+
 	var formIndicador = new Ext.FormPanel({
 		baseCls:'x-plain'
 		,id:module + 'formIndicador'
@@ -71,6 +71,7 @@
 					,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_nombre'); ?>'
 					,id:module+'indicador_nombre'
 					,allowBlank:false
+					,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.indicador_nombre_help'); ?>')]
 				}]
 			}]
 		},{
@@ -87,11 +88,11 @@
 			}
 			,items:[{
 				defaults:{anchor:'100%'}
-				,columnWidth:.2
+				//,columnWidth:.2
 				,items:[comboAnio_ini]
 			},{
 				defaults:{anchor:'100%'}
-				,columnWidth:.2
+				//,columnWidth:.2
 				,items:[comboAnio_fin]
 			},{
 				xtype:'hidden'
@@ -150,7 +151,7 @@
 
 	function getDescription () {
 		var arrDescription = [];
-		
+
 		var arrValues      = [];
 
 		var yearIni      = Ext.getCmp(module+'comboAnio_ini').getValue();
@@ -158,7 +159,7 @@
 		arrValues     = [];
 
 		arrValues.push(yearIni + ' - ' + yearFin);
-		
+
 		arrDescription.push({
 			label: Ext.ux.lang.reports.period
 			,values: arrValues

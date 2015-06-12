@@ -49,6 +49,7 @@
 		,valueField:'id_pais'
 		,tpl: resultTplPais
 		,displayFieldTpl:'({id_pais}) - {pais}'
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.pais_help'); ?>')]
 	});
 
 	var storeMercado = new Ext.data.JsonStore({
@@ -80,6 +81,7 @@
 		,valueField:'mercado_id'
 		,tpl: resultTplMercado
 		,displayFieldTpl:'{mercado_nombre}'
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.mercado_nombre_help'); ?>')]
 	});
 
 	var arrYears = <?= json_encode($yearsAvailable); ?>;
@@ -152,6 +154,7 @@
 					,fieldLabel:'<?= Lang::get('indicador.columns_title.indicador_nombre'); ?>'
 					,id:module+'indicador_nombre'
 					,allowBlank:false
+					,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.indicador_nombre_help'); ?>')]
 				}]
 			}]
 		},{
@@ -168,11 +171,11 @@
 			}
 			,items:[{
 				defaults:{anchor:'100%'}
-				,columnWidth:.2
+				//,columnWidth:.2
 				,items:[comboAnio_ini]
 			},{
 				defaults:{anchor:'100%'}
-				,columnWidth:.2
+				//,columnWidth:.2
 				,items:[comboAnio_fin]
 			}]
 		},{

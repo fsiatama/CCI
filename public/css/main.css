@@ -122,7 +122,7 @@ i.fa        { text-decoration:none !important;}
 .color-white    { color:#fff !important;    }
 
 .bootstrap-styles .styleColor {color:#9db667 !important; }
-.bootstrap-styles div{font-family:Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#3e3f3a;background-color:#fff}
+.bootstrap-styles div{font-family:Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:1em;line-height:1.42857143;color:#3e3f3a;background-color:#fff}
 div.countTo strong {display: block; font-size: 50px; line-height: 50px; font-weight: 600; }
 div.countTo label {font-weight: 300; font-size: 22px; line-height: 22px; }
 
@@ -132,7 +132,7 @@ div.countTo label {font-weight: 300; font-size: 22px; line-height: 22px; }
 #loading-mask {position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #999999; z-index: 1; }
 #loading {position: absolute; top: 40%; left: 45%; z-index: 2; }
 #loading span {background: url('../img/progress.gif') no-repeat top left; display: block; color:#666; padding-left:20px; padding:5px 0 20px 40px; }
-.x-form-helptext {color: #888; font-size: 9px; padding: 0; margin: 0 0 8px; }
+.x-form-helptext {color: #666; padding: 0; margin: 0 0 8px; }
 .rotate i {float: right; color: #dfd7ca; position: absolute; left: 0; left: auto; right: 0; bottom: 0; display: block; height: 65px; font-size: 75px; -webkit-transform: rotate(-40deg); -moz-transform: rotate(-40deg); -o-transform: rotate(-40deg); -ms-transform: rotate(-40deg); transform: rotate(-40deg); text-shadow:1px 0 #ddd; }
 .dashboard-block {opacity:0.9; clear:both; position:relative; overflow:hidden; background:#f8f5f0!important; margin:15px 0; padding:30px 10px; border: 1px solid #CCC; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; }
 .navbar-block, .main-block, .footer-block

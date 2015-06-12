@@ -365,8 +365,10 @@ class DeclaracionesRepo extends BaseRepo {
 			//$this->model->setAnio($year);
 			$row = 'fecha AS id';
 		} else {
-			if (array_key_exists('anio_'.$range, $this->arrFiltersValues)) {
-				$year = $this->arrFiltersValues['anio_'.$range];
+			if (array_key_exists('anio_ini', $this->arrFiltersValues)) {
+				$rowField = '"' . $this->arrFiltersValues['anio_ini'] . ' - ' . $this->arrFiltersValues['anio_fin'] . '" AS periodo';
+			} elseif ( array_key_exists('desde_'.$range, $this->arrFiltersValues) ) {
+				$rowField = '"' . $this->arrFiltersValues['desde_'.$range] . ' - ' . $this->arrFiltersValues['hasta_'.$range] . '" AS periodo';
 			}
 		}
 
@@ -376,13 +378,11 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrRowField = [$row, $rowField];
 
-
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($this->columnValueImpo);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
 		$rsDeclaraimp = $this->modelAdo->pivotSearch($this->model);
-
 
 		if (!$rsDeclaraimp['success']) {
 			return $rsDeclaraimp;
@@ -394,16 +394,6 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo   = $this->getModelExpoAdo();
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
-
-		//si el periodo es diferente a anual debe filtrar por año
-		if ($period != 12) {
-			//$this->model->setAnio($year);
-			$row = 'fecha AS id';
-		} else {
-			if (array_key_exists('anio_'.$range, $this->arrFiltersValues)) {
-				$year = $this->arrFiltersValues['anio_'.$range];
-			}
-		}
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);

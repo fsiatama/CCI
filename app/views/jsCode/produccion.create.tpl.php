@@ -68,8 +68,9 @@
 		,valueField:'sector_id'
 		,tpl: resultTplSector
 		,displayFieldTpl:'{sector_nombre}'
+		,plugins:[new Ext.ux.FieldHelp('<?= Lang::get('indicador.reports.sector_help'); ?>')]
 	});
-	
+
 	var formProduccion = new Ext.FormPanel({
 		baseCls:'x-plain'
 		,id:module + 'formProduccion'
