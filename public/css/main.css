@@ -168,3 +168,5 @@ div.countTo label {font-weight: 300; font-size: 22px; line-height: 22px; }
 {
     color: greenyellow;
 }
+
+.bootstrap-styles .alert{ font-size: 1.5em; }
