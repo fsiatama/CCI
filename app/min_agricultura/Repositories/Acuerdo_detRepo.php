@@ -479,9 +479,14 @@ class Acuerdo_detRepo extends BaseRepo {
 		$arrData = [];
 
 		foreach ($result['data'] as $key => $row) {
+
+			$trade                 = $row['acuerdo_intercambio'];
+			$desgravacion_det_tasa = (float)$row['desgravacion_det_tasa'];
+
 			$arrFiltros   = [];
 			$arrFiltros[] = 'id_pais:'.$row['id_pais'];
 			$arrFiltros[] = 'id_posicion:'.$row['acuerdo_det_productos'];
+			$arrFiltros[] = 'intercambio:'.$trade;
 			$params       = [
 				'indicador_filtros'        => implode('||', $arrFiltros),
 				'tipo_indicador_activador' => 'volumen',
@@ -507,9 +512,21 @@ class Acuerdo_detRepo extends BaseRepo {
 			}
 			$executedWeight = 0;
 			if ( $rsExecuted['total'] > 0) {
-				$rowExecuted = array_shift($rsExecuted['data']);
-				//se divide por 1000 para convertir en Toneladas metricas
-				$executedWeight = ( $rowExecuted['peso_neto'] / 1000 );
+				foreach ($rsExecuted['data'] as $rowExecuted) {
+
+					//se divide por 1000 para convertir en Toneladas metricas
+					$weight     = ( (float)$rowExecuted['peso_neto'] / 1000 );
+					$tariffRate = ( isset($rowExecuted['porcentaje_arancel']) ) ? (float)$rowExecuted['porcentaje_arancel'] : 0;
+
+					if ($trade == 'impo') {
+						if ($row['desgravacion_mdesgravacion'] == '1') {
+							# si maneja desgravacion el valor de declaraimp.porcentaje_arancel debe ser igual al de la desgravacion
+							$weight = ($desgravacion_det_tasa == $tariffRate) ? $weight : 0 ;
+						}
+					}
+
+					$executedWeight += $weight;
+				}
 			}
 			$rate = ($row['contingente_det_peso_neto'] == 0) ? 0 : ($executedWeight / $row['contingente_det_peso_neto'] ) * 100 ;
 

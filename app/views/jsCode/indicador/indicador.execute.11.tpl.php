@@ -72,13 +72,11 @@ $htmlDescription .= '</ol>';
 		chart.setJSONData(store.reader.jsonData.chartData);
 		chart.render(module + 'Chart');
 
-
 		if (store.reader.jsonData.titleSector && store.reader.jsonData.titleTotal) {
 			var titleSector = store.reader.jsonData.titleSector;
 			var titleTotal  = store.reader.jsonData.titleTotal;
 			setColumnsTitle(titleSector, titleTotal);
 		}
-
 
 		Ext.ux.bodyMask.hide();
 	});

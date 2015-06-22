@@ -3,6 +3,7 @@
 require PATH_MODELS.'Entities/Contingente.php';
 require PATH_MODELS.'Ado/ContingenteAdo.php';
 require_once PATH_MODELS.'Repositories/Contingente_detRepo.php';
+require_once PATH_MODELS.'Repositories/Desgravacion_detRepo.php';
 //require_once PATH_MODELS.'Repositories/AcuerdoRepo.php';
 require_once PATH_MODELS.'Repositories/AlertaRepo.php';
 require_once ('BaseRepo.php');
@@ -454,7 +455,8 @@ class ContingenteRepo extends BaseRepo {
 		if (
 			empty($acuerdo_id) ||
 			empty($acuerdo_det_id) ||
-			empty($contingente_id)
+			empty($contingente_id) ||
+			empty($desgravacion_id)
 		) {
 			$result = [
 				'success' => false,
@@ -472,6 +474,26 @@ class ContingenteRepo extends BaseRepo {
 		}
 		//la consulta solo deberia arrojar un registro
 		$arrContingente = array_shift($result['data']);
+		$trade          = $arrContingente['acuerdo_intercambio'];
+
+		/************************************ busca el registro detalle de desgravacion ************************************/
+
+		$desgravacion_detRepo = new Desgravacion_detRepo;
+		$params = [
+			'desgravacion_id'                     => $desgravacion_id,
+			'desgravacion_acuerdo_det_id'         => $acuerdo_det_id,
+			'desgravacion_acuerdo_det_acuerdo_id' => $acuerdo_id,
+			'year'                               => $year,
+		];
+		$result = $desgravacion_detRepo->listId($params);
+		if (!$result['success']) {
+			return $result;
+		}
+		$arrDesgravacion_det        = array_shift( $result['data'] );
+		$desgravacion_det_tasa      = ( empty($arrDesgravacion_det) ) ? 0 : (float)$arrDesgravacion_det['desgravacion_det_tasa'] ;
+		$desgravacion_mdesgravacion = ( empty($arrDesgravacion_det) ) ? '0' : $arrDesgravacion_det['desgravacion_mdesgravacion'] ;
+
+		/************************************ busca el registro detalle de contingente ************************************/
 
 		$this->contingente_detRepo = new Contingente_detRepo;
 		$params = [
@@ -493,6 +515,8 @@ class ContingenteRepo extends BaseRepo {
 			$safeguard       = (float)$arrContingente['contingente_salvaguardia_sobretasa'];
 			$safeguardWeight = $quotaWeight * ( 1 + ( $safeguard / 100 ) );
 		}
+
+		/**************************************************************************************************************/
 
 		$lines            = Helpers::getRequire(PATH_APP.'lib/indicador.config.php');
 		$methodName       = ( $source == 'bol' ) ? 'acuerdo_det_bol' : 'acuerdo_det';
@@ -546,12 +570,12 @@ class ContingenteRepo extends BaseRepo {
 			return $result;
 		}
 		
-		$arrData    = [];
+		$arrFinal   = [];
 		$gaugeChart = [];
 
 		if ($result['total'] == 0) {
 			
-			$arrData[] = [
+			$arrFinal[] = [
 				'id'               => $arrContingente['contingente_id'],
 				'periodo'          => $year,
 				'executedWeight'   => 0,
@@ -565,37 +589,68 @@ class ContingenteRepo extends BaseRepo {
 		} else {
 
 			$arrDeclaraciones = $result['data'];
+			$arrData          = [];
 			$cumulativeRate   = 0;
 			$cumulativeWeight = 0;
 
 			foreach ($arrDeclaraciones as $data) {
 
-				$executedWeight    = ( $data['peso_neto'] / 1000 );
-				$executedRate      = ($quotaWeight == 0) ? 0 : ( $executedWeight / $quotaWeight ) * 100 ;
-				$cumulativeWeight += $executedWeight;
-				$cumulativeRate   += $executedRate;
+				if (empty($executedWeight[$data['periodo']])) {
+					$executedWeight[$data['periodo']] = 0;
+					$executedRate[$data['periodo']]   = 0;
+				}
 
-				$arrData[] = [
+
+				$weight     = ( (float)$data['peso_neto'] / 1000 );
+				$tariffRate = ( isset($data['porcentaje_arancel']) ) ? (float)$data['porcentaje_arancel'] : 0;
+
+				if ($trade == 'impo') {
+					if ($desgravacion_mdesgravacion == '1') {
+						# si maneja desgravacion el valor de declaraimp.porcentaje_arancel debe ser igual al de la desgravacion
+						$weight = ($desgravacion_det_tasa == $tariffRate) ? $weight : 0 ;
+					}
+				}
+
+				$executedWeight[$data['periodo']] += $weight;
+				$executedRate[$data['periodo']]   += ($quotaWeight == 0) ? 0 : ( $weight / $quotaWeight ) * 100 ;
+
+				$arrData[$data['periodo']] = [
 					'id'               => $arrContingente['contingente_id'],
 					'periodo'          => $data['periodo'],
-					'executedWeight'   => $executedWeight,
-					'executedRate'     => $executedRate,
+					'executedWeight'   => $executedWeight[$data['periodo']],
+					'executedRate'     => $executedRate[$data['periodo']],
+				];
+
+			}
+
+			foreach ($arrData as $key => $row) {
+
+				$cumulativeWeight += $row['executedWeight'];
+				$cumulativeRate   += $row['executedRate'];
+
+				$arrFinal[] = [
+					'id'               => $row['id'],
+					'periodo'          => $row['periodo'],
+					'executedWeight'   => $row['executedWeight'],
+					'executedRate'     => $row['executedRate'],
 					'cumulativeWeight' => $cumulativeWeight,
 					'cumulativeRate'   => $cumulativeRate,
 				];
-
 			}
 
 			$gaugeChart = $this->getGaugeData($arrContingente, $cumulativeRate, $quotaWeight, $arrContingente['pais']);
 		}
 
+		$desgravacion_det_tasa = ($desgravacion_mdesgravacion == '1') ? $desgravacion_det_tasa : false ;
+
 
 		$result = [
 			'success'         => true,
-			'data'            => $arrData,
+			'data'            => $arrFinal,
 			'gaugeChartData'  => $gaugeChart,
 			'quotaWeight'     => $quotaWeight,
 			'safeguardWeight' => $safeguardWeight,
+			'tariffRate'      => $desgravacion_det_tasa,
 			'total'           => count($arrData)
 		];
 

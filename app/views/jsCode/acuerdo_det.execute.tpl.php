@@ -10,7 +10,6 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 
 ?>
 
-
 /*<script>*/
 (function(){
 	Ext.form.Field.prototype.msgTarget = 'side';
@@ -31,6 +30,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		,id:module+'storeAcuerdo_det'
 		,fields:[
 			{name:'contingente_id', type:'float'},
+			{name:'desgravacion_id', type:'float'},
 			{name:'acuerdo_id', type:'float'},
 			{name:'acuerdo_det_id', type:'float'},
 			{name:'acuerdo_det_productos', type:'string'},
@@ -100,9 +100,16 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		'</div>'
 	);
 
+	gridAcuerdo_detExpander = new Ext.grid.RowExpander({
+		tpl: new Ext.Template(
+			 '<p style="margin:0 0 4px 8px"><b><?= Lang::get('acuerdo_det.columns_title.acuerdo_det_productos'); ?>:</b> <br>{acuerdo_det_productos}</p>'
+		)
+	});
+
 	var colModelAcuerdo_det = new Ext.grid.ColumnModel({
 		defaultSortable: true
 		,columns:[
+			gridAcuerdo_detExpander,
 			{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_productos_desc'); ?>', dataIndex:'acuerdo_det_productos_desc', align:'left'},
 			{header:'<?= Lang::get('acuerdo.partner_title'); ?>', dataIndex:'pais', align:'left'},
 			{header:'<?= Lang::get('contingente_det.peso_contingente'); ?>', dataIndex:'contingente_det_peso_neto' ,'renderer':numberFormat , align:'right'},
@@ -137,7 +144,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		,autoHeight:true
 		,autoWidth:true
 		,margins:'10 15 5 0'
-		,plugins:[gridAcuerdo_detAction, new Ext.ux.grid.Excel()]
+		,plugins:[gridAcuerdo_detAction, new Ext.ux.grid.Excel(), gridAcuerdo_detExpander]
 		,listeners:{
 			render: {
 				fn: function(grid){
@@ -212,9 +219,10 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 	/*********************************************** Start functions***********************************************/
 
 	function fnOpenDetail (record, source) {
-		var contingente_id = record.get('contingente_id');
-		var acuerdo_id     = record.get('acuerdo_id');
-		var acuerdo_det_id = record.get('acuerdo_det_id');
+		var contingente_id  = record.get('contingente_id');
+		var desgravacion_id = record.get('desgravacion_id');
+		var acuerdo_id      = record.get('acuerdo_id');
+		var acuerdo_det_id  = record.get('acuerdo_det_id');
 
 		if(Ext.getCmp('tab-detail_'+module)){
 			Ext.Msg.show({
@@ -236,6 +244,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 					,module: 'detail_' + module
 					,parent: module
 					,contingente_id: contingente_id
+					,desgravacion_id: desgravacion_id
 					,acuerdo_id: acuerdo_id
 					,acuerdo_det_id: acuerdo_det_id
 					,source: source

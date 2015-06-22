@@ -10,6 +10,7 @@ class DeclaraimpAdo extends BaseAdo {
 	protected $pivotTotalFields      = [];
 	protected $pivotGroupingFunction = '';
 	protected $pivotSortColumn       = '';
+	protected $sortColumn            = '';
 	protected $arrJoins       		 = [];
 
 	public function setPivotRowFields($pivotRowFields)
@@ -40,6 +41,11 @@ class DeclaraimpAdo extends BaseAdo {
 	public function setPivotSortColumn($pivotSortColumn)
 	{
 		$this->pivotSortColumn = $pivotSortColumn;
+	}
+
+	public function setSortColumn($sortColumn)
+	{
+		$this->sortColumn = $sortColumn;
 	}
 
 	protected function setTable()
@@ -235,6 +241,8 @@ class DeclaraimpAdo extends BaseAdo {
 
 	public function buildSelect()
 	{
+
+		$table = $this->getTable();
 		$sql = 'SELECT
 			 decl.id,
 			 decl.anio,
@@ -244,11 +252,13 @@ class DeclaraimpAdo extends BaseAdo {
 			 decl.id_paisorigen,
 			 decl.id_paiscompra,
 			 decl.id_paisprocedencia,
+			 pais.pais,
 			 decl.id_deptorigen,
 			 decl.id_capitulo,
 			 decl.id_partida,
 			 decl.id_subpartida,
 			 decl.id_posicion,
+			 posicion.posicion,
 			 decl.id_ciiu,
 			 decl.valorcif,
 			 decl.valorfob,
@@ -258,10 +268,12 @@ class DeclaraimpAdo extends BaseAdo {
 			 decl.porcentaje_arancel,
 			 decl.cantidad,
 			 decl.unidad
-			FROM declaraimp AS decl
-		';
+			FROM ' . $table;
 
 		$sql .= $this->buildSelectWhere();
+		$sql .= (empty($this->sortColumn)) ? ' ' : ' ORDER BY ' . $this->sortColumn ;
+
+		//echo '<pre>'.$sql.'</pre>';
 
 		return $sql;
 	}

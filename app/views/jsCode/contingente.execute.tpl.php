@@ -11,6 +11,29 @@ $htmlProducts .= '</ol>';
 
 $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo['dateTo']->format('m')).' - '.$updateInfo['dateTo']->format('Y') : '' ;
 
+
+$htmlContingentStatus = '
+	<div class="bootstrap-styles">
+		<div class="row text-center countTo">
+			<div class="col-md-4">
+				<label>' . Lang::get('contingente_det.peso_contingente') . '</label>
+				<strong id="\' + module + \'quotaWeight">0</strong>
+			</div>
+			<div class="col-md-4">
+				<label>' . Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa') . '</label>
+				<strong id="\' + module + \'tariffRate">0</strong>
+			</div>
+			<div class="col-md-4">
+				<label>' . Lang::get('contingente_det.peso_salvaguardia') . '</label>
+				<strong id="\' + module + \'safeguardWeight">0</strong>
+			</div>
+		</div>
+	</div>
+';
+
+
+$htmlContingentStatus = Inflector::compress($htmlContingentStatus);
+
 ?>
 
 /*<script>*/
@@ -28,6 +51,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		,baseParams: {
 			id: '<?= $id; ?>'
 			,contingente_id: '<?= $contingente_id; ?>'
+			,desgravacion_id: '<?= $desgravacion_id; ?>'
 			,acuerdo_det_id: '<?= $acuerdo_det_id; ?>'
 			,acuerdo_id: '<?= $acuerdo_id; ?>'
 			,source:'customs'
@@ -57,10 +81,24 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		var el = Ext.Element.get(module + 'quotaWeight');
 		var average = numberFormat(store.reader.jsonData.quotaWeight);
 		el.update(average);
-		
+
 		el = Ext.Element.get(module + 'safeguardWeight');
-		average = numberFormat(store.reader.jsonData.safeguardWeight);
-		el.update(average);
+		var parent = el.findParent('div',5, true);
+		parent.hide();
+		if (store.reader.jsonData.safeguardWeight > 0) {
+			average = numberFormat(store.reader.jsonData.safeguardWeight);
+			el.update(average);
+			parent.show();
+		}
+		
+		el = Ext.Element.get(module + 'tariffRate');
+		var parent = el.findParent('div',5, true);
+		parent.hide();
+		if (store.reader.jsonData.tariffRate !== false) {
+			tariffRate = numberFormat(store.reader.jsonData.tariffRate);
+			el.update(tariffRate);
+			parent.show();
+		}
 
 		if (typeof(store.reader.jsonData.gaugeChartData) === 'object') {
 			FusionCharts.setCurrentRenderer('javascript');
@@ -229,18 +267,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			}]
 		},{
 			style:{padding:'0px'}
-			,html: '<div class="bootstrap-styles">' +
-				'<div class="row text-center countTo">' +
-					'<div class="col-md-4 col-md-offset-2">' +
-						'<label><?= Lang::get('contingente_det.peso_contingente'); ?></label>' +
-						'<strong id="' + module + 'quotaWeight">0</strong>' +
-					'</div>' +
-					'<div class="col-md-4">' +
-						'<label><?= Lang::get('contingente_det.peso_salvaguardia'); ?></label>' +
-						'<strong id="' + module + 'safeguardWeight">0</strong>' +
-					'</div>' +
-				'</div>' +
-			'</div>'
+			,html: '<?= $htmlContingentStatus; ?>'
 		},{
 			defaults:{anchor:'100%'}
 			,items:[gridContingente]

@@ -91,6 +91,8 @@ class Acuerdo_detAdo extends BaseAdo {
 
 		$sql = $this->buildDetailedSelect($year);
 
+		//echo "<pre>{$sql}</pre>";
+
 		$savec = ( empty($ADODB_COUNTRECS) ) ? false : $ADODB_COUNTRECS;
 		if ($conn->pageExecuteCountRows) {
 			$ADODB_COUNTRECS = true;
@@ -130,6 +132,7 @@ class Acuerdo_detAdo extends BaseAdo {
 
 		$sql = 'SELECT
 			acuerdo_id,
+			acuerdo_intercambio,
 			acuerdo_det_id,
 			acuerdo_det_productos,
 			acuerdo_det_productos_desc,
@@ -150,11 +153,15 @@ class Acuerdo_detAdo extends BaseAdo {
 			alerta_contingente_roja,
 			alerta_salvaguardia_verde,
 			alerta_salvaguardia_amarilla,
-			alerta_salvaguardia_roja
+			alerta_salvaguardia_roja,
+			desgravacion_id,
+			desgravacion_mdesgravacion,
+			desgravacion_det_tasa
 			FROM acuerdo_det
 			LEFT JOIN acuerdo ON acuerdo_det_acuerdo_id = acuerdo_id
 			LEFT JOIN mercado ON acuerdo_mercado_id = mercado_id
 			LEFT JOIN contingente ON acuerdo_det_id = contingente_acuerdo_det_id
+			LEFT JOIN desgravacion ON acuerdo_det_id = desgravacion_acuerdo_det_id
 			LEFT JOIN alerta ON contingente_id = alerta_contingente_id
 			LEFT JOIN pais ON contingente_id_pais = id_pais
 			LEFT JOIN (
@@ -162,6 +169,11 @@ class Acuerdo_detAdo extends BaseAdo {
 				FROM contingente_det
 				WHERE  '.$year.' >= contingente_det_anio_ini AND '.$year.' <= contingente_det_anio_fin
 			) AS contingente_det ON contingente_id = contingente_det_contingente_id
+			LEFT JOIN (
+				SELECT desgravacion_det_id, desgravacion_det_desgravacion_id, desgravacion_det_tasa
+				FROM desgravacion_det
+				WHERE  '.$year.' >= desgravacion_det_anio_ini AND '.$year.' <= desgravacion_det_anio_fin
+			) AS desgravacion_det ON desgravacion_id = desgravacion_det_desgravacion_id
 		';
 
 		$whereAssignment = false;

@@ -109,6 +109,7 @@ class ContingenteAdo extends BaseAdo {
 			 contingente_acuerdo_det_acuerdo_id,
 			 acuerdo_nombre,
 			 acuerdo_mercado_id,
+			 acuerdo_intercambio,
 			 mercado_nombre,
 			 IF(acuerdo_det_contingente_acumulado_pais = "0", pais, mercado_nombre) AS pais,
 			 IF(acuerdo_det_contingente_acumulado_pais = "0", id_pais, mercado_paises) AS id_pais,

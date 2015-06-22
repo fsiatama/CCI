@@ -474,6 +474,9 @@ class IndicadorRepo extends BaseRepo {
 		$scope     = (empty($scope)) ? 1 : $scope ;
 		$scale     = (empty($scale)) ? 1 : $scale ;
 		$chartType = (empty($chartType)) ? AREA : $chartType ;
+		$start     = ( isset($start) ) ? $start : 0;
+		$limit     = ( isset($limit) ) ? $limit : MAXREGEXCEL;
+		//$page      = ( $start==0 ) ? 1 : ( $start / $limit ) + 1;
 		
 
 		if (empty($indicador_id)) {
@@ -522,7 +525,9 @@ class IndicadorRepo extends BaseRepo {
 				$scope,
 				$scale,
 				$typeIndicator,
-				$chartType
+				$chartType,
+				$start,
+				$limit
 			);
 			if ( !method_exists($repo, $repoMethodName) ) {
 				return [

@@ -102,8 +102,10 @@ class Desgravacion_detAdo extends BaseAdo {
 			 desgravacion_det_tasa,
 			 desgravacion_det_desgravacion_id,
 			 desgravacion_det_desgravacion_acuerdo_det_id,
-			 desgravacion_det_desgravacion_acuerdo_det_acuerdo_id
+			 desgravacion_det_desgravacion_acuerdo_det_acuerdo_id,
+			 desgravacion_mdesgravacion
 			FROM desgravacion_det
+			LEFT JOIN desgravacion ON desgravacion_det_desgravacion_id = desgravacion_id
 		';
 
 		$whereAssignment = false;

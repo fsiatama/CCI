@@ -367,7 +367,7 @@ class DesgravacionRepo extends BaseRepo {
 		) {
 			$result = [
 				'success' => false,
-				'error'   => 'Incomplete data for this request. contingenteRepo  execute'
+				'error'   => 'Incomplete data for this request. desgravacionRepo  execute'
 			];
 			return $result;
 		}

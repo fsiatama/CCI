@@ -26,6 +26,8 @@ class DeclaracionesRepo extends BaseRepo {
 	protected $scope;
 	private $scale;
 	private $chartType;
+	private $start;
+	private $limit;
 	private $divisor = 1;
 	private $pYAxisName;
 
@@ -37,8 +39,10 @@ class DeclaracionesRepo extends BaseRepo {
 		$scope,
 		$scale = '1',
 		$typeIndicator = '',
-		$chartType = '')
-	{
+		$chartType = '',
+		$start = 0,
+		$limit = 0
+	){
 		$this->rowIndicador  = $rowIndicador;
 		$this->filtersConfig = $filtersConfig;
 		$this->year          = $year;
@@ -46,6 +50,8 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->scope         = $scope;
 		$this->scale         = $scale;
 		$this->chartType     = $chartType;
+		$this->start         = (int)$start;
+		$this->limit         = (int)$limit;
 
 		extract($rowIndicador);
 
@@ -2094,11 +2100,9 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$this->model      = $this->getModelImpo();
 		$this->modelAdo   = $this->getModelImpoAdo();
+		$columnValue      = $this->columnValueImpo;
 		$this->setFiltersValues();
 
-		$columnValue1 = 'valorarancel';
-		$columnValue2 = 'arancel_pagado';
-		$columnValue3 = 'valor_pesos';
 
 		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
@@ -2109,6 +2113,61 @@ class DeclaracionesRepo extends BaseRepo {
 			$productsAgriculture = $result['data'];
 			$this->model->setId_posicion($productsAgriculture);
 		}
+
+		$this->modelAdo->setSortColumn($columnValue . ' DESC');
+		$result = $this->modelAdo->inSearch($this->model);
+
+		if (!$result['success']) {
+			return $result;
+		}
+
+		$totalValue = 0;
+		$arrData    = [];
+		$average    = 0;
+		foreach ($result['data'] as $keyImpo => $rowImpo) {
+			$totalValue += (float)$rowImpo[$columnValue];
+		}
+
+		foreach ($result['data'] as $keyImpo => $rowImpo) {
+			
+			$rate     = ( (float)$rowImpo[$columnValue] / $totalValue );
+			$weighing = ( (float)$rowImpo[$columnValue] * $rate );
+			$average += $weighing;
+
+			if ($keyImpo >= $this->start && $keyImpo < ( $this->start + $this->limit )) {
+				$arrData[] = [
+					'pais'               => $rowImpo['pais'],
+					'id_posicion'        => $rowImpo['id_posicion'],
+					'posicion'           => $rowImpo['posicion'],
+					'valor_impo'         => $this->getFloatValue( $rowImpo[$columnValue] ),
+					'valorarancel'       => $this->getFloatValue( $rowImpo['valorarancel'] ),
+					'porcentaje_arancel' => $rowImpo['porcentaje_arancel'],
+					'participacion'      => ( $rate * 100 )
+				];
+			}
+		}
+
+		$title = $this->getColumnValueImpoTitle() ;
+
+		$result = [
+			'success'    => true,
+			'data'       => $arrData,
+			'total'      => $result['total'],
+			'average'    => $average,
+			'titleValue' => $title
+		];
+
+		return $result;
+
+		var_dump($arrData, $average);
+
+
+
+
+		$columnValue1 = 'valorarancel';
+		$columnValue2 = 'arancel_pagado';
+		$columnValue3 = 'valor_pesos';
+
 
 		$rowField = Helpers::getPeriodColumnSql($this->period);
 		$row = 'fecha AS id';
@@ -2126,13 +2185,11 @@ class DeclaracionesRepo extends BaseRepo {
 			return $result;
 		}
 
-		$totalValue = 0;
 
 		foreach ($result['data'] as $keyImpo => $rowImpo) {
 			$totalValue += (float)$rowImpo[$columnValue1];
 		}
 
-		$arrData = [];
 		$average = 0;
 
 		foreach ($result['data'] as $keyImpo => $rowImpo) {
@@ -3730,6 +3787,10 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrRowField = [$row, $rowField];
 
+		if ( $trade == 'impo' ) {
+			$arrRowField[] = 'porcentaje_arancel';
+		}
+
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotTotalFields($columnValue);
 		$this->modelAdo->setPivotGroupingFunction('SUM');
@@ -3761,10 +3822,15 @@ class DeclaracionesRepo extends BaseRepo {
 
 					$periodName = Helpers::getPeriodName($this->period, $number);
 					$arrFinal[$number] = [
-						'id'         => array_shift($range),
-						'periodo'    => $this->year . ' ' . $periodName,
-						'peso_neto'  => 0,
+						'id'                 => array_shift($range),
+						'periodo'            => $this->year . ' ' . $periodName,
+						'porcentaje_arancel' => 0,
+						'peso_neto'          => 0,
 					];
+
+					if ( $trade == 'impo' ) {
+						$arrFinal[$number]['porcentaje_arancel'] = 0;
+					}
 				}
 
 			}
@@ -3822,7 +3888,6 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->modelAdo->setPivotGroupingFunction('SUM');
 
 		$rsDeclaraciones = $this->modelAdo->pivotSearch($this->model);
-
 
 		if (!$rsDeclaraciones['success']) {
 			return $rsDeclaraciones;

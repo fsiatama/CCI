@@ -25,7 +25,7 @@ $htmlDescription .= '</ol>';
 		,root:'data'
 		,id:module+'storeIndicador'
 		,autoDestroy:true
-		,sortInfo:{field:'valorarancel',direction:'DESC'}
+		,sortInfo:{field:'valor_impo',direction:'DESC'}
 		,totalProperty:'total'
 		,baseParams: {
 			id: '<?= $id; ?>'
@@ -37,19 +37,19 @@ $htmlDescription .= '</ol>';
 			{name:'posicion', type:'string'},
 			{name:'pais', type:'string'},
 			{name:'valorarancel', type:'float'},
-			{name:'arancel_pagado', type:'float'},
+			{name:'valor_impo', type:'float'},
 			{name:'participacion', type:'float'}
 		]
 	});
 
 	storeIndicador.on('beforeload', function(){
-		var scale     = Ext.getCmp(module + 'comboScale').getValue();
-		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
-		if (!scale || !chartType) {
+		var scale         = Ext.getCmp(module + 'comboScale').getValue();
+		var typeIndicator = Ext.getCmp(module + 'comboActivator').getValue();
+		if (!scale || !typeIndicator) {
 			return false;
 		}
 		this.setBaseParam('scale', scale);
-		this.setBaseParam('chartType', chartType);
+		this.setBaseParam('typeIndicator', typeIndicator);
 		Ext.ux.bodyMask.show();
 	});
 
@@ -60,30 +60,21 @@ $htmlDescription .= '</ol>';
 
 		el.update(average);
 
-		var height = (store.reader.jsonData.total * 23);
-		Ext.getCmp(module+'gridIndicador').setHeight(height);
-
-		FusionCharts.setCurrentRenderer('javascript');
-
-		disposeCharts();
-
-		var chartType = Ext.getCmp(module + 'comboCharts').getValue();
-		var chart     = new FusionCharts(chartType, module + 'ChartId', '100%', '100%', '0', '1');
-
-		chart.setTransparent(true);
-		chart.setJSONData(store.reader.jsonData.chartData);
-		chart.render(module + 'Chart');
+		if (store.reader.jsonData.titleValue) {
+			var titleValue = store.reader.jsonData.titleValue;
+			setColumnsTitle(titleValue);
+		}
 
 		Ext.ux.bodyMask.hide();
 	});
 
 	var colModelIndicador = new Ext.grid.ColumnModel({
 		columns:[
+			{header:'<?= Lang::get('indicador.columns_title.pais'); ?>', dataIndex:'pais', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.posicion'); ?>', dataIndex:'id_posicion', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.desc_posicion'); ?>', dataIndex:'posicion', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.pais'); ?>', dataIndex:'pais', align: 'left'},
-			{header:'<?= Lang::get('indicador.columns_title.arancel_pagado'); ?>', dataIndex:'arancel_pagado' ,'renderer':numberFormat, align:'right'},
-			{header:'<?= Lang::get('indicador.columns_title.valorarancel'); ?>', dataIndex:'valorarancel' ,'renderer':numberFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat, align:'right'},
+			//{header:'<?= Lang::get('indicador.columns_title.valorarancel'); ?>', dataIndex:'valorarancel' ,'renderer':numberFormat, align:'right'},
 			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat, align:'right'},
 		]
 		,defaults: {
@@ -105,19 +96,19 @@ $htmlDescription .= '</ol>';
 		,enableColumnMove:false
 		,id:module+'gridIndicador'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeIndicador, displayInfo:true})
+		,bbar:new Ext.PagingToolbar({pageSize:30, store:storeIndicador, displayInfo:true})
 		,iconCls:'silk-grid'
 		,plugins:[new Ext.ux.grid.Excel()]
 		,layout:'fit'
-		,height:panelHeight
+		,height:750
 		,autoWidth:true
 		,margins:'10 15 5 0'
 	});
 	/*elimiar cualquier estado de la grilla guardado con anterioridad */
 	Ext.state.Manager.clear(gridIndicador.getItemId());
 
+	var arrActivator = <?= json_encode($activator); ?>;
 	var arrScales    = <?= json_encode($scales); ?>;
-	var arrCharts  = <?= json_encode($charts); ?>;
 
 	/******************************************************************************************************************************************************************************/
 
@@ -141,7 +132,7 @@ $htmlDescription .= '</ol>';
 			style:{padding:'0px'}
 			,html: '<div class="bootstrap-styles">' +
 				'<div class="page-head">' +
-					'<h4 class="nopadding"><i class="styleColor fa fa-area-chart"></i> <?= $tipo_indicador_nombre; ?>: <small><?= $indicador_nombre; ?></small></h4>' +
+					'<h4 class="page-header"><i class="styleColor fa fa-area-chart"></i> <?= $tipo_indicador_nombre; ?>: <small><?= $indicador_nombre; ?></small></h4>' +
 					'<div class="clearfix"></div><?= $htmlDescription; ?>' +
 				'</div>' +
 			'</div>'
@@ -150,6 +141,26 @@ $htmlDescription .= '</ol>';
 			,border:true
 			,html: ''
 			,tbar:[{
+				xtype: 'buttongroup'
+				,columns: 1
+				,defaults: {
+					scale: 'small'
+				},
+				items: [{
+					xtype: 'label'
+					,text: '<?= Lang::get('tipo_indicador.columns_title.tipo_indicador_activador')?>: '
+				},{
+					xtype: 'combo'
+					,store: arrActivator
+					,id: module + 'comboActivator'
+					,typeAhead: true
+					,forceSelection: true
+					,triggerAction: 'all'
+					,selectOnFocus:true
+					,value: '<?= $tipo_indicador_activador; ?>'
+					,width: 150
+				}]
+			},{
 				xtype: 'buttongroup'
 				,columns: 1
 				,defaults: {
@@ -170,43 +181,15 @@ $htmlDescription .= '</ol>';
 					,width: 150
 				}]
 			},{
-				xtype: 'buttongroup'
-				,columns: 1
-				,defaults: {
-					scale: 'small'
-				},
-				items: [{
-					xtype: 'label'
-					,text: Ext.ux.lang.reports.selectChart + ': '
-				},{
-					xtype: 'combo'
-					,store: arrCharts
-					,id: module + 'comboCharts'
-					,typeAhead: true
-					,forceSelection: true
-					,triggerAction: 'all'
-					,selectOnFocus:true
-					,value: '<?= AREA; ?>'
-					,width: 150
-				}]
-			},{
 				xtype:'buttongroup',
 				items: [{
 					text: Ext.ux.lang.buttons.generate
 					,iconCls: 'icon-refresh'
 					,iconAlign: 'top'
 					,handler: function () {
-						storeIndicador.load();
+						storeIndicador.load({params:{start:0, limit:30}});
 					}
 				}]
-			}]
-		},{
-			height:430
-			,html:'<div id="' + module + 'Chart"></div>'
-			,items:[{
-				xtype:'panel'
-				,id: module + 'Chart'
-				,plain:true
 			}]
 		},{
 			style:{padding:'0px'}
@@ -222,32 +205,16 @@ $htmlDescription .= '</ol>';
 			defaults:{anchor:'100%'}
 			,items:[gridIndicador]
 		}]
-		,listeners:{
-			beforedestroy: {
-				fn: function(p){
-					disposeCharts();
-				}
-			}
-		}
 	});
 
-	Ext.getCmp('<?= $panel; ?>').on('deactivate', function(p) {
-		disposeCharts();
-	}, this);
-
-	Ext.getCmp('<?= $panel; ?>').on('activate', function(p) {
-		storeIndicador.load();
-	}, this);
-
-	storeIndicador.load();
+	storeIndicador.load({params:{start:0, limit:30}});
 
 	return indicadorContainer;
 
 	/*********************************************** Start functions***********************************************/
-	function disposeCharts () {
-		if(FusionCharts(module + 'ChartId')){
-			FusionCharts(module + 'ChartId').dispose();
-		}
+	
+	function setColumnsTitle (titleValue) {
+		colModelIndicador.setColumnHeader( 3, titleValue );
 	}
 
 	/*********************************************** End functions***********************************************/
