@@ -742,10 +742,12 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 		$productsAgriculture     = $result['data'];
 		$productsAgricultureName = $result['name'];
+		$totalTitle = Lang::get('indicador.reports.sectorSelected');
 
 		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
 			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
 			$this->model->setId_posicion($productsAgriculture);
+			$totalTitle =  $productsAgricultureName;
 		}
 
 		$arrRowField = ['id', 'decl.id_posicion', 'posicion'];
@@ -840,7 +842,7 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 		$indexId  += 1;
 		//$totalTitle = $this->getColumnValueExpoTitle() . ' [ ' . $productsAgricultureName . ' ]';
-		$totalTitle =  $productsAgricultureName;
+		
 		
 		$arrData[] = [
 			'id'            => $indexId,

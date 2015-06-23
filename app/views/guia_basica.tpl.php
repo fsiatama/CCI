@@ -93,7 +93,7 @@
                                 <td><p>
                                     Revisión de los componentes implícitos del producto en puerto destino (CIF), por país origen.
                                 </p></td>
-                                <td><a target="_blank" href="#"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a></td>
+                                <td><a target="_blank" href="http://www.trademap.org/"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a></td>
                             </tr>
                             <tr>
                                 <td class="bg-info">
@@ -104,7 +104,11 @@
                                 </td>
                                 <td><i class="fa-3x flight-grey icon-paso6"></i></td>
                                 <td><p>Revisión de los requerimientos de embalajes y normas de rotulado de los países de destino.</p></td>
-                                <td><a target="_blank" href="http://www.procolombia.co"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a></td>
+                                <td>
+                                    <a target="_blank" href="http://www.colombiatrade.com.co/herramientas/rutas-y-tarifas-de-transporte">
+                                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                                    </a>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="bg-info">
@@ -117,7 +121,11 @@
                                 <td><p>
                                     Realizar la construcción de cada uno de los costos de la operación en país origen, tránsito y país destino; para determinar la liquidación de exportación.
                                 </p></td>
-                                <td><a target="_blank" href="http://www.procolombia.co/"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a></td>
+                                <td>
+                                    <a target="_blank" href="http://www.colombiatrade.com.co/herramientas/rutas-y-tarifas-de-transporte">
+                                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                                    </a>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="bg-danger" colspan="4"><h4 class="text-center">Trámites y <strong>documentación</strong></h4></td>

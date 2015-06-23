@@ -61,7 +61,7 @@
 							<tr>
 								<td class="col-md-11">
 									<p>
-										El siguiente link le permite consultar las desgravaciones otorgadas a Colombia por producto, País y años proyectados, así como los tamaños de los contingentes y la tasa extra contingente.
+										El siguiente enlace le permite consultar las desgravaciones otorgadas a Colombia por producto, País y años proyectados, así como los tamaños de los contingentes y la tasa extra contingente.
 									</p>
 								</td>
 								<td class="col-md-1">
@@ -81,7 +81,7 @@
 							</tr>
 							<tr>
 								<td class="col-md-11">
-									<p>El siguiente link te permite consultar los protocolos de exportación vigentes por país.</p>
+									<p>El siguiente enlace le permite consultar los protocolos de exportación vigentes por país.</p>
 								</td>
 								<td class="col-md-1">
 									<a target="_blank" href="http://www.ica.gov.co/getdoc/fdcf7ae0-72bd-4b00-a380-0608dc9f6033/Protocolos-Fitosanitarios.aspx">
@@ -100,7 +100,7 @@
 							</tr>
 							<tr>
 								<td>
-									<p>También dispone de los siguientes links para consultar los requisitos sanitarios de los siguientes países:</p>
+									<p>También dispone de los siguientes enlaces para consultar los requisitos sanitarios de los siguientes países:</p>
 									<ul>
 										<li><a target="_blank" href="http://www.aphis.usda.gov/publications/plant_health/2012/importing_food_spanish.pdf">Estados Unidos.</a></li>
 										<li><a target="_blank" href="https://epermits.aphis.usda.gov/manual/index.cfm?NEW=1&REGION_ID=149&ACTION=countrySummCommPI">Estados Unidos.</a></li>
@@ -121,7 +121,7 @@
 							<tr>
 								<td class="col-md-11">
 									<p>
-										En el siguiente link podrá consultar los medios de transporte disponibles, las rutas y el costo.
+										En el siguiente enlace podrá consultar los medios de transporte disponibles, las rutas y el costo.
 									</p>
 								</td>
 								<td class="col-md-1">
@@ -142,7 +142,7 @@
 							<tr>
 								<td>
 									<p>
-										Con los siguientes links podrá consultar los contingentes arancelarios de países como 
+										Con los siguientes enlaces podrá consultar los contingentes arancelarios de países como 
 										Estados Unidos y México, o bloques comerciales como la Unión Europea y EFTA.
 									</p>
 									<ul>
@@ -172,7 +172,7 @@
 							<tr>
 								<td class="col-md-11">
 									<p>
-										Podrá acceder a la información del comercio mundial a través del siguiente link.
+										Podrá acceder a la información del comercio mundial a través del siguiente enlace.
 									</p>
 								</td>
 								<td class="col-md-1">

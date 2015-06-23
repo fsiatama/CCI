@@ -66,7 +66,7 @@
 			
 						<ul class="nav navbar-nav navbar-right">
 							<li class="active"><a href="<?= URL_RAIZ; ?>">Inicio</a></li>
-							<li><a href="<?= URL_RAIZ ?>informacion-general">Información General</a></li>
+							<li><a href="<?= URL_RAIZ ?>informacion-general">Información de los TLC</a></li>
 							<li><a href="<?= URL_RAIZ ?>guia-basica-exportar">Guia Básica Exportar</a></li>
 							<li><a href="<?= URL_RAIZ ?>herramientas">Herramientas</a></li>
 							<li><a href="<?= URL_RAIZ ?>auth">Inicio de Sesión</a></li>
