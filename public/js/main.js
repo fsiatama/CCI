@@ -8,6 +8,11 @@ jQuery(function($) {
 	var is_msie = (navigator.appVersion.indexOf("MSIE")!=-1) ? true : false;
 	var map;
 
+	if (location.pathname !== '/') {
+		$('.navbar-static-top').find('li.active').removeClass('active');
+		$('.navbar-static-top').find('a[href*="' + location.pathname + '"]').parents('li').addClass('active');
+	}
+
 	if ( $('#full-slider').length > 0 ) {
 		$('footer').hide();
 		//$( '.navbar' ).addClass( 'bottom' )

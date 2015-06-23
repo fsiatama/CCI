@@ -1,22 +1,23 @@
 
 <div class="container white">
 	<header class="page-header">
-		<h3>Información general de los Tratados de Libre Comercio (TLC)</h3>
+		<h3>Información general de los tratados de libre comercio (TLC)</h3>
 	</header>
 	<div class="row">
 
 		<div class="col-md-12">
 			<p class="lead">
-				Aquí podrá encontrar fácilmente información general de los acuerdos comerciales entre Colombia y otros países, para los productos agropecuarios y agroindustriales.
+				Aquí podrá encontrar fácilmente información general de los acuerdos comerciales entre Colombia y otros países, 
+				para los productos agropecuarios y agroindustriales.
 				<ul>
 					<li>
-						Por favor seleccione un país de la lista que dice Socio Comercial.
+						Seleccione un país en la parte inferior del listado desplegable, sección "Socio Comercial".
 					</li>
 					<li>
 						Una vez lo haga, oprima el botón buscar.
 					</li>
 					<li>
-						A continuación se resaltara en el mapa todos los países que se incluyen en el acuerdo comercial al cual se encuentra suscrito el país seleccionado.
+						A continuación, se resaltará en el mapa los países incluidos en un acuerdo comercial.
 					</li>
 				</ul>
 				<hr class="half-margins">

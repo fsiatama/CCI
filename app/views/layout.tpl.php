@@ -24,39 +24,60 @@
 				<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 		<![endif]-->
 
-		<header id="header">
-
-			<nav class="navbar navbar-inverse" role="navigation"><!-- add "white" class for white nav bar -->
-				<div class="container">
-
-					<!-- Mobile Menu Button -->
-					<button id="mobileMenu" class="fa fa-bars" type="button" data-toggle="collapse" data-target=".navbar-collapse"></button>
-
-					<!-- Brand and toggle get grouped for better mobile display -->
-					<div class="navbar-header">
-						<a class="navbar-brand" href="<?= URL_RAIZ; ?>">
-							<img class="img-responsive visible-xs visible-sm visible-md " src="<?= URL_RAIZ; ?>img/logo_xs.png" alt="www.minagricultura.gov.co" width="175" height="60" />
-							<img class="img-responsive hidden-xs hidden-sm hidden-md" src="<?= URL_RAIZ; ?>img/logo_home_new.png" alt="www.minagricultura.gov.co" width="265" height="80" />
-						</a>
-					</div>
-
-					<!-- Collect the nav links, forms, and other content for toggling -->
-					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-						<ul class="nav navbar-nav navbar-right">
-							<li class="active"><a href="<?= URL_RAIZ; ?>">Inicio</a></li>
-							<li><a href="<?= URL_RAIZ ?>informacion-general">Información General tlcs</a></li>
+		<div class="header">
+			<!-- <div class="navbar navbar-default navbar-static-top" role="navigation">
+				            <div class="container-fluid">
+				                <div class="navbar-header">
+				                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				                        <span class="sr-only">Toggle navigation</span>
+				                        <span class="icon-bar"></span>
+				                        <span class="icon-bar"></span>
+				                        <span class="icon-bar"></span>
+				                    </button>
+				                    <a class="navbar-brand" href="index.html">
+				                    	<img class="img-responsive hidden-xs hidden-sm" src="<?= URL_RAIZ; ?>img/logo.png" alt="www.minagricultura.gov.co" width="510" height="85" />
+				                    </a>
+				                </div>
+				                <div class="navbar-collapse collapse">
+				                    <ul class="nav navbar-nav navbar-right">
+				                    	<li class="active"><a href="<?= URL_RAIZ; ?>">Inicio</a></li>
+							<li><a href="<?= URL_RAIZ ?>informacion-general">Información General</a></li>
 							<li><a href="<?= URL_RAIZ ?>guia-basica-exportar">Guia Básica Exportar</a></li>
 							<li><a href="<?= URL_RAIZ ?>herramientas">Herramientas</a></li>
 							<li><a href="<?= URL_RAIZ ?>auth">Inicio de Sesión</a></li>
 						</ul>
+					</div>
+				</div>
+			</div> -->
 
-					</div><!-- /.navbar-collapse -->
-
+			<nav class="navbar navbar-default navbar-static-top" role="navigation">
+				<div class="container-fluid">
+			
+					<button id="mobileMenu" class="fa fa-bars" type="button" data-toggle="collapse" data-target=".navbar-collapse"></button>
+			
+					<div class="navbar-header">
+						<a class="navbar-brand" href="<?= URL_RAIZ; ?>">
+							<img class="img-responsive visible-xs visible-sm" src="<?= URL_RAIZ; ?>img/logo-small.png" alt="www.minagricultura.gov.co" width="360" height="60" />
+							<img class="img-responsive hidden-xs hidden-sm" src="<?= URL_RAIZ; ?>img/logo.png" alt="www.minagricultura.gov.co" width="510" height="85" />
+						</a>
+					</div>
+			
+					<div class="navbar-collapse collapse">
+			
+						<ul class="nav navbar-nav navbar-right">
+							<li class="active"><a href="<?= URL_RAIZ; ?>">Inicio</a></li>
+							<li><a href="<?= URL_RAIZ ?>informacion-general">Información General</a></li>
+							<li><a href="<?= URL_RAIZ ?>guia-basica-exportar">Guia Básica Exportar</a></li>
+							<li><a href="<?= URL_RAIZ ?>herramientas">Herramientas</a></li>
+							<li><a href="<?= URL_RAIZ ?>auth">Inicio de Sesión</a></li>
+						</ul>
+			
+					</div>
+			
 				</div>
 			</nav>
 
-		</header>
+		</div>
 
 		<!-- Fixed navbar -->
 		
