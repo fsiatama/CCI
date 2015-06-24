@@ -356,6 +356,21 @@
 	}
 
 	function fnSave () {
+		//validar que el periodo inicial no se superior al periodo final
+		var per1Ini = Ext.getCmp(module+'comboDesde_ini').getValue();
+		var per1Fin = Ext.getCmp(module+'comboHasta_ini').getValue();
+		var per2Ini = Ext.getCmp(module+'comboDesde_fin').getValue();
+		var per2Fin = Ext.getCmp(module+'comboHasta_fin').getValue();
+		if (per2Ini <= per1Ini || per2Fin <= per1Fin) {
+			Ext.Msg.show({
+				title: Ext.ux.lang.messages.warning
+				,msg: '<?= Lang::get('error.invalid_final_range'); ?>'
+				,buttons: Ext.Msg.OK
+				,icon: Ext.Msg.WARNING
+			});
+			return false;
+		}
+		
 		var field1 = Ext.getCmp(module+'comboPosicion');
 		var field2 = Ext.getCmp(module+'comboSector');
 		if (!field1 || !field2) {
