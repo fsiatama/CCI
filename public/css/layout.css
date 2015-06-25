@@ -1248,7 +1248,7 @@ body.modal-open {
 }
 .table-guide td:first-child,
 .table-guide td:nth-child(2),
-.table-guide td:nth-child(4) {min-width: 75px; vertical-align: middle; text-align: center;}
+.table-guide td:nth-child(4) {vertical-align: middle; text-align: center;}
 .table-guide td:nth-child(2) {padding: 0 10px;}
 .table-guide td>h4 {margin: 20px;}
 
@@ -1256,7 +1256,85 @@ body.modal-open {
 .table-tools td {vertical-align: middle;}
 .table-tools td>p {margin: 10px 0;}
 .table-tools td:nth-child(2) {vertical-align: middle; min-width: 75px; text-align: center;}
+/* ==========================
+ --- accordion ---
+============================= */
+div.toggle {
+	position: relative;
+	clear: both;
+}
 
+div.toggle > label {
+	color: #fff;
+	background: #5ea431;
+
+	cursor: pointer;
+	font-size: 16px;
+	font-weight:normal;
+	padding: 5px 20px;
+	position: relative;
+	display: block;
+
+	-webkit-transition: all .10s ease-out;
+	   -moz-transition: all .10s ease-out;
+		 -o-transition: all .10s ease-out;
+			transition: all .10s ease-out;
+
+	-webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	   -khtml-user-select: none;
+		 -moz-user-select: none;
+		  -ms-user-select: none;
+			  user-select: none;
+}
+
+div.toggle div.toggle-content {
+	border: 0;
+	display: none;
+	background: #fff;
+	margin-top: -5px;
+	padding: 15px 20px;
+}
+
+div.toggle > label:before {
+	content: '';
+	border: 6px solid transparent;
+	border-top-color: inherit;
+
+	position: absolute;
+	top: 50%; right: 14px;
+	margin-top: -3px;
+}
+
+/* div.toggle > label:hover {
+	background: #06c;
+} */
+
+div.toggle > label + p {
+	color: #888;
+	height: 25px;
+	display: block;
+	overflow: hidden;
+	padding-left: 10px;
+}
+
+div.toggle.active > label:before {
+	border: 6px solid transparent;
+	border-bottom-color: #fff;
+	right: 14px; margin-top: -10px;
+}
+div.toggle.active > label {
+	color:#fff;
+	background-color:#3d6907;
+}
+
+div.toggle.active > label > h4 {
+	color:#fff;
+}
+
+div.toggle > label > h4 {
+	margin: 10px 0!important;
+}
 
 /** --. Responsive
  **************************************************************** **/
