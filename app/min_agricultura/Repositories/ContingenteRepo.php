@@ -651,7 +651,7 @@ class ContingenteRepo extends BaseRepo {
 			'quotaWeight'     => $quotaWeight,
 			'safeguardWeight' => $safeguardWeight,
 			'tariffRate'      => $desgravacion_det_tasa,
-			'total'           => count($arrData)
+			'total'           => count($arrFinal)
 		];
 
 		if ($format !== false && !empty($fields) && $result['total'] > 0) {

@@ -205,6 +205,9 @@ class DeclaracionesRepo extends BaseRepo {
 		foreach ($filtersConfig as $filter) {
 
 			if (array_key_exists($filter['field'], $arrFiltersValues)) {
+
+
+
 				$fieldName = ($trade == 'impo') ? $filter['field_impo'] : $filter['field_expo'] ;
 
 				$filterValue = $arrFiltersValues[$filter['field']];
@@ -213,6 +216,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 				$setFilterValue = true;
 
+				//var_dump($filter['field'], $arrFiltersValues, $fieldName, $methodName);
 				/*if (!empty($filter['dateRange'])) {
 					//si el filtro es un rango de fechas, debe unir los periodos que componen el rango
 
@@ -272,14 +276,21 @@ class DeclaracionesRepo extends BaseRepo {
 					}
 
 
-				} elseif ($filter['field'] == 'id_pais') {
+				} elseif ($filter['field'] == 'id_pais'  || $filter['field'] == 'mercado_id') {
 					//si el filtro es el pais puede venir como parametro un pais o un mercado (grupo de paises)
 					//Trae los paises configurados en el mercado seleccionado
+
 					if (!empty($arrFiltersValues['mercado_id'])) {
+
+						$arrTmp = Helpers::findKeyInArrayMulti($filtersConfig, 'field', 'id_pais');
+
 						$result = $this->findCountriesByMarket($arrFiltersValues['mercado_id']);
 						if (!$result['success']) {
 							return $result;
 						}
+						$fieldName = ($trade == 'impo') ? $arrTmp['field_impo'] : $arrTmp['field_expo'] ;
+						$methodName = $this->getColumnMethodName('set', $fieldName);
+						
 						$arr = explode(',', $result['data']);
 						if (!empty($filterValue)) {
 							$arr = array_merge(explode(',', $filterValue), $arr);
@@ -1006,7 +1017,6 @@ class DeclaracionesRepo extends BaseRepo {
 
 	public function executeTasaCrecimientoProductosNuevos()
 	{
-		//multiplicar por 100 la variacion
 		$arrFiltersValues = $this->arrFiltersValues;
 		$trade            = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
 
@@ -1093,7 +1103,7 @@ class DeclaracionesRepo extends BaseRepo {
 				'valueFirst'  => $rowFirst[$columnValue],
 				'periodLast'  => $periodLast,
 				'valueLast'   => $valueLast,
-				'variation'   => $variation
+				'variation'   => ( $variation * 100 )
 			];
 
 		}

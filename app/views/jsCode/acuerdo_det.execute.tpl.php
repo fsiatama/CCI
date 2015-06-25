@@ -138,7 +138,7 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		,id:module+'gridAcuerdo_det'
 		,title: '<?= Lang::get('acuerdo_det.table_name') . " - " . Lang::get('update_info.table_name') . " " . Lang::get('update_info.columns_title.update_info_to') . " " . $updateInfo; ?>'
 		,sm:new Ext.grid.RowSelectionModel({singleSelect:true})
-		,bbar: ['->']
+		,bbar:new Ext.PagingToolbar({pageSize:10000, store:storeAcuerdo_det, displayInfo:true})
 		,iconCls:'silk-grid'
 		,layout:'fit'
 		,autoHeight:true
