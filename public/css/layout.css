@@ -1160,6 +1160,11 @@ body.modal-open {
 	color:#fff;
 }
 
+.google-chart{
+	width:100%;
+    height:400px;
+}
+
 /*
  * jQuery Dynatable plugin 0.3.1
  *

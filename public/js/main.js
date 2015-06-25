@@ -8,7 +8,7 @@ jQuery(function($) {
 	var is_msie = (navigator.appVersion.indexOf("MSIE")!=-1) ? true : false;
 	var map;
 
-	if (location.pathname !== '/' && location.pathname !== '/min_agricultura/public/') {
+	if (location.pathname !== '/') {
 		$('.navbar-static-top').find('li.active').removeClass('active');
 		$('.navbar-static-top').find('a[href*="' + location.pathname + '"]').parents('li').addClass('active');
 	}
@@ -400,8 +400,25 @@ jQuery(function($) {
 				return 'Solo puedes seleccionar ' + v + ' item' + (v > 1 ? 's':'');
 			}
 		});
+		var arrQuadrant1 = [];
+		var arrQuadrant2 = [];
+		var arrQuadrant3 = [];
+		var arrQuadrant4 = [];
 
 		$('.range-year').hide();
+		$('#quadrantTabs a[href="#quadrant_1"]').on('shown.bs.tab', function (e) {
+			console.log(e);
+			drawSeriesChart(arrQuadrant1, 'quadrant_1_chart_div', 'btn-print-1');
+		});
+		$('#quadrantTabs a[href="#quadrant_2"]').on('shown.bs.tab', function (e) {
+			drawSeriesChart(arrQuadrant2, 'quadrant_2_chart_div', 'btn-print-2');
+		});
+		$('#quadrantTabs a[href="#quadrant_3"]').on('shown.bs.tab', function (e) {
+			drawSeriesChart(arrQuadrant3, 'quadrant_3_chart_div', 'btn-print-3');
+		});
+		$('#quadrantTabs a[href="#quadrant_4"]').on('shown.bs.tab', function (e) {
+			drawSeriesChart(arrQuadrant4, 'quadrant_4_chart_div', 'btn-print-4');
+		});
 
 		$('#searchQuadrantForm').on('submit', function(event){
 			
@@ -425,6 +442,11 @@ jQuery(function($) {
 						if(data.success){
 							var showTab = false;
 
+							arrQuadrant1 = [];
+							arrQuadrant2 = [];
+							arrQuadrant3 = [];
+							arrQuadrant4 = [];
+
 							$('#quadrant_1_chart_div').html('');
 							$('#quadrant_2_chart_div').html('');
 							$('#quadrant_3_chart_div').html('');
@@ -435,31 +457,49 @@ jQuery(function($) {
 								$('.range-year>small').text(data.yearFirst + ' - ' + data.yearLast);
 							}
 
+							var tabObject;
+
 							if (data.arrQuadrant1.rows) {
-								drawSeriesChart(data.arrQuadrant1, 'quadrant_1_chart_div', 'btn-print-1');
+								arrQuadrant1 = data.arrQuadrant1;
 								if ( !showTab ) {
-									$('#quadrantTabs a[href="#quadrant_1"]').tab('show');
+									tabObject = $('#quadrantTabs a[href="#quadrant_1"]');
+									if (tabObject.parent().hasClass('active')){
+										drawSeriesChart(arrQuadrant1, 'quadrant_1_chart_div', 'btn-print-1');
+									}
+									tabObject.tab('show');
 									showTab = true;
 								}
 							}
 							if (data.arrQuadrant2.rows) {
-								drawSeriesChart(data.arrQuadrant2, 'quadrant_2_chart_div', 'btn-print-2');
+								arrQuadrant2 = data.arrQuadrant2;
 								if ( !showTab ) {
-									$('#quadrantTabs a[href="#quadrant_2"]').tab('show');
+									tabObject = $('#quadrantTabs a[href="#quadrant_2"]');
+									if (tabObject.parent().hasClass('active')){
+										drawSeriesChart(arrQuadrant2, 'quadrant_2_chart_div', 'btn-print-2');
+									}
+									tabObject.tab('show');
 									showTab = true;
 								}
 							}
 							if (data.arrQuadrant3.rows) {
-								drawSeriesChart(data.arrQuadrant3, 'quadrant_3_chart_div', 'btn-print-3');
+								arrQuadrant3 = data.arrQuadrant3;
 								if ( !showTab ) {
-									$('#quadrantTabs a[href="#quadrant_3"]').tab('show');
+									tabObject = $('#quadrantTabs a[href="#quadrant_3"]');
+									if (tabObject.parent().hasClass('active')){
+										drawSeriesChart(arrQuadrant3, 'quadrant_3_chart_div', 'btn-print-3');
+									}
+									tabObject.tab('show');
 									showTab = true;
 								}
 							}
 							if (data.arrQuadrant4.rows) {
-								drawSeriesChart(data.arrQuadrant4, 'quadrant_4_chart_div', 'btn-print-4');
+								arrQuadrant4 = data.arrQuadrant4;
 								if ( !showTab ) {
-									$('#quadrantTabs a[href="#quadrant_4"]').tab('show');
+									tabObject = $('#quadrantTabs a[href="#quadrant_4"]');
+									if (tabObject.parent().hasClass('active')){
+										drawSeriesChart(arrQuadrant4, 'quadrant_4_chart_div', 'btn-print-4');
+									}
+									tabObject.tab('show');
 									showTab = true;
 								}
 							}
@@ -633,11 +673,15 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
 
 function drawSeriesChart(jsonData, divId, btnId) {
 
+	if ($.isEmptyObject(jsonData)) {
+		return false;
+	}
+
 	var data = new google.visualization.DataTable(jsonData);
 
 	var options = {
-		width: 700,
-		height: 400,
+		width: '100%',
+        height: '100%',
 		hAxis: {title: 'Valor promedio anual de las importaciones del país X'},
         vAxis: {title: 'Crecimiento promedio anual de las importaciones del país X'},
         title: 'Unidad : Miles ($USD)',

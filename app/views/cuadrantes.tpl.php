@@ -72,7 +72,9 @@
 								<div class="panel-body text-center">
 									<h4>Altamente Atractivos</h4>
 									<p class="help-block">Mercado grande con crecimiento dinámico</p>
-									<div id="quadrant_1_chart_div" style="width: 700px; height: 400px;"></div>
+									<div class="row">
+										<div id="quadrant_1_chart_div" class="col-md-12 google-chart"></div>
+									</div>
 									<blockquote class="blockquote-reverse">
 										<p>
 											<cite title="Comtrade">Fuente de información
@@ -96,7 +98,9 @@
 								<div class="panel-body text-center">
 									<h4>Potenciales</h4>
 									<p class="help-block">Mercado pequeño con crecimiento dinámico</p>
-									<div id="quadrant_2_chart_div" style="width: 700px; height: 400px;"></div>
+									<div class="row">
+										<div id="quadrant_2_chart_div" class="col-md-12 google-chart"></div>
+									</div>
 									<blockquote class="blockquote-reverse">
 										<p>
 											<cite title="Comtrade">Fuente de información
@@ -120,7 +124,9 @@
 								<div class="panel-body text-center">
 									<h4>Productos de bajo interés</h4>
 									<p class="help-block">Mercado pequeño con bajo crecimiento </p>
-									<div id="quadrant_3_chart_div" style="width: 700px; height: 400px;"></div>
+									<div class="row">
+										<div id="quadrant_3_chart_div" class="col-md-12 google-chart"></div>
+									</div>
 									<blockquote class="blockquote-reverse">
 										<p>
 											<cite title="Comtrade">Fuente de información
@@ -144,7 +150,9 @@
 								<div class="panel-body text-center">
 									<h4>Promisorios</h4>
 									<p class="help-block">Mercado grande con bajo crecimiento</p>
-									<div id="quadrant_4_chart_div" style="width: 700px; height: 400px;"></div>
+									<div class="row">
+										<div id="quadrant_4_chart_div" class="col-md-12 google-chart"></div>
+									</div>
 									<blockquote class="blockquote-reverse">
 										<p>
 											<cite title="Comtrade">Fuente de información
