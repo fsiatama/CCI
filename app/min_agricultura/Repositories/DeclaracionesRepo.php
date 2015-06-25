@@ -1006,6 +1006,7 @@ class DeclaracionesRepo extends BaseRepo {
 
 	public function executeTasaCrecimientoProductosNuevos()
 	{
+		//multiplicar por 100 la variacion
 		$arrFiltersValues = $this->arrFiltersValues;
 		$trade            = ( empty($arrFiltersValues['intercambio']) ) ? 'impo' : $arrFiltersValues['intercambio'];
 
@@ -4032,7 +4033,7 @@ class DeclaracionesRepo extends BaseRepo {
 		//curl 'http://comtrade.un.org/api/get?max=500&type=C&freq=A&px=HS&ps=2013%2C2010%2C2011%2C2012&r=170%2C218&p=0&rg=1%2C2&cc=01&token=56233621927079056ea4d1e49ecf8f11' -H 'Host: comtrade.un.org' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:34.0) Gecko/20100101 Firefox/34.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: es-MX,es-ES;q=0.8,es-AR;q=0.7,es;q=0.5,en-US;q=0.3,en;q=0.2' -H 'Accept-Encoding: gzip, deflate' -H 'X-Requested-With: XMLHttpRequest' -H 'Referer: http://comtrade.un.org/data/' -H 'Cookie: _ga=GA1.2.2137246786.1419954195; ASPSESSIONIDAACRDDSB=HGLJBMEDNOAGEKOAKDFCLCBC; _gat=1; _gali=preview'
 
 		$parameters = [
-			'max'  => 5000,
+			'max'  => 50000,
 			'type' => 'C',
 			'freq' => 'A', //frecuancia anual
 			'px'   => 'HS',
@@ -4044,7 +4045,7 @@ class DeclaracionesRepo extends BaseRepo {
 		];
 
 		$cache  = phpFastCache();
-		$url    = $baseUrl . '?' . http_build_query($parameters);
+		$url    = $baseUrl . http_build_query($parameters);
 		$key    = md5($url);
 		$result = $cache->get($key);
 
@@ -4125,7 +4126,9 @@ class DeclaracionesRepo extends BaseRepo {
 
 				} else {
 
-					$avg  = array_sum($arrCalculatedColumns) / count($arrCalculatedColumns);
+					$avg = array_sum($arrCalculatedColumns) / count($arrCalculatedColumns);
+					$avg = $this->getFloatValue($avg);
+
 					$arrY = array_map('Helpers::naturalLogarithm', $arrCalculatedColumns);
 
 					$linearRegression = Helpers::linearRegression($arrY);
@@ -4294,6 +4297,8 @@ class DeclaracionesRepo extends BaseRepo {
 			'arrQuadrant4' => $arrChartQuadrant4,
 			'totalSlope'   => $totalSlope,
 			'totalAvg'     => $totalAvg,
+			'yearLast'     => $yearLast,
+			'yearFirst'    => $yearFirst,
 		];
 
 		return $result;
@@ -4343,11 +4348,12 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrFields        = ['id' => 'id', 'id_subpartida' => 'id_subpartida', 'subpartida' => 'subpartida', $columnValue => $columnValue];
 		$arrDeclaraciones = $rsDeclaraciones['data'];
-		$arrData      = [];
-		$arrChartData = [];
-		$counter      = 0;
-		$othersValue  = 0;
-		$arrOthersVal = [];
+		$arrData          = [];
+		$arrChartData     = [];
+		$counter          = 0;
+		$othersValue      = 0;
+		$avgOthersValue   = 0;
+		$arrOthersVal     = [];
 
 		$arrColumnValue = Helpers::arrayColumn($arrDeclaraciones, $columnValue);
 		$totalValue     = $this->getFloatValue( array_sum($arrColumnValue) );
@@ -4362,7 +4368,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$htmlColumns[$index] = $index . ' ' . $this->pYAxisName;
 		}
 
-		$htmlColumns[$columnValue]         = 'Total ' . $this->pYAxisName;
+		$htmlColumns[$columnValue]         = 'Promedio ' . $this->pYAxisName;
 		$htmlColumns['rate_'.$columnValue] = Lang::get('indicador.columns_title.participacion');
 		$htmlColumns['growthRate']         = Lang::get('indicador.reports.growRate');
 
@@ -4370,11 +4376,15 @@ class DeclaracionesRepo extends BaseRepo {
 
 			$arrCalculatedColumns = array_diff_key($row, $arrFields);
 
+			$avgCalculatedColumns = array_sum($arrCalculatedColumns) / count($arrYear);
+			$avgCalculatedColumns = $this->getFloatValue($avgCalculatedColumns);
+
 			if( $counter < $pareto ) {
 
 				$counter += 1;
 				$arr      = [];
-				
+
+				//adiciona las columnas de texto
 				foreach ($arrFields as $key => $val) {
 					if ( $key != $columnValue ) {
 						$arr[$key] = $row[$key];
@@ -4392,7 +4402,7 @@ class DeclaracionesRepo extends BaseRepo {
 				$linearRegression          = Helpers::linearRegression($arrY);
 				$slope                     = ( $linearRegression['m'] * 100 );
 				$rate                      = ($totalValue == 0) ? 0 : ( $value / $totalValue) ;
-				$arr[$columnValue]         = $value;
+				$arr[$columnValue]         = $avgCalculatedColumns; //debe mostrar el promedio y NO el ACUMULADO
 				$arr['rate_'.$columnValue] = $rate * 100;
 				$arr['growthRate']         = $slope;
 
@@ -4401,7 +4411,7 @@ class DeclaracionesRepo extends BaseRepo {
 				$arrChartData[] = [
 					'id_subpartida' => $row['id_subpartida'] ,
 					'subpartida'    => $subpartida,
-					'valor_expo'    => $value,
+					'valor_expo'    => $avgCalculatedColumns,
 					'growthRate'    => $slope
 				];
 			} else {
@@ -4421,6 +4431,8 @@ class DeclaracionesRepo extends BaseRepo {
 			}
 		}
 
+		$avgOthersValue = array_sum($arrOthersVal) / count($arrYear);
+
 		//inserta la fila "otros"
 		$arr                  = [];
 		$arr['id']            = 0;
@@ -4433,17 +4445,18 @@ class DeclaracionesRepo extends BaseRepo {
 		$linearRegression          = Helpers::linearRegression($arrY);
 		$slope                     = ( $linearRegression['m'] * 100 );
 		$rate                      = ($totalValue == 0) ? 0 : ( $othersValue / $totalValue) ;
-		$arr[$columnValue]         = $othersValue;
+		$arr[$columnValue]         = $avgOthersValue;
 		$arr['rate_'.$columnValue] = $rate * 100;
 		$arr['growthRate']         = $slope;
 		$arrData[]                 = $arr;
 		$arrChartData[]            = [
 			'id_subpartida' => Lang::get('indicador.reports.others') ,
 			'subpartida'    => Lang::get('indicador.reports.others'),
-			'valor_expo'    => $othersValue,
+			'valor_expo'    => $avgOthersValue,
 			'growthRate'    => $slope
 		];
 
+		//var_dump($arrChartData);
 
 		$pieChart              = [];
 		$pieChart['cols'][]    = ['id' => 'subpartida', 'label' => Lang::get('indicador.columns_title.subpartida'), 'type' => 'string'];
@@ -4467,6 +4480,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$result = [
 			'success'     => true,
 			'data'        => $arrData,
+			'arrYear'     => $arrYear,
 			'total'       => count($arrData),
 			'columnChart' => $columnChart,
 			'pieChart'    => $pieChart,
@@ -4538,7 +4552,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$htmlColumns[$index] = $index . ' ' . $this->pYAxisName;
 		}
 
-		$htmlColumns[$columnValue]         = 'Total ' . $this->pYAxisName;
+		$htmlColumns[$columnValue]         = 'Promedio ' . $this->pYAxisName;
 		$htmlColumns['rate_'.$columnValue] = Lang::get('indicador.columns_title.participacion');
 		$htmlColumns['growthRate']         = Lang::get('indicador.reports.growRate');
 
@@ -4546,11 +4560,15 @@ class DeclaracionesRepo extends BaseRepo {
 
 			$arrCalculatedColumns = array_diff_key($row, $arrFields);
 
+			$avgCalculatedColumns = array_sum($arrCalculatedColumns) / count($arrYear);
+			$avgCalculatedColumns = $this->getFloatValue($avgCalculatedColumns);
+
 			if( $counter < $pareto ) {
 
 				$counter += 1;
 				$arr      = [];
-				
+
+				//adiciona las columnas de texto
 				foreach ($arrFields as $key => $val) {
 					if ( $key != $columnValue ) {
 						$arr[$key] = $row[$key];
@@ -4568,14 +4586,14 @@ class DeclaracionesRepo extends BaseRepo {
 				$linearRegression          = Helpers::linearRegression($arrY);
 				$slope                     = ( $linearRegression['m'] * 100 );
 				$rate                      = ($totalValue == 0) ? 0 : ( $value / $totalValue) ;
-				$arr[$columnValue]         = $value;
+				$arr[$columnValue]         = $avgCalculatedColumns; //debe mostrar el promedio y NO el ACUMULADO
 				$arr['rate_'.$columnValue] = $rate * 100;
 				$arr['growthRate']         = $slope;
 
 				$arrData[]      = $arr;
 				$arrChartData[] = [
 					'pais'       => $row['pais'],
-					'valor_expo' => $value,
+					'valor_expo' => $avgCalculatedColumns,
 					'growthRate' => $slope
 				];
 			} else {
@@ -4595,10 +4613,12 @@ class DeclaracionesRepo extends BaseRepo {
 			}
 		}
 
+		$avgOthersValue = array_sum($arrOthersVal) / count($arrYear);
+
 		//inserta la fila "otros"
-		$arr                = [];
-		$arr['id']          = 0;
-		$arr['pais']    = Lang::get('indicador.reports.others');
+		$arr         = [];
+		$arr['id']   = 0;
+		$arr['pais'] = Lang::get('indicador.reports.others');
 
 		$arr = $arr + $arrOthersVal;
 
@@ -4606,13 +4626,13 @@ class DeclaracionesRepo extends BaseRepo {
 		$linearRegression          = Helpers::linearRegression($arrY);
 		$slope                     = ( $linearRegression['m'] * 100 );
 		$rate                      = ($totalValue == 0) ? 0 : ( $othersValue / $totalValue) ;
-		$arr[$columnValue]         = $othersValue;
+		$arr[$columnValue]         = $avgOthersValue;
 		$arr['rate_'.$columnValue] = $rate * 100;
 		$arr['growthRate']         = $slope;
 		$arrData[]                 = $arr;
 		$arrChartData[]            = [
 			'pais' => Lang::get('indicador.reports.others') ,
-			'valor_expo'  => $othersValue,
+			'valor_expo'  => $avgOthersValue,
 			'growthRate'  => $slope
 		];
 
@@ -4638,6 +4658,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$result = [
 			'success'     => true,
 			'data'        => $arrData,
+			'arrYear'     => $arrYear,
 			'total'       => count($arrData),
 			'columnChart' => $columnChart,
 			'pieChart'    => $pieChart,
@@ -4709,7 +4730,7 @@ class DeclaracionesRepo extends BaseRepo {
 			$htmlColumns[$index] = $index . ' ' . $this->pYAxisName;
 		}
 
-		$htmlColumns[$columnValue]         = 'Total ' . $this->pYAxisName;
+		$htmlColumns[$columnValue]         = 'Promedio ' . $this->pYAxisName;
 		$htmlColumns['rate_'.$columnValue] = Lang::get('indicador.columns_title.participacion');
 		$htmlColumns['growthRate']         = Lang::get('indicador.reports.growRate');
 
@@ -4717,11 +4738,15 @@ class DeclaracionesRepo extends BaseRepo {
 
 			$arrCalculatedColumns = array_diff_key($row, $arrFields);
 
+			$avgCalculatedColumns = array_sum($arrCalculatedColumns) / count($arrYear);
+			$avgCalculatedColumns = $this->getFloatValue($avgCalculatedColumns);
+
 			if( $counter < $pareto ) {
 
 				$counter += 1;
 				$arr      = [];
-				
+
+				//adiciona las columnas de texto
 				foreach ($arrFields as $key => $val) {
 					if ( $key != $columnValue ) {
 						$arr[$key] = $row[$key];
@@ -4739,14 +4764,14 @@ class DeclaracionesRepo extends BaseRepo {
 				$linearRegression          = Helpers::linearRegression($arrY);
 				$slope                     = ( $linearRegression['m'] * 100 );
 				$rate                      = ($totalValue == 0) ? 0 : ( $value / $totalValue) ;
-				$arr[$columnValue]         = $value;
+				$arr[$columnValue]         = $avgCalculatedColumns; //debe mostrar el promedio y NO el ACUMULADO
 				$arr['rate_'.$columnValue] = $rate * 100;
 				$arr['growthRate']         = $slope;
 
 				$arrData[]      = $arr;
 				$arrChartData[] = [
 					'pais'       => $row['pais'],
-					'valor_expo' => $value,
+					'valor_expo' => $avgCalculatedColumns,
 					'growthRate' => $slope
 				];
 			} else {
@@ -4766,10 +4791,12 @@ class DeclaracionesRepo extends BaseRepo {
 			}
 		}
 
+		$avgOthersValue = array_sum($arrOthersVal) / count($arrYear);
+
 		//inserta la fila "otros"
-		$arr                = [];
-		$arr['id']          = 0;
-		$arr['pais']    = Lang::get('indicador.reports.others');
+		$arr         = [];
+		$arr['id']   = 0;
+		$arr['pais'] = Lang::get('indicador.reports.others');
 
 		$arr = $arr + $arrOthersVal;
 
@@ -4777,13 +4804,13 @@ class DeclaracionesRepo extends BaseRepo {
 		$linearRegression          = Helpers::linearRegression($arrY);
 		$slope                     = ( $linearRegression['m'] * 100 );
 		$rate                      = ($totalValue == 0) ? 0 : ( $othersValue / $totalValue) ;
-		$arr[$columnValue]         = $othersValue;
+		$arr[$columnValue]         = $avgOthersValue;
 		$arr['rate_'.$columnValue] = $rate * 100;
 		$arr['growthRate']         = $slope;
 		$arrData[]                 = $arr;
 		$arrChartData[]            = [
 			'pais' => Lang::get('indicador.reports.others') ,
-			'valor_expo'  => $othersValue,
+			'valor_expo'  => $avgOthersValue,
 			'growthRate'  => $slope
 		];
 
@@ -4809,6 +4836,7 @@ class DeclaracionesRepo extends BaseRepo {
 		$result = [
 			'success'     => true,
 			'data'        => $arrData,
+			'arrYear'     => $arrYear,
 			'total'       => count($arrData),
 			'columnChart' => $columnChart,
 			'pieChart'    => $pieChart,

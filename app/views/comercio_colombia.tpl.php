@@ -40,15 +40,6 @@ foreach ($pareto as $key => $row) {
 		<h3>Comercio agropecuario de <strong>Colombia</strong></h3>
 	</header>
 	<div class="row">
-		<div class="col-md-12">
-			<blockquote class="blockquote-reverse">
-				<p>
-					<cite title="Sicex.com">Fuente de información
-						<a href="http://sicex.com/" target="_blank">Sicex</a>
-					</cite>
-				</p>
-			</blockquote>
-		</div>
 
 		<aside class="col-md-3">
 
@@ -100,20 +91,20 @@ foreach ($pareto as $key => $row) {
 
 		<div class="col-md-9">
 
-			<div class="">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<?= Lang::get('update_info.table_name'); ?>
-					</div>
-					<div class="panel-body">
-						<?= $updateInfo; ?>
-					</div>
-				</div>
-			</div>
 
 			
 			<div id="grid-trade-info">
 
+				<div class="">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<?= Lang::get('update_info.table_name'); ?>
+						</div>
+						<div class="panel-body">
+							<?= $updateInfo; ?>
+						</div>
+					</div>
+				</div>
 				<p class="lead"><i class="fa fa-arrow-left"></i> Por favor seleccione un reporte.</p>
 				
 			</div>

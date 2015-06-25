@@ -401,6 +401,8 @@ jQuery(function($) {
 			}
 		});
 
+		$('.range-year').hide();
+
 		$('#searchQuadrantForm').on('submit', function(event){
 			
 			var countries = msCountry.getValue();
@@ -427,6 +429,11 @@ jQuery(function($) {
 							$('#quadrant_2_chart_div').html('');
 							$('#quadrant_3_chart_div').html('');
 							$('#quadrant_4_chart_div').html('');
+
+							if (data.yearFirst && data.yearLast) {
+								$('.range-year').show();
+								$('.range-year>small').text(data.yearFirst + ' - ' + data.yearLast);
+							}
 
 							if (data.arrQuadrant1.rows) {
 								drawSeriesChart(data.arrQuadrant1, 'quadrant_1_chart_div', 'btn-print-1');
@@ -631,10 +638,11 @@ function drawSeriesChart(jsonData, divId, btnId) {
 	var options = {
 		width: 700,
 		height: 400,
-		hAxis: {title: 'Vr. Prom. Anual'},
-        vAxis: {title: 'Prom. Anual'},
-        title: 'Unidad : Dólar EUA miles',
+		hAxis: {title: 'Valor promedio anual de las importaciones del país X'},
+        vAxis: {title: 'Crecimiento promedio anual de las importaciones del país X'},
+        title: 'Unidad : Miles ($USD)',
         allowHtml: true,
+        tooltip: {isHtml: true},
         crosshair: { trigger: 'both' }
 	};
 
@@ -663,7 +671,8 @@ function drawPieChart(jsonData, divId, btnId) {
 	var options = {
 		allowHtml: true,
 		is3D: true,
-		legend: 'none'
+		legend: 'none',
+		title: 'Unidad : Miles ($USD)'
 	};
 
 	var formatter = new google.visualization.NumberFormat({

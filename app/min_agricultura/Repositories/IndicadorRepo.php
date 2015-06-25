@@ -613,7 +613,7 @@ class IndicadorRepo extends BaseRepo {
 		require $repoFileName;
 
 		$now = new DateTime;
-  		$now->modify( '-2year' );
+  		$now->modify( '-12months' );
   		$yearLast = $now->format('Y'); //toma el año inmediatamente anterior
   		$now->modify( '-4year' );
   		$yearFirst = $now->format('Y'); //toma 5 hacia a tras
@@ -634,7 +634,8 @@ class IndicadorRepo extends BaseRepo {
 			$arrFiltersName,
 			'',
 			12,
-			1
+			1,
+			2
 		);
 		if (!method_exists($repo, $repoMethodName)) {
 			return [
@@ -688,8 +689,9 @@ class IndicadorRepo extends BaseRepo {
 		require $repoFileName;
 
 		$updateInfo = Helpers::getUpdateInfo('aduanas', 'impo');
+  		$updateInfo['dateTo']->modify( '-1year' );
 		$yearLast   = $updateInfo['dateTo']->format('Y');
-  		$updateInfo['dateTo']->modify( '-5year' );
+  		$updateInfo['dateTo']->modify( '-4year' );
   		$yearFirst = $updateInfo['dateTo']->format('Y'); //toma 5 hacia a tras
 
 		$arrFilters = [

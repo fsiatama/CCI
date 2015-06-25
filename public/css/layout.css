@@ -1153,6 +1153,12 @@ body.modal-open {
   overflow:inherit;
   padding-right:inherit !important;
 }
+.modal-header{
+	background-color:#5ea431; /* The Fallback */
+}
+.modal-header h4{
+	color:#fff;
+}
 
 /*
  * jQuery Dynatable plugin 0.3.1

@@ -250,7 +250,7 @@ class IndicadorController {
 
 			extract($result);
 
-			$view = new View($template, compact('is_template', 'data', 'htmlColumns'));
+			$view = new View($template, compact('is_template', 'data', 'htmlColumns', 'arrYear'));
 
 			ob_start();
 

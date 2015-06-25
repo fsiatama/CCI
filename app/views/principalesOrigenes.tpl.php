@@ -40,6 +40,9 @@ $tableHtml .= '
 </table>
 ';
 
+$yearFirst = array_shift($arrYear);
+$yearLast  = array_pop($arrYear);
+
 ?>
 
 <div role="tabpanel">
@@ -56,8 +59,15 @@ $tableHtml .= '
 			<div class="panel panel-primary margin-top10">
 				<div class="panel-body text-center">
 					<h4>Principales Paises de Origen</h4>
-					<p class="help-block">Valor acumulado últimos 5 años</p>
+					<p class="help-block">Valor promedio de los últimos 5 años <small>(<?= $yearFirst . ' - ' . $yearLast; ?>)</small></p>
 					<div id="chart_1_div" style="width:100%; height:500px"></div>
+					<blockquote class="blockquote-reverse">
+						<p>
+							<cite title="Sicex.com">Fuente de información
+								<a href="http://www.dian.gov.co/" target="_blank">DIAN</a>
+							</cite>
+						</p>
+					</blockquote>
 				</div>
 				<div class="panel-heading">
 					<span class="panel-title">Participación Por Pais de Origen</span>
@@ -75,8 +85,15 @@ $tableHtml .= '
 			<div class="panel panel-success margin-top10">
 				<div class="panel-body text-center">
 					<h4>Principales Paises de Origen</h4>
-					<p class="help-block">Valor promedio de los últimos 5 años</p>
+					<p class="help-block">Valor promedio de los últimos 5 años <small>(<?= $yearFirst . ' - ' . $yearLast; ?>)</small></p>
 					<div id="chart_2_div" style="width:700px; height:500px"></div>
+					<blockquote class="blockquote-reverse">
+						<p>
+							<cite title="Sicex.com">Fuente de información
+								<a href="http://www.dian.gov.co/" target="_blank">DIAN</a>
+							</cite>
+						</p>
+					</blockquote>
 				</div>
 				<div class="panel-heading">
 					<span class="panel-title">Tasa de crecimiento</span>
@@ -93,11 +110,17 @@ $tableHtml .= '
 			<div class="panel panel-success margin-top10">
 				<div class="panel-body text-center">
 					<h4>Principales Paises de Origen</h4>
-
+					<p class="help-block">Valor promedio de los últimos 5 años <small>(<?= $yearFirst . ' - ' . $yearLast; ?>)</small></p>
 					<div class="table-responsive fsize11">
 							<?= $tableHtml; ?>
 					</div>
-					
+					<blockquote class="blockquote-reverse">
+						<p>
+							<cite title="Sicex.com">Fuente de información
+								<a href="http://www.dian.gov.co/" target="_blank">DIAN</a>
+							</cite>
+						</p>
+					</blockquote>
 				</div>
 				<div class="panel-heading">
 					<span class="panel-title">Datos acumulados</span>

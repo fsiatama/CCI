@@ -40,7 +40,8 @@
 							<tr>
 								<td class="col-md-11">
 									<p>
-										Priorización de productos a partir de la demanda "Metodología de cuadrantes" – exploración preliminar de mercados.
+										Esta herramienta permite identificar los productos más atractivos desde el punto de vista del tamaño y del crecimiento promedio anual de las importaciones registrado en los últimos 5 años.
+										<!-- Priorización de productos a partir de la demanda "Metodología de cuadrantes" – exploración preliminar de mercados. -->
 									</p>
 								</td>
 								<td class="col-md-1">
