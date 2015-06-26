@@ -87,43 +87,92 @@ jQuery(function($) {
 	if ( $('#map-canvas').length > 0 ) {
 
 		var mapStyles = {1: {lineColor: "#FF0000", lineWidth: 1, lineOpacity: 1, backgroundColor: "#FF0000", backgroundOpacity: 0.5 }, 2: {lineColor: "#996633", lineWidth: 1, lineOpacity: 1, backgroundColor: "#FFCC99", backgroundOpacity: 0.5 }, 3: {lineColor: "#0000FF", lineWidth: 1, lineOpacity: 1, backgroundColor: "#0000FF", backgroundOpacity: 0.5 }, 4: {lineColor: "#00FFFF", lineWidth: 1, lineOpacity: 1, backgroundColor: "#00FFFF", backgroundOpacity: 0.5 }, 5: {lineColor: "#996600", lineWidth: 1, lineOpacity: 1, backgroundColor: "#996600", backgroundOpacity: 0.5 }, 6: {lineColor: "#660000", lineWidth: 1, lineOpacity: 1, backgroundColor: "#660000", backgroundOpacity: 0.5 } };
-		initialize();
 
-		$.ajax({
-			type:'POST'
-			,url:'acuerdo_info/public-search'
-			,dataType:"json"
-			,success:function(data){
-				
-				if(data.success){
-					var records = data.data;
-					var index   = 0;
-					var keys    = Object.keys(mapStyles);
-					$.each(records, function( key, row ) {
-
-
-						index = ( row.acuerdo_estado === 'vigente' ) ? 1 : 5;
-
-						var agreement = row.acuerdo_id;
-						var mapStyle  = mapStyles[index];
-
-						if (row.paises_iata) {
-							var countriesIata = row.paises_iata.split(',');
-							
-							$.each(countriesIata, function( i, iataCode ) {
-								paintCountry(iataCode, mapStyle, null, null, agreement);
-							});
-						} else {
-							paintCountry(row.pais_iata, mapStyle, null, null, agreement);
-						}
-					});
-				} else {
-					$('#modal-error-msg').html(data.error);
-					$('#errorModal').modal('show');
-				}
+		var msCountry = $('#ms-filter-country').magicSuggest({
+			allowFreeEntries: false
+			,data: 'pais/list-in-agreement'
+			,displayField: 'pais'
+			,highlight:true
+			,maxSelection: 5
+			,placeholder: 'Select...'
+			,mode: 'remote'
+			,resultsField: 'data'
+			,selectionPosition: 'bottom'
+			,selectionStacked: true
+			,typeDelay: 600
+			,useZebraStyle: true
+			,valueField: 'id_pais'
+			,selectionRenderer: function(data){
+				return data.pais + ' (<b>' + data.pais_iata + '</b>)';
+			}
+			,maxSelectionRenderer: function(v){
+				return 'Solo puedes seleccionar ' + v + ' item' + (v > 1 ? 's':'');
 			}
 		});
 
+		$(msCountry).on('beforeload', function(c){
+			var trade = $("#searchAgreementForm input[name=agreementTrade]:checked").val();
+			this.setDataUrlParams({trade: trade});
+		});
+
+		initialize();
+
+		$('#searchAgreementForm').on('submit', function(event){
+			
+			var countries = msCountry.getValue();
+			/*var products  = msProduct.getValue();*/
+			var trade     = $("#searchAgreementForm input[name=agreementTrade]:checked").val();
+			
+			if ( countries.length > 0 /*|| products.length > 0*/) {
+				
+				initialize();
+
+				var form = $(this);
+				var btn = $('#searchAgreementSubmit');
+				btn.button('loading');
+
+				$.ajax({
+					type:'POST'
+					,url:'acuerdo/public-search'
+					,data:{
+						/*products: products,*/
+						countries: countries,
+						trade: trade
+					}
+					,dataType:"json"
+					,success:function(data){
+						if(data.success){
+							var records = data.data;
+							var index   = 0;
+							var keys    = Object.keys(mapStyles);
+							$.each(records, function( key, row ) {
+
+								index = ( (index + 1) > keys.length ) ? (index - keys.length) : (index + 1);
+
+								var agreement = row.acuerdo_id;
+								var mapStyle  = mapStyles[index];
+
+								if (row.paises_iata) {
+									var countriesIata = row.paises_iata.split(',');
+									
+									$.each(countriesIata, function( i, iataCode ) {
+										paintCountry(iataCode, mapStyle, null, null, agreement);
+									});
+								} else {
+									paintCountry(row.pais_iata, mapStyle, null, null, agreement);
+								}
+							});
+						} else {
+							$('#modal-error-msg').html(data.error);
+							$('#errorModal').modal('show');
+						}
+					}
+				}).always(function(){
+					btn.button('reset');
+				});
+			}
+			event.preventDefault();
+		});
 	}// End of if ( $('#map-canvas').length > 0 )
 
 	if ( $('#grid-quota').length > 0 ) {
@@ -481,7 +530,6 @@ function initialize() {
 
 	var mapOptions = {
 		zoom: 2,
-		minZoom: 2,
 		center: new google.maps.LatLng(35, 0)
 	};
 	
@@ -569,7 +617,7 @@ function paintCountry(countryCode, countryOptions, countryIcon, countryPosition,
 		google.maps.event.addListener(polygonObj, 'click', function (event) {
 			$.ajax({
 				type:'POST'
-				,url:'acuerdo_info/list-id-public'
+				,url:'acuerdo/list-id-public'
 				,data:{
 					acuerdo_id: agreement
 				}

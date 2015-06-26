@@ -920,6 +920,10 @@ class DeclaracionesRepo extends BaseRepo {
 			$this->model->setId_posicion($productsAgriculture);
 		}
 
+		$methodName = $this->getColumnMethodName('set', $columnValue);
+		//descarta los valores inferioes a 10.000
+		call_user_func_array([$this->model, $methodName], [10000]);
+
 		//$columnValue = 'decl.id';
 		$arrRowField = ['id', 'decl.id_posicion', 'posicion'];
 
@@ -1066,7 +1070,7 @@ class DeclaracionesRepo extends BaseRepo {
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
 
-		//busca los datos del primer rango de fechas en exportaciones
+		//busca los datos del segundo rango de fechas en exportaciones
 		$rsDeclaraimp = $this->modelAdo->pivotSearch($this->model);
 		if (!$rsDeclaraimp['success']) {
 			return $rsDeclaraimp;
@@ -1189,6 +1193,9 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		$columnValue = $this->getColumnValueExpo();
+		$methodName = $this->getColumnMethodName('set', $columnValue);
+		//descarta los valores inferioes a 10.000
+		call_user_func_array([$this->model, $methodName], [10000]);
 		$arrRowField = ['id', 'decl.id_paisdestino', 'pais'];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
@@ -1283,79 +1290,6 @@ class DeclaracionesRepo extends BaseRepo {
 		return $result;
 	}
 
-	/*public function executeNumeroPaisesDestino()
-	{
-		$arrFiltersValues = $this->arrFiltersValues;
-		$this->setTrade('expo');
-		$this->setRange('ini');
-
-		$this->model      = $this->getModelExpo();
-		$this->modelAdo   = $this->getModelExpoAdo();
-		//asigna los valores de filtro del indicador al modelo
-		$this->setFiltersValues();
-
-		//var_dump($arrFiltersValues, $this->model);
-
-		if (!array_key_exists('id_posicion', $arrFiltersValues) && !array_key_exists('sector_id', $arrFiltersValues)) {
-			//si el reporte no tiene un producto seleccionado, debe seleccionar todo el sector agropecuario
-			$result = $this->findProductsBySector('sectorIdAgriculture');
-			if (!$result['success']) {
-				return $result;
-			}
-			$productsAgriculture = $result['data'];
-			$this->model->setId_posicion($productsAgriculture);
-		}
-
-		$arrRowField = ['id', 'decl.id_paisdestino', 'pais'];
-
-		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
-		$this->modelAdo->setPivotTotalFields($this->columnValueExpo);
-		$this->modelAdo->setPivotGroupingFunction('SUM');
-		$this->modelAdo->setPivotSortColumn($this->columnValueExpo . ' DESC');
-
-		$rsDeclaraexp = $this->modelAdo->pivotSearch($this->model);
-
-		if (!$rsDeclaraexp['success']) {
-			return $rsDeclaraexp;
-		}
-		if ($rsDeclaraexp['total'] == 0) {
-			return [
-				'success' => false,
-				'error'   => Lang::get('error.no_records_found')
-			];
-		}
-
-		$totalValue = 0;
-
-		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
-			$value       = $this->getFloatValue( $rowExpo[$this->columnValueExpo] );
-			$totalValue += $value;
-		}
-
-		$arrData           = [];
-
-		foreach ($rsDeclaraexp['data'] as $keyExpo => $rowExpo) {
-
-			$value = $this->getFloatValue( $rowExpo[$this->columnValueExpo] );
-
-			$rate = round( ( $value / $totalValue ) * 100 , 2 );
-			$arrData[] = [
-				'id'            => $keyExpo,
-				'pais'          => $rowExpo['pais'],
-				'valor_expo'    => $value,
-				'participacion' => $rate
-			];
-		}
-
-		$result = [
-			'success'         => true,
-			'data'            => $arrData,
-			'total'           => count($arrData)
-		];
-		return $result;
-
-	}*/
-
 	public function executeIHH()
 	{
 		$arrFiltersValues = $this->arrFiltersValues;
@@ -1389,6 +1323,10 @@ class DeclaracionesRepo extends BaseRepo {
 
 		$arrRowField   = ['id', 'decl.id_posicion'];
 		$arrFieldAlias = ['id', 'id_posicion', $columnValue];
+
+		$methodName = $this->getColumnMethodName('set', $columnValue);
+		//descarta los valores inferioes a 10.000
+		call_user_func_array([$this->model, $methodName], [10000]);
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));
 		$this->modelAdo->setPivotColumnFields('anio');
@@ -1888,6 +1826,11 @@ class DeclaracionesRepo extends BaseRepo {
 		}
 
 		$columnValue = $this->getColumnValueExpo();
+
+		$methodName = $this->getColumnMethodName('set', $columnValue);
+		//descarta los valores inferioes a 10.000
+		call_user_func_array([$this->model, $methodName], [10000]);
+		
 		$arrRowField = ['id', 'decl.id_empresa', 'empresa'];
 
 		$this->modelAdo->setPivotRowFields(implode(',', $arrRowField));

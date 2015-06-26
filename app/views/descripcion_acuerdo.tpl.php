@@ -28,6 +28,14 @@ if ( ! empty($row['acuerdo_ffirma']) ) {
 	';
 }
 
+$acuerdo_fvigente = '';
+if ( ! empty($row['acuerdo_fvigente']) ) {
+	$acuerdo_fvigente = '
+		<dt>' . Lang::get('acuerdo.columns_title.acuerdo_fvigente') . '</dt>
+		<dd>' . $acuerdo_fvigente_title . '</dd>
+	';
+}
+
 $acuerdo_ley = '';
 if ( ! empty($row['acuerdo_ley']) ) {
 	$acuerdo_ley = '
@@ -59,11 +67,12 @@ if ( ! empty($row['acuerdo_decreto']) ) {
 			<img class="media-object" src="<?= $flag; ?>" alt="<?= $partner; ?>">
 		</div>
 		<div class="media-body">
+			<h4><?= $row['acuerdo_nombre']; ?></h4>
 			<?= $row['acuerdo_descripcion']; ?>
 			<dl>
-				<dt><?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?></dt>
-				<dd><?= $row['acuerdo_fvigente_title']; ?></dd>
 				
+				<?= $acuerdo_fvigente; ?>
+
 				<?= $acuerdo_ffirma; ?>
 
 				<?= $acuerdo_ley; ?>

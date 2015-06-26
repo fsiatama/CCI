@@ -298,6 +298,8 @@ class DeclaraimpAdo extends BaseAdo {
 						//debe colocarle comillas a cada valor dentro del IN
 						$arr              = explode(',', $data);
 						$filterPosicion[] = 'decl.' . $key . ' ' . $operator . '("' . implode('","', $arr) . '")';
+					} elseif ($key == 'valorcif' || $key == 'peso_neto') {
+						$filter[] = 'decl.' . $key . ' > ' . $data;
 					} else {
 						$arr      = explode(',', $data);
 						$filter[] = 'decl.' . $key . ' ' . $operator . '("' . implode('","', $arr) . '")';

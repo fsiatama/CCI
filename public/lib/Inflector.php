@@ -71,10 +71,12 @@ class Inflector {
 
 	public static function cleanInputString($string)
 	{
-		$string = static::cleanOutputString($string);
 		$string = strip_tags($string);
+		$string = filter_var($string, FILTER_SANITIZE_STRING);
+		//$string = static::cleanOutputString($string);
+		//$string = strip_tags($string);
 		
-		$string = strtoupper($string);
+		//$string = strtoupper($string);
 
 		return $string;
 	}
