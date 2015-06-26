@@ -1,6 +1,7 @@
 <?php 
 
 $acuerdo_ffirma_title = ( empty($row['acuerdo_ffirma_title']) ) ? '' : $row['acuerdo_ffirma_title'] ;
+$acuerdo_fvigente_title = ( empty($row['acuerdo_fvigente_title']) ) ? '' : $row['acuerdo_fvigente_title'] ;
 
 $partner = ( empty($row['mercado_nombre']) ) ? $row['pais'] : $row['mercado_nombre'] ;
 
