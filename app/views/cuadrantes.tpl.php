@@ -21,7 +21,7 @@
 				</ul>
 			</p>
 			<p class="text-right">
-				<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#defaultModal">
+				<button type="button" class="btn btn-green btn-lg" data-toggle="modal" data-target="#defaultModal">
 				  <i class="fa fa-info-circle"></i> Ayuda metodología cuadrantes
 				</button>
 			</p>
@@ -44,7 +44,7 @@
 					<input type="text" class="form-control" id="ms-filter-country">
 				</div>
 
-				<button type="submit" class="btn btn-primary" id="searchQuadrantSubmit">Buscar</button>
+				<button type="submit" class="btn btn-green" id="searchQuadrantSubmit">Buscar</button>
 			</form>
 
 		</aside>
@@ -68,7 +68,7 @@
 					<div class="tab-content">
 						
 						<div id="quadrant_1" class="tab-pane active" role="tabpanel">
-							<div class="panel panel-primary margin-top10">
+							<div class="panel panel-success margin-top10">
 								<div class="panel-body text-center">
 									<h4>Altamente Atractivos</h4>
 									<p class="help-block">Mercado grande con crecimiento dinámico</p>
@@ -120,7 +120,7 @@
 						</div>
 					
 						<div id="quadrant_3" class="tab-pane" role="tabpanel">
-							<div class="panel panel-danger margin-top10">
+							<div class="panel panel-success margin-top10">
 								<div class="panel-body text-center">
 									<h4>Productos de bajo interés</h4>
 									<p class="help-block">Mercado pequeño con bajo crecimiento </p>
@@ -146,7 +146,7 @@
 						</div>
 					
 						<div id="quadrant_4" class="tab-pane" role="tabpanel">
-							<div class="panel panel-warning margin-top10">
+							<div class="panel panel-success margin-top10">
 								<div class="panel-body text-center">
 									<h4>Promisorios</h4>
 									<p class="help-block">Mercado grande con bajo crecimiento</p>

@@ -13,7 +13,8 @@ var storeDesgravacion_det = new Ext.data.JsonStore({
 		{name:'desgravacion_det_id', type:'float'},
 		{name:'desgravacion_det_anio_ini', type:'float'},
 		{name:'desgravacion_det_anio_fin', type:'float'},
-		{name:'desgravacion_det_tasa', type:'string'},
+		{name:'desgravacion_det_tasa_intra', type:'string'},
+		{name:'desgravacion_det_tasa_extra', type:'string'},
 		{name:'desgravacion_det_tipo_operacion', type:'string'},
 		{name:'desgravacion_det_desgravacion_id', type:'float'},
 		{name:'desgravacion_det_desgravacion_acuerdo_det_id', type:'float'},
@@ -45,7 +46,8 @@ var cmDesgravacion_det = new Ext.grid.ColumnModel({
 		{xtype:'numbercolumn', header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_id'); ?>', align:'right', hidden:false, dataIndex:'desgravacion_det_id'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_anio_ini'); ?>', align:'right', hidden:false, dataIndex:'desgravacion_det_anio_ini'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_anio_fin'); ?>', align:'right', hidden:false, dataIndex:'desgravacion_det_anio_fin'},
-		{header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa'); ?>', align:'left', hidden:false, dataIndex:'desgravacion_det_tasa'},
+		{header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa_intra'); ?>', align:'left', hidden:false, dataIndex:'desgravacion_det_tasa_intra'},
+		{header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa_extra'); ?>', align:'left', hidden:false, dataIndex:'desgravacion_det_tasa_extra'},
 		{header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_tipo_operacion'); ?>', align:'left', hidden:false, dataIndex:'desgravacion_det_tipo_operacion'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_desgravacion_id'); ?>', align:'right', hidden:false, dataIndex:'desgravacion_det_desgravacion_id'},
 		{xtype:'numbercolumn', header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_desgravacion_acuerdo_det_id'); ?>', align:'right', hidden:false, dataIndex:'desgravacion_det_desgravacion_acuerdo_det_id'},
@@ -91,7 +93,8 @@ var formDesgravacion_det = new Ext.FormPanel({
 			{name:'desgravacion_det_id', mapping:'desgravacion_det_id', type:'float'},
 			{name:'desgravacion_det_anio_ini', mapping:'desgravacion_det_anio_ini', type:'float'},
 			{name:'desgravacion_det_anio_fin', mapping:'desgravacion_det_anio_fin', type:'float'},
-			{name:'desgravacion_det_tasa', mapping:'desgravacion_det_tasa', type:'string'},
+			{name:'desgravacion_det_tasa_intra', mapping:'desgravacion_det_tasa_intra', type:'string'},
+			{name:'desgravacion_det_tasa_extra', mapping:'desgravacion_det_tasa_extra', type:'string'},
 			{name:'desgravacion_det_tipo_operacion', mapping:'desgravacion_det_tipo_operacion', type:'string'},
 			{name:'desgravacion_det_desgravacion_id', mapping:'desgravacion_det_desgravacion_id', type:'float'},
 			{name:'desgravacion_det_desgravacion_acuerdo_det_id', mapping:'desgravacion_det_desgravacion_acuerdo_det_id', type:'float'},
@@ -141,9 +144,18 @@ var formDesgravacion_det = new Ext.FormPanel({
 			defaults:{anchor:'100%'}
 			,items:[{
 				xtype:'numberfield'
-				,name:'desgravacion_det_tasa'
-				,fieldLabel:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa'); ?>'
-				,id:module+'desgravacion_det_tasa'
+				,name:'desgravacion_det_tasa_intra'
+				,fieldLabel:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa_intra'); ?>'
+				,id:module+'desgravacion_det_tasa_intra'
+				,allowBlank:false
+			}]
+		},{
+			defaults:{anchor:'100%'}
+			,items:[{
+				xtype:'numberfield'
+				,name:'desgravacion_det_tasa_extra'
+				,fieldLabel:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa_extra'); ?>'
+				,id:module+'desgravacion_det_tasa_extra'
 				,allowBlank:false
 			}]
 		},{

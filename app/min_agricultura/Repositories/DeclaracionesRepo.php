@@ -1177,8 +1177,9 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->setTrade('expo');
 		$this->setRange('ini');
 
-		$this->model      = $this->getModelExpo();
-		$this->modelAdo   = $this->getModelExpoAdo();
+		$this->model    = $this->getModelExpo();
+		$this->modelAdo = $this->getModelExpoAdo();
+		$columnValue    = $this->columnValueExpo;
 
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
@@ -1192,7 +1193,6 @@ class DeclaracionesRepo extends BaseRepo {
 			$this->model->setId_posicion($productsAgriculture);
 		}
 
-		$columnValue = $this->getColumnValueExpo();
 		$methodName = $this->getColumnMethodName('set', $columnValue);
 		//descarta los valores inferioes a 10.000
 		call_user_func_array([$this->model, $methodName], [10000]);
@@ -1810,8 +1810,9 @@ class DeclaracionesRepo extends BaseRepo {
 		$this->setTrade('expo');
 		$this->setRange('ini');
 
-		$this->model      = $this->getModelExpo();
-		$this->modelAdo   = $this->getModelExpoAdo();
+		$this->model    = $this->getModelExpo();
+		$this->modelAdo = $this->getModelExpoAdo();
+		$columnValue    = $this->columnValueExpo;
 		
 		//asigna los valores de filtro del indicador al modelo
 		$this->setFiltersValues();
@@ -1824,8 +1825,6 @@ class DeclaracionesRepo extends BaseRepo {
 			$productsAgriculture = $result['data'];
 			$this->model->setId_posicion($productsAgriculture);
 		}
-
-		$columnValue = $this->getColumnValueExpo();
 
 		$methodName = $this->getColumnMethodName('set', $columnValue);
 		//descarta los valores inferioes a 10.000
@@ -3763,6 +3762,8 @@ class DeclaracionesRepo extends BaseRepo {
 			$arrFinal = [];
 			$rangePeriods  = Helpers::getPeriodRange($this->period);
 
+			$index = 0;
+
 			foreach ($rangePeriods as $number => $range) {
 
 				$findId = false;
@@ -3770,14 +3771,16 @@ class DeclaracionesRepo extends BaseRepo {
 
 					if (in_array($row['id'], $range)) {
 						$findId = true;
-						$arrFinal[$number] = $row;
+						$arrFinal[$index] = $row;
+						$index += 1;
 					}
 				}
 
 				if ( ! $findId ) {
 
+
 					$periodName = Helpers::getPeriodName($this->period, $number);
-					$arrFinal[$number] = [
+					$arrFinal[$index] = [
 						'id'                 => array_shift($range),
 						'periodo'            => $this->year . ' ' . $periodName,
 						'porcentaje_arancel' => 0,
@@ -3785,8 +3788,9 @@ class DeclaracionesRepo extends BaseRepo {
 					];
 
 					if ( $trade == 'impo' ) {
-						$arrFinal[$number]['porcentaje_arancel'] = 0;
+						$arrFinal[$index]['porcentaje_arancel'] = 0;
 					}
+					$index += 1;
 				}
 
 			}

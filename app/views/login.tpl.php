@@ -22,7 +22,7 @@
                         </div>
                         <div class="form-group last">
                             <div class="col-sm-offset-6 col-sm-6">
-                                <button id="loginFormSubmit" type="submit" class="btn btn-success btn-sm btn-block">Ingresar</button>
+                                <button id="loginFormSubmit" type="submit" class="btn btn-green btn-sm btn-block">Ingresar</button>
                             </div>
                         </div>
                     </form>

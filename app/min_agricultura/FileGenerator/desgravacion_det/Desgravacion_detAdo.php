@@ -21,7 +21,8 @@ class Desgravacion_detAdo extends BaseAdo {
 		$desgravacion_det_id = $desgravacion_det->getDesgravacion_det_id();
 		$desgravacion_det_anio_ini = $desgravacion_det->getDesgravacion_det_anio_ini();
 		$desgravacion_det_anio_fin = $desgravacion_det->getDesgravacion_det_anio_fin();
-		$desgravacion_det_tasa = $desgravacion_det->getDesgravacion_det_tasa();
+		$desgravacion_det_tasa_intra = $desgravacion_det->getDesgravacion_det_tasa_intra();
+		$desgravacion_det_tasa_extra = $desgravacion_det->getDesgravacion_det_tasa_extra();
 		$desgravacion_det_tipo_operacion = $desgravacion_det->getDesgravacion_det_tipo_operacion();
 		$desgravacion_det_desgravacion_id = $desgravacion_det->getDesgravacion_det_desgravacion_id();
 		$desgravacion_det_desgravacion_acuerdo_det_id = $desgravacion_det->getDesgravacion_det_desgravacion_acuerdo_det_id();
@@ -31,7 +32,8 @@ class Desgravacion_detAdo extends BaseAdo {
 			'desgravacion_det_id',
 			'desgravacion_det_anio_ini',
 			'desgravacion_det_anio_fin',
-			'desgravacion_det_tasa',
+			'desgravacion_det_tasa_intra',
+			'desgravacion_det_tasa_extra',
 			'desgravacion_det_tipo_operacion',
 			'desgravacion_det_desgravacion_id',
 			'desgravacion_det_desgravacion_acuerdo_det_id',
@@ -50,7 +52,8 @@ class Desgravacion_detAdo extends BaseAdo {
 				desgravacion_det_id,
 				desgravacion_det_anio_ini,
 				desgravacion_det_anio_fin,
-				desgravacion_det_tasa,
+				desgravacion_det_tasa_intra,
+				desgravacion_det_tasa_extra,
 				desgravacion_det_tipo_operacion,
 				desgravacion_det_desgravacion_id,
 				desgravacion_det_desgravacion_acuerdo_det_id,
@@ -60,7 +63,8 @@ class Desgravacion_detAdo extends BaseAdo {
 				"'.$this->data['desgravacion_det_id'].'",
 				"'.$this->data['desgravacion_det_anio_ini'].'",
 				"'.$this->data['desgravacion_det_anio_fin'].'",
-				"'.$this->data['desgravacion_det_tasa'].'",
+				"'.$this->data['desgravacion_det_tasa_intra'].'",
+				"'.$this->data['desgravacion_det_tasa_extra'].'",
 				"'.$this->data['desgravacion_det_tipo_operacion'].'",
 				"'.$this->data['desgravacion_det_desgravacion_id'].'",
 				"'.$this->data['desgravacion_det_desgravacion_acuerdo_det_id'].'",
@@ -80,7 +84,8 @@ class Desgravacion_detAdo extends BaseAdo {
 			 desgravacion_det_id,
 			 desgravacion_det_anio_ini,
 			 desgravacion_det_anio_fin,
-			 desgravacion_det_tasa,
+			 desgravacion_det_tasa_intra,
+			 desgravacion_det_tasa_extra,
 			 desgravacion_det_tipo_operacion,
 			 desgravacion_det_desgravacion_id,
 			 desgravacion_det_desgravacion_acuerdo_det_id,

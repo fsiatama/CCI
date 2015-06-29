@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "893f49c5609db738ede38d2d14426c31",
+    "hash": "dbffec5345872d1b974f338414ea61ca",
     "packages": [
         {
             "name": "adldap/adldap",
@@ -143,12 +143,12 @@
             "version": "v5.7.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mpdf/mpdf.git",
+                "url": "https://github.com/finwe/mpdf.git",
                 "reference": "f9a374c7ea975ce8c795cec4dfd17ef55addac9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/f9a374c7ea975ce8c795cec4dfd17ef55addac9c",
+                "url": "https://api.github.com/repos/finwe/mpdf/zipball/f9a374c7ea975ce8c795cec4dfd17ef55addac9c",
                 "reference": "f9a374c7ea975ce8c795cec4dfd17ef55addac9c",
                 "shasum": ""
             },
@@ -183,16 +183,16 @@
         },
         {
             "name": "phpfastcache/phpfastcache",
-            "version": "3.0.5",
+            "version": "3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/khoaofgod/phpfastcache.git",
-                "reference": "408b32b3424e940c04c8ea7af289bfc04e5f3bbf"
+                "reference": "4dbe9d1099efded83bd2070d96135a658949fbd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/khoaofgod/phpfastcache/zipball/408b32b3424e940c04c8ea7af289bfc04e5f3bbf",
-                "reference": "408b32b3424e940c04c8ea7af289bfc04e5f3bbf",
+                "url": "https://api.github.com/repos/khoaofgod/phpfastcache/zipball/4dbe9d1099efded83bd2070d96135a658949fbd9",
+                "reference": "4dbe9d1099efded83bd2070d96135a658949fbd9",
                 "shasum": ""
             },
             "require": {
@@ -235,7 +235,7 @@
                 "redis",
                 "wincache"
             ],
-            "time": "2015-05-26 16:33:36"
+            "time": "2015-06-28 20:41:55"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -294,16 +294,16 @@
         },
         {
             "name": "phpoffice/phpexcel",
-            "version": "1.8.1",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PHPExcel.git",
-                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
+                "reference": "e69a5e4d0ffa7fb6f171859e0a04346e580df30b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
-                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/e69a5e4d0ffa7fb6f171859e0a04346e580df30b",
+                "reference": "e69a5e4d0ffa7fb6f171859e0a04346e580df30b",
                 "shasum": ""
             },
             "require": {
@@ -347,7 +347,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2015-05-01 07:00:55"
+            "time": "2014-03-02 15:22:49"
         },
         {
             "name": "raveren/kint",

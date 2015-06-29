@@ -28,7 +28,8 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 			{name:'desgravacion_det_anio_ini', type:'string'},
 			{name:'desgravacion_det_anio_fin', type:'string'},
 			{name:'desgravacion_det_anio_fin_title', type:'string'},
-			{name:'desgravacion_det_tasa', type:'float'},
+			{name:'desgravacion_det_tasa_intra', type:'float'},
+			{name:'desgravacion_det_tasa_extra', type:'float'},
 			{name:'desgravacion_det_desgravacion_id', type:'float'},
 			{name:'desgravacion_det_desgravacion_acuerdo_det_id', type:'float'},
 			{name:'desgravacion_det_desgravacion_acuerdo_det_acuerdo_id', type:'float'}
@@ -48,12 +49,20 @@ $acuerdo_det_productos_desc = Inflector::compress($acuerdo_det_productos_desc);
 			,dataIndex:'desgravacion_det_anio_fin_title'
 		},{
 			xtype:'numbercolumn'
-			,header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa'); ?>'
-			,dataIndex:'desgravacion_det_tasa'
+			,header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa_intra'); ?>'
+			,dataIndex:'desgravacion_det_tasa_intra'
 			,editor:new Ext.form.NumberField({
 				allowBlank:false
 				,minValue:1
-			}) 
+			})
+		},{
+			xtype:'numbercolumn'
+			,header:'<?= Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa_extra'); ?>'
+			,dataIndex:'desgravacion_det_tasa_extra'
+			,editor:new Ext.form.NumberField({
+				allowBlank:false
+				,minValue:1
+			})
 		}]
 		,defaults:{
 			sortable:false

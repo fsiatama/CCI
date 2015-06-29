@@ -481,7 +481,8 @@ class Acuerdo_detRepo extends BaseRepo {
 		foreach ($result['data'] as $key => $row) {
 
 			$trade                 = $row['acuerdo_intercambio'];
-			$desgravacion_det_tasa = (float)$row['desgravacion_det_tasa'];
+			$desgravacion_det_tasa_intra = (float)$row['desgravacion_det_tasa_intra'];
+			$desgravacion_det_tasa_extra = (float)$row['desgravacion_det_tasa_extra'];
 
 			$arrFiltros   = [];
 			$arrFiltros[] = 'id_pais:'.$row['id_pais'];
@@ -510,25 +511,38 @@ class Acuerdo_detRepo extends BaseRepo {
 			if ( ! $rsExecuted['success'] ) {
 				return $rsExecuted;
 			}
-			$executedWeight = 0;
+			$executedWeightIntra = 0;
+			$executedWeightExtra = 0;
 			if ( $rsExecuted['total'] > 0) {
 				foreach ($rsExecuted['data'] as $rowExecuted) {
 
 					//se divide por 1000 para convertir en Toneladas metricas
 					$weight     = ( (float)$rowExecuted['peso_neto'] / 1000 );
+					//si no esta definido el campo porcentaje_arancel en el array es porque se trata
+					//de la BD de exportaciones la cual no posee ese campo
 					$tariffRate = ( isset($rowExecuted['porcentaje_arancel']) ) ? (float)$rowExecuted['porcentaje_arancel'] : 0;
 
 					if ($trade == 'impo') {
 						if ($row['desgravacion_mdesgravacion'] == '1') {
-							# si maneja desgravacion el valor de declaraimp.porcentaje_arancel debe ser igual al de la desgravacion
-							$weight = ($desgravacion_det_tasa == $tariffRate) ? $weight : 0 ;
+							# si maneja desgravacion el valor de declaraimp.porcentaje_arancel debe ser igual 
+							# al de la desgravacion intracontingente, de lo contrario se medira como peso 
+							# extracontingente
+							if ( $desgravacion_det_tasa_intra == $tariffRate ) {
+								$executedWeightIntra += $weight;
+							} else {
+								$executedWeightExtra += $weight;
+							}
 						}
+					} else {
+						# si es expo, se sumara todo como peso intra contingente ya que no se puede
+						# determinar si pago o no el porcentaje adecuado de arancel
+						$executedWeightIntra += $weight;
 					}
 
-					$executedWeight += $weight;
 				}
 			}
-			$rate = ($row['contingente_det_peso_neto'] == 0) ? 0 : ($executedWeight / $row['contingente_det_peso_neto'] ) * 100 ;
+			$rateIntra = ($row['contingente_det_peso_neto'] == 0) ? 0 : ($executedWeightIntra / $row['contingente_det_peso_neto'] ) * 100 ;
+			$rateExtra = ($row['contingente_det_peso_neto'] == 0) ? 0 : ($executedWeightExtra / $row['contingente_det_peso_neto'] ) * 100 ;
 
 			$statusCtgCls = 'good_traffic';
 			$statusCtgTxt = Lang::get('alerta.verde');
@@ -540,10 +554,10 @@ class Acuerdo_detRepo extends BaseRepo {
 				$yellow = (float)$row['alerta_contingente_amarilla'];
 				$red    = (float)$row['alerta_contingente_roja'];
 				
-				if ( $rate <= $yellow && $rate >= $green) {
+				if ( $rateIntra <= $yellow && $rateIntra >= $green) {
 					$statusCtgCls = 'average_traffic';
 					$statusCtgTxt = Lang::get('alerta.amarilla');
-				} elseif ( $rate > $yellow ) {
+				} elseif ( $rateIntra > $yellow ) {
 					$statusCtgCls = 'poor_traffic';
 					$statusCtgTxt = Lang::get('alerta.roja');
 				} else {
@@ -553,16 +567,16 @@ class Acuerdo_detRepo extends BaseRepo {
 				if ($row['contingente_msalvaguardia'] == '1') {
 					$sobretasa = (float)$row['contingente_salvaguardia_sobretasa'];
 
-					$green   = $red + ( $sobretasa * ( (float)$row['alerta_salvaguardia_verde'] / 100) );
-					$yellow  = $red + ( $sobretasa * ( (float)$row['alerta_salvaguardia_amarilla'] / 100) );
-					$red     = $red + ( $sobretasa * ( (float)$row['alerta_salvaguardia_roja'] / 100) );
+					$green   = ( $sobretasa * ( (float)$row['alerta_salvaguardia_verde'] / 100) );
+					$yellow  = ( $sobretasa * ( (float)$row['alerta_salvaguardia_amarilla'] / 100) );
+					$red     = ( $sobretasa * ( (float)$row['alerta_salvaguardia_roja'] / 100) );
 
-					//var_dump($green, $yellow, $red, $rate);
+					//var_dump($green, $yellow, $red, $rateExtra);
 
-					if ( $rate <= $yellow && $rate >= $green) {
+					if ( $rateExtra <= $yellow && $rateExtra >= $green) {
 						$statusSvgCls = 'average_traffic';
 						$statusSvgTxt = Lang::get('alerta.amarilla');
-					} elseif ( $rate > $yellow ) {
+					} elseif ( $rateExtra > $yellow ) {
 						$statusSvgCls = 'poor_traffic';
 						$statusSvgTxt = Lang::get('alerta.roja');
 					} else {
@@ -574,12 +588,14 @@ class Acuerdo_detRepo extends BaseRepo {
 
 			$arrData[] = array_merge(
 				$row,
-				[ 'peso_neto'     => $executedWeight ],
-				[ 'ejecutado'     => $rate ],
-				[ 'estado_ctg'    => $statusCtgCls ],
-				[ 'estado_ctg_tt' => $statusCtgTxt ],
-				[ 'estado_svg'    => $statusSvgCls ],
-				[ 'estado_svg_tt' => $statusSvgTxt ]
+				[ 'peso_intra'      => $executedWeightIntra ],
+				[ 'ejecutado_intra' => $rateIntra ],
+				[ 'peso_extra'      => $executedWeightExtra ],
+				[ 'ejecutado_extra' => $rateExtra ],
+				[ 'estado_ctg'      => $statusCtgCls ],
+				[ 'estado_ctg_tt'   => $statusCtgTxt ],
+				[ 'estado_svg'      => $statusSvgCls ],
+				[ 'estado_svg_tt'   => $statusSvgTxt ]
 			);
 
 		}

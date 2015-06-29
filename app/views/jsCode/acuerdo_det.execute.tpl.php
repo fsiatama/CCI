@@ -35,11 +35,14 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			{name:'acuerdo_det_id', type:'float'},
 			{name:'acuerdo_det_productos', type:'string'},
 			{name:'acuerdo_det_productos_desc', type:'string'},
+			{name:'contingente_msalvaguardia', type:'string'},
 			{name:'pais', type:'string'},
 			{name:'contingente_det_peso_neto', type:'float'},
 			{name:'salvaguardia_peso_neto', type:'float'},
-			{name:'peso_neto', type:'float'},
-			{name:'ejecutado', type:'float'},
+			{name:'peso_intra', type:'float'},
+			{name:'ejecutado_intra', type:'float'},
+			{name:'peso_extra', type:'float'},
+			{name:'ejecutado_extra', type:'float'},
 			{name:'estado_ctg', type:'string'},
 			{name:'estado_ctg_tt', type:'string'},
 			{name:'estado_svg', type:'string'},
@@ -91,12 +94,14 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 		'</div>'
 	);
 	var columnTplEstadoSvg = new Ext.XTemplate(
-		'<div class="ux-row-action">' +
-			'<tpl for=".">' +
-				'<div class="ux-row-action-item {estado_svg} ux-row-action-text" qtip="{estado_svg_tt}">' +
-					'<span qtip="{estado_svg_tt}">{estado_svg_tt}</span>' +
-				'</div>' +
-			'</tpl>' +
+		'<div class="ux-row-action">',
+			'<tpl for=".">',
+				'<tpl if="contingente_msalvaguardia != \'0\'">',
+					'<div class="ux-row-action-item {estado_svg} ux-row-action-text" qtip="{estado_svg_tt}">',
+						'<span qtip="{estado_svg_tt}">{estado_svg_tt}</span>',
+					'</div>',
+				'</tpl>',
+			'</tpl>',
 		'</div>'
 	);
 
@@ -112,12 +117,12 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 			gridAcuerdo_detExpander,
 			{header:'<?= Lang::get('acuerdo_det.columns_title.acuerdo_det_productos_desc'); ?>', dataIndex:'acuerdo_det_productos_desc', align:'left'},
 			{header:'<?= Lang::get('acuerdo.partner_title'); ?>', dataIndex:'pais', align:'left'},
-			{header:'<?= Lang::get('contingente_det.peso_contingente'); ?>', dataIndex:'contingente_det_peso_neto' ,'renderer':numberFormat , align:'right'},
-			{header:'<?= Lang::get('contingente_det.peso_salvaguardia'); ?>', dataIndex:'salvaguardia_peso_neto' ,'renderer':numberFormat , align:'right'},
-			{header:'<?= Lang::get('contingente_det.peso_ejecutado'); ?>', dataIndex:'peso_neto' ,'renderer':numberFormat , align:'right'},
-			{header:'% <?= Lang::get('contingente_det.valor_ejecutado'); ?>', dataIndex:'ejecutado' ,'renderer':rateFormat , align:'right'},
+			{header:'<?= Lang::get('contingente_det.peso_contingente'); ?>', dataIndex:'contingente_det_peso_neto' ,'renderer':numberFormat , align:'right', hidden:true},
+			{header:'<?= Lang::get('contingente_det.peso_salvaguardia'); ?>', dataIndex:'salvaguardia_peso_neto' ,'renderer':numberFormat , align:'right', hidden:true},
+			{header:'<?= Lang::get('contingente_det.peso_ejecutado_intra'); ?>', dataIndex:'peso_intra' ,'renderer':numberFormat , align:'right'},
+			{header:'% <?= Lang::get('contingente_det.valor_ejecutado_intra'); ?>', dataIndex:'ejecutado_intra' ,'renderer':rateFormat , align:'right'},
 			{header:'<?= Lang::get('contingente_det.estado_contingente'); ?>', dataIndex:'estado_ctg_tt', xtype: 'templatecolumn', tpl: columnTplEstadoCtg },
-			{header:'<?= Lang::get('contingente_det.estado_salvaguardia'); ?>', dataIndex:'estado_svg_tt', xtype: 'templatecolumn', tpl: columnTplEstadoSvg, hidden:true },
+			{header:'<?= Lang::get('contingente_det.estado_salvaguardia'); ?>', dataIndex:'estado_svg_tt', xtype: 'templatecolumn', tpl: columnTplEstadoSvg },
 			gridAcuerdo_detAction
 		]
 	});

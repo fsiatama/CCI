@@ -13,7 +13,8 @@ if(isset($accion)){
 			$desgravacion_det->setDesgravacion_det_id($desgravacion_det_id);
 			$desgravacion_det->setDesgravacion_det_anio_ini($desgravacion_det_anio_ini);
 			$desgravacion_det->setDesgravacion_det_anio_fin($desgravacion_det_anio_fin);
-			$desgravacion_det->setDesgravacion_det_tasa($desgravacion_det_tasa);
+			$desgravacion_det->setDesgravacion_det_tasa_intra($desgravacion_det_tasa_intra);
+			$desgravacion_det->setDesgravacion_det_tasa_extra($desgravacion_det_tasa_extra);
 			$desgravacion_det->setDesgravacion_det_tipo_operacion($desgravacion_det_tipo_operacion);
 			$desgravacion_det->setDesgravacion_det_desgravacion_id($desgravacion_det_desgravacion_id);
 			$desgravacion_det->setDesgravacion_det_desgravacion_acuerdo_det_id($desgravacion_det_desgravacion_acuerdo_det_id);
@@ -52,7 +53,8 @@ if(isset($accion)){
 			$desgravacion_det->setDesgravacion_det_id($desgravacion_det_id);
 			$desgravacion_det->setDesgravacion_det_anio_ini($desgravacion_det_anio_ini);
 			$desgravacion_det->setDesgravacion_det_anio_fin($desgravacion_det_anio_fin);
-			$desgravacion_det->setDesgravacion_det_tasa($desgravacion_det_tasa);
+			$desgravacion_det->setDesgravacion_det_tasa_intra($desgravacion_det_tasa_intra);
+			$desgravacion_det->setDesgravacion_det_tasa_extra($desgravacion_det_tasa_extra);
 			$desgravacion_det->setDesgravacion_det_tipo_operacion($desgravacion_det_tipo_operacion);
 			$desgravacion_det->setDesgravacion_det_desgravacion_id($desgravacion_det_desgravacion_id);
 			$desgravacion_det->setDesgravacion_det_desgravacion_acuerdo_det_id($desgravacion_det_desgravacion_acuerdo_det_id);
@@ -79,7 +81,8 @@ if(isset($accion)){
 			$desgravacion_det->setDesgravacion_det_id($desgravacion_det_id);
 			$desgravacion_det->setDesgravacion_det_anio_ini($desgravacion_det_anio_ini);
 			$desgravacion_det->setDesgravacion_det_anio_fin($desgravacion_det_anio_fin);
-			$desgravacion_det->setDesgravacion_det_tasa($desgravacion_det_tasa);
+			$desgravacion_det->setDesgravacion_det_tasa_intra($desgravacion_det_tasa_intra);
+			$desgravacion_det->setDesgravacion_det_tasa_extra($desgravacion_det_tasa_extra);
 			$desgravacion_det->setDesgravacion_det_tipo_operacion($desgravacion_det_tipo_operacion);
 			$desgravacion_det->setDesgravacion_det_desgravacion_id($desgravacion_det_desgravacion_id);
 			$desgravacion_det->setDesgravacion_det_desgravacion_acuerdo_det_id($desgravacion_det_desgravacion_acuerdo_det_id);

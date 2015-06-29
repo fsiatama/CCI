@@ -175,6 +175,12 @@ p {
 	-webkit-margin-start: 0px;
 	-webkit-margin-end: 0px;
 }
+a {
+	color: #3d6907;
+}
+a:hover {
+	color: #5ea431;
+}
 
 a, a:focus, a:hover, a:active {
   outline: 0;
@@ -367,6 +373,24 @@ blockquote cite {
 
 /** 09. Buttons
  **************************************************************** **/
+
+ .btn:focus, .btn:active:focus, .btn.active:focus {
+    outline: 0 none;
+}
+
+.btn-green {
+    background: #3d6907;
+    color: #ffffff;
+}
+ 
+.btn-green:hover, .btn-green:focus, .btn-green:active, .btn-green.active, .open > .dropdown-toggle.btn-green {
+    background: #5ea431;
+}
+ 
+.btn-green:active, .btn-green.active {
+    background: #007299;
+    box-shadow: none;
+}
 
 /** 10. Labels
  **************************************************************** **/
@@ -1089,7 +1113,7 @@ div.maximage-controls #slider_prev:hover {
 /** 18. Footer
  **************************************************************** **/
 
- footer {position: absolute; bottom: 0; width: 100%; height: 100px; background-color: #5ea431; font-size:13px; padding:10px 0; }
+ footer {position: absolute; bottom: 0; width: 100%; height: 100px; background-color: #3d6907; font-size:13px; padding:10px 0; }
 	footer .copyright {padding-top:10px; color:#FFF; }
 
 

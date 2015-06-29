@@ -146,7 +146,7 @@ class Acuerdo_detAdo extends BaseAdo {
 			IF(acuerdo_det_contingente_acumulado_pais = "0", id_pais, mercado_paises) AS id_pais,
 			IF(acuerdo_det_contingente_acumulado_pais = "0", pais, mercado_nombre) AS pais,
 			IF(contingente_det_peso_neto IS NULL, 0, contingente_det_peso_neto) AS contingente_det_peso_neto,
-			IF(contingente_msalvaguardia = "0", 0, ( ( 1 + (contingente_salvaguardia_sobretasa / 100 ) ) *  contingente_det_peso_neto)) AS salvaguardia_peso_neto,
+			IF(contingente_msalvaguardia = "0", 0, ( ( (contingente_salvaguardia_sobretasa / 100 ) ) *  contingente_det_peso_neto)) AS salvaguardia_peso_neto,
 			contingente_salvaguardia_sobretasa,
 			alerta_contingente_verde,
 			alerta_contingente_amarilla,
@@ -156,7 +156,8 @@ class Acuerdo_detAdo extends BaseAdo {
 			alerta_salvaguardia_roja,
 			desgravacion_id,
 			desgravacion_mdesgravacion,
-			desgravacion_det_tasa
+			desgravacion_det_tasa_intra,
+			desgravacion_det_tasa_extra
 			FROM acuerdo_det
 			LEFT JOIN acuerdo ON acuerdo_det_acuerdo_id = acuerdo_id
 			LEFT JOIN mercado ON acuerdo_mercado_id = mercado_id
@@ -170,7 +171,7 @@ class Acuerdo_detAdo extends BaseAdo {
 				WHERE  '.$year.' >= contingente_det_anio_ini AND '.$year.' <= contingente_det_anio_fin
 			) AS contingente_det ON contingente_id = contingente_det_contingente_id
 			LEFT JOIN (
-				SELECT desgravacion_det_id, desgravacion_det_desgravacion_id, desgravacion_det_tasa
+				SELECT desgravacion_det_id, desgravacion_det_desgravacion_id, desgravacion_det_tasa_intra, desgravacion_det_tasa_extra
 				FROM desgravacion_det
 				WHERE  '.$year.' >= desgravacion_det_anio_ini AND '.$year.' <= desgravacion_det_anio_fin
 			) AS desgravacion_det ON desgravacion_id = desgravacion_det_desgravacion_id

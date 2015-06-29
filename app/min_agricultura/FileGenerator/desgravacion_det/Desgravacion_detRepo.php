@@ -59,7 +59,8 @@ class Desgravacion_detRepo extends BaseRepo {
 			empty($desgravacion_det_id) ||
 			empty($desgravacion_det_anio_ini) ||
 			empty($desgravacion_det_anio_fin) ||
-			empty($desgravacion_det_tasa) ||
+			empty($desgravacion_det_tasa_intra) ||
+			empty($desgravacion_det_tasa_extra) ||
 			empty($desgravacion_det_tipo_operacion) ||
 			empty($desgravacion_det_desgravacion_id) ||
 			empty($desgravacion_det_desgravacion_acuerdo_det_id) ||
@@ -74,7 +75,8 @@ class Desgravacion_detRepo extends BaseRepo {
 		$this->model->setDesgravacion_det_id($desgravacion_det_id);
 		$this->model->setDesgravacion_det_anio_ini($desgravacion_det_anio_ini);
 		$this->model->setDesgravacion_det_anio_fin($desgravacion_det_anio_fin);
-		$this->model->setDesgravacion_det_tasa($desgravacion_det_tasa);
+		$this->model->setDesgravacion_det_tasa_intra($desgravacion_det_tasa_intra);
+		$this->model->setDesgravacion_det_tasa_extra($desgravacion_det_tasa_extra);
 		$this->model->setDesgravacion_det_tipo_operacion($desgravacion_det_tipo_operacion);
 		$this->model->setDesgravacion_det_desgravacion_id($desgravacion_det_desgravacion_id);
 		$this->model->setDesgravacion_det_desgravacion_acuerdo_det_id($desgravacion_det_desgravacion_acuerdo_det_id);
@@ -99,7 +101,8 @@ class Desgravacion_detRepo extends BaseRepo {
 			$this->model->setDesgravacion_det_id(implode('", "', $query));
 			$this->model->setDesgravacion_det_anio_ini(implode('", "', $query));
 			$this->model->setDesgravacion_det_anio_fin(implode('", "', $query));
-			$this->model->setDesgravacion_det_tasa(implode('", "', $query));
+			$this->model->setDesgravacion_det_tasa_intra(implode('", "', $query));
+			$this->model->setDesgravacion_det_tasa_extra(implode('", "', $query));
 			$this->model->setDesgravacion_det_tipo_operacion(implode('", "', $query));
 			$this->model->setDesgravacion_det_desgravacion_id(implode('", "', $query));
 			$this->model->setDesgravacion_det_desgravacion_acuerdo_det_id(implode('", "', $query));
@@ -111,7 +114,8 @@ class Desgravacion_detRepo extends BaseRepo {
 			$this->model->setDesgravacion_det_id($query);
 			$this->model->setDesgravacion_det_anio_ini($query);
 			$this->model->setDesgravacion_det_anio_fin($query);
-			$this->model->setDesgravacion_det_tasa($query);
+			$this->model->setDesgravacion_det_tasa_intra($query);
+			$this->model->setDesgravacion_det_tasa_extra($query);
 			$this->model->setDesgravacion_det_tipo_operacion($query);
 			$this->model->setDesgravacion_det_desgravacion_id($query);
 			$this->model->setDesgravacion_det_desgravacion_acuerdo_det_id($query);

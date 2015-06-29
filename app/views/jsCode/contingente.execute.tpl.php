@@ -20,7 +20,7 @@ $htmlContingentStatus = '
 				<strong id="\' + module + \'quotaWeight">0</strong>
 			</div>
 			<div class="col-md-4">
-				<label>' . Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa') . '</label>
+				<label>' . Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa_intra') . '</label>
 				<strong id="\' + module + \'tariffRate">0</strong>
 			</div>
 			<div class="col-md-4">
@@ -59,8 +59,10 @@ $htmlContingentStatus = Inflector::compress($htmlContingentStatus);
 		,fields:[
 			{name:'id', type:'float'},
 			{name:'periodo', type:'string'},
-			{name:'executedWeight', type:'float'},
-			{name:'executedRate', type:'float'},
+			{name:'executedWeightIntra', type:'float'},
+			{name:'executedRateIntra', type:'float'},
+			{name:'executedWeightExtra', type:'float'},
+			{name:'executedRateExtra', type:'float'},
 			{name:'cumulativeWeight', type:'float'},
 			{name:'cumulativeRate', type:'float'},
 		]
@@ -100,13 +102,21 @@ $htmlContingentStatus = Inflector::compress($htmlContingentStatus);
 			parent.show();
 		}
 
+		FusionCharts.setCurrentRenderer('javascript');
+		disposeCharts();
+		Ext.getCmp(module + 'gaugeChart2').hide();
 		if (typeof(store.reader.jsonData.gaugeChartData) === 'object') {
-			FusionCharts.setCurrentRenderer('javascript');
-			disposeCharts();
 			var chart = new FusionCharts('hlineargauge', module + 'AreaChartId', '100%', '100%', '0', '1');
 			chart.setTransparent(true);
 			chart.setJSONData(store.reader.jsonData.gaugeChartData);
 			chart.render(module + 'AreaChart');
+		}
+		if (typeof(store.reader.jsonData.safeguardGaugeChartData) === 'object') {
+			var chart = new FusionCharts('hlineargauge', module + 'SafeguardChartId', '100%', '100%', '0', '1');
+			chart.setTransparent(true);
+			chart.setJSONData(store.reader.jsonData.safeguardGaugeChartData);
+			Ext.getCmp(module + 'gaugeChart2').show();
+			chart.render(module + 'SafeguardChart');
 		}
 		Ext.ux.bodyMask.hide();
 	});
@@ -115,10 +125,12 @@ $htmlContingentStatus = Inflector::compress($htmlContingentStatus);
 		defaultSortable: true
 		,columns:[
 			{header:'<?= Lang::get('indicador.columns_title.periodo'); ?>', dataIndex:'periodo', align:'left'},
-			{header:'<?= Lang::get('contingente_det.peso_ejecutado'); ?>', dataIndex:'executedWeight' ,'renderer':numberFormat , align:'right'},
-			{header:'<?= Lang::get('contingente_det.valor_ejecutado'); ?>', dataIndex:'executedRate' ,'renderer':rateFormat , align:'right'},
-			{header:'<?= Lang::get('contingente_det.peso_acumulado'); ?>', dataIndex:'cumulativeWeight' ,'renderer':numberFormat , align:'right'},
-			{header:'<?= Lang::get('contingente_det.valor_acumulado'); ?>', dataIndex:'cumulativeRate' ,'renderer':rateFormat , align:'right'},
+			{header:'<?= Lang::get('contingente_det.peso_ejecutado_intra'); ?>', dataIndex:'executedWeightIntra' ,'renderer':numberFormat , align:'right'},
+			{header:'<?= Lang::get('contingente_det.valor_ejecutado_intra'); ?>', dataIndex:'executedRateIntra' ,'renderer':rateFormat , align:'right'},
+			{header:'<?= Lang::get('contingente_det.peso_ejecutado_extra'); ?>', dataIndex:'executedWeightExtra' ,'renderer':numberFormat , align:'right'},
+			{header:'<?= Lang::get('contingente_det.valor_ejecutado_extra'); ?>', dataIndex:'executedRateExtra' ,'renderer':rateFormat , align:'right'},
+			{header:'<?= Lang::get('contingente_det.peso_acumulado'); ?>', dataIndex:'cumulativeWeight' ,'renderer':numberFormat , align:'right', hidden: true},
+			{header:'<?= Lang::get('contingente_det.valor_acumulado'); ?>', dataIndex:'cumulativeRate' ,'renderer':rateFormat , align:'right', hidden: true},
 		]
 	});
 
@@ -211,9 +223,20 @@ $htmlContingentStatus = Inflector::compress($htmlContingentStatus);
 		},{
 			height:140
 			,html:'<div id="' + module + 'AreaChart"></div>'
+			,id: module + 'gaugeChart1'
 			,items:[{
 				xtype:'panel'
 				,id: module + 'AreaChart'
+				,plain:true
+			}]
+		},{
+			height:140
+			,id: module + 'gaugeChart2'
+			,html:'<div id="' + module + 'SafeguardChart"></div>'
+			,hidden:true
+			,items:[{
+				xtype:'panel'
+				,id: module + 'SafeguardChart'
 				,plain:true
 			}]
 		},{
@@ -297,6 +320,9 @@ $htmlContingentStatus = Inflector::compress($htmlContingentStatus);
 
 		if(FusionCharts(module + 'AreaChartId')){
 			FusionCharts(module + 'AreaChartId').dispose();
+		}
+		if(FusionCharts(module + 'SafeguardChartId')){
+			FusionCharts(module + 'SafeguardChartId').dispose();
 		}
 	}
 	

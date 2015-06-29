@@ -4,7 +4,8 @@ class Desgravacion_det {
 	private $desgravacion_det_id;
 	private $desgravacion_det_anio_ini;
 	private $desgravacion_det_anio_fin;
-	private $desgravacion_det_tasa;
+	private $desgravacion_det_tasa_intra;
+	private $desgravacion_det_tasa_extra;
 	private $desgravacion_det_tipo_operacion;
 	private $desgravacion_det_desgravacion_id;
 	private $desgravacion_det_desgravacion_acuerdo_det_id;
@@ -34,12 +35,20 @@ class Desgravacion_det {
 		return $this->desgravacion_det_anio_fin;
 	}
 
-	public function setDesgravacion_det_tasa($desgravacion_det_tasa){
-		$this->desgravacion_det_tasa = $desgravacion_det_tasa;
+	public function setDesgravacion_det_tasa_intra($desgravacion_det_tasa_intra){
+		$this->desgravacion_det_tasa_intra = $desgravacion_det_tasa_intra;
 	}
 
-	public function getDesgravacion_det_tasa(){
-		return $this->desgravacion_det_tasa;
+	public function getDesgravacion_det_tasa_intra(){
+		return $this->desgravacion_det_tasa_intra;
+	}
+
+	public function setDesgravacion_det_tasa_extra($desgravacion_det_tasa_extra){
+		$this->desgravacion_det_tasa_extra = $desgravacion_det_tasa_extra;
+	}
+
+	public function getDesgravacion_det_tasa_extra(){
+		return $this->desgravacion_det_tasa_extra;
 	}
 
 	public function setDesgravacion_det_tipo_operacion($desgravacion_det_tipo_operacion){

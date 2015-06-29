@@ -490,7 +490,8 @@ class ContingenteRepo extends BaseRepo {
 			return $result;
 		}
 		$arrDesgravacion_det        = array_shift( $result['data'] );
-		$desgravacion_det_tasa      = ( empty($arrDesgravacion_det) ) ? 0 : (float)$arrDesgravacion_det['desgravacion_det_tasa'] ;
+		$desgravacion_det_tasa_intra    = ( empty($arrDesgravacion_det) ) ? 0 : (float)$arrDesgravacion_det['desgravacion_det_tasa_intra'] ;
+		$desgravacion_det_tasa_extra    = ( empty($arrDesgravacion_det) ) ? 0 : (float)$arrDesgravacion_det['desgravacion_det_tasa_extra'] ;
 		$desgravacion_mdesgravacion = ( empty($arrDesgravacion_det) ) ? '0' : $arrDesgravacion_det['desgravacion_mdesgravacion'] ;
 
 		/************************************ busca el registro detalle de contingente ************************************/
@@ -513,7 +514,7 @@ class ContingenteRepo extends BaseRepo {
 		$safeguardWeight    = 0;
 		if ($arrContingente['contingente_msalvaguardia'] == '1') {
 			$safeguard       = (float)$arrContingente['contingente_salvaguardia_sobretasa'];
-			$safeguardWeight = $quotaWeight * ( 1 + ( $safeguard / 100 ) );
+			$safeguardWeight = $quotaWeight * ( ( $safeguard / 100 ) );
 		}
 
 		/**************************************************************************************************************/
@@ -570,8 +571,9 @@ class ContingenteRepo extends BaseRepo {
 			return $result;
 		}
 		
-		$arrFinal   = [];
-		$gaugeChart = [];
+		$arrFinal            = [];
+		$gaugeChart          = [];
+		$safeguardGaugeChart = false;
 
 		if ($result['total'] == 0) {
 			
@@ -588,16 +590,20 @@ class ContingenteRepo extends BaseRepo {
 
 		} else {
 
-			$arrDeclaraciones = $result['data'];
-			$arrData          = [];
-			$cumulativeRate   = 0;
-			$cumulativeWeight = 0;
+			$arrDeclaraciones      = $result['data'];
+			$arrData               = [];
+			$cumulativeRate        = 0;
+			$cumulativeWeight      = 0;
+			$cumulativeRateExtra   = 0;
+			$cumulativeWeightExtra = 0;
 
 			foreach ($arrDeclaraciones as $data) {
 
-				if (empty($executedWeight[$data['periodo']])) {
-					$executedWeight[$data['periodo']] = 0;
-					$executedRate[$data['periodo']]   = 0;
+				if (!isset($executedWeightIntra[$data['periodo']])) {
+					$executedWeightIntra[$data['periodo']] = 0;
+					$executedRateIntra[$data['periodo']]   = 0;
+					$executedWeightExtra[$data['periodo']] = 0;
+					$executedRateExtra[$data['periodo']]   = 0;
 				}
 
 
@@ -606,52 +612,73 @@ class ContingenteRepo extends BaseRepo {
 
 				if ($trade == 'impo') {
 					if ($desgravacion_mdesgravacion == '1') {
-						# si maneja desgravacion el valor de declaraimp.porcentaje_arancel debe ser igual al de la desgravacion
-						$weight = ($desgravacion_det_tasa == $tariffRate) ? $weight : 0 ;
+						# si maneja desgravacion el valor de declaraimp.porcentaje_arancel debe ser igual 
+						# al de la desgravacion intracontingente, de lo contrario se medira como peso 
+						# extracontingente
+						if ( $desgravacion_det_tasa_intra == $tariffRate ) {
+							$executedWeightIntra[$data['periodo']] += $weight;
+						} else {
+							$executedWeightExtra[$data['periodo']] += $weight;
+						}
 					}
+				} else {
+					# si es expo, se sumara todo como peso intra contingente ya que no se puede
+					# determinar si pago o no el porcentaje adecuado de arancel
+					$executedWeightIntra[$data['periodo']] += $weight;
 				}
 
-				$executedWeight[$data['periodo']] += $weight;
-				$executedRate[$data['periodo']]   += ($quotaWeight == 0) ? 0 : ( $weight / $quotaWeight ) * 100 ;
+				$executedRateIntra[$data['periodo']] = ($quotaWeight == 0) ? 0 : ( $executedWeightIntra[$data['periodo']] / $quotaWeight ) * 100 ;
+				$executedRateExtra[$data['periodo']] = ($quotaWeight == 0) ? 0 : ( $executedWeightExtra[$data['periodo']] / $quotaWeight ) * 100 ;
 
 				$arrData[$data['periodo']] = [
-					'id'               => $arrContingente['contingente_id'],
-					'periodo'          => $data['periodo'],
-					'executedWeight'   => $executedWeight[$data['periodo']],
-					'executedRate'     => $executedRate[$data['periodo']],
+					'id'                  => $arrContingente['contingente_id'],
+					'periodo'             => $data['periodo'],
+					'executedWeightIntra' => $executedWeightIntra[$data['periodo']],
+					'executedRateIntra'   => $executedRateIntra[$data['periodo']],
+					'executedWeightExtra' => $executedWeightExtra[$data['periodo']],
+					'executedRateExtra'   => $executedRateExtra[$data['periodo']],
 				];
 
 			}
 
 			foreach ($arrData as $key => $row) {
 
-				$cumulativeWeight += $row['executedWeight'];
-				$cumulativeRate   += $row['executedRate'];
+				$cumulativeWeight += $row['executedWeightIntra'];
+				$cumulativeRate   += $row['executedRateIntra'];
+
+				$cumulativeWeightExtra += $row['executedWeightExtra'];
+				$cumulativeRateExtra   += $row['executedRateExtra'];
 
 				$arrFinal[] = [
 					'id'               => $row['id'],
 					'periodo'          => $row['periodo'],
-					'executedWeight'   => $row['executedWeight'],
-					'executedRate'     => $row['executedRate'],
+					'executedWeightIntra'   => $row['executedWeightIntra'],
+					'executedRateIntra'     => $row['executedRateIntra'],
+					'executedWeightExtra'   => $row['executedWeightExtra'],
+					'executedRateExtra'     => $row['executedRateExtra'],
 					'cumulativeWeight' => $cumulativeWeight,
 					'cumulativeRate'   => $cumulativeRate,
 				];
 			}
 
 			$gaugeChart = $this->getGaugeData($arrContingente, $cumulativeRate, $quotaWeight, $arrContingente['pais']);
+			if ($arrContingente['contingente_msalvaguardia']) {
+				$safeguardGaugeChart = $this->getGaugeData($arrContingente, $cumulativeRateExtra, $quotaWeight, $arrContingente['pais'], true);
+			}
 		}
 
-		$desgravacion_det_tasa = ($desgravacion_mdesgravacion == '1') ? $desgravacion_det_tasa : false ;
+		$desgravacion_det_tasa = ($desgravacion_mdesgravacion == '1') ? $desgravacion_det_tasa_intra : false ;
 
 
 		$result = [
-			'success'         => true,
-			'data'            => $arrFinal,
-			'gaugeChartData'  => $gaugeChart,
-			'quotaWeight'     => $quotaWeight,
-			'safeguardWeight' => $safeguardWeight,
-			'tariffRate'      => $desgravacion_det_tasa,
-			'total'           => count($arrFinal)
+			'success'                 => true,
+			'data'                    => $arrFinal,
+			'gaugeChartData'          => $gaugeChart,
+			'safeguardGaugeChartData' => $safeguardGaugeChart,
+			'quotaWeight'             => $quotaWeight,
+			'safeguardWeight'         => $safeguardWeight,
+			'tariffRate'              => $desgravacion_det_tasa,
+			'total'                   => count($arrFinal)
 		];
 
 		if ($format !== false && !empty($fields) && $result['total'] > 0) {
@@ -720,7 +747,7 @@ class ContingenteRepo extends BaseRepo {
 		return $result;
 	}
 
-	private function getGaugeData($row, $dial, $quotaWeight, $title)
+	private function getGaugeData($row, $dial, $quotaWeight, $title, $safeguard = false)
 	{
 		//var_dump($row);
 		$arr = [];
@@ -780,7 +807,6 @@ class ContingenteRepo extends BaseRepo {
 					'showValues'   => 0,
 					'color'        => '#0075c2',
 					'useMarker'    => '1',
-				
 				]
 			];
 
@@ -788,7 +814,7 @@ class ContingenteRepo extends BaseRepo {
 			$trendPointsSalvag = [];
 			if ($row['contingente_msalvaguardia'] == '1') {
 				$sobretasa   = (float)$row['contingente_salvaguardia_sobretasa'];
-				$upperLimit += $sobretasa;
+				//$upperLimit += $sobretasa;
 				
 				$greenS  = (float)$row['alerta_salvaguardia_verde'];
 				$greenS  = ($greenS < 1) ? 70 : $greenS;
@@ -804,42 +830,55 @@ class ContingenteRepo extends BaseRepo {
 
 				$colorsSalvag = [
 					[
-						'minValue' => $red,
-						'maxValue' => ($red + $greenS),
+						'minValue' => 0,
+						'maxValue' => ($greenS),
 						'code'     => '#399e38',
 					],[
-						'minValue' => ($red + $greenS),
-						'maxValue' => ($red + $yellowS),
+						'minValue' => ($greenS),
+						'maxValue' => ($yellowS),
 						'code'     => '#e48739',
 					],[
-						'minValue' => ($red + $yellowS),
-						'maxValue' => ($red + $redS),
+						'minValue' => ($yellowS),
+						'maxValue' => ($redS),
 						'code'     => '#b41527',
 					]
 				];
 
 				$trendPointsSalvag = [
 					[
-						'startValue'   => $upperLimit,
-						//'dashed'     => 1,
+						'startValue'   => 0,
 						'displayValue' => ' ',
 						'showValues'   => 0,
 						'color'        => '#0075c2',
 						'useMarker'    => '1',
 					],[
-						'startValue'     => $row['alerta_contingente_roja'],
-						'endValue'       => $upperLimit,
+						'startValue'   => $row['alerta_salvaguardia_roja'],
+						'displayValue' => ' ',
+						'showValues'   => 0,
+						'color'        => '#0075c2',
+						'useMarker'    => '1',
+					],[
+						'startValue'     => 0,
+						'endValue'       => $row['alerta_salvaguardia_roja'],
 						'displayValue'   => ' ',
-						'alpha'          => 50,
+						'alpha'          => 1,
 						'markerTooltext' => Lang::get('contingente.salvaguardia'),
 						'displayValue'   => Lang::get('contingente.salvaguardia')
-						//'color'        => '#0075c2'
+					],[
+						'startValue'   => $row['alerta_salvaguardia_roja'],
+						//'dashed'     => 1,
+						'displayValue' => ' ',
+						'showValues'   => 0,
+						'color'        => '#0075c2',
+						'useMarker'    => '1',
 					]
 				];
 			}
 
-			$colors      = array_merge($colors, $colorsSalvag);
-			$trendPoints = array_merge($trendPoints, $trendPointsSalvag);
+			$colors      = (! $safeguard) ? $colors : $colorsSalvag ;
+			$trendPoints = (! $safeguard) ? $trendPoints : $trendPointsSalvag ;
+			$title       = (! $safeguard) ? $title : ' ' ;
+			//$trendPoints = array_merge($trendPoints, $trendPointsSalvag);
 
 			$upperLimit = ($dial > $upperLimit) ? ($dial + 5) : $upperLimit ;
 			$arr = [

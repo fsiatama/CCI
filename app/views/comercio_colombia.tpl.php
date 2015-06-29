@@ -84,7 +84,7 @@ foreach ($pareto as $key => $row) {
 				</div>
 
 				<div class="form-group">
-					<button type="submit" class="btn btn-primary" id="publicReportsSubmit">Consultar</button>
+					<button type="submit" class="btn btn-green" id="publicReportsSubmit">Consultar</button>
 				</div>
 			</form>
 		</aside>

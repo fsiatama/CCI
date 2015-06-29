@@ -250,18 +250,23 @@ class DataSync extends Connection {
 			foreach ($arrAgreementDet as $rowDet) {
 
 				$statusCtg = $rowDet['estado_ctg'];
+				$statusSvg = $rowDet['estado_svg'];
 
-				if ( $statusCtg != 'good_traffic') {
+				if ( $statusCtg != 'good_traffic' || $statusSvg != 'good_traffic') {
 
 					$subject = 'Alerta de contingente para: ' .$rowDet['pais'];
+					$statusSvgTT = ( $contingente_msalvaguardia == '1') ? $rowDet['estado_svg_tt'] : 'No aplica';
 
 					$message = file_get_contents(PATH_RAIZ.'lib/templates/billing.html');
 					$message = str_replace('%partner%', $rowDet['pais'], $message);
 					$message = str_replace('%products%', $rowDet['acuerdo_det_productos_desc'], $message);
 					$message = str_replace('%agreement%', $row['acuerdo_nombre'], $message);
 					$message = str_replace('%statusCtg%', $rowDet['estado_ctg_tt'], $message);
-					$message = str_replace('%weight%', $rowDet['peso_neto'], $message);
-					$message = str_replace('%rate%', $rowDet['ejecutado'], $message);
+					$message = str_replace('%statusSvg%', $statusSvgTT, $message);
+					$message = str_replace('%weight%', $rowDet['peso_intra'], $message);
+					$message = str_replace('%rate%', $rowDet['ejecutado_intra'], $message);
+					$message = str_replace('%weightExtra%', $rowDet['peso_extra'], $message);
+					$message = str_replace('%rateExtra%', $rowDet['ejecutado_extra'], $message);
 
 					$result = Helpers::sendEmail($arrEmail, $message, $subject);
 

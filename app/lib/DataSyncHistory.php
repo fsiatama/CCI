@@ -1,5 +1,9 @@
 <?php
 
+set_time_limit(0);
+ini_set('display_errors', true);
+error_reporting(-1);
+
 /**
  * Name: DataSync
  * Description: Actualiza la información de las tablas de importaciones y exportaciones
@@ -11,8 +15,6 @@ include "../../public/lib/config.php";
 require '../../public/lib/Helpers.php';
 require '../../public/lib/Lang.php';
 
-ini_set('display_errors', true);
-error_reporting(-1);
 
 require PATH_APP.'../vendor/autoload.php';
 //require PATH_APP.'lib/connection/Connection.php';
