@@ -122,6 +122,15 @@ i {
     height: 16px;
 }
 
+.icon-conv3 {
+    background-image: url("../img/conv3.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+
 
 
 

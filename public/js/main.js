@@ -101,8 +101,13 @@ jQuery(function($) {
 					var keys    = Object.keys(mapStyles);
 					$.each(records, function( key, row ) {
 
-
-						index = ( row.acuerdo_estado === 'vigente' ) ? 1 : 5;
+						if (row.acuerdo_estado === 'vigente') {
+							index = 1;
+						} else if (row.acuerdo_estado === 'suscrito') {
+							index = 3;
+						} else {
+							index = 5;
+						}
 
 						var agreement = row.acuerdo_id;
 						var mapStyle  = mapStyles[index];

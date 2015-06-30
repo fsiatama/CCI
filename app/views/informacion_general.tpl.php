@@ -20,6 +20,7 @@
 					<small class="pull-right">
 				  		<cite title="Acuerdos vigentes">
 					  		<i class="icon-conv1"></i> Acuerdos vigentes &nbsp;
+					  		<i class="icon-conv3"></i> Acuerdos suscritos &nbsp;
 					  		<i class="icon-conv2"></i> Acuerdos en negociación
 					  	</cite>
 					</small>
