@@ -13,13 +13,17 @@
 			</p>
 		</div>
 
-
-
 		<div class="col-md-12">
-
+	
 			<div class="panel panel-default">
 				<div class="panel-heading">
-
+					<small class="pull-right">
+				  		<cite title="Acuerdos vigentes">
+					  		<i class="icon-conv1"></i> Acuerdos vigentes &nbsp;
+					  		<i class="icon-conv2"></i> Acuerdos en negociación
+					  	</cite>
+					</small>
+					<div class="clearfix"></div>
 				</div>
 				<div class="panel-body">
 					<div id="map-canvas" style="height: 600px;"></div>
