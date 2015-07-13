@@ -4,7 +4,7 @@
             <!--<img src="<?= URL_RAIZ ?>img/logo-330_106.png" class="img-responsive center-block" alt="Responsive image">-->
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <strong class="">Inicio de Sesión</strong>
+                    <strong class="">Inicio de sesión</strong>
                 </div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" id="loginForm" action="<?= URL_RAIZ ?>auth/login">

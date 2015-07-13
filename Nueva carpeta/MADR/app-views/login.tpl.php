@@ -4,14 +4,14 @@
             <!--<img src="<?= URL_RAIZ ?>img/logo-330_106.png" class="img-responsive center-block" alt="Responsive image">-->
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <strong class="">Inicio de Sessión</strong>
+                    <strong class="">Inicio de sesión</strong>
                 </div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" id="loginForm" action="<?= URL_RAIZ ?>auth/login">
                         <div class="form-group">
                             <label for="inputUserName" class="col-sm-3 control-label">Usuario</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="inputUserName" name="userName" placeholder=" @minagricultura.gov.co" required autofocus>
+                                <input type="text" class="form-control" id="inputUserName" name="userName" placeholder=" " required autofocus>
                             </div>
                         </div>
                         <div class="form-group">

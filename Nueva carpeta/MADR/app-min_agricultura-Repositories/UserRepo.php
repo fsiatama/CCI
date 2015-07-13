@@ -363,4 +363,16 @@ class UserRepo extends BaseRepo {
 		return $result;
 	}
 
+	public function listByProfile($params)
+	{
+		extract($params);
+
+		$profile_id = ( empty($profile_id) ) ? '2' : $profile_id ;
+		
+		$this->model->setUser_profile_id($profile_id);
+		
+		return $this->modelAdo->exactSearch($this->model);
+		
+	}
+
 }
