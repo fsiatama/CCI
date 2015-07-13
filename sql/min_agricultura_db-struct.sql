@@ -74,7 +74,7 @@ CREATE TABLE `acuerdo_info` (
   `acuerdo_ley` varchar(100) NOT NULL,
   `acuerdo_decreto` varchar(100) NOT NULL,
   `acuerdo_url` varchar(200) NOT NULL,
-  `acuerdo_estado` enum('vigente','negociacion') NOT NULL,
+  `acuerdo_estado` enum('vigente','negociacion','suscrito') NOT NULL,
   `acuerdo_uinsert` int(10) unsigned NOT NULL,
   `acuerdo_finsert` datetime NOT NULL,
   `acuerdo_uupdate` int(10) unsigned NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE `acuerdo_info` (
   PRIMARY KEY (`acuerdo_id`),
   KEY `fk_acuerdo_mercado1_idx` (`acuerdo_mercado_id`),
   KEY `fk_acuerdo_pais1_idx` (`acuerdo_id_pais`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `alerta` */
 
@@ -145,7 +145,7 @@ CREATE TABLE `audit` (
   `audit_uinsert` int(10) unsigned NOT NULL,
   `audit_finsert` datetime NOT NULL,
   PRIMARY KEY (`audit_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=23752 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=24169 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `category_menu` */
 
@@ -402,7 +402,7 @@ CREATE TABLE `indicador` (
   `indicador_finsert` datetime NOT NULL,
   `indicador_fupdate` datetime NOT NULL,
   PRIMARY KEY (`indicador_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=205 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=206 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `menu` */
 
@@ -432,7 +432,7 @@ CREATE TABLE `mercado` (
   `mercado_uupdate` int(10) unsigned NOT NULL,
   `mercado_fupdate` datetime NOT NULL,
   PRIMARY KEY (`mercado_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `pais` */
 
