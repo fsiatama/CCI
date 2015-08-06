@@ -8,7 +8,7 @@
 	var is_msie = (navigator.appVersion.indexOf("MSIE")!=-1) ? true : false;
 	var map;
 
-	if (location.pathname !== '/') {
+	if (location.pathname !== '/' && location.pathname !== '/min_agricultura/public/') {
 		$('.navbar-static-top').find('li.active').removeClass('active');
 		$('.navbar-static-top').find('a[href*="' + location.pathname + '"]').parents('li').addClass('active');
 	}
@@ -57,7 +57,7 @@
 		$('#loginForm').on('submit', function(event){
 			var $form = $(this);
 			var $btn = $('#loginFormSubmit');
-			//$btn.button('loading');
+			$btn.button('loading');
 			$.ajax({
 				type:'POST'
 				,url:$form.attr('action')
@@ -77,8 +77,7 @@
 					}
 				}
 			}).always(function(){
-				//$btn.button('reset');
-	
+				$btn.button('reset');
 			});
 			event.preventDefault();
 		});
@@ -222,7 +221,7 @@
 				
 				var form = $(this);
 				var btn = $('#searchQuotaSubmit');
-				//btn.button('loading');
+				btn.button('loading');
 
 				$.ajax({
 					type:'POST'
@@ -262,7 +261,7 @@
 						}
 					}
 				}).always(function(){
-					//btn.button('reset');
+					btn.button('reset');
 				});
 			}
 			event.preventDefault();
@@ -606,8 +605,8 @@ function drawSeriesChart(jsonData, divId, btnId) {
 	var options = {
 		width: '100%',
         height: '100%',
-		hAxis: {title: 'Valor promedio anual de las importaciones del paÃ­s X'},
-        vAxis: {title: 'Crecimiento promedio anual de las importaciones del paÃ­s X'},
+		hAxis: {title: 'Valor promedio anual de las importaciones del país X'},
+        vAxis: {title: 'Crecimiento promedio anual de las importaciones del país X'},
         title: 'Unidad : Miles ($USD)',
         allowHtml: true,
         tooltip: {isHtml: true},

@@ -63,8 +63,8 @@ $yearLast  = array_pop($arrYear);
 					<div id="chart_1_div" style="width:100%; height:500px"></div>
 					<blockquote class="blockquote-reverse">
 						<p>
-							<cite title="Sicex.com">Fuente de información
-								<a href="http://www.dian.gov.co/" target="_blank">DIAN</a>
+							<cite title="DIAN">Fuente de información
+								<a href="http://www.dian.gov.co/" target="_blank"> DIAN</a>
 							</cite>
 						</p>
 					</blockquote>
@@ -89,8 +89,8 @@ $yearLast  = array_pop($arrYear);
 					<div id="chart_2_div" style="width:700px; height:500px"></div>
 					<blockquote class="blockquote-reverse">
 						<p>
-							<cite title="Sicex.com">Fuente de información
-								<a href="http://www.dian.gov.co/" target="_blank">DIAN</a>
+							<cite title="DIAN">Fuente de información
+								<a href="http://www.dian.gov.co/" target="_blank"> DIAN</a>
 							</cite>
 						</p>
 					</blockquote>
@@ -116,8 +116,8 @@ $yearLast  = array_pop($arrYear);
 					</div>
 					<blockquote class="blockquote-reverse">
 						<p>
-							<cite title="Sicex.com">Fuente de información
-								<a href="http://www.dian.gov.co/" target="_blank">DIAN</a>
+							<cite title="DIAN">Fuente de información
+								<a href="http://www.dian.gov.co/" target="_blank"> DIAN</a>
 							</cite>
 						</p>
 					</blockquote>

@@ -11,7 +11,6 @@
 							<tr>
 								<td class="bg-success" colspan="2">
 									<h4>
-										Comercio agropecuario de Colombia
 										Comercio agropecuario de <strong>Colombia</strong>
 									</h4>
 								</td>

@@ -18,8 +18,8 @@ $htmlDescription .= '</ol>';
 $htmlExplanation = '
   <div class="well bs-component">
   	<blockquote class="blockquote-reverse">
-	  	<cite title="Comtrade">Fuente de información
-	  		<a href="http://www.sicex.com/" target="_blank"> Sicex</a>
+	  	<cite title="DIAN">Fuente de información
+	  		<a href=""http://www.dian.gov.co/"" target="_blank"> DIAN</a>
 	  	</cite>
 	</blockquote>
     <ul class="list-group">

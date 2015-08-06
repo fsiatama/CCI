@@ -113,7 +113,8 @@ foreach ($arrAgreementDet as $key => $row) {
 				<thead>
 					<th>Año</th>
 					<th>'.Lang::get('contingente_det.peso_contingente').'</th>
-					<th>'.Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa').'</th>
+					<th>'.Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa_intra').'</th>
+					<th>'.Lang::get('desgravacion_det.columns_title.desgravacion_det_tasa_extra').'</th>
 				</thead>
 				<tbody>
 	';
@@ -129,7 +130,8 @@ foreach ($arrAgreementDet as $key => $row) {
 			<tr>
 				<td>'.$rowDet['year'].'</td>
 				<td class="text-right">'.$quota.'</td>
-				<td class="text-right">'.number_format($rowDet['duty'], 2).'%</td>
+				<td class="text-right">'.number_format($rowDet['dutyIntra'], 2).'%</td>
+				<td class="text-right">'.number_format($rowDet['dutyExtra'], 2).'%</td>
 			</tr>
 			';
 		}

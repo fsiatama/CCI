@@ -256,6 +256,7 @@ class IndicadorController {
 
 			$view->execute();
 			$html = ob_get_clean();
+			$html = Inflector::compress($html);
 
 			$result = array_merge( $result, compact('html') );
 		}

@@ -774,13 +774,15 @@ class Acuerdo_detRepo extends BaseRepo {
 						);
 						if ($rowQuota !== false) {
 							//si encuentra el registro en contingentes añade informacion de desgravacion
-							$arrDetail[ $year ][ 'duty' ] = $rowDet['desgravacion_det_tasa'];
+							$arrDetail[ $year ][ 'dutyIntra' ] = $rowDet['desgravacion_det_tasa_intra'];
+							$arrDetail[ $year ][ 'dutyExtra' ] = $rowDet['desgravacion_det_tasa_extra'];
 						} else {
 							//si no encuentra el registro crea uno 
 							$arrDetail[ $year ] = [
 								'year'  => $year,
 								'quota' => 0,
-								'duty'  => $rowDet['desgravacion_det_tasa']
+								'dutyIntra'  => $rowDet['desgravacion_det_tasa_intra'],
+								'dutyExtra'  => $rowDet['desgravacion_det_tasa_extra']
 							];
 						}
 					}

@@ -36,7 +36,7 @@ class PosicionAdo extends BaseAdo {
 
 	public function setSelectedValues($selectedValues)
 	{
-		$this->setSelectedValues = $selectedValues;
+		$this->selectedValues = $selectedValues;
 	}
 
 	public function getSelectedValues()

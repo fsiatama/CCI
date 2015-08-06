@@ -42,6 +42,7 @@ return [
 		'valor_balanza'                => 'Balanza (USD$)',
 		'peso_balanza'                 => 'Balanza (Kg)',
 		'valorarancel'                 => 'Valor Arancel (USD$)',
+		'porcentaje_arancel'           => 'Arancel (%)',
 		'participacion_arancel'        => 'Participación % Valor Arancel',
 		'arancel_pagado'               => 'Arancel Pagado (USD$)',
 		'IHH'                          => 'Indice de concentración IHH',

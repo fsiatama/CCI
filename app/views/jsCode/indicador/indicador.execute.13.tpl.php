@@ -37,6 +37,7 @@ $htmlDescription .= '</ol>';
 			{name:'posicion', type:'string'},
 			{name:'pais', type:'string'},
 			{name:'valorarancel', type:'float'},
+			{name:'porcentaje_arancel', type:'float'},
 			{name:'valor_impo', type:'float'},
 			{name:'participacion', type:'float'}
 		]
@@ -74,8 +75,8 @@ $htmlDescription .= '</ol>';
 			{header:'<?= Lang::get('indicador.columns_title.posicion'); ?>', dataIndex:'id_posicion', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.desc_posicion'); ?>', dataIndex:'posicion', align: 'left'},
 			{header:'<?= Lang::get('indicador.columns_title.valor_impo'); ?>', dataIndex:'valor_impo' ,'renderer':numberFormat, align:'right'},
-			//{header:'<?= Lang::get('indicador.columns_title.valorarancel'); ?>', dataIndex:'valorarancel' ,'renderer':numberFormat, align:'right'},
 			{header:'<?= Lang::get('indicador.columns_title.participacion'); ?>', dataIndex:'participacion','renderer':rateFormat, align:'right'},
+			{header:'<?= Lang::get('indicador.columns_title.porcentaje_arancel'); ?>', dataIndex:'porcentaje_arancel' ,'renderer':rateFormat, align:'right'},
 		]
 		,defaults: {
 			sortable: true
