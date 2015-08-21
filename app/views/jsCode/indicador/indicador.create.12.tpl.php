@@ -481,7 +481,7 @@
 			return false;
 		}
 		
-		if (!isValidComplement(module+'comboPais', module+'comboMercado')) {
+		/*if (!isValidComplement(module+'comboPais', module+'comboMercado')) {
 			Ext.Msg.show({
 				title: Ext.ux.lang.messages.warning
 				,msg: Ext.ux.lang.error.empty_country
@@ -489,7 +489,7 @@
 				,icon: Ext.Msg.WARNING
 			});
 			return false;
-		}
+		}*/
 
 		if (!isValidComplement(module+'comboPosicion', module+'comboSector')) {
 			Ext.Msg.show({
