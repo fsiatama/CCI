@@ -54,7 +54,7 @@ class UserRepo extends BaseRepo {
 		}
 
 		$user->setUser_email($userName);
-		$user->setUser_password(md5($password));
+		//$user->setUser_password(md5($password));
 		$result = $userAdo->exactSearch($user);
 
 		if (!$result['success']) {
@@ -65,52 +65,51 @@ class UserRepo extends BaseRepo {
 			return $result;
 		}
 		if ($result['total'] == 0) {
-			//si el usuario no existe, valida contra el directorio activo y posteriormente crea el usuario
-			try {
-				$adldap = new \adLDAP\adLDAP();
-			}
-			catch (adLDAPException $e) {
-				$result = array(
-					'success' => false,
-					'error'   => $e
-				);
-				return $result;
-			}
-
-			$authUser = $adldap->user()->authenticate($userName, $password);
-			if ($authUser !== true) {
-				$result = array(
-					'success' => false,
-					'error'   => $adldap->getLastError()
-				);
-				return $result;
-			}
-			$userInfo = $adldap->user()->info($userName);
-			$userInfo = $userInfo[0];
-			$password = md5($password);
-
-			$user_full_name  = $userInfo['displayname'][0];
-			$user_email      = $userName;
-			$user_password   = $password;
-			$user_profile_id = '2';
-			$user_active     = '1';
-
-			$result = $this->create( compact('user_full_name', 'user_email', 'user_password', 'user_profile_id', 'user_active') );
-
-			if (!$result['success']) {
-				$result = [
-					'success'  => false,
-					'error'    => $result['error']
-				];
-				return $result;
-			}
+			
+			$user->setUser_email($userName.'@minagricultura.gov.co');
 			$result = $userAdo->exactSearch($user);
-			if (!$result['success']) {
-				$result = [
-					'success'  => false,
-					'error'    => $result['error']
-				];
-				return $result;
+			
+			if ($result['total'] == 0) {
+			
+				//si el usuario no existe, valida contra el directorio activo y posteriormente crea el usuario
+				try {
+					$adldap = new \adLDAP\adLDAP();
+				}
+				catch (adLDAPException $e) {
+					$result = array(
+						'success' => false,
+						'error'   => $e
+					);
+					return $result;
+				}
+	
+				$authUser = $adldap->user()->authenticate($userName, $password);
+				if ($authUser !== true) {
+					$result = array(
+						'success' => false,
+						'error'   => $adldap->getLastError()
+					);
+					return $result;
+				}
+				$userInfo = $adldap->user()->info($userName);
+				$userInfo = $userInfo[0];
+				$password = md5($password);
+	
+				$user_full_name  = $userInfo['displayname'][0];
+				$user_email      = $userName;
+				$user_password   = $password;
+				$user_profile_id = '2';
+				$user_active     = '1';
+
+				$result = $this->create( compact('user_full_name', 'user_email', 'user_password', 'user_profile_id', 'user_active') );
+			
+				if (!$result['success']) {
+					return $result;
+				}
+				$result = $userAdo->exactSearch($user);
+				if (!$result['success']) {
+					return $result;
+				}
 			}
 		}
 
