@@ -4,10 +4,10 @@ $connection = [
 	'default' => 'agrocomercio',
 	'min_agricultura' => (object)[
 		'driver'   => 'mysqli',
-		'host'     => '172.20.52.11',
-		'database' => 'agrocomercio',
-		'username' => 'AgroComercio',
-		'password' => '@$un70$1N'
+		'host'     => '172.16.1.233',
+		'database' => 'min_agricultura',
+		'username' => 'appusr',
+		'password' => 's1c3x2016**'
 	]
 ];
 

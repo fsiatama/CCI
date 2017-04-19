@@ -327,3 +327,606 @@
 2015-06-02 09:45:25 - Cerrando conexión con el servidor FTP
 2015-06-02 09:45:25 - ====================================================================================
 2015-06-02 09:45:25 - ====================================================================================
+2017-01-18 15:47:09 - Inicia proceso para actualizar datos en la tabla arancel
+2017-01-18 15:47:10 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 15:47:11 - Comprueba si existe un archivo disponible
+2017-01-18 15:47:11 - Inicia descarga de archivo arancel.zip
+2017-01-18 15:47:12 - Cerrando conexión con el servidor FTP
+2017-01-18 15:47:12 - Preparando carpeta temporal
+2017-01-18 15:47:12 - Descomprimiendo datos
+2017-01-18 15:47:13 - ERROR. Fallo durante la descompresión de datos
+2017-01-18 15:47:13 - ====================================================================================
+2017-01-18 15:47:13 - ====================================================================================
+2017-01-18 15:47:13 - Inicia proceso para actualizar datos en la tabla posicion
+2017-01-18 15:47:13 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 15:47:15 - Comprueba si existe un archivo disponible
+2017-01-18 15:47:15 - Inicia descarga de archivo posicion.zip
+2017-01-18 15:47:15 - Cerrando conexión con el servidor FTP
+2017-01-18 15:47:15 - Preparando carpeta temporal
+2017-01-18 15:47:15 - Descomprimiendo datos
+2017-01-18 15:47:15 - ERROR. Fallo durante la descompresión de datos
+2017-01-18 15:47:15 - ====================================================================================
+2017-01-18 15:47:15 - ====================================================================================
+2017-01-18 15:47:15 - Inicia proceso para actualizar datos en la tabla subpartida
+2017-01-18 15:47:15 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 15:47:17 - Comprueba si existe un archivo disponible
+2017-01-18 15:47:17 - Inicia descarga de archivo subpartida.zip
+2017-01-18 15:47:17 - Cerrando conexión con el servidor FTP
+2017-01-18 15:47:17 - Preparando carpeta temporal
+2017-01-18 15:47:17 - Descomprimiendo datos
+2017-01-18 15:47:17 - ERROR. Fallo durante la descompresión de datos
+2017-01-18 15:47:17 - ====================================================================================
+2017-01-18 15:47:17 - ====================================================================================
+2017-01-18 15:47:17 - Inicia proceso para actualizar datos en la tabla empresa
+2017-01-18 15:47:17 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 15:47:19 - Comprueba si existe un archivo disponible
+2017-01-18 15:47:19 - Inicia descarga de archivo empresa.zip
+2017-01-18 15:47:19 - Cerrando conexión con el servidor FTP
+2017-01-18 15:47:19 - Preparando carpeta temporal
+2017-01-18 15:47:19 - Descomprimiendo datos
+2017-01-18 15:47:19 - ERROR. Fallo durante la descompresión de datos
+2017-01-18 15:47:19 - ====================================================================================
+2017-01-18 15:47:19 - ====================================================================================
+2017-01-18 15:47:19 - Inicia proceso para actualizar datos en la tabla departamento
+2017-01-18 15:47:19 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 15:47:21 - Comprueba si existe un archivo disponible
+2017-01-18 15:47:21 - Inicia descarga de archivo departamento.zip
+2017-01-18 15:47:21 - Cerrando conexión con el servidor FTP
+2017-01-18 15:47:21 - Preparando carpeta temporal
+2017-01-18 15:47:21 - Descomprimiendo datos
+2017-01-18 15:47:21 - ERROR. Fallo durante la descompresión de datos
+2017-01-18 15:47:21 - ====================================================================================
+2017-01-18 15:47:21 - ====================================================================================
+2017-01-18 15:47:21 - Inicia proceso para actualizar datos en la tabla pais
+2017-01-18 15:47:21 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 15:47:23 - Comprueba si existe un archivo disponible
+2017-01-18 15:47:23 - No hay archivo disponible
+2017-01-18 15:47:23 - Cerrando conexión con el servidor FTP
+2017-01-18 15:47:23 - ====================================================================================
+2017-01-18 15:47:23 - ====================================================================================
+2017-01-18 15:47:23 - Inicia proceso para actualizar datos en la tabla declaraimp
+2017-01-18 15:47:23 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 15:47:25 - Comprueba si existe un archivo disponible
+2017-01-18 15:47:25 - Inicia descarga de archivo declaraimp.zip
+2017-01-18 15:47:26 - Cerrando conexión con el servidor FTP
+2017-01-18 15:47:26 - Preparando carpeta temporal
+2017-01-18 15:47:26 - Descomprimiendo datos
+2017-01-18 15:47:29 - Inicia carga de datos nuevos
+2017-01-18 16:39:03 - Inicia proceso para actualizar datos en la tabla arancel
+2017-01-18 16:39:03 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:05 - Comprueba si existe un archivo disponible
+2017-01-18 16:39:05 - Inicia descarga de archivo arancel.zip
+2017-01-18 16:39:05 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:05 - Preparando carpeta temporal
+2017-01-18 16:39:05 - Descomprimiendo datos
+2017-01-18 16:39:05 - Inicia carga de datos nuevos
+2017-01-18 16:39:07 - Elimina archivos y carpetas temporales
+2017-01-18 16:39:07 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:09 - Renombrando archivo el servidor FTP
+2017-01-18 16:39:09 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:09 - Finaliza proceso de actualización para la tabla arancel
+2017-01-18 16:39:09 - ====================================================================================
+2017-01-18 16:39:09 - ====================================================================================
+2017-01-18 16:39:09 - Inicia proceso para actualizar datos en la tabla posicion
+2017-01-18 16:39:09 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:11 - Comprueba si existe un archivo disponible
+2017-01-18 16:39:11 - Inicia descarga de archivo posicion.zip
+2017-01-18 16:39:11 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:11 - Preparando carpeta temporal
+2017-01-18 16:39:11 - Descomprimiendo datos
+2017-01-18 16:39:11 - Inicia carga de datos nuevos
+2017-01-18 16:39:12 - Elimina archivos y carpetas temporales
+2017-01-18 16:39:12 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:14 - Renombrando archivo el servidor FTP
+2017-01-18 16:39:14 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:14 - Finaliza proceso de actualización para la tabla posicion
+2017-01-18 16:39:14 - ====================================================================================
+2017-01-18 16:39:14 - ====================================================================================
+2017-01-18 16:39:14 - Inicia proceso para actualizar datos en la tabla subpartida
+2017-01-18 16:39:14 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:16 - Comprueba si existe un archivo disponible
+2017-01-18 16:39:16 - Inicia descarga de archivo subpartida.zip
+2017-01-18 16:39:16 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:16 - Preparando carpeta temporal
+2017-01-18 16:39:16 - Descomprimiendo datos
+2017-01-18 16:39:16 - Inicia carga de datos nuevos
+2017-01-18 16:39:16 - Elimina archivos y carpetas temporales
+2017-01-18 16:39:16 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:19 - Renombrando archivo el servidor FTP
+2017-01-18 16:39:19 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:19 - Finaliza proceso de actualización para la tabla subpartida
+2017-01-18 16:39:19 - ====================================================================================
+2017-01-18 16:39:19 - ====================================================================================
+2017-01-18 16:39:19 - Inicia proceso para actualizar datos en la tabla empresa
+2017-01-18 16:39:19 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:20 - Comprueba si existe un archivo disponible
+2017-01-18 16:39:20 - Inicia descarga de archivo empresa.zip
+2017-01-18 16:39:21 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:21 - Preparando carpeta temporal
+2017-01-18 16:39:21 - Descomprimiendo datos
+2017-01-18 16:39:21 - Inicia carga de datos nuevos
+2017-01-18 16:39:36 - Elimina archivos y carpetas temporales
+2017-01-18 16:39:36 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:38 - Renombrando archivo el servidor FTP
+2017-01-18 16:39:38 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:38 - Finaliza proceso de actualización para la tabla empresa
+2017-01-18 16:39:38 - ====================================================================================
+2017-01-18 16:39:38 - ====================================================================================
+2017-01-18 16:39:38 - Inicia proceso para actualizar datos en la tabla departamento
+2017-01-18 16:39:38 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:40 - Comprueba si existe un archivo disponible
+2017-01-18 16:39:40 - Inicia descarga de archivo departamento.zip
+2017-01-18 16:39:40 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:40 - Preparando carpeta temporal
+2017-01-18 16:39:40 - Descomprimiendo datos
+2017-01-18 16:39:40 - Inicia carga de datos nuevos
+2017-01-18 16:39:40 - Elimina archivos y carpetas temporales
+2017-01-18 16:39:40 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:42 - Renombrando archivo el servidor FTP
+2017-01-18 16:39:42 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:42 - Finaliza proceso de actualización para la tabla departamento
+2017-01-18 16:39:42 - ====================================================================================
+2017-01-18 16:39:42 - ====================================================================================
+2017-01-18 16:39:42 - Inicia proceso para actualizar datos en la tabla pais
+2017-01-18 16:39:42 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:44 - Comprueba si existe un archivo disponible
+2017-01-18 16:39:44 - No hay archivo disponible
+2017-01-18 16:39:44 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:44 - ====================================================================================
+2017-01-18 16:39:44 - ====================================================================================
+2017-01-18 16:39:44 - Inicia proceso para actualizar datos en la tabla declaraimp
+2017-01-18 16:39:44 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 16:39:46 - Comprueba si existe un archivo disponible
+2017-01-18 16:39:46 - Inicia descarga de archivo declaraimp.zip
+2017-01-18 16:39:46 - Cerrando conexión con el servidor FTP
+2017-01-18 16:39:46 - Preparando carpeta temporal
+2017-01-18 16:39:46 - Descomprimiendo datos
+2017-01-18 16:39:48 - Inicia carga de datos nuevos
+2017-01-18 17:36:43 - Inicia proceso para actualizar datos en la tabla arancel
+2017-01-18 17:36:43 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 17:36:45 - Comprueba si existe un archivo disponible
+2017-01-18 17:36:45 - No hay archivo disponible
+2017-01-18 17:36:45 - Cerrando conexión con el servidor FTP
+2017-01-18 17:36:45 - ====================================================================================
+2017-01-18 17:36:45 - ====================================================================================
+2017-01-18 17:36:45 - Inicia proceso para actualizar datos en la tabla posicion
+2017-01-18 17:36:45 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 17:36:47 - Comprueba si existe un archivo disponible
+2017-01-18 17:36:47 - No hay archivo disponible
+2017-01-18 17:36:47 - Cerrando conexión con el servidor FTP
+2017-01-18 17:36:47 - ====================================================================================
+2017-01-18 17:36:47 - ====================================================================================
+2017-01-18 17:36:47 - Inicia proceso para actualizar datos en la tabla subpartida
+2017-01-18 17:36:47 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 17:36:48 - Comprueba si existe un archivo disponible
+2017-01-18 17:36:48 - No hay archivo disponible
+2017-01-18 17:36:48 - Cerrando conexión con el servidor FTP
+2017-01-18 17:36:48 - ====================================================================================
+2017-01-18 17:36:48 - ====================================================================================
+2017-01-18 17:36:48 - Inicia proceso para actualizar datos en la tabla empresa
+2017-01-18 17:36:48 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 17:36:50 - Comprueba si existe un archivo disponible
+2017-01-18 17:36:50 - No hay archivo disponible
+2017-01-18 17:36:50 - Cerrando conexión con el servidor FTP
+2017-01-18 17:36:50 - ====================================================================================
+2017-01-18 17:36:50 - ====================================================================================
+2017-01-18 17:36:50 - Inicia proceso para actualizar datos en la tabla departamento
+2017-01-18 17:36:50 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 17:36:57 - Comprueba si existe un archivo disponible
+2017-01-18 17:36:57 - No hay archivo disponible
+2017-01-18 17:36:57 - Cerrando conexión con el servidor FTP
+2017-01-18 17:36:57 - ====================================================================================
+2017-01-18 17:36:57 - ====================================================================================
+2017-01-18 17:36:57 - Inicia proceso para actualizar datos en la tabla pais
+2017-01-18 17:36:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 17:36:59 - Comprueba si existe un archivo disponible
+2017-01-18 17:36:59 - No hay archivo disponible
+2017-01-18 17:36:59 - Cerrando conexión con el servidor FTP
+2017-01-18 17:36:59 - ====================================================================================
+2017-01-18 17:36:59 - ====================================================================================
+2017-01-18 17:36:59 - Inicia proceso para actualizar datos en la tabla declaraimp
+2017-01-18 17:36:59 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-18 17:37:01 - Comprueba si existe un archivo disponible
+2017-01-18 17:37:01 - Inicia descarga de archivo declaraimp.zip
+2017-01-18 17:37:01 - Cerrando conexión con el servidor FTP
+2017-01-18 17:37:01 - Preparando carpeta temporal
+2017-01-18 17:37:01 - Descomprimiendo datos
+2017-01-18 17:37:03 - Inicia carga de datos nuevos
+2017-01-19 09:46:54 - Inicia proceso para actualizar datos en la tabla arancel
+2017-01-19 09:46:54 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 09:46:56 - Comprueba si existe un archivo disponible
+2017-01-19 09:46:56 - No hay archivo disponible
+2017-01-19 09:46:56 - Cerrando conexión con el servidor FTP
+2017-01-19 09:46:56 - ====================================================================================
+2017-01-19 09:46:56 - ====================================================================================
+2017-01-19 09:46:56 - Inicia proceso para actualizar datos en la tabla posicion
+2017-01-19 09:46:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 09:46:58 - Comprueba si existe un archivo disponible
+2017-01-19 09:46:58 - No hay archivo disponible
+2017-01-19 09:46:58 - Cerrando conexión con el servidor FTP
+2017-01-19 09:46:58 - ====================================================================================
+2017-01-19 09:46:58 - ====================================================================================
+2017-01-19 09:46:58 - Inicia proceso para actualizar datos en la tabla subpartida
+2017-01-19 09:46:58 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 09:46:59 - Comprueba si existe un archivo disponible
+2017-01-19 09:46:59 - No hay archivo disponible
+2017-01-19 09:46:59 - Cerrando conexión con el servidor FTP
+2017-01-19 09:46:59 - ====================================================================================
+2017-01-19 09:46:59 - ====================================================================================
+2017-01-19 09:46:59 - Inicia proceso para actualizar datos en la tabla empresa
+2017-01-19 09:46:59 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 09:47:01 - Comprueba si existe un archivo disponible
+2017-01-19 09:47:01 - No hay archivo disponible
+2017-01-19 09:47:01 - Cerrando conexión con el servidor FTP
+2017-01-19 09:47:01 - ====================================================================================
+2017-01-19 09:47:01 - ====================================================================================
+2017-01-19 09:47:01 - Inicia proceso para actualizar datos en la tabla departamento
+2017-01-19 09:47:01 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 09:47:02 - Comprueba si existe un archivo disponible
+2017-01-19 09:47:02 - No hay archivo disponible
+2017-01-19 09:47:02 - Cerrando conexión con el servidor FTP
+2017-01-19 09:47:02 - ====================================================================================
+2017-01-19 09:47:02 - ====================================================================================
+2017-01-19 09:47:02 - Inicia proceso para actualizar datos en la tabla pais
+2017-01-19 09:47:02 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 09:47:04 - Comprueba si existe un archivo disponible
+2017-01-19 09:47:04 - No hay archivo disponible
+2017-01-19 09:47:04 - Cerrando conexión con el servidor FTP
+2017-01-19 09:47:04 - ====================================================================================
+2017-01-19 09:47:04 - ====================================================================================
+2017-01-19 09:47:04 - Inicia proceso para actualizar datos en la tabla declaraimp
+2017-01-19 09:47:04 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 09:47:06 - Comprueba si existe un archivo disponible
+2017-01-19 09:47:06 - Inicia descarga de archivo declaraimp.zip
+2017-01-19 09:47:06 - Cerrando conexión con el servidor FTP
+2017-01-19 09:47:06 - Preparando carpeta temporal
+2017-01-19 09:47:06 - Descomprimiendo datos
+2017-01-19 09:47:08 - Inicia carga de datos nuevos
+2017-01-19 10:59:55 - Inicia proceso para actualizar datos en la tabla arancel
+2017-01-19 10:59:55 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 10:59:57 - Comprueba si existe un archivo disponible
+2017-01-19 10:59:57 - No hay archivo disponible
+2017-01-19 10:59:57 - Cerrando conexión con el servidor FTP
+2017-01-19 10:59:57 - ====================================================================================
+2017-01-19 10:59:57 - ====================================================================================
+2017-01-19 10:59:57 - Inicia proceso para actualizar datos en la tabla posicion
+2017-01-19 10:59:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 10:59:58 - Comprueba si existe un archivo disponible
+2017-01-19 10:59:58 - No hay archivo disponible
+2017-01-19 10:59:58 - Cerrando conexión con el servidor FTP
+2017-01-19 10:59:58 - ====================================================================================
+2017-01-19 10:59:58 - ====================================================================================
+2017-01-19 10:59:58 - Inicia proceso para actualizar datos en la tabla subpartida
+2017-01-19 10:59:58 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:00:00 - Comprueba si existe un archivo disponible
+2017-01-19 11:00:00 - No hay archivo disponible
+2017-01-19 11:00:00 - Cerrando conexión con el servidor FTP
+2017-01-19 11:00:00 - ====================================================================================
+2017-01-19 11:00:00 - ====================================================================================
+2017-01-19 11:00:00 - Inicia proceso para actualizar datos en la tabla empresa
+2017-01-19 11:00:00 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:00:02 - Comprueba si existe un archivo disponible
+2017-01-19 11:00:02 - No hay archivo disponible
+2017-01-19 11:00:02 - Cerrando conexión con el servidor FTP
+2017-01-19 11:00:02 - ====================================================================================
+2017-01-19 11:00:02 - ====================================================================================
+2017-01-19 11:00:02 - Inicia proceso para actualizar datos en la tabla departamento
+2017-01-19 11:00:02 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:00:04 - Comprueba si existe un archivo disponible
+2017-01-19 11:00:04 - No hay archivo disponible
+2017-01-19 11:00:04 - Cerrando conexión con el servidor FTP
+2017-01-19 11:00:04 - ====================================================================================
+2017-01-19 11:00:04 - ====================================================================================
+2017-01-19 11:00:04 - Inicia proceso para actualizar datos en la tabla pais
+2017-01-19 11:00:04 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:00:05 - Comprueba si existe un archivo disponible
+2017-01-19 11:00:05 - No hay archivo disponible
+2017-01-19 11:00:05 - Cerrando conexión con el servidor FTP
+2017-01-19 11:00:05 - ====================================================================================
+2017-01-19 11:00:05 - ====================================================================================
+2017-01-19 11:00:05 - Inicia proceso para actualizar datos en la tabla declaraimp
+2017-01-19 11:00:05 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:00:07 - Comprueba si existe un archivo disponible
+2017-01-19 11:00:07 - Inicia descarga de archivo declaraimp.zip
+2017-01-19 11:00:08 - Cerrando conexión con el servidor FTP
+2017-01-19 11:00:08 - Preparando carpeta temporal
+2017-01-19 11:00:08 - Descomprimiendo datos
+2017-01-19 11:00:09 - Inicia carga de datos nuevos
+2017-01-19 11:03:48 - Inicia proceso para actualizar datos en la tabla arancel
+2017-01-19 11:03:48 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:03:50 - Comprueba si existe un archivo disponible
+2017-01-19 11:03:50 - No hay archivo disponible
+2017-01-19 11:03:50 - Cerrando conexión con el servidor FTP
+2017-01-19 11:03:50 - ====================================================================================
+2017-01-19 11:03:50 - ====================================================================================
+2017-01-19 11:03:50 - Inicia proceso para actualizar datos en la tabla posicion
+2017-01-19 11:03:50 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:03:52 - Comprueba si existe un archivo disponible
+2017-01-19 11:03:52 - No hay archivo disponible
+2017-01-19 11:03:52 - Cerrando conexión con el servidor FTP
+2017-01-19 11:03:52 - ====================================================================================
+2017-01-19 11:03:52 - ====================================================================================
+2017-01-19 11:03:52 - Inicia proceso para actualizar datos en la tabla subpartida
+2017-01-19 11:03:52 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:03:53 - Comprueba si existe un archivo disponible
+2017-01-19 11:03:53 - No hay archivo disponible
+2017-01-19 11:03:53 - Cerrando conexión con el servidor FTP
+2017-01-19 11:03:53 - ====================================================================================
+2017-01-19 11:03:53 - ====================================================================================
+2017-01-19 11:03:53 - Inicia proceso para actualizar datos en la tabla empresa
+2017-01-19 11:03:53 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:03:55 - Comprueba si existe un archivo disponible
+2017-01-19 11:03:55 - No hay archivo disponible
+2017-01-19 11:03:55 - Cerrando conexión con el servidor FTP
+2017-01-19 11:03:55 - ====================================================================================
+2017-01-19 11:03:55 - ====================================================================================
+2017-01-19 11:03:55 - Inicia proceso para actualizar datos en la tabla departamento
+2017-01-19 11:03:55 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:03:57 - Comprueba si existe un archivo disponible
+2017-01-19 11:03:57 - No hay archivo disponible
+2017-01-19 11:03:57 - Cerrando conexión con el servidor FTP
+2017-01-19 11:03:57 - ====================================================================================
+2017-01-19 11:03:57 - ====================================================================================
+2017-01-19 11:03:57 - Inicia proceso para actualizar datos en la tabla pais
+2017-01-19 11:03:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:03:59 - Comprueba si existe un archivo disponible
+2017-01-19 11:03:59 - No hay archivo disponible
+2017-01-19 11:03:59 - Cerrando conexión con el servidor FTP
+2017-01-19 11:03:59 - ====================================================================================
+2017-01-19 11:03:59 - ====================================================================================
+2017-01-19 11:03:59 - Inicia proceso para actualizar datos en la tabla declaraimp
+2017-01-19 11:03:59 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:04:00 - Comprueba si existe un archivo disponible
+2017-01-19 11:04:00 - Inicia descarga de archivo declaraimp.zip
+2017-01-19 11:04:01 - Cerrando conexión con el servidor FTP
+2017-01-19 11:04:01 - Preparando carpeta temporal
+2017-01-19 11:04:01 - Descomprimiendo datos
+2017-01-19 11:04:03 - Inicia carga de datos nuevos
+2017-01-19 11:14:13 - Elimina archivos y carpetas temporales
+2017-01-19 11:14:13 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:14:14 - Renombrando archivo el servidor FTP
+2017-01-19 11:14:14 - Cerrando conexión con el servidor FTP
+2017-01-19 11:14:14 - Finaliza proceso de actualización para la tabla declaraimp
+2017-01-19 11:14:14 - Inicia proceso de alertas para los contingentes de declaraimp Intercambio impo
+2017-01-19 11:33:49 - Inicia proceso para actualizar datos en la tabla arancel
+2017-01-19 11:33:49 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:33:51 - Comprueba si existe un archivo disponible
+2017-01-19 11:33:51 - No hay archivo disponible
+2017-01-19 11:33:51 - Cerrando conexión con el servidor FTP
+2017-01-19 11:33:51 - ====================================================================================
+2017-01-19 11:33:51 - ====================================================================================
+2017-01-19 11:33:51 - Inicia proceso para actualizar datos en la tabla posicion
+2017-01-19 11:33:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:33:53 - Comprueba si existe un archivo disponible
+2017-01-19 11:33:53 - No hay archivo disponible
+2017-01-19 11:33:53 - Cerrando conexión con el servidor FTP
+2017-01-19 11:33:53 - ====================================================================================
+2017-01-19 11:33:53 - ====================================================================================
+2017-01-19 11:33:53 - Inicia proceso para actualizar datos en la tabla subpartida
+2017-01-19 11:33:53 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:33:54 - Comprueba si existe un archivo disponible
+2017-01-19 11:33:54 - No hay archivo disponible
+2017-01-19 11:33:54 - Cerrando conexión con el servidor FTP
+2017-01-19 11:33:54 - ====================================================================================
+2017-01-19 11:33:54 - ====================================================================================
+2017-01-19 11:33:54 - Inicia proceso para actualizar datos en la tabla empresa
+2017-01-19 11:33:54 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:33:56 - Comprueba si existe un archivo disponible
+2017-01-19 11:33:56 - No hay archivo disponible
+2017-01-19 11:33:56 - Cerrando conexión con el servidor FTP
+2017-01-19 11:33:56 - ====================================================================================
+2017-01-19 11:33:56 - ====================================================================================
+2017-01-19 11:33:56 - Inicia proceso para actualizar datos en la tabla departamento
+2017-01-19 11:33:56 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:33:58 - Comprueba si existe un archivo disponible
+2017-01-19 11:33:58 - No hay archivo disponible
+2017-01-19 11:33:58 - Cerrando conexión con el servidor FTP
+2017-01-19 11:33:58 - ====================================================================================
+2017-01-19 11:33:58 - ====================================================================================
+2017-01-19 11:33:58 - Inicia proceso para actualizar datos en la tabla pais
+2017-01-19 11:33:58 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:33:59 - Comprueba si existe un archivo disponible
+2017-01-19 11:33:59 - No hay archivo disponible
+2017-01-19 11:33:59 - Cerrando conexión con el servidor FTP
+2017-01-19 11:33:59 - ====================================================================================
+2017-01-19 11:33:59 - ====================================================================================
+2017-01-19 11:33:59 - Inicia proceso para actualizar datos en la tabla declaraimp
+2017-01-19 11:33:59 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:34:01 - Comprueba si existe un archivo disponible
+2017-01-19 11:34:01 - No hay archivo disponible
+2017-01-19 11:34:01 - Cerrando conexión con el servidor FTP
+2017-01-19 11:34:01 - ====================================================================================
+2017-01-19 11:34:01 - ====================================================================================
+2017-01-19 11:34:01 - Inicia proceso para actualizar datos en la tabla declaraexp
+2017-01-19 11:34:01 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:34:03 - Comprueba si existe un archivo disponible
+2017-01-19 11:34:03 - Inicia descarga de archivo declaraexp.zip
+2017-01-19 11:34:03 - Cerrando conexión con el servidor FTP
+2017-01-19 11:34:03 - Preparando carpeta temporal
+2017-01-19 11:34:03 - Descomprimiendo datos
+2017-01-19 11:34:04 - Inicia carga de datos nuevos
+2017-01-19 11:39:22 - Elimina archivos y carpetas temporales
+2017-01-19 11:39:22 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:39:24 - Renombrando archivo el servidor FTP
+2017-01-19 11:39:24 - Cerrando conexión con el servidor FTP
+2017-01-19 11:39:24 - Finaliza proceso de actualización para la tabla declaraexp
+2017-01-19 11:39:24 - Inicia proceso de alertas para los contingentes de declaraexp Intercambio expo
+2017-01-19 11:39:24 - ====================================================================================
+2017-01-19 11:39:24 - ====================================================================================
+2017-01-19 11:56:49 - Inicia proceso para actualizar datos en la tabla arancel
+2017-01-19 11:56:49 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:56:52 - Comprueba si existe un archivo disponible
+2017-01-19 11:56:52 - No hay archivo disponible
+2017-01-19 11:56:52 - Cerrando conexión con el servidor FTP
+2017-01-19 11:56:52 - ====================================================================================
+2017-01-19 11:56:52 - ====================================================================================
+2017-01-19 11:56:52 - Inicia proceso para actualizar datos en la tabla posicion
+2017-01-19 11:56:52 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:56:53 - Comprueba si existe un archivo disponible
+2017-01-19 11:56:53 - No hay archivo disponible
+2017-01-19 11:56:53 - Cerrando conexión con el servidor FTP
+2017-01-19 11:56:53 - ====================================================================================
+2017-01-19 11:56:53 - ====================================================================================
+2017-01-19 11:56:53 - Inicia proceso para actualizar datos en la tabla subpartida
+2017-01-19 11:56:53 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:56:55 - Comprueba si existe un archivo disponible
+2017-01-19 11:56:55 - No hay archivo disponible
+2017-01-19 11:56:55 - Cerrando conexión con el servidor FTP
+2017-01-19 11:56:55 - ====================================================================================
+2017-01-19 11:56:55 - ====================================================================================
+2017-01-19 11:56:55 - Inicia proceso para actualizar datos en la tabla empresa
+2017-01-19 11:56:55 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:56:57 - Comprueba si existe un archivo disponible
+2017-01-19 11:56:57 - No hay archivo disponible
+2017-01-19 11:56:57 - Cerrando conexión con el servidor FTP
+2017-01-19 11:56:57 - ====================================================================================
+2017-01-19 11:56:57 - ====================================================================================
+2017-01-19 11:56:57 - Inicia proceso para actualizar datos en la tabla departamento
+2017-01-19 11:56:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:56:58 - Comprueba si existe un archivo disponible
+2017-01-19 11:56:58 - No hay archivo disponible
+2017-01-19 11:56:58 - Cerrando conexión con el servidor FTP
+2017-01-19 11:56:58 - ====================================================================================
+2017-01-19 11:56:58 - ====================================================================================
+2017-01-19 11:56:58 - Inicia proceso para actualizar datos en la tabla pais
+2017-01-19 11:56:58 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:57:00 - Comprueba si existe un archivo disponible
+2017-01-19 11:57:00 - No hay archivo disponible
+2017-01-19 11:57:00 - Cerrando conexión con el servidor FTP
+2017-01-19 11:57:00 - ====================================================================================
+2017-01-19 11:57:00 - ====================================================================================
+2017-01-19 11:57:00 - Inicia proceso para actualizar datos en la tabla declaraimp
+2017-01-19 11:57:00 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:57:01 - Comprueba si existe un archivo disponible
+2017-01-19 11:57:01 - No hay archivo disponible
+2017-01-19 11:57:01 - Cerrando conexión con el servidor FTP
+2017-01-19 11:57:01 - ====================================================================================
+2017-01-19 11:57:01 - ====================================================================================
+2017-01-19 11:57:01 - Inicia proceso para actualizar datos en la tabla declaraexp
+2017-01-19 11:57:01 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 11:57:03 - Comprueba si existe un archivo disponible
+2017-01-19 11:57:03 - No hay archivo disponible
+2017-01-19 11:57:03 - Cerrando conexión con el servidor FTP
+2017-01-19 11:57:03 - ====================================================================================
+2017-01-19 11:57:03 - ====================================================================================
+2017-01-19 12:07:51 - Inicia proceso para actualizar datos en la tabla arancel
+2017-01-19 12:07:51 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 12:07:55 - Comprueba si existe un archivo disponible
+2017-01-19 12:07:55 - No hay archivo disponible
+2017-01-19 12:07:55 - Cerrando conexión con el servidor FTP
+2017-01-19 12:07:55 - ====================================================================================
+2017-01-19 12:07:55 - ====================================================================================
+2017-01-19 12:07:55 - Inicia proceso para actualizar datos en la tabla posicion
+2017-01-19 12:07:55 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 12:07:57 - Comprueba si existe un archivo disponible
+2017-01-19 12:07:57 - No hay archivo disponible
+2017-01-19 12:07:57 - Cerrando conexión con el servidor FTP
+2017-01-19 12:07:57 - ====================================================================================
+2017-01-19 12:07:57 - ====================================================================================
+2017-01-19 12:07:57 - Inicia proceso para actualizar datos en la tabla subpartida
+2017-01-19 12:07:57 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 12:07:59 - Comprueba si existe un archivo disponible
+2017-01-19 12:07:59 - No hay archivo disponible
+2017-01-19 12:07:59 - Cerrando conexión con el servidor FTP
+2017-01-19 12:07:59 - ====================================================================================
+2017-01-19 12:07:59 - ====================================================================================
+2017-01-19 12:07:59 - Inicia proceso para actualizar datos en la tabla empresa
+2017-01-19 12:07:59 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 12:08:01 - Comprueba si existe un archivo disponible
+2017-01-19 12:08:01 - No hay archivo disponible
+2017-01-19 12:08:01 - Cerrando conexión con el servidor FTP
+2017-01-19 12:08:01 - ====================================================================================
+2017-01-19 12:08:01 - ====================================================================================
+2017-01-19 12:08:01 - Inicia proceso para actualizar datos en la tabla departamento
+2017-01-19 12:08:01 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 12:08:02 - Comprueba si existe un archivo disponible
+2017-01-19 12:08:02 - No hay archivo disponible
+2017-01-19 12:08:02 - Cerrando conexión con el servidor FTP
+2017-01-19 12:08:02 - ====================================================================================
+2017-01-19 12:08:02 - ====================================================================================
+2017-01-19 12:08:02 - Inicia proceso para actualizar datos en la tabla pais
+2017-01-19 12:08:02 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 12:08:04 - Comprueba si existe un archivo disponible
+2017-01-19 12:08:04 - No hay archivo disponible
+2017-01-19 12:08:04 - Cerrando conexión con el servidor FTP
+2017-01-19 12:08:04 - ====================================================================================
+2017-01-19 12:08:04 - ====================================================================================
+2017-01-19 12:08:04 - Inicia proceso para actualizar datos en la tabla declaraimp
+2017-01-19 12:08:04 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 12:08:06 - Comprueba si existe un archivo disponible
+2017-01-19 12:08:06 - No hay archivo disponible
+2017-01-19 12:08:06 - Cerrando conexión con el servidor FTP
+2017-01-19 12:08:06 - ====================================================================================
+2017-01-19 12:08:06 - ====================================================================================
+2017-01-19 12:08:06 - Inicia proceso para actualizar datos en la tabla declaraexp
+2017-01-19 12:08:06 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-19 12:08:08 - Comprueba si existe un archivo disponible
+2017-01-19 12:08:08 - No hay archivo disponible
+2017-01-19 12:08:08 - Cerrando conexión con el servidor FTP
+2017-01-19 12:08:08 - ====================================================================================
+2017-01-19 12:08:08 - ====================================================================================
+2017-01-20 11:54:21 - Inicia proceso para actualizar datos en la tabla arancel
+2017-01-20 11:54:21 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-20 11:54:24 - Comprueba si existe un archivo disponible
+2017-01-20 11:54:24 - No hay archivo disponible
+2017-01-20 11:54:24 - Cerrando conexión con el servidor FTP
+2017-01-20 11:54:24 - ====================================================================================
+2017-01-20 11:54:24 - ====================================================================================
+2017-01-20 11:54:24 - Inicia proceso para actualizar datos en la tabla posicion
+2017-01-20 11:54:24 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-20 11:54:26 - Comprueba si existe un archivo disponible
+2017-01-20 11:54:26 - No hay archivo disponible
+2017-01-20 11:54:26 - Cerrando conexión con el servidor FTP
+2017-01-20 11:54:26 - ====================================================================================
+2017-01-20 11:54:26 - ====================================================================================
+2017-01-20 11:54:26 - Inicia proceso para actualizar datos en la tabla subpartida
+2017-01-20 11:54:26 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-20 11:54:28 - Comprueba si existe un archivo disponible
+2017-01-20 11:54:28 - No hay archivo disponible
+2017-01-20 11:54:28 - Cerrando conexión con el servidor FTP
+2017-01-20 11:54:28 - ====================================================================================
+2017-01-20 11:54:28 - ====================================================================================
+2017-01-20 11:54:28 - Inicia proceso para actualizar datos en la tabla empresa
+2017-01-20 11:54:28 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-20 11:54:30 - Comprueba si existe un archivo disponible
+2017-01-20 11:54:30 - No hay archivo disponible
+2017-01-20 11:54:30 - Cerrando conexión con el servidor FTP
+2017-01-20 11:54:30 - ====================================================================================
+2017-01-20 11:54:30 - ====================================================================================
+2017-01-20 11:54:30 - Inicia proceso para actualizar datos en la tabla departamento
+2017-01-20 11:54:30 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-20 11:54:32 - Comprueba si existe un archivo disponible
+2017-01-20 11:54:32 - No hay archivo disponible
+2017-01-20 11:54:32 - Cerrando conexión con el servidor FTP
+2017-01-20 11:54:32 - ====================================================================================
+2017-01-20 11:54:32 - ====================================================================================
+2017-01-20 11:54:32 - Inicia proceso para actualizar datos en la tabla pais
+2017-01-20 11:54:32 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-20 11:54:34 - Comprueba si existe un archivo disponible
+2017-01-20 11:54:34 - No hay archivo disponible
+2017-01-20 11:54:34 - Cerrando conexión con el servidor FTP
+2017-01-20 11:54:34 - ====================================================================================
+2017-01-20 11:54:34 - ====================================================================================
+2017-01-20 11:54:34 - Inicia proceso para actualizar datos en la tabla declaraimp
+2017-01-20 11:54:34 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-20 11:54:36 - Comprueba si existe un archivo disponible
+2017-01-20 11:54:36 - No hay archivo disponible
+2017-01-20 11:54:36 - Cerrando conexión con el servidor FTP
+2017-01-20 11:54:36 - ====================================================================================
+2017-01-20 11:54:36 - ====================================================================================
+2017-01-20 11:54:36 - Inicia proceso para actualizar datos en la tabla declaraexp
+2017-01-20 11:54:36 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-20 11:54:38 - Comprueba si existe un archivo disponible
+2017-01-20 11:54:38 - Inicia descarga de archivo declaraexp.zip
+2017-01-20 11:54:39 - Cerrando conexión con el servidor FTP
+2017-01-20 11:54:39 - Preparando carpeta temporal
+2017-01-20 11:54:39 - Descomprimiendo datos
+2017-01-20 11:54:39 - Inicia carga de datos nuevos
+2017-01-20 12:04:50 - Elimina archivos y carpetas temporales
+2017-01-20 12:04:50 - Tratando de establecer conexión con el servidor FTP 190.60.211.98
+2017-01-20 12:04:53 - Renombrando archivo el servidor FTP
+2017-01-20 12:04:53 - Cerrando conexión con el servidor FTP
+2017-01-20 12:04:53 - Finaliza proceso de actualización para la tabla declaraexp
+2017-01-20 12:04:53 - Inicia proceso de alertas para los contingentes de declaraexp Intercambio expo
+2017-01-20 12:04:53 - ====================================================================================
+2017-01-20 12:04:53 - ====================================================================================

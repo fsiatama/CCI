@@ -5,7 +5,7 @@ return [
 			[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
-				'field_impo'         => 'id_paisprocedencia',
+				'field_impo'         => 'id_paisorigen',
 				'required'   		 => false,
 				//'requiredComplement' => true,
 				//'complement'         => ['mercado_id'],
@@ -45,7 +45,7 @@ return [
 			[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
-				'field_impo'         => 'id_paisprocedencia',
+				'field_impo'         => 'id_paisorigen',
 				'required'   		 => false,
 				//'requiredComplement' => true,
 				//'complement'         => ['mercado_id'],
@@ -85,7 +85,7 @@ return [
 			[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
-				'field_impo'         => 'id_paisprocedencia',
+				'field_impo'         => 'id_paisorigen',
 				'required'   		 => false,
 				'requiredComplement' => true,
 				'complement'         => ['mercado_id'],
@@ -140,7 +140,7 @@ return [
 			[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
-				'field_impo'         => 'id_paisprocedencia',
+				'field_impo'         => 'id_paisorigen',
 				'required'   		 => false,
 				'requiredComplement' => true,
 				'complement'         => ['mercado_id'],
@@ -186,7 +186,7 @@ return [
 			],[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
-				'field_impo'         => 'id_paisprocedencia',
+				'field_impo'         => 'id_paisorigen',
 				'required'   		 => false,
 				'requiredComplement' => true,
 				'complement'         => ['mercado_id'],
@@ -244,7 +244,7 @@ return [
 			],[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
-				'field_impo'         => 'id_paisprocedencia',
+				'field_impo'         => 'id_paisorigen',
 				'required'   		 => false,
 				'requiredComplement' => true,
 				'complement'         => ['mercado_id'],
@@ -341,7 +341,7 @@ return [
 			],[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
-				'field_impo'         => 'id_paisprocedencia',
+				'field_impo'         => 'id_paisorigen',
 				'required'   		 => false,
 				'requiredComplement' => true,
 				'complement'         => ['mercado_id'],
@@ -369,7 +369,7 @@ return [
 			[
 				'field'      => 'id_pais',
 				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
+				'field_impo' => 'id_paisorigen',
 				'required'   => false,
 				'multivalue' => true,
 			],[
@@ -395,7 +395,7 @@ return [
 			[
 				'field'      => 'id_pais',
 				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
+				'field_impo' => 'id_paisorigen',
 				'required'   => false,
 				'multivalue' => true,
 			],[
@@ -421,7 +421,7 @@ return [
 			[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
-				'field_impo'         => 'id_paisprocedencia',
+				'field_impo'         => 'id_paisorigen',
 				'required'   		 => false,
 				'requiredComplement' => true,
 				'complement'         => ['mercado_id'],
@@ -464,7 +464,7 @@ return [
 			[
 				'field'              => 'id_pais',
 				'field_expo'         => 'id_paisdestino',
-				'field_impo'         => 'id_paisprocedencia',
+				'field_impo'         => 'id_paisorigen',
 				'required'   		 => false,
 				//'requiredComplement' => true,
 				//'complement'         => ['mercado_id'],
@@ -577,7 +577,7 @@ return [
 			[
 				'field'      => 'id_pais',
 				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
+				'field_impo' => 'id_paisorigen',
 				'required'   => false,
 				'multivalue' => true,
 			],[
@@ -702,7 +702,7 @@ return [
 			[
 				'field'      => 'id_pais',
 				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
+				'field_impo' => 'id_paisorigen',
 				'required'   => false,
 				'multivalue' => true,
 			],[
@@ -803,7 +803,7 @@ return [
 			],[
 				'field'      => 'id_pais',
 				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
+				'field_impo' => 'id_paisorigen',
 				'multivalue' => true,
 			],[
 				'field'      => 'id_posicion',
@@ -823,7 +823,7 @@ return [
 			],[
 				'field'      => 'id_pais',
 				'field_expo' => 'id_paisdestino',
-				'field_impo' => 'id_paisprocedencia',
+				'field_impo' => 'id_paisorigen',
 				'multivalue' => true,
 			],[
 				'field'      => 'id_posicion',

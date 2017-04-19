@@ -9,10 +9,12 @@
  
 include "../../public/lib/config.php";
 require '../../public/lib/Helpers.php';
+require '../../public/lib/Inflector.php';
 require '../../public/lib/Lang.php';
 
 ini_set('display_errors', true);
 error_reporting(-1);
+set_time_limit(2000000);
 
 require PATH_APP.'../vendor/autoload.php';
 //require PATH_APP.'lib/connection/Connection.php';
