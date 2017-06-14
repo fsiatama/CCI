@@ -202,6 +202,10 @@ class DataSync extends Connection {
 		//listar los administradores para notificar las alertas de contingentes
 		$userRepo   = new UserRepo;
 		$profile_id = 1;
+
+		$this->Log("Inicia buscando los usuarios administradores del sistema");
+
+
 		$result = $userRepo->listByProfile(compact('profile_id'));
 		if (!$result['success']) {
 			$this->Log("ERROR. listando usuarios " . $result['error']);
@@ -214,12 +218,12 @@ class DataSync extends Connection {
 
 		foreach ($result['data'] as $row) {
 			if (! empty($row['user_email'])) {
-
-				$arrEmail = [
-					[ 'email' => $row['user_email'], 'name' => $row['user_full_name'] ]
-				];
+				$this->Log("usuario a reportar: " . $row['user_email']. " - ". $row['user_full_name']);
+				$arrEmail[] = ['email' => $row['user_email'], 'name' => $row['user_full_name']];
 			}
 		}
+		
+		$arrEmail[] = ['email' => 'fsiatama@sicex.com', 'name' => 'Fabian Siatama'];
 
 		//var_dump($arrEmail);
 
@@ -232,6 +236,8 @@ class DataSync extends Connection {
 			$this->Log("====================================================================================");
 			return false;
 		}
+
+		$this->Log("listando acuerdos comerciales de " . $trade . ": total acuerdos:" . $result['total']);
 
 		$acuerdo_detRepo = new Acuerdo_detRepo;
 
@@ -248,13 +254,18 @@ class DataSync extends Connection {
 				$this->Log("====================================================================================");
 				return false;
 			}
+			$this->Log("listando detalle del acuerdo comercial:" . $acuerdo_id . ": total reg:" . $result['total']);
 			$arrAgreementDet = $result['data'];
 			foreach ($arrAgreementDet as $rowDet) {
+
+				$this->Log(" verificando esta del contingente para{$rowDet['acuerdo_det_productos_desc']}");
 
 				$statusCtg = $rowDet['estado_ctg'];
 				$statusSvg = $rowDet['estado_svg'];
 
 				if ( $statusCtg != 'good_traffic' || $statusSvg != 'good_traffic') {
+
+					$this->Log("Preparando alerta para el contingente : " . $rowDet['pais']. " - ". $row['acuerdo_nombre']);
 
 					$subject = 'Alerta de contingente para: ' .$rowDet['pais'];
 					$statusSvgTT = ( $contingente_msalvaguardia == '1') ? $rowDet['estado_svg_tt'] : 'No aplica';
@@ -278,6 +289,8 @@ class DataSync extends Connection {
 						$this->Log("====================================================================================");
 						return false;
 					}
+
+					$this->Log("Alerta enviada con exito");
 
 				}
 			}
@@ -309,7 +322,7 @@ class DataSync extends Connection {
 
 	protected function LoadData($file, $tempFolder) {
 
-		$table = $this->tableName;
+		$table = ($this->tableName == "paises") ? "pais" : $this->tableName;
 
 		//En caso de que el archivo tenga una codificación distinta a UTF-8 es necesario realizar la transformación del archivo
 		$tempfile = tempnam($tempFolder, $file);
@@ -482,6 +495,7 @@ $dataSync->Syncronize("posicion");
 $dataSync->Syncronize("subpartida");
 $dataSync->Syncronize("empresa");
 $dataSync->Syncronize("departamento");
-$dataSync->Syncronize("pais");
+$dataSync->Syncronize("paises");
+$dataSync->Syncronize("ciiu");
 $dataSync->Syncronize("declaraimp");
 $dataSync->Syncronize("declaraexp");

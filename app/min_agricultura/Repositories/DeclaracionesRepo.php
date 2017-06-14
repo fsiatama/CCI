@@ -2086,7 +2086,7 @@ class DeclaracionesRepo extends BaseRepo {
 		foreach ($result['data'] as $keyImpo => $rowImpo) {
 			
 			$rate     = ( (float)$rowImpo[$columnValue] / $totalValue );
-			$weighing = ( (float)$rowImpo[$columnValue] * $rate );
+			$weighing = ( (float)$rowImpo['porcentaje_arancel'] * $rate );
 			$average += $weighing;
 
 			if ($keyImpo >= $this->start && $keyImpo < ( $this->start + $this->limit )) {

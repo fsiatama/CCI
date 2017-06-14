@@ -14,7 +14,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800" rel="stylesheet" type="text/css" />
 
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+		<link rel="stylesheet" href="<?= URL_RAIZ; ?>css/bootstrap.min.css" />
 		<link rel="stylesheet" href="<?= URL_RAIZ; ?>css/layout.css" />
 
 		<script src="<?= URL_RAIZ; ?>js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -57,8 +57,8 @@
 			
 					<div class="navbar-header">
 						<a class="navbar-brand" href="<?= URL_RAIZ; ?>">
-							<img class="img-responsive visible-xs visible-sm" src="<?= URL_RAIZ; ?>img/logo-small.png" alt="www.minagricultura.gov.co" width="360" height="60" />
-							<img class="img-responsive hidden-xs hidden-sm" src="<?= URL_RAIZ; ?>img/logo.png" alt="www.minagricultura.gov.co" width="510" height="85" />
+							<img class="img-responsive visible-xs visible-sm" src="<?= URL_RAIZ; ?>img/logo-sm.png" alt="www.sicex.com" width="210" height="60" />
+							<img class="img-responsive hidden-xs hidden-sm" src="<?= URL_RAIZ; ?>img/logo.png" alt="www.sicex.com" width="297" height="85" />
 						</a>
 					</div>
 			
@@ -91,7 +91,7 @@
 		<footer>
 			<div class="container">
 				<p class="copyright">
-					Ministerio de Agricultura y Desarrollo Rural. República de Colombia. Bogotá D.C<br />
+					Sicex.com. Bogotá D.C<br />
 					2014 &copy; All Rights Reserved.
 				</p>
 			</div>

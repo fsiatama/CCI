@@ -9,7 +9,7 @@
 					<div class="table-responsive">
 						<table class="table table-bordered table-tools">
 							<tr>
-								<td class="bg-success" colspan="2">
+								<td class="bg-warning" colspan="2">
 									<h4>
 										Comercio agropecuario de <strong>Colombia</strong>
 									</h4>
@@ -32,7 +32,7 @@
 					<div class="table-responsive">
 						<table class="table table-bordered table-tools">
 							<tr>
-								<td class="bg-success" colspan="2">
+								<td class="bg-warning" colspan="2">
 									<h4>Posicionamiento y dinamismo de los <strong>productos</strong></h4>
 								</td>
 							</tr>
@@ -54,7 +54,7 @@
 					<div class="table-responsive">
 						<table class="table table-bordered table-tools">
 							<tr>
-								<td class="bg-success" colspan="2">
+								<td class="bg-warning" colspan="2">
 									<h4>Cronograma de desgravación y contingentes <strong>otorgados</strong></h4>
 								</td>
 							</tr>
@@ -75,7 +75,7 @@
 					<div class="table-responsive">
 						<table class="table table-bordered table-tools">
 							<tr>
-								<td class="bg-success" colspan="2">
+								<td class="bg-warning" colspan="2">
 									<h4>Protocolos de <strong>exportación</strong></h4>
 								</td>
 							</tr>
@@ -94,7 +94,7 @@
 					<div class="table-responsive">
 						<table class="table table-bordered table-tools">
 							<tr>
-								<td class="bg-success">
+								<td class="bg-warning">
 									<h4>Requisitos sanitarios y <strong>fitosanitarios</strong></h4>
 								</td>
 							</tr>
@@ -114,7 +114,7 @@
 					<div class="table-responsive">
 						<table class="table table-bordered table-tools">
 							<tr>
-								<td class="bg-success" colspan="2">
+								<td class="bg-warning" colspan="2">
 									<h4>Logística de <strong>transporte</strong></h4>
 								</td>
 							</tr>
@@ -135,7 +135,7 @@
 					<div class="table-responsive">
 						<table class="table table-bordered table-tools">
 							<tr>
-								<td class="bg-success">
+								<td class="bg-warning">
 									<h4>Utilización de <strong>contingentes</strong></h4>
 								</td>
 							</tr>
@@ -165,7 +165,7 @@
 					<div class="table-responsive">
 						<table class="table table-bordered table-tools">
 							<tr>
-								<td class="bg-success" colspan="2">
+								<td class="bg-warning" colspan="2">
 									<h4>Comercio agropecuario <strong>mundial por producto</strong></h4>
 								</td>
 							</tr>

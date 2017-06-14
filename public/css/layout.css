@@ -201,10 +201,10 @@ p {
 	-webkit-margin-end: 0px;
 }
 a {
-	color: #3d6907;
+	color: #34495e;
 }
 a:hover {
-	color: #5ea431;
+	color: #2c3e50;
 }
 
 a, a:focus, a:hover, a:active {
@@ -404,12 +404,12 @@ blockquote cite {
 }
 
 .btn-green {
-    background: #3d6907;
+    background: #34495e;
     color: #ffffff;
 }
  
 .btn-green:hover, .btn-green:focus, .btn-green:active, .btn-green.active, .open > .dropdown-toggle.btn-green {
-    background: #5ea431;
+    background: #2c3e50;
 }
  
 .btn-green:active, .btn-green.active {
@@ -1138,7 +1138,7 @@ div.maximage-controls #slider_prev:hover {
 /** 18. Footer
  **************************************************************** **/
 
- footer {position: absolute; bottom: 0; width: 100%; height: 100px; background-color: #3d6907; font-size:13px; padding:10px 0; }
+ footer {position: absolute; bottom: 0; width: 100%; height: 100px; background-color: #34495e; font-size:13px; padding:10px 0; }
 	footer .copyright {padding-top:10px; color:#FFF; }
 
 
@@ -1203,7 +1203,7 @@ body.modal-open {
   padding-right:inherit !important;
 }
 .modal-header{
-	background-color:#5ea431; /* The Fallback */
+	background-color:#2c3e50; /* The Fallback */
 }
 .modal-header h4{
 	color:#fff;
@@ -1315,7 +1315,7 @@ div.toggle {
 
 div.toggle > label {
 	color: #fff;
-	background: #5ea431;
+	background: #2c3e50;
 
 	cursor: pointer;
 	font-size: 16px;
@@ -1374,7 +1374,7 @@ div.toggle.active > label:before {
 }
 div.toggle.active > label {
 	color:#fff;
-	background-color:#3d6907;
+	background-color:#34495e;
 }
 
 div.toggle.active > label > h4 {

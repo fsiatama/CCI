@@ -340,19 +340,19 @@ $updateInfo = ( $updateInfo !== false ) ? Lang::get('shared.months.'.$updateInfo
 							'<div class="row">' +
 								'<div class="col-md-4">' +
 									'<div class="well well-sm nomargin">' +
-								    	'<strong class="text-success margin-bottom-5"><span class="label label-success pull-right"><i class="fa fa-2x fa-calendar"></i></span> <?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?> </strong>' +
+								    	'<strong class="text-info margin-bottom-5"><span class="label label-info pull-right"><i class="fa fa-2x fa-calendar"></i></span> <?= Lang::get('acuerdo.columns_title.acuerdo_fvigente'); ?> </strong>' +
 								    	'<p><?= $acuerdo_fvigente_title; ?></p>' +
 									'</div>' +
 								'</div>' +
 								'<div class="col-md-4">' +
 									'<div class="well well-sm nomargin">' +
-								    	'<strong class="text-success margin-bottom-5"><span class="label label-success pull-right"><i class="fa fa-2x fa-money"></i></span> <?= Lang::get('acuerdo.columns_title.acuerdo_intercambio'); ?> </strong>' +
+								    	'<strong class="text-info margin-bottom-5"><span class="label label-info pull-right"><i class="fa fa-2x fa-money"></i></span> <?= Lang::get('acuerdo.columns_title.acuerdo_intercambio'); ?> </strong>' +
 								    	'<p><?= $acuerdo_intercambio_title; ?></p>' +
 									'</div>' +
 								'</div>' +
 								'<div class="col-md-4">' +
 									'<div class="well well-sm nomargin">' +
-								    	'<strong class="text-success margin-bottom-5"><span class="label label-success pull-right"><i class="fa fa-2x fa-globe"></i></span> <?= Lang::get('acuerdo.partner_title'); ?> </strong>' +
+								    	'<strong class="text-info margin-bottom-5"><span class="label label-info pull-right"><i class="fa fa-2x fa-globe"></i></span> <?= Lang::get('acuerdo.partner_title'); ?> </strong>' +
 								    	'<p><?= $partner; ?></p>' +
 									'</div>' +
 								'</div>' +

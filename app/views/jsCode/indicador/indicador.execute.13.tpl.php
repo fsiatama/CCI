@@ -57,7 +57,7 @@ $htmlDescription .= '</ol>';
 	storeIndicador.on('load', function(store){
 
 		var el = Ext.Element.get(module + 'weighted_average');
-		var average = numberFormat(store.reader.jsonData.average);
+		var average = rateFormat(store.reader.jsonData.average);
 
 		el.update(average);
 

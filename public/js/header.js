@@ -1,5 +1,4 @@
 Header = function(){
-
 	function logout(){
 		Ext.Msg.confirm('','Esta seguro de salir?', function(btn){
 			if(btn=='yes'){
@@ -77,7 +76,7 @@ Header = function(){
 	var toolbar = new Ext.Toolbar({
 		height: 65
 		,items:[
-			'<img src="img/logo_new.png" alt="Logo" width="265" height="52" border="0" align="middle" style="vertical-align:middle;margin:0;" />'
+			'<img src="img/logo-sm.png" alt="Logo" width="181" height="52" border="0" align="middle" style="vertical-align:middle;margin:0;" />'
 		,'->'
 		,{
 			text: ''
