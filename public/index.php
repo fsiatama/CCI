@@ -4,6 +4,10 @@
  * El frontend controller se encarga de
  * configurar nuestra aplicacion
  */
+
+$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv->load();
+
 require 'lib/config.php';
 require 'lib/Helpers.php';
 

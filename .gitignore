@@ -1,4 +1,3 @@
 vendor/*
 
-/public/lib/config.php
-/app/lib/config.php
+.env
