@@ -1,8 +1,4 @@
 <?php
-
-
-use \PHPExcel;
-
 require 'PHPExcel_Cell_MyValueBinder.php';
 /**
 * Excel
