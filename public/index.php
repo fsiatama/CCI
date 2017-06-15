@@ -1,18 +1,20 @@
 <?php
 
+require '../vendor/autoload.php';
+
 /*
  * El frontend controller se encarga de
  * configurar nuestra aplicacion
  */
 
-$dotenv = new Dotenv\Dotenv(__DIR__);
+
+$dotenv = new Dotenv\Dotenv("../");
 $dotenv->load();
 
 require 'lib/config.php';
 require 'lib/Helpers.php';
 
 //Library
-require '../vendor/autoload.php';
 require 'lib/Request.php';
 require 'lib/Inflector.php';
 require 'lib/Response.php';
