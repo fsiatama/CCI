@@ -21,7 +21,7 @@
 
                     <div class="block">
                         <p>
-                            Esta solución tecnológica ha sido diseñada por el Ministerio de Agricultura y Desarrollo Rural para evaluar <br> 
+                            Esta herramienta pretende ayudar a evaluar <br> 
                             el desempeño de los acuerdos comerciales suscritos por Colombia a partir de información estadística e <br>
                             indicadores para evaluar el aprovechamiento de los TLC, así como para brindar al público en <br>
                             general información relevante para la toma de decisiones de comercio exterior.
@@ -44,7 +44,7 @@
 
                     <div class="block">
                         <p>Encuentre fácilmente información acerca de los acuerdos comerciales entre Colombia <br>
-                            y otros países, para los productos agropecuarios y agroindustriales.
+                            y otros países.
                         </p>
                     </div>
 

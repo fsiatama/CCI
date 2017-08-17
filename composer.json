@@ -8,7 +8,6 @@
         "phpmailer/phpmailer": "5.*",
         "mpdf/mpdf": "5.*",
         "adodb/adodb-php": "5.19",
-        "adldap/adldap": "4.0.*",
         "kint-php/kint": "^2.1",
         "vlucas/phpdotenv": "^2.4"
     }

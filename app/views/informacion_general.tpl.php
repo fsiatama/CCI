@@ -7,8 +7,7 @@
 
 		<div class="col-md-12">
 			<p class="lead">
-				Aquí podrá encontrar fácilmente información general de los acuerdos comerciales entre Colombia y otros países, 
-				para los productos agropecuarios y agroindustriales.
+				Aquí podrá encontrar fácilmente información general de los acuerdos comerciales entre Colombia y otros países.
 				<hr class="half-margins">
 			</p>
 		</div>

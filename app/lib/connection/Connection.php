@@ -49,8 +49,8 @@ class Connection
 	public function setConnection($database)
 	{
 
-		$linesConfig = file_get_contents(PATH_APP.'lib/config.php');
-		$connections = unserialize(base64_decode(str_rot13($linesConfig)));
+		$linesConfig = Helpers::getRequire(PATH_APP.'lib/config.php');
+		$connections = $linesConfig;
 		
 		if (empty($connections->$database)) {
 			$database = $connections->default;

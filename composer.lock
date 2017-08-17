@@ -4,52 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9386b5d827d51cc98a49c1a9b8975875",
+    "hash": "9adfe2efc8795c4fc37601a04542ac86",
+    "content-hash": "0ee1bae0eaccef2196c9dbefb3dfc865",
     "packages": [
-        {
-            "name": "adldap/adldap",
-            "version": "v4.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ztec/adLDAP.git",
-                "reference": "20e8269d8dbb519e674daf7f567d5f0089c23c00"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ztec/adLDAP/zipball/20e8269d8dbb519e674daf7f567d5f0089c23c00",
-                "reference": "20e8269d8dbb519e674daf7f567d5f0089c23c00",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ldap": "*",
-                "php": ">=5.2.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "adLDAP": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GNU"
-            ],
-            "authors": [
-                {
-                    "name": "Richard Hyland",
-                    "email": "adldap@richardhyland.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "adLDAP, low-level library to query Active directory",
-            "homepage": "http://adldap.sourceforge.net",
-            "keywords": [
-                "active directory",
-                "ldap",
-                "windows"
-            ],
-            "time": "2012-11-02T02:12:46+00:00"
-        },
         {
             "name": "adodb/adodb-php",
             "version": "v5.19",
@@ -94,7 +51,7 @@
             "keywords": [
                 "database"
             ],
-            "time": "2014-04-23T14:37:03+00:00"
+            "time": "2014-04-23 14:37:03"
         },
         {
             "name": "apfelbox/php-file-download",
@@ -136,7 +93,7 @@
             "keywords": [
                 "download"
             ],
-            "time": "2014-02-10T17:12:20+00:00"
+            "time": "2014-02-10 17:12:20"
         },
         {
             "name": "kint-php/kint",
@@ -194,7 +151,7 @@
                 "kint",
                 "php"
             ],
-            "time": "2017-05-13T17:24:30+00:00"
+            "time": "2017-05-13 17:24:30"
         },
         {
             "name": "mpdf/mpdf",
@@ -237,7 +194,7 @@
                 "php",
                 "utf-8"
             ],
-            "time": "2014-12-14T18:32:11+00:00"
+            "time": "2014-12-14 18:32:11"
         },
         {
             "name": "phpfastcache/phpfastcache",
@@ -293,7 +250,7 @@
                 "redis",
                 "wincache"
             ],
-            "time": "2015-06-28T20:41:55+00:00"
+            "time": "2015-06-28 20:41:55"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -348,7 +305,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2015-05-04T12:37:21+00:00"
+            "time": "2015-05-04 12:37:21"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -405,54 +362,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2014-03-02T15:22:49+00:00"
-        },
-        {
-            "name": "raveren/kint",
-            "version": "v0.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/raveren/kint.git",
-                "reference": "ada810111ced4e3a926b4040da9b86442e43b613"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/raveren/kint/zipball/ada810111ced4e3a926b4040da9b86442e43b613",
-                "reference": "ada810111ced4e3a926b4040da9b86442e43b613",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "Kint.class.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Rokas Šleinius",
-                    "homepage": "https://github.com/raveren"
-                },
-                {
-                    "name": "Contributors",
-                    "homepage": "https://github.com/raveren/kint/contributors"
-                }
-            ],
-            "description": "Kint - debugging helper for PHP developers",
-            "homepage": "https://github.com/raveren/kint",
-            "keywords": [
-                "debug",
-                "kint",
-                "php"
-            ],
-            "abandoned": "kint-php/kint",
-            "time": "2013-08-12T22:46:16+00:00"
+            "time": "2014-03-02 15:22:49"
         },
         {
             "name": "skyzyx/mimetypes",
@@ -504,7 +414,7 @@
                 "mime",
                 "mimetype"
             ],
-            "time": "2013-03-31T11:50:02+00:00"
+            "time": "2013-03-31 11:50:02"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -554,7 +464,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2016-09-01T10:05:43+00:00"
+            "time": "2016-09-01 10:05:43"
         }
     ],
     "packages-dev": [],
